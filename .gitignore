@@ -1,0 +1,28 @@
+# Environment files: secrets never go in git (all apps, any depth).
+# .env.example holds key names only and is committed on purpose.
+.env
+.env.*
+**/.env
+**/.env.*
+!**/.env.example
+
+# Dependencies and build output
+node_modules/
+.next/
+dist/
+coverage/
+*.tsbuildinfo
+
+# CMS uploads (local dev; production uses cloud storage)
+apps/frontend/media/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.log
+
+# Old separate repo (github.com/nidhijethva/cta-project), not part of this project
+cta-project/
+
+# Reference material (theme source zip), not project code
+old-data-zips/

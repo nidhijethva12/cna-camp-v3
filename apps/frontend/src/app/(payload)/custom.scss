@@ -1,0 +1,239 @@
+// CNA brand for the admin, matching the website: DM Sans text, Bebas Neue page titles, trail
+// orange accents and the site's warm neutrals. Payload's styles live in `@layer payload-default`,
+// so these unlayered rules win without !important.
+
+// Self-hosted (SIL Open Font License) so the admin makes no third-party requests.
+@font-face {
+  font-family: "DM Sans";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("/fonts/dm-sans-latin.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Bebas Neue";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/bebas-neue-latin.woff2") format("woff2");
+}
+
+:root {
+  // Warm neutrals from the website palette instead of flat grey. Payload uses this scale as-is
+  // for the light theme and reverses it for dark mode, so one scale serves both.
+  --color-base-0: #ffffff;
+  --color-base-50: #f7f5f1;
+  --color-base-100: #f4f2ee;
+  --color-base-150: #e3dfd7;
+  --color-base-200: #d5d0c6;
+  --color-base-250: #c6c0b5;
+  --color-base-300: #b6b0a4;
+  --color-base-350: #a7a093;
+  --color-base-400: #979083;
+  --color-base-450: #878073;
+  --color-base-500: #787166;
+  --color-base-550: #66625b;
+  --color-base-600: #5b564e;
+  --color-base-650: #4e4a43;
+  --color-base-700: #423e38;
+  --color-base-750: #36332e;
+  --color-base-800: #2a2a28;
+  --color-base-850: #22201d;
+  --color-base-900: #1a1916;
+  --color-base-950: #141414;
+  --color-base-1000: #000000;
+
+  --font-body: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  --cna-font-display: "Bebas Neue", "Arial Narrow", Impact, sans-serif;
+
+  // Website radius (6px cards, 4px tags).
+  --style-radius-s: 4px;
+  --style-radius-m: 6px;
+
+  --cna-accent: #cf4510;
+  --cna-accent-hover: #b23a0b;
+  --cna-accent-soft: #fff4ee;
+  --cna-on-accent: #ffffff;
+  --cna-sun: #ffb627;
+}
+
+html[data-theme="dark"] {
+  // Brighter orange keeps its contrast on the dark background.
+  --cna-accent: #e8541c;
+  --cna-accent-hover: #f0743f;
+  --cna-accent-soft: #2c1d14;
+}
+
+// Page titles (dashboard, lists, edit screens) in the website's display face.
+h1 {
+  font-family: var(--cna-font-display);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+
+// Buttons
+.btn--style-primary:not(.btn--disabled) {
+  --bg-color: var(--cna-accent);
+  --color: var(--cna-on-accent);
+  --hover-bg: var(--cna-accent-hover);
+  --hover-color: var(--cna-on-accent);
+}
+
+// Sidebar: its own warm panel, small uppercase section labels (like the site's eyebrows) and
+// the current page highlighted as an orange pill.
+.nav {
+  background: var(--theme-elevation-50);
+  border-color: var(--theme-elevation-100);
+}
+
+.nav-group__toggle {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--theme-elevation-500);
+}
+
+.nav__link {
+  margin-inline: -10px;
+  padding: 6px 10px;
+  border-radius: var(--style-radius-m);
+  transition: background-color 0.15s, color 0.15s;
+
+  &:hover {
+    background: var(--theme-elevation-100);
+  }
+
+  &.active {
+    background: var(--cna-accent-soft);
+    color: var(--cna-accent);
+  }
+}
+
+// The pill replaces Payload's thin side marker.
+.nav__link-indicator {
+  display: none;
+}
+
+// Tabs (Basics / Content / Photos / SEO …)
+.tabs-field__tab-button:after {
+  background: var(--cna-accent);
+}
+
+// Form controls
+input:focus,
+textarea:focus,
+.field-type.textarea textarea:focus-within {
+  border-color: var(--cna-accent);
+}
+
+.checkbox-input--checked .checkbox-input__input {
+  background: var(--cna-accent);
+  border-color: var(--cna-accent);
+  color: var(--cna-on-accent);
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+  accent-color: var(--cna-accent);
+}
+
+:focus-visible {
+  outline-color: var(--cna-accent);
+}
+
+::selection {
+  background: var(--cna-accent);
+  color: var(--cna-on-accent);
+}
+
+// Dashboard: section headings in the display face with a short orange rule, like the site's
+// section headers, and cards that lift with an orange edge on hover.
+.collections__label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--cna-font-display);
+  font-size: 30px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+
+  &::before {
+    content: "";
+    width: 24px;
+    height: 3px;
+    border-radius: 2px;
+    background: var(--cna-accent);
+  }
+}
+
+.card {
+  min-height: 88px;
+  background: var(--theme-elevation-50);
+  border: 1px solid var(--theme-elevation-150);
+  border-radius: var(--style-radius-m);
+  transition: border-color 0.15s, transform 0.15s, box-shadow 0.15s;
+}
+
+.card__title {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.card--has-onclick:hover {
+  background: var(--theme-elevation-50);
+  border-color: var(--cna-accent);
+  box-shadow: inset 3px 0 0 var(--cna-accent);
+  transform: translateY(-2px);
+}
+
+.card__actions .btn__icon:hover {
+  border-color: var(--cna-accent);
+  color: var(--cna-accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card--has-onclick:hover {
+    transform: none;
+  }
+}
+
+// Login / account logo
+.cna-admin-logo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: var(--theme-text);
+
+  img {
+    width: 56px;
+    height: 56px;
+  }
+
+  strong {
+    display: block;
+    font-family: var(--cna-font-display);
+    font-size: 30px;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    line-height: 1;
+  }
+
+  span {
+    display: block;
+    margin-top: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--cna-accent);
+  }
+}
+
+.cna-admin-icon {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
