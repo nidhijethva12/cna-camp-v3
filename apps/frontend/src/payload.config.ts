@@ -2,6 +2,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { mongooseAdapter } from "@payloadcms/db-mongodb";
 import { nodemailerAdapter } from "@payloadcms/email-nodemailer";
+import { vercelBlobStorage } from "@payloadcms/storage-vercel-blob";
 import { lexicalEditor } from "@payloadcms/richtext-lexical";
 import { buildConfig } from "payload";
 import sharp from "sharp";
@@ -86,5 +87,16 @@ export default buildConfig({
   graphQL: { disable: true },
   upload: { limits: { fileSize: 10 * 1024 * 1024 } },
   sharp,
+  plugins: [
+    // Uploads go to Vercel Blob when its token is set (Vercel adds it when the store is connected);
+    // without it, files stay on local disk for development. Files are served straight from the
+    // Blob CDN, and the browser uploads directly so large phone photos skip Vercel's request-size limit.
+    vercelBlobStorage({
+      enabled: Boolean(process.env.BLOB_READ_WRITE_TOKEN),
+      token: process.env.BLOB_READ_WRITE_TOKEN,
+      collections: { media: { disablePayloadAccessControl: true } },
+      clientUploads: true,
+    }),
+  ],
   typescript: { outputFile: path.resolve(dirname, "payload-types.ts") },
 });

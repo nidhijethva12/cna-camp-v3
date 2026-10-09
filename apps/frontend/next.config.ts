@@ -32,6 +32,8 @@ const nextConfig: NextConfig = {
     formats: ["image/webp"],
     qualities: [90],
     localPatterns: [{ pathname: "/api/media/file/**" }, { pathname: "/img/**" }],
+    // Admin-uploaded photos are served from the Vercel Blob CDN.
+    remotePatterns: [{ protocol: "https", hostname: "*.public.blob.vercel-storage.com" }],
   },
   async headers() {
     return [
