@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { EnquiryForm } from "@/components/enquiry/EnquiryForm";
 import { PageHead } from "@/components/layout/PageHead";
-import { PhotoPlaceholder } from "@/components/media/Photo";
+import { ArrowRight } from "@/components/ui/icons";
 import { site } from "@/content/site";
 import { getSiteSettings, type SiteSettings } from "@/lib/content";
 
@@ -28,6 +28,8 @@ export default async function ContactPage() {
   return (
     <>
       <PageHead
+        img="cna/real/group-05"
+        imgAlt="CNA trip leaders talking with a group of campers at camp"
         eyebrow="Contact"
         title="Talk to a real person"
         text="Fill the form or reach us directly. Our team usually replies within a day, most often on WhatsApp."
@@ -47,20 +49,24 @@ export default async function ContactPage() {
                 <span className="mt-1 block break-all text-[19px] font-bold">{w.value}</span>
                 <span className="text-[14px] text-muted">{w.note}</span>
               </span>
-              <span aria-hidden="true">→</span>
+              <ArrowRight />
             </a>
           ))}
           <div className="overflow-hidden rounded-card border border-line">
-            <div className="relative aspect-[16/9]">
-              <PhotoPlaceholder label="Map of our Rajkot office" />
-            </div>
+            <iframe
+              src={`https://www.google.com/maps?q=${encodeURIComponent(contact.address.full)}&output=embed`}
+              title="Map of the CNA office in Rajkot"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              className="block aspect-[16/9] w-full border-0 bg-soft"
+            />
             <div className="p-5">
               <p className="eyebrow">Office</p>
               <p className="mt-2 font-semibold">{contact.address.full}</p>
               <p className="mt-1 text-[14px] text-muted">Visits by appointment. Please call before you come.</p>
               {contact.mapHref && (
                 <a href={contact.mapHref} target="_blank" rel="noopener" className="btn btn-outline mt-4">
-                  Open in Google Maps →
+                  Open in Google Maps <ArrowRight />
                 </a>
               )}
             </div>

@@ -1,3 +1,8 @@
+import type { FeatureIconName } from "@/components/ui/FeatureIcon";
+
+type Feature = [icon: FeatureIconName, title: string, text: string];
+type DateItem = { icon: FeatureIconName; label: string; value: string };
+
 // Adventure Olympiad 2026 details from the approved design. Editable in the CMS later.
 export const olympiad = {
   name: "Adventure Olympiad 1.0",
@@ -11,26 +16,26 @@ export const olympiad = {
   closes: "2026-06-20T23:59:00+05:30",
   dates: [
     {
-      icon: "📝",
+      icon: "notePencil",
       label: "Registration opens",
       value: "02 April 2026, 12:59 PM"
     },
     {
-      icon: "⏰",
+      icon: "alarm",
       label: "Registration closes",
       value: "20 June 2026, 11:59 PM"
     },
     {
-      icon: "📚",
+      icon: "exam",
       label: "Round 1 — Eco-STEM quiz",
       value: "Early July 2026"
     },
     {
-      icon: "⛰",
+      icon: "mountains",
       label: "Astro Adventure Camp, Manali",
       value: "Dates after the final merit list"
     }
-  ],
+  ] satisfies DateItem[],
   fees: [
     {
       fee: 90,
@@ -76,26 +81,26 @@ export const olympiad = {
   ],
   pillars: [
     [
-      "🌳",
+      "tree",
       "Environment education",
       "Learn conservation through nature."
     ],
     [
-      "🔭",
+      "planet",
       "Astronomy & STEM",
       "Star gazing, space awareness and hands-on activities."
     ],
     [
-      "🥾",
+      "boot",
       "Adventure activities",
       "Trekking, rafting and rock climbing."
     ],
     [
-      "💪",
+      "flag",
       "Leadership & life skills",
       "Experiential learning, as NEP recommends."
     ]
-  ],
+  ] satisfies Feature[],
   groups: [
     {
       g: "A",
@@ -128,26 +133,26 @@ export const olympiad = {
   ],
   steps: [
     [
-      "📝",
+      "notePencil",
       "Register & pay online",
       "Read the rules, pay the registration fee online, then fill the Google Form with your payment screenshot and submit."
     ],
     [
-      "📚",
+      "exam",
       "Take the Eco-STEM quiz",
       "100 MCQs, 100 marks, 60 minutes. Rounds 1-3 are online. Rounds 4-5 are offline, with basic training camps in Gujarat."
     ],
     [
-      "🏆",
+      "trophy",
       "Merit list & documents",
       "Final merit uses the quiz plus other achievements (NMMS, science fairs, sports). Selected students submit a medical certificate and parental consent within 10 days."
     ],
     [
-      "⛰",
+      "mountains",
       "Manali adventure camp",
       "Ahmedabad to Ahmedabad travel (rail/bus), hotel or tent stay, pure vegetarian meals, trekking, rafting, astronomy, STEM sessions and a certificate."
     ]
-  ],
+  ] satisfies Feature[],
   quiz: [
     [
       "Type",
@@ -232,53 +237,59 @@ export const olympiad = {
     }
   ],
   scholarshipRule: "You can apply for only ONE scholarship. Applying for both means automatic disqualification. Once selected, your choice cannot be changed. Scholarships are non-transferable and not paid in cash. The organiser’s decision is final.",
+  campPhotos: [
+    { img: "cna/real/campus-03", caption: "Our Manali campus", alt: "CNA’s Manali campus buildings with snow peaks behind" },
+    { img: "cna/real/river-01", caption: "River crossing", alt: "Campers crossing a river on a wooden bridge near Manali" },
+    { img: "cna/real/climb-03", caption: "Rappelling day", alt: "A camper rappelling down a rock face on a rope" },
+    { img: "cna/real/snow-02", caption: "Snow day", alt: "Campers walking up a snowy mountain road in warm layers" },
+  ],
   included: [
     [
-      "🚌",
+      "bus",
       "Travel (Ahmedabad–Ahmedabad)",
       "Round trip from Ahmedabad by rail/bus. Bring your own dry snacks: meals are not provided during travel."
     ],
     [
-      "🏠",
+      "tent",
       "Hotel / tent stay",
       "Stay in hotels or tents in Manali, surrounded by the Himalaya."
     ],
     [
-      "🍽",
+      "forkKnife",
       "Pure vegetarian meals",
       "Breakfast, lunch and dinner, checked by instructors. Tell us about special dietary needs in advance."
     ],
     [
-      "🥾",
+      "boot",
       "Hiking & snow trekking",
       "Guided mountain and snow treks with trained instructors, following safety protocols."
     ],
     [
-      "🌊",
+      "waves",
       "River rafting & rock climbing",
       "Supervised by certified instructors. Insurance provided for selected students."
     ],
     [
-      "🔭",
+      "planet",
       "Astro & STEM activities",
       "Night sky observation, telescope sessions, STEM learning and workshops."
     ],
     [
-      "🧘",
+      "lotus",
       "Yoga & meditation",
       "Scientific and suitable methods of yoga and meditation."
     ],
     [
-      "🎓",
+      "chalkboard",
       "Expert guest lectures",
       "Space, science, maths, environment, law, technology, cyber crime, art and social topics."
     ],
     [
-      "📜",
+      "certificate",
       "Certificate of achievement",
       "Participation and achievement certificate from Climber Nature Adventure Club."
     ]
-  ],
+  ] satisfies Feature[],
   regions: [
     "Saurashtra",
     "Kutch",

@@ -6,6 +6,7 @@ export interface GroupKind {
   who: string;
   text: string;
   img: PhotoKey;
+  alt: string;
   popular: string;
 }
 
@@ -15,7 +16,8 @@ export const groupKinds: GroupKind[] = [
     title: "School groups",
     who: "Std 9 and above",
     text: "Outdoor learning camps planned with teachers: nature sessions (EVS), adventure activities and a clear daily plan. Minimum 50 students; 1 teacher travels free with every 25 students.",
-    img: "stock/aud-school",
+    img: "cna/real/group-10",
+    alt: "A boys’ batch with their bags outside a wooden hut in Himachal",
     popular: "Marine Camp · Hingolgadh · Sasan Gir",
   },
   {
@@ -23,7 +25,8 @@ export const groupKinds: GroupKind[] = [
     title: "College & university",
     who: "All years",
     text: "Treks and adventure camps for clubs, NSS/NCC units and class trips. Fun first, fully organised.",
-    img: "meadow",
+    img: "cna/real/group-11",
+    alt: "A group of campers cheering together in a deodar forest",
     popular: "Manali · Grand Uttaranchal · Sikkim",
   },
   {
@@ -31,7 +34,8 @@ export const groupKinds: GroupKind[] = [
     title: "Families",
     who: "All ages welcome",
     text: "Easy camps and nature trails where kids and grandparents both have a good time.",
-    img: "stock/nainital-mussoorie-corbett",
+    img: "cna/real/food-04",
+    alt: "Campers being served lunch with snow peaks behind, Manali",
     popular: "Kerala · Nainital · Gir & Diu",
   },
   {
@@ -39,7 +43,8 @@ export const groupKinds: GroupKind[] = [
     title: "Friends & youth groups",
     who: "Join as a group",
     text: "Pick your dates and your kind of adventure. We handle travel, stay, food, leaders and activities.",
-    img: "river",
+    img: "cna/real/river-02",
+    alt: "A group of campers crossing a mountain river together",
     popular: "Ladakh · Manali Snow Camp · Goa",
   },
   {
@@ -47,7 +52,8 @@ export const groupKinds: GroupKind[] = [
     title: "Corporate teams",
     who: "Custom dates",
     text: "Team outings with real challenge: treks, rock climbing, rafting and camp nights away from screens.",
-    img: "stock/grand-uttaranchal-trek",
+    img: "cna/real/climb-03",
+    alt: "A camper rappelling down a rock face on a rope",
     popular: "Osam Hill · Mount Abu · Manali",
   },
   {
@@ -55,7 +61,8 @@ export const groupKinds: GroupKind[] = [
     title: "Teachers, NGOs & clubs",
     who: "Custom dates",
     text: "Nature education and adventure camps for teacher groups, NGOs, scouts and clubs.",
-    img: "stock/campus-hingolgadh",
+    img: "cna/real/group-05",
+    alt: "Camp leaders talking to a group of young campers",
     popular: "Hingolgadh · Bet Dwarka · Saputara",
   },
 ];
@@ -88,21 +95,24 @@ export const travellerKinds = [
     id: "girls",
     title: "Girls-only batches",
     tag: "For girls & women",
-    img: "river",
+    img: "cna/real/group-08",
+    alt: "A girls’ group holding up a sign on a CNA trip",
     points: ["Batches only for girls and women", "Separate stay at every camp", "Female volunteers with every girls’ group", "Regular updates to family"],
   },
   {
     id: "solo",
     title: "Solo travellers",
     tag: "18 years and above",
-    img: "stock/aud-solo",
+    img: "cna/real/trek-03",
+    alt: "Walking through a tall deodar forest near Manali",
     points: ["Join any open batch alone", "We pair you with tent-mates", "Group activities from day one", "Leave with new trail friends"],
   },
   {
     id: "first",
     title: "First-timers",
     tag: "Never trekked before?",
-    img: "meadow",
+    img: "cna/real/campus-02",
+    alt: "Blue tents on a green meadow, Manali",
     points: ["Pick an Easy trip", "We teach camp basics on day one", "Trained leaders set the pace", "Gear list shared before you go"],
   },
 ];

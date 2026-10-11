@@ -15,7 +15,13 @@ export default async function BlogPage() {
 
   return (
     <>
-      <PageHead eyebrow="Blog" title="Stories from the trail" text="Trip stories, packing tips and nature notes from the CNA team." />
+      <PageHead
+        img="cna/real/trek-02"
+        imgAlt="A line of trekkers walking up a green Himalayan hillside"
+        eyebrow="Blog"
+        title="Stories from the trail"
+        text="Trip stories, packing tips and nature notes from the CNA team."
+      />
       <section className="wrap mt-12">
         {posts.length ? (
           <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

@@ -116,7 +116,7 @@ export const campuses: Campus[] = [
     place: "Vashisht, Manali",
     state: "Himachal Pradesh",
     own: "Our own campus",
-    img: "peaks",
+    img: "cna/real/campus-03",
     stay: "Swiss tents & hotel rooms",
     capacity: "200 people",
     facilities: ["Attached toilets", "Drinking water", "Meals", "First aid"],

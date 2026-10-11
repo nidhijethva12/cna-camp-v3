@@ -5,6 +5,8 @@ import { GroupFinder } from "@/components/olympiad/GroupFinder";
 import { Photo } from "@/components/media/Photo";
 import { CountUp } from "@/components/ui/CountUp";
 import { FaqList } from "@/components/ui/FaqList";
+import { FeatureIcon } from "@/components/ui/FeatureIcon";
+import { ArrowDown, ArrowRight, CheckCircle, Clock, Leaf, MapPin, SealCheck, Star, Trophy, Warning, WarningCircle } from "@/components/ui/icons";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { olympiad as o } from "@/content/olympiad";
 import { site } from "@/content/site";
@@ -43,19 +45,20 @@ export default async function OlympiadPage() {
   const contact = await getSiteSettings();
   const whatsappUpdates = whatsappLink(contact.whatsappNumber, "Hi CNA, please send me Adventure Olympiad updates.");
   const status = registrationStatus();
-  const cta = status === "open" ? { href: o.formUrl, label: "Register now · from ₹90 →" } : { href: whatsappUpdates, label: "Get Olympiad updates on WhatsApp →" };
+  const cta = status === "open" ? { href: o.formUrl, label: "Register now · from ₹90" } : { href: whatsappUpdates, label: "Get Olympiad updates on WhatsApp" };
   const pdfs = { lavkumarPdf: o.lavkumarPdf, ketankumarPdf: o.ketankumarPdf } as const;
 
   return (
     <>
       <section className="relative isolate overflow-hidden bg-dark text-light">
         <div className="kenburns absolute inset-0 -z-10 overflow-hidden opacity-80">
-          <Photo img="peaks" wide preload sizes="100vw" alt="Snow peaks above a green Himalayan valley near Manali" />
+          <Photo img="cna/real/land-02" wide preload sizes="100vw" alt="Sunrise on snow peaks above the Manali valley, Himachal Pradesh" />
         </div>
         <div className="absolute inset-0 -z-10 bg-linear-to-r from-dark/92 via-dark/55 via-60% to-dark/30" />
         <div className="wrap py-20 sm:py-28">
           <p className="inline-flex items-center gap-2 rounded-tag bg-secondary px-3 py-1.5 font-mono text-[11.5px] font-medium uppercase tracking-[.1em] text-dark">
-            ★ {o.tagline}
+            <Star className="text-[13px]" />
+            {o.tagline}
           </p>
           <h1 className="h-page mt-5 max-w-4xl">{o.name}</h1>
           <p className="mt-2 font-mono text-[12.5px] uppercase tracking-[.14em] text-secondary">Eco-STEM online quiz · Mountain · Desert · Marine</p>
@@ -70,13 +73,13 @@ export default async function OlympiadPage() {
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <a href={cta.href} target="_blank" rel="noopener" className="btn btn-primary">
-              {cta.label}
+              {cta.label} <ArrowRight />
             </a>
             <a href={o.rulesPdf} target="_blank" rel="noopener" className="btn btn-outline-light">
               Rules &amp; regulations (PDF)
             </a>
             <a href="#how" className="btn border-transparent text-light/80 hover:bg-light/10">
-              How it works ↓
+              How it works <ArrowDown />
             </a>
           </div>
           <p className="mt-5 text-[13px] text-light/60">Follows the State Government of Gujarat guidelines for environment education trips.</p>
@@ -133,10 +136,8 @@ export default async function OlympiadPage() {
         <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {o.dates.map((d, i) => (
             <li key={d.label} className="relative rounded-card border border-line p-5">
-              <span className="text-[26px]" aria-hidden="true">
-                {d.icon}
-              </span>
-              <p className="mt-3 font-mono text-[11px] uppercase tracking-[.08em] text-muted">{d.label}</p>
+              <FeatureIcon name={d.icon} tone={i === o.dates.length - 1 ? "accent" : "light"} />
+              <p className="mt-4 font-mono text-[11px] uppercase tracking-[.08em] text-muted">{d.label}</p>
               <p className="mt-1 text-[18px] font-bold">{d.value}</p>
               {i < 3 && <span className="absolute -right-3 top-1/2 hidden h-px w-6 border-t-2 border-dashed border-line lg:block" aria-hidden="true" />}
             </li>
@@ -169,10 +170,8 @@ export default async function OlympiadPage() {
           <div className="grid gap-4 sm:grid-cols-2">
             {o.pillars.map(([icon, title, text]) => (
               <div key={title} className="rounded-card border border-line bg-light p-5">
-                <span className="text-[28px]" aria-hidden="true">
-                  {icon}
-                </span>
-                <h3 className="mt-3 text-[19px] leading-normal">{title}</h3>
+                <FeatureIcon name={icon} />
+                <h3 className="mt-4 text-[19px] leading-normal">{title}</h3>
                 <p className="mt-1 text-[15px] text-muted">{text}</p>
               </div>
             ))}
@@ -181,7 +180,7 @@ export default async function OlympiadPage() {
               <p className="display mt-1 text-[30px]">Astro Adventure Trekking Camp 2026-27</p>
               <p className="mt-1 text-light/70">Manali · Himachal Pradesh · ₹18,000 camp fee</p>
               <Link href="/trips/astro-adventure-manali" className="mt-4 inline-block font-semibold text-secondary underline">
-                See the camp →
+                See the camp <ArrowRight />
               </Link>
             </div>
           </div>
@@ -223,9 +222,7 @@ export default async function OlympiadPage() {
             <li key={title} className="rounded-card border border-line p-6">
               <div className="flex items-center justify-between">
                 <span className="display text-[44px] leading-none text-primary">0{i + 1}</span>
-                <span className="text-[28px]" aria-hidden="true">
-                  {icon}
-                </span>
+                <FeatureIcon name={icon} />
               </div>
               <h3 className="mt-4 text-[20px] leading-normal">{title}</h3>
               <p className="mt-2 text-[15px] text-muted">{text}</p>
@@ -261,7 +258,10 @@ export default async function OlympiadPage() {
               </dl>
             </div>
             <div>
-              <p className="eyebrow text-light/60!">🏆 Five rounds of selection</p>
+              <p className="eyebrow flex items-center gap-2 text-light/60!">
+                <Trophy className="text-[16px] text-secondary" />
+                Five rounds of selection
+              </p>
               <ol className="mt-5 border-l-2 border-dashed border-light/20 pl-6">
                 {o.rounds.map(([round, title, mode]) => (
                   <li key={round} className="relative pb-6">
@@ -273,7 +273,9 @@ export default async function OlympiadPage() {
                   </li>
                 ))}
                 <li className="relative">
-                  <span className="absolute -left-[33px] top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-secondary text-[10px] text-dark">★</span>
+                  <span className="absolute -left-[35px] top-0 flex h-5 w-5 items-center justify-center rounded-full bg-secondary text-[11px] text-dark">
+                    <Star />
+                  </span>
                   <p className="text-[17px] font-bold text-secondary">{o.roundsResult}</p>
                 </li>
               </ol>
@@ -288,7 +290,11 @@ export default async function OlympiadPage() {
       <section id="scholarships" className="wrap mt-24 scroll-mt-28">
         <SectionHeader
           eyebrow="Scholarships"
-          title="Dedicated to two Lamps of Nature 🌿"
+          title={
+            <>
+              Dedicated to two Lamps of Nature <Leaf className="text-success" />
+            </>
+          }
           intro={`Your scholarship percentage applies to the ₹${o.campFee.toLocaleString("en-IN")} camp fee.`}
         />
         <div className="grid gap-6 lg:grid-cols-2">
@@ -305,22 +311,20 @@ export default async function OlympiadPage() {
                 <ul className="mt-4 space-y-1.5 text-[15px]">
                   {s.points.map((p) => (
                     <li key={p} className="flex gap-2">
-                      <span className="text-success">✓</span>
+                      <CheckCircle className="mt-[3px] text-[18px] text-success" />
                       {p}
                     </li>
                   ))}
                 </ul>
                 <a href={pdfs[s.pdf]} target="_blank" rel="noopener" className="mt-5 self-start font-semibold text-primary underline">
-                  {s.pdfLabel} (PDF) →
+                  {s.pdfLabel} (PDF) <ArrowRight />
                 </a>
               </div>
             </article>
           ))}
         </div>
         <p className="mt-6 flex gap-3 rounded-card border border-primary bg-primary-soft p-5 text-[15px]">
-          <span className="text-[20px]" aria-hidden="true">
-            ⚠
-          </span>
+          <Warning className="mt-0.5 text-[20px] text-primary" />
           <span>
             <strong>Important:</strong> {o.scholarshipRule}
           </span>
@@ -335,12 +339,20 @@ export default async function OlympiadPage() {
             intro="Astro Adventure Trekking Camp: everything organised by qualified instructors."
             action={{ label: "Camp page", href: "/trips/astro-adventure-manali" }}
           />
+          <ul className="mb-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
+            {o.campPhotos.map((p) => (
+              <li key={p.img} className="group relative aspect-[4/3] overflow-hidden rounded-card bg-dark">
+                <Photo img={p.img} alt={p.alt} sizes="(min-width: 1024px) 290px, 50vw" className="transition duration-700 group-hover:scale-[1.04]" />
+                <div className="absolute inset-x-0 bottom-0 bg-linear-to-b from-transparent to-dark/80 p-3 pt-10">
+                  <p className="font-mono text-[11px] uppercase tracking-[.1em] text-light">{p.caption}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {o.included.map(([icon, title, text]) => (
               <div key={title} className="flex gap-4 rounded-card bg-light p-5">
-                <span className="text-[26px]" aria-hidden="true">
-                  {icon}
-                </span>
+                <FeatureIcon name={icon} />
                 <div>
                   <h3 className="text-[18px] leading-normal">{title}</h3>
                   <p className="mt-1 text-[15px] text-muted">{text}</p>
@@ -349,9 +361,7 @@ export default async function OlympiadPage() {
             ))}
           </div>
           <div className="mt-6 flex flex-col gap-4 rounded-card bg-dark p-6 text-light sm:flex-row sm:items-center">
-            <span className="text-[34px]" aria-hidden="true">
-              📵
-            </span>
+            <FeatureIcon name="noPhone" tone="accent" size="lg" />
             <div>
               <p className="display text-[28px]">Unplug. Explore. Discover.</p>
               <p className="mt-1 text-light/70">
@@ -372,8 +382,9 @@ export default async function OlympiadPage() {
           </div>
           <ul className="flex flex-wrap gap-2">
             {o.regions.map((d) => (
-              <li key={d} className="rounded-card bg-soft px-4 py-2.5 font-semibold">
-                📍 {d}
+              <li key={d} className="flex items-center gap-2 rounded-card bg-soft px-4 py-2.5 font-semibold">
+                <MapPin className="text-primary" />
+                {d}
               </li>
             ))}
           </ul>
@@ -384,22 +395,28 @@ export default async function OlympiadPage() {
         <SectionHeader eyebrow="Requirements" title="Eligibility & important rules" action={{ label: "Full rules (PDF)", href: o.rulesPdf }} />
         <div className="grid gap-6 lg:grid-cols-2">
           <div className="rounded-card border border-line p-6">
-            <h3 className="text-[22px] leading-normal">✅ Eligibility</h3>
+            <h3 className="flex items-center gap-2 text-[22px] leading-normal">
+              <SealCheck className="text-success" />
+              Eligibility
+            </h3>
             <ul className="mt-4 space-y-3">
               {o.eligibility.map((x) => (
                 <li key={x} className="flex gap-3">
-                  <span className="text-success">✓</span>
+                  <CheckCircle className="mt-[3px] text-[18px] text-success" />
                   {x}
                 </li>
               ))}
             </ul>
           </div>
           <div className="rounded-card border border-primary p-6">
-            <h3 className="text-[22px] leading-normal">⚠ Important rules</h3>
+            <h3 className="flex items-center gap-2 text-[22px] leading-normal">
+              <Warning className="text-primary" />
+              Important rules
+            </h3>
             <ul className="mt-4 space-y-3">
               {o.rules.map((x) => (
                 <li key={x} className="flex gap-3">
-                  <span className="font-bold text-primary">!</span>
+                  <WarningCircle className="mt-[3px] text-[18px] text-primary" />
                   {x}
                 </li>
               ))}
@@ -429,7 +446,10 @@ export default async function OlympiadPage() {
             <Photo img="valley" wide sizes="(min-width: 1240px) 1176px, 100vw" />
           </div>
           <div className="relative">
-            <p className="font-mono text-[12px] uppercase tracking-[.14em] text-secondary">⏰ {statusText[status]}</p>
+            <p className="flex items-center gap-2 font-mono text-[12px] uppercase tracking-[.14em] text-secondary">
+              <Clock className="text-[15px]" />
+              {statusText[status]}
+            </p>
             <h2 className="h-section mt-3 max-w-2xl">Ready for the adventure of a lifetime?</h2>
             <p className="mt-3 max-w-xl text-light/75">Score high on the Eco-STEM quiz and earn your scholarship to Manali.</p>
             <div className="mt-6 flex flex-wrap gap-x-8 gap-y-3">
@@ -440,7 +460,7 @@ export default async function OlympiadPage() {
               ))}
             </div>
             <a href={cta.href} target="_blank" rel="noopener" className="btn btn-primary mt-8">
-              {cta.label}
+              {cta.label} <ArrowRight />
             </a>
             <p className="mt-4 text-[13px] text-light/55">All disputes subject to Rajkot jurisdiction.</p>
           </div>

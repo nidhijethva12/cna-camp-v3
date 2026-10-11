@@ -3,6 +3,7 @@ import Link from "next/link";
 import { PageHead } from "@/components/layout/PageHead";
 import { Photo } from "@/components/media/Photo";
 import { TripCard } from "@/components/trips/TripCard";
+import { ArrowRight, CheckCircle } from "@/components/ui/icons";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { travellerKinds } from "@/content/groups";
 import { getSiteSettings, getTrips } from "@/lib/content";
@@ -20,7 +21,8 @@ export default async function TravellersPage() {
   return (
     <>
       <PageHead
-        img="river"
+        img="cna/real/group-01"
+        imgAlt="A group of girls smiling together on a CNA trip in Himachal"
         eyebrow="Girls-only & solo"
         title="Come with your girl gang. Or come alone."
         text="Girls-only batches, solo-friendly trips and easy first adventures. You will not be alone for long."
@@ -32,7 +34,7 @@ export default async function TravellersPage() {
           {travellerKinds.map((k) => (
             <article key={k.id} id={k.id} className="scroll-mt-28 overflow-hidden rounded-card border border-line">
               <div className="relative aspect-[16/10] bg-soft">
-                <Photo img={k.img} alt={k.title} sizes="(min-width: 768px) 400px, 100vw" />
+                <Photo img={k.img} alt={k.alt} sizes="(min-width: 768px) 400px, 100vw" />
                 <span className="tag absolute left-3 top-3 border-secondary bg-secondary text-dark">{k.tag}</span>
               </div>
               <div className="p-6">
@@ -40,7 +42,7 @@ export default async function TravellersPage() {
                 <ul className="mt-4 space-y-2">
                   {k.points.map((p) => (
                     <li key={p} className="flex gap-3 text-muted">
-                      <span className="text-primary">✓</span>
+                      <CheckCircle className="mt-[3px] text-[18px] text-primary" />
                       {p}
                     </li>
                   ))}
@@ -68,7 +70,7 @@ export default async function TravellersPage() {
           </div>
           <div className="flex flex-wrap gap-3">
             <Link href="/group-trips#custom" className="btn btn-primary">
-              Plan a trip →
+              Plan a trip <ArrowRight />
             </Link>
             <a href={contact.whatsappHref} target="_blank" rel="noopener" className="btn btn-outline-light">
               WhatsApp

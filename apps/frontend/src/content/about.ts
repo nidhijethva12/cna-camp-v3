@@ -1,3 +1,6 @@
+import type { FeatureIconName } from "@/components/ui/FeatureIcon";
+import type { PhotoKey } from "@/types/content";
+
 export const mission = {
   line: "Bring people closer to nature, through adventure.",
   text: "CNA is an eco-tourism club, not a sightseeing company. Every camp is built around a nature experience: walking a coral reef at low tide, reading the night sky, crossing a Himalayan river, watching birds at dawn. Adventure activities are the way in. Respect for nature is what people take home.",
@@ -119,11 +122,35 @@ export const ecoPrinciples = [
   ["Support conservation", "Campers learn what is being done to protect each place, and how to help."],
 ];
 
-export const campLife = [
-  ["☀️", "A day at camp", "Activities start after breakfast. We come back to camp for lunch and a short rest, then head out again and return before dinner. On full-day programmes we carry packed lunch."],
-  ["⛺", "Where you stay", "Hotels where they exist (about 5 people per room) or tents for 2, 4, 6 or 10 people. Where both are possible, the group leader chooses before the camp."],
-  ["🍽", "Food", "Vegetarian meals planned with your group leader: two breakfast options, hot drinks, and Gujarati, Punjabi, South Indian, Rajasthani or Chinese for lunch and dinner. Journey food on request."],
-  ["🚆", "Getting there", "Your group chooses train, bus, car or air. Travel cost follows the market rate at the time of booking."],
+export const campLife: { icon: FeatureIconName; title: string; text: string; img: PhotoKey; alt: string }[] = [
+  {
+    icon: "sun",
+    title: "A day at camp",
+    text: "Activities start after breakfast. We come back to camp for lunch and a short rest, then head out again and return before dinner. On full-day programmes we carry packed lunch.",
+    img: "cna/real/group-05",
+    alt: "Camp leaders briefing a group of campers before an activity",
+  },
+  {
+    icon: "tent",
+    title: "Where you stay",
+    text: "Hotels where they exist (about 5 people per room) or tents for 2, 4, 6 or 10 people. Where both are possible, the group leader chooses before the camp.",
+    img: "cna/real/campus-01",
+    alt: "Campers seated on the terrace of CNA’s Manali campus, mountains behind",
+  },
+  {
+    icon: "forkKnife",
+    title: "Food",
+    text: "Vegetarian meals planned with your group leader: two breakfast options, hot drinks, and Gujarati, Punjabi, South Indian, Rajasthani or Chinese for lunch and dinner. Journey food on request.",
+    img: "cna/real/food-04",
+    alt: "Campers being served lunch with snow peaks behind, Manali",
+  },
+  {
+    icon: "train",
+    title: "Getting there",
+    text: "Your group chooses train, bus, car or air. Travel cost follows the market rate at the time of booking.",
+    img: "cna/real/travel-01",
+    alt: "Smiling campers taking a selfie on the bus",
+  },
 ];
 
 export const safetyPoints = [

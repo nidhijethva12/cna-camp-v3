@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PageHead } from "@/components/layout/PageHead";
 import { TripCard } from "@/components/trips/TripCard";
 import { TripFilters } from "@/components/trips/TripFilters";
 import { regionOrder, regions } from "@/content/site";
@@ -18,15 +19,13 @@ export default async function TripsPage() {
 
   return (
     <>
-      <section className="topo border-b border-line bg-soft">
-        <div className="wrap py-14">
-          <p className="eyebrow">Treks &amp; camps</p>
-          <h1 className="h-page mt-3">Find your trip</h1>
-          <p className="mt-4 max-w-2xl text-[17px] text-muted">
-            {trips.length} trips across Gujarat, the Himalaya, North-East and the rest of India. Filter by region, type, month or level.
-          </p>
-        </div>
-      </section>
+      <PageHead
+        img="cna/real/trek-03"
+        imgAlt="Campers walking in a line through a deodar forest near Manali"
+        eyebrow="Treks & camps"
+        title="Find your trip"
+        text={`${trips.length} trips across Gujarat, the Himalaya, North-East and the rest of India. Filter by region, type, month or level.`}
+      />
       <section className="wrap mt-8">
         <TripFilters
           regionOptions={regionOrder.map((r) => ({ value: r, label: regions[r].label }))}

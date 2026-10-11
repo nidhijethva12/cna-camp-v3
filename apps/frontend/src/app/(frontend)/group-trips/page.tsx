@@ -4,6 +4,7 @@ import { PageHead } from "@/components/layout/PageHead";
 import { Photo } from "@/components/media/Photo";
 import { TripCard } from "@/components/trips/TripCard";
 import { CountUp } from "@/components/ui/CountUp";
+import { ArrowRight, CheckCircle, Phone, WhatsApp } from "@/components/ui/icons";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { groupBookingSteps, groupFavourites, groupInclusions, groupKinds } from "@/content/groups";
 import { yearsActive } from "@/content/site";
@@ -23,14 +24,15 @@ export default async function GroupTripsPage() {
   return (
     <>
       <PageHead
-        img="river"
+        img="cna/real/group-04"
+        imgAlt="A large group of CNA campers sitting together in a Himalayan forest"
         eyebrow="Group trips"
         title="Your group. Your dates. We plan the rest."
         text="Custom treks, camps and nature trails for schools, colleges, families, friends, companies and clubs. From Gujarat to the Himalaya."
       >
         <div className="mt-8 flex flex-wrap gap-3">
           <a href="#custom" className="btn btn-primary">
-            Plan a custom trip →
+            Plan a custom trip <ArrowRight />
           </a>
           <a href={contact.whatsappHref} target="_blank" rel="noopener" className="btn btn-outline-light">
             WhatsApp us
@@ -44,7 +46,7 @@ export default async function GroupTripsPage() {
           {groupKinds.map((k) => (
             <article key={k.id} id={k.id} className="flex scroll-mt-28 flex-col overflow-hidden rounded-card border border-line">
               <div className="relative aspect-[16/10] bg-soft">
-                <Photo img={k.img} alt={k.title} sizes="(min-width: 1024px) 400px, (min-width: 640px) 50vw, 100vw" />
+                <Photo img={k.img} alt={k.alt} sizes="(min-width: 1024px) 400px, (min-width: 640px) 50vw, 100vw" />
                 <span className="tag absolute left-3 top-3 border-secondary bg-secondary text-dark">{k.who}</span>
               </div>
               <div className="flex flex-1 flex-col p-6">
@@ -72,7 +74,7 @@ export default async function GroupTripsPage() {
             </div>
             <div className="flex flex-wrap gap-3 lg:justify-end">
               <a href="#custom" className="btn bg-light text-dark hover:bg-dark hover:text-light">
-                Plan a school trip →
+                Plan a school trip <ArrowRight />
               </a>
               <a href={contact.whatsappHref} target="_blank" rel="noopener" className="btn btn-outline-light">
                 WhatsApp
@@ -101,7 +103,7 @@ export default async function GroupTripsPage() {
             <ul className="grid gap-3 sm:grid-cols-2">
               {groupInclusions.map((h) => (
                 <li key={h} className="flex gap-3 rounded-card bg-light p-4">
-                  <span className="text-primary">✓</span>
+                  <CheckCircle className="mt-[3px] text-[18px] text-primary" />
                   {h}
                 </li>
               ))}
@@ -142,11 +144,16 @@ export default async function GroupTripsPage() {
           </p>
           <div className="mt-8 space-y-3">
             <a href={contact.phoneHref} className="flex items-center justify-between rounded-card border border-line p-4 hover:border-dark">
-              <span>
-                <span className="eyebrow block">Call</span>
-                <span className="font-bold">{contact.phone}</span>
+              <span className="flex items-center gap-4">
+                <span className="flex h-11 w-11 items-center justify-center rounded-full bg-primary-soft text-[20px] text-primary">
+                  <Phone />
+                </span>
+                <span>
+                  <span className="eyebrow block">Call</span>
+                  <span className="font-bold">{contact.phone}</span>
+                </span>
               </span>
-              →
+              <ArrowRight className="text-[18px]" />
             </a>
             <a
               href={contact.whatsappHref}
@@ -154,11 +161,16 @@ export default async function GroupTripsPage() {
               rel="noopener"
               className="flex items-center justify-between rounded-card border border-line p-4 hover:border-dark"
             >
-              <span>
-                <span className="eyebrow block">WhatsApp</span>
-                <span className="font-bold">Chat with us</span>
+              <span className="flex items-center gap-4">
+                <span className="flex h-11 w-11 items-center justify-center rounded-full bg-whatsapp/10 text-[22px] text-whatsapp-dark">
+                  <WhatsApp />
+                </span>
+                <span>
+                  <span className="eyebrow block">WhatsApp</span>
+                  <span className="font-bold">Chat with us</span>
+                </span>
               </span>
-              →
+              <ArrowRight className="text-[18px]" />
             </a>
           </div>
         </div>

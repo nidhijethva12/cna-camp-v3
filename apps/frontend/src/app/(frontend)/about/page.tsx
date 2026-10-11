@@ -4,6 +4,8 @@ import { PageHead } from "@/components/layout/PageHead";
 import { Photo } from "@/components/media/Photo";
 import { CountUp } from "@/components/ui/CountUp";
 import { FaqList } from "@/components/ui/FaqList";
+import { FeatureIcon } from "@/components/ui/FeatureIcon";
+import { ArrowRight, CheckCircle } from "@/components/ui/icons";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { campLife, different, ecoPrinciples, founder, mission, safetyPoints, storyParagraphs, teamRoles } from "@/content/about";
 import { site, yearsActive } from "@/content/site";
@@ -34,7 +36,8 @@ export default async function AboutPage() {
   return (
     <>
       <PageHead
-        img="meadow"
+        img="cna/real/campus-04"
+        imgAlt="CNA’s Manali campus ground with snow peaks behind"
         eyebrow="About CNA"
         title="A nature club that takes you outdoors. Since 1997."
         text={`Climber Nature Adventure Club (CNA) is an eco-tourism and adventure club from Rajkot. Backed by ${site.trust.name}.`}
@@ -61,9 +64,9 @@ export default async function AboutPage() {
         </div>
         <figure>
           <div className="relative aspect-[4/5] overflow-hidden rounded-card">
-            <Photo img="river" alt="A CNA group crossing a Himalayan river together" sizes="(min-width: 1024px) 590px, 100vw" />
+            <Photo img="cna/real/river-01" alt="CNA campers crossing a river on a wooden bridge near Manali" sizes="(min-width: 1024px) 590px, 100vw" />
           </div>
-          <figcaption className="mt-3 font-mono text-[11.5px] uppercase tracking-[.08em] text-muted">A CNA group on the trail</figcaption>
+          <figcaption className="mt-3 font-mono text-[11.5px] uppercase tracking-[.08em] text-muted">A CNA group crossing a river, Manali</figcaption>
         </figure>
       </section>
 
@@ -103,7 +106,7 @@ export default async function AboutPage() {
             <ul className="grid gap-3 sm:grid-cols-2">
               {ecoPrinciples.map(([title, text]) => (
                 <li key={title} className="flex gap-3">
-                  <span className="mt-1 text-primary">✓</span>
+                  <CheckCircle className="mt-[3px] text-[18px] text-primary" />
                   <span>
                     <strong>{title}.</strong> <span className="text-muted">{text}</span>
                   </span>
@@ -121,14 +124,17 @@ export default async function AboutPage() {
           intro="The same simple rhythm since 1997: adventure by day, good food, rest, and the outdoors all around."
         />
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-          {campLife.map(([icon, title, text]) => (
-            <div key={title} className="rounded-card border border-line p-6">
-              <span className="text-[28px]" aria-hidden="true">
-                {icon}
-              </span>
-              <h3 className="h-card mt-3">{title}</h3>
-              <p className="mt-2 text-[15px] text-muted">{text}</p>
-            </div>
+          {campLife.map((c) => (
+            <article key={c.title} className="group flex flex-col overflow-hidden rounded-card border border-line transition-colors hover:border-primary">
+              <div className="relative aspect-[4/3] overflow-hidden bg-soft">
+                <Photo img={c.img} alt={c.alt} sizes="(min-width: 1280px) 290px, (min-width: 768px) 50vw, 100vw" className="transition duration-700 group-hover:scale-[1.04]" />
+              </div>
+              <div className="relative flex-1 px-6 pb-6">
+                <FeatureIcon name={c.icon} tone="soft" className="-mt-6 transition-colors group-hover:bg-primary group-hover:text-light" />
+                <h3 className="h-card mt-4">{c.title}</h3>
+                <p className="mt-2 text-[15px] text-muted">{c.text}</p>
+              </div>
+            </article>
           ))}
         </div>
       </section>
@@ -164,7 +170,7 @@ export default async function AboutPage() {
             <p className="mt-8 rounded-card bg-light/5 p-5 text-light/80">
               <span className="font-bold text-light">His legacy.</span> {founder.legacy}{" "}
               <Link href="/olympiad" className="font-bold text-secondary underline">
-                About the Olympiad →
+                About the Olympiad <ArrowRight />
               </Link>
             </p>
           </div>
@@ -185,7 +191,7 @@ export default async function AboutPage() {
             <p className="text-[21px] font-bold">Find your trip</p>
             <p className="mt-2 text-light/70">{trips.length} treks, camps and nature trails across Gujarat, India and beyond.</p>
             <Link href="/trips" className="btn btn-primary mt-6 self-start">
-              See all trips →
+              See all trips <ArrowRight />
             </Link>
           </li>
         </ol>
@@ -199,7 +205,7 @@ export default async function AboutPage() {
             <p className="mt-1 text-muted">Registered charitable trust · Reg. {site.trust.registration} · Rajkot</p>
           </div>
           <Link href="/contact" className="btn btn-outline shrink-0">
-            Contact us →
+            Contact us <ArrowRight />
           </Link>
         </div>
       </section>

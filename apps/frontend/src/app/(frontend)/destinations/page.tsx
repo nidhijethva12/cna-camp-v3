@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { PageHead } from "@/components/layout/PageHead";
 import { Photo } from "@/components/media/Photo";
+import { ArrowRight } from "@/components/ui/icons";
 import { regionOrder, regions, tripsByRegionHref } from "@/content/site";
 import { getHome, getTrips } from "@/lib/content";
 import { durationShort } from "@/lib/trips";
@@ -19,6 +20,8 @@ export default async function DestinationsPage() {
   return (
     <>
       <PageHead
+        img="cna/real/land-10"
+        imgAlt="Snow peaks above the green Manali valley in Himachal Pradesh"
         eyebrow="Destinations"
         title="Where we go"
         text="Coast, forest, desert and high mountains: Gujarat, across India, the North-East and Nepal. We pick the right place for each season and each group."
@@ -47,7 +50,7 @@ export default async function DestinationsPage() {
                             {t.type} · {durationShort(t)} · {t.months.slice(0, 3).join(" ")}
                           </span>
                         </span>
-                        <span aria-hidden="true">→</span>
+                        <ArrowRight />
                       </Link>
                     </li>
                   ))}
