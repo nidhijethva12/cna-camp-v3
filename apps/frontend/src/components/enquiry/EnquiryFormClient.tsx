@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useActionState, type ReactNode } from "react";
 import { submitEnquiry, type EnquiryField, type EnquiryState } from "@/actions/enquiry";
+import { ArrowRight, CheckCircle } from "@/components/ui/icons";
 import { Select } from "@/components/ui/Select";
 import { regionOrder, regions, travellerTypes } from "@/content/site";
 import { enquiryDays, enquiryInterests, enquiryMonths, type EnquiryVariant } from "@/lib/enquiry";
@@ -221,7 +222,9 @@ export function EnquiryFormClient({ trips, phone, variant = "quick", defaultTrip
 
       {state.status === "success" && (
         <div role="status" className="mt-5 rounded-card border border-success bg-light px-4 py-3 text-[15px]">
-          <p className="font-bold text-success">✓ Your {isGroup ? "trip request" : "enquiry"} has been sent successfully.</p>
+          <p className="flex items-center gap-2 font-bold text-success">
+            <CheckCircle className="text-[20px]" />
+            Your {isGroup ? "trip request" : "enquiry"} has been sent successfully.</p>
           <p className="mt-1 text-muted">
             Our team will reply within a day, usually on WhatsApp. For anything urgent, call{" "}
             <a href={phone.href} className="font-semibold text-dark underline">
@@ -239,7 +242,8 @@ export function EnquiryFormClient({ trips, phone, variant = "quick", defaultTrip
       )}
 
       <button type="submit" disabled={pending} className="btn btn-primary mt-6 w-full sm:w-auto">
-        {pending ? "Sending…" : isGroup ? "Send trip request →" : "Send enquiry →"}
+        {pending ? "Sending…" : isGroup ? "Send trip request" : "Send enquiry"}
+        {!pending && <ArrowRight />}
       </button>
     </form>
   );

@@ -2,7 +2,7 @@
 
 import * as RadixSelect from "@radix-ui/react-select";
 import { useState } from "react";
-import { ChevronDownIcon } from "@/components/ui/icons";
+import { CaretDown, Check } from "@/components/ui/icons";
 
 export interface SelectOption {
   value: string;
@@ -48,7 +48,7 @@ export function Select({ name, options, emptyLabel, defaultValue = "", value: co
       >
         <RadixSelect.Value />
         <RadixSelect.Icon className="shrink-0 text-muted transition-transform duration-200 [[data-state=open]_&]:rotate-180">
-          <ChevronDownIcon size={12} />
+          <CaretDown className="text-[13px]" />
         </RadixSelect.Icon>
       </RadixSelect.Trigger>
       <input type="hidden" name={name} value={value === EMPTY ? "" : value} />
@@ -69,9 +69,7 @@ export function Select({ name, options, emptyLabel, defaultValue = "", value: co
               >
                 <RadixSelect.ItemText>{o.label}</RadixSelect.ItemText>
                 <RadixSelect.ItemIndicator className="absolute right-3 text-primary">
-                  <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
-                    <path d="M2.5 7.5l3 3 6-7" fill="none" stroke="currentColor" strokeWidth="2" />
-                  </svg>
+                  <Check className="text-[15px]" />
                 </RadixSelect.ItemIndicator>
               </RadixSelect.Item>
             ))}

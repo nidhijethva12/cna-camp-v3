@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { ArrowRight } from "@/components/ui/icons";
 
 interface SectionHeaderProps {
   eyebrow: string;
@@ -29,7 +30,7 @@ export function SectionHeader({ eyebrow, title, intro, action, dark, id }: Secti
           href={action.href}
           className={`btn shrink-0 self-start md:self-auto ${dark ? "btn-outline-light" : "btn-outline"}`}
         >
-          {action.label} <span aria-hidden="true">→</span>
+          {action.label} <ArrowRight />
         </Link>
       )}
     </div>

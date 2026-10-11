@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import { ArrowLeft, ArrowRight, Close } from "@/components/ui/icons";
 
 interface Slide {
   src: string;
@@ -64,17 +65,17 @@ export function Lightbox({ children }: { children: ReactNode }) {
             {slide.caption && <p className="mt-2 text-center text-[14px] text-light/75">{slide.caption}</p>}
             <div className="mt-3 flex items-center justify-between gap-3 text-light">
               <button type="button" onClick={() => step(-1)} className="btn btn-outline-light min-h-11! px-4!" aria-label="Previous photo">
-                ←
+                <ArrowLeft className="text-[18px]" />
               </button>
               <span className="font-mono text-[12px] tracking-[.1em]">
                 {index + 1} / {slides.length}
               </span>
               <div className="flex gap-2">
                 <button type="button" onClick={() => step(1)} className="btn btn-outline-light min-h-11! px-4!" aria-label="Next photo">
-                  →
+                  <ArrowRight className="text-[18px]" />
                 </button>
                 <button type="button" onClick={() => dialogRef.current?.close()} className="btn btn-primary min-h-11! px-4!" aria-label="Close">
-                  ✕
+                  <Close className="text-[18px]" />
                 </button>
               </div>
             </div>

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { ArrowRight } from "@/components/ui/icons";
 
 export const metadata: Metadata = {
   title: "Page not found",
@@ -17,7 +18,7 @@ export default function NotFound() {
           Home
         </Link>
         <Link href="/trips" className="btn btn-primary">
-          See trips →
+          See trips <ArrowRight />
         </Link>
       </div>
     </section>

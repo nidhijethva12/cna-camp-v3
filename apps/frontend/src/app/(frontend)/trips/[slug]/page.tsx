@@ -8,6 +8,8 @@ import { BreadcrumbLd } from "@/components/seo/Breadcrumbs";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { TripCard } from "@/components/trips/TripCard";
 import { FaqList } from "@/components/ui/FaqList";
+import { FeatureIcon } from "@/components/ui/FeatureIcon";
+import { ArrowRight, CheckCircle, XCircle } from "@/components/ui/icons";
 import { MetaLine } from "@/components/ui/MetaLine";
 import { regions, site, tripsByRegionHref } from "@/content/site";
 import { getSimilarTrips, getSiteSettings, getTrip, getTripBatches, getTrips } from "@/lib/content";
@@ -219,9 +221,7 @@ export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
 
           <section className="mt-14 flex flex-col gap-5 rounded-card bg-dark p-6 text-light sm:flex-row sm:items-center sm:justify-between">
             <div className="flex gap-4">
-              <span className="text-[30px]" aria-hidden="true">
-                🏫
-              </span>
+              <FeatureIcon name="graduationCap" tone="dark" size="lg" />
               <div>
                 <p className="font-mono text-[11.5px] uppercase tracking-[.12em] text-secondary">For schools</p>
                 <p className="mt-1 text-[19px] font-bold">Bring your school on this trip</p>
@@ -231,7 +231,7 @@ export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
               </div>
             </div>
             <Link href="/group-trips#schools" className="btn btn-primary shrink-0">
-              Plan a school trip →
+              Plan a school trip <ArrowRight />
             </Link>
           </section>
 
@@ -292,7 +292,7 @@ export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
               <ul className="mt-4 space-y-2">
                 {tripIncluded(trip).map((x) => (
                   <li key={x} className="flex gap-3">
-                    <span className="text-success">✓</span>
+                    <CheckCircle className="mt-[3px] text-[18px] text-success" />
                     {x}
                   </li>
                 ))}
@@ -303,7 +303,7 @@ export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
               <ul className="mt-4 space-y-2">
                 {tripNotIncluded(trip).map((x) => (
                   <li key={x} className="flex gap-3">
-                    <span className="text-primary">✕</span>
+                    <XCircle className="mt-[3px] text-[18px] text-primary" />
                     {x}
                   </li>
                 ))}
@@ -319,7 +319,7 @@ export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
             <ul className="mt-5 grid gap-x-8 gap-y-2 sm:grid-cols-2">
               {tripPackingList(trip).map((c) => (
                 <li key={c} className="flex gap-3">
-                  <span className="text-primary">✓</span>
+                  <CheckCircle className="mt-[3px] text-[18px] text-primary" />
                   {c}
                 </li>
               ))}
@@ -383,7 +383,7 @@ export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
               <p className="mt-3 text-[15px] text-muted">Dates on request. Groups can choose their own dates.</p>
             )}
             <a href="#enquire" className="btn btn-primary mt-6 w-full">
-              Enquire / book →
+              Enquire / book <ArrowRight />
             </a>
             <a href={contact.whatsappHref} target="_blank" rel="noopener" className="btn btn-outline mt-3 w-full">
               WhatsApp us

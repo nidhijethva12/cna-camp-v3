@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Photo } from "@/components/media/Photo";
+import { ArrowRight } from "@/components/ui/icons";
 import type { PostSummary } from "@/lib/content";
 import { formatDate } from "@/lib/format";
 
@@ -25,7 +26,7 @@ export function PostCard({ post }: { post: PostSummary }) {
           </Link>
         </h3>
         <p className="mt-2 line-clamp-3 flex-1 text-[15px] leading-relaxed text-muted">{post.excerpt}</p>
-        <p className="mt-5 font-semibold group-hover:text-primary">Read story →</p>
+        <p className="mt-5 font-semibold group-hover:text-primary">Read story <ArrowRight /></p>
       </div>
     </article>
   );

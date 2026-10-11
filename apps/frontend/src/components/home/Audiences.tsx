@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowRight, GraduationCap } from "@/components/ui/icons";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Photo } from "@/components/media/Photo";
 import type { HomeContent } from "@/lib/content";
@@ -30,7 +31,7 @@ export function Audiences({ content }: { content: HomeContent["audiences"] }) {
               <div className="flex flex-1 flex-col p-5">
                 <h3 className="display text-[24px]">{a.title}</h3>
                 <p className="mt-2 flex-1 text-[15px] text-muted">{a.description}</p>
-                <p className="mt-5 font-semibold group-hover:text-primary">Find trips →</p>
+                <p className="mt-5 font-semibold group-hover:text-primary">Find trips <ArrowRight /></p>
               </div>
             </Link>
           </li>
@@ -38,10 +39,10 @@ export function Audiences({ content }: { content: HomeContent["audiences"] }) {
       </ul>
       {content.teacherNote && (
         <p className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-2 rounded-card bg-soft px-5 py-4 text-[15px]">
-          <span aria-hidden="true">🏫</span>
+          <GraduationCap className="text-[22px] text-primary" />
           <strong>Teachers:</strong> {content.teacherNote}
           <Link href="/group-trips#schools" className="font-semibold text-primary underline">
-            Plan a school trip →
+            Plan a school trip <ArrowRight />
           </Link>
         </p>
       )}

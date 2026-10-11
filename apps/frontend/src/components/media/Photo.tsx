@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { Camera, Play } from "@/components/ui/icons";
 import { photoSrc } from "@/lib/photos";
 import type { PhotoSource } from "@/types/content";
 
@@ -43,16 +44,7 @@ export function PhotoPlaceholder({ label, kind = "photo", dark = false, classNam
         aria-hidden="true"
         className={`flex h-14 w-14 items-center justify-center rounded-full ${dark ? "bg-light/10" : "bg-light shadow-card"}`}
       >
-        {kind === "video" ? (
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M8 5v14l11-7z" />
-          </svg>
-        ) : (
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7">
-            <path d="M4 7h3l2-2.5h6L17 7h3v12H4z" />
-            <circle cx="12" cy="13" r="3.5" />
-          </svg>
-        )}
+        {kind === "video" ? <Play className="ml-0.5 text-[22px]" /> : <Camera className="text-[26px]" />}
       </span>
       <span className="font-mono text-[11.5px] uppercase tracking-[.1em]">{need}</span>
       {label && <span className="max-w-[260px] text-[14px] leading-snug">{label}</span>}

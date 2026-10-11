@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Photo } from "@/components/media/Photo";
+import { ArrowRight } from "@/components/ui/icons";
 import type { HomeContent } from "@/lib/content";
 
 export function WhyCna({ content }: { content: HomeContent["why"] }) {
@@ -27,7 +28,7 @@ export function WhyCna({ content }: { content: HomeContent["why"] }) {
             ))}
           </ul>
           <Link href="/about" className="btn btn-primary mt-10">
-            Our story →
+            Our story <ArrowRight />
           </Link>
         </div>
       </div>

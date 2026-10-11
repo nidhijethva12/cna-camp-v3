@@ -3,7 +3,7 @@
 import * as NavigationMenu from "@radix-ui/react-navigation-menu";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChevronDownIcon } from "@/components/ui/icons";
+import { CaretDown } from "@/components/ui/icons";
 import { isNavActive, type NavItem } from "@/content/site";
 
 const itemClass =
@@ -19,7 +19,7 @@ export function DesktopNav({ items }: { items: NavItem[] }) {
             <NavigationMenu.Item key={item.href} className="relative">
               <NavigationMenu.Trigger className={`group ${itemClass} ${isNavActive(item, pathname) ? "text-primary" : ""}`}>
                 {item.label}
-                <ChevronDownIcon className="transition-transform duration-200 group-data-[state=open]:rotate-180" />
+                <CaretDown className="text-[12px] transition-transform duration-200 group-data-[state=open]:rotate-180" />
               </NavigationMenu.Trigger>
               <NavigationMenu.Content className="absolute left-0 top-full z-50 mt-1 min-w-[220px] rounded-card border border-line bg-light p-2 shadow-menu">
                 <ul>

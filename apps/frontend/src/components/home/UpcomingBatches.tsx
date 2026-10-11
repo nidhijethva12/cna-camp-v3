@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowRight } from "@/components/ui/icons";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { enquireHref, regions } from "@/content/site";
 import type { UpcomingBatch } from "@/lib/content";
@@ -59,7 +60,7 @@ export function UpcomingBatches({ batches }: { batches: UpcomingBatch[] }) {
                     className="flex h-11 w-11 items-center justify-center rounded-card border border-line transition group-hover:border-primary group-hover:bg-primary group-hover:text-light"
                     aria-hidden="true"
                   >
-                    →
+                    <ArrowRight className="text-[18px]" />
                   </span>
                 </Link>
               </li>

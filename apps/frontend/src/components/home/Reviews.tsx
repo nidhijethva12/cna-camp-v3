@@ -1,3 +1,4 @@
+import { Star } from "@/components/ui/icons";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import type { Review } from "@/types/content";
 
@@ -37,9 +38,10 @@ export function Reviews({ reviews }: { reviews: Review[] }) {
                   <p className="font-mono text-[11.5px] uppercase tracking-[.08em] text-muted">{r.role}</p>
                 </figcaption>
               </div>
-              <p className="mt-5 text-[18px] tracking-[2px]" role="img" aria-label={`${r.rating} out of 5 stars`}>
-                <span className="text-secondary">{"★".repeat(r.rating)}</span>
-                <span className="text-line">{"★".repeat(5 - r.rating)}</span>
+              <p className="mt-5 flex gap-0.5 text-[19px]" role="img" aria-label={`${r.rating} out of 5 stars`}>
+                {[1, 2, 3, 4, 5].map((n) => (
+                  <Star key={n} className={n <= r.rating ? "text-secondary" : "text-line"} />
+                ))}
               </p>
               <blockquote className="mt-3 flex-1 text-[17px] leading-relaxed">“{r.quote}”</blockquote>
               <div className="trail-line mt-5" />

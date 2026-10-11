@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { CloseIcon, MenuIcon } from "@/components/ui/icons";
+import { Close, Menu } from "@/components/ui/icons";
 import { enquireHref, isNavActive, type NavItem } from "@/content/site";
 
 export function MobileNav({ items }: { items: NavItem[] }) {
@@ -35,7 +35,7 @@ export function MobileNav({ items }: { items: NavItem[] }) {
         aria-label={open ? "Close menu" : "Open menu"}
         onClick={() => setOpen((o) => !o)}
       >
-        {open ? <CloseIcon /> : <MenuIcon />}
+        {open ? <Close className="text-[22px]" /> : <Menu className="text-[22px]" />}
       </button>
 
       <nav

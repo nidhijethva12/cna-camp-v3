@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Photo } from "@/components/media/Photo";
+import { ArrowRight, Check } from "@/components/ui/icons";
 import { FOUNDED_YEAR } from "@/content/site";
 import type { HomeContent } from "@/lib/content";
 
@@ -28,11 +29,8 @@ export function StorySection({ content }: { content: HomeContent["story"] }) {
         <ul className="mt-8 space-y-5">
           {content.points.map((p) => (
             <li key={p.title} className="flex gap-4">
-              <span
-                className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-dark text-[13px] text-light"
-                aria-hidden="true"
-              >
-                ✓
+              <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-dark text-[14px] text-secondary">
+                <Check />
               </span>
               <div>
                 <h3 className="text-[18px] leading-normal">{p.title}</h3>
@@ -42,7 +40,7 @@ export function StorySection({ content }: { content: HomeContent["story"] }) {
           ))}
         </ul>
         <Link href="/about" className="btn btn-dark mt-9">
-          About us →
+          About us <ArrowRight />
         </Link>
       </div>
     </section>

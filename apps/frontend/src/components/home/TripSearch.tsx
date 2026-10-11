@@ -1,4 +1,5 @@
 import Form from "next/form";
+import { ArrowRight } from "@/components/ui/icons";
 import { Select } from "@/components/ui/Select";
 import { regionOrder, regions } from "@/content/site";
 
@@ -36,7 +37,7 @@ export function TripSearch() {
           <Select name="month" emptyLabel="Any month" options={monthOptions} className="mt-2" />
         </label>
         <button type="submit" className="btn btn-dark self-end">
-          Find trips →
+          Find trips <ArrowRight />
         </button>
       </Form>
     </div>

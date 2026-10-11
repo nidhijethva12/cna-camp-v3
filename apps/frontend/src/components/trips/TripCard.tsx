@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Photo } from "@/components/media/Photo";
+import { ArrowRight } from "@/components/ui/icons";
 import { MetaLine } from "@/components/ui/MetaLine";
 import { regions } from "@/content/site";
 import { durationShort, tripPrice } from "@/lib/trips";
@@ -45,7 +46,7 @@ export function TripCard({ trip, badge }: { trip: Trip; badge?: string }) {
             className="flex h-11 w-11 items-center justify-center rounded-card bg-dark text-light transition group-hover:bg-primary"
             aria-label={`View ${trip.name}`}
           >
-            →
+            <ArrowRight className="text-[18px]" />
           </Link>
         </div>
       </div>

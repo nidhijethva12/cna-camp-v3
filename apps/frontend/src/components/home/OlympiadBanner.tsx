@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { ArrowRight, Star } from "@/components/ui/icons";
 
 const facts = [
   { label: "Max scholarship", value: "100%" },
@@ -13,13 +14,14 @@ export function OlympiadBanner() {
     <section className="wrap mt-24" aria-labelledby="olympiad-title">
       <div className="reveal relative overflow-hidden rounded-card bg-dark text-light">
         <div className="absolute inset-0 opacity-40">
-          <Image src="/img/peaks-wide.jpg" alt="" fill sizes="(min-width: 1240px) 1176px, 100vw" className="object-cover" />
+          <Image src="/img/cna/real/land-10-wide.webp" alt="" fill sizes="(min-width: 1240px) 1176px, 100vw" className="object-cover" />
         </div>
         <div className="absolute inset-0 bg-linear-to-r from-dark/95 to-dark/60" />
         <div className="relative grid gap-8 p-6 sm:p-10 lg:grid-cols-[1.3fr_1fr] lg:items-center">
           <div>
-            <p className="inline-flex rounded-tag bg-secondary px-3 py-1.5 font-mono text-[11.5px] font-medium uppercase tracking-[.1em] text-dark">
-              ★ India’s 1st Adventure Olympiad
+            <p className="inline-flex items-center gap-2 rounded-tag bg-secondary px-3 py-1.5 font-mono text-[11.5px] font-medium uppercase tracking-[.1em] text-dark">
+              <Star className="text-[13px]" />
+              India’s 1st Adventure Olympiad
             </p>
             <h2 id="olympiad-title" className="h-section mt-4 [zoom:1]">
               Adventure Olympiad: take the quiz, win the Himalaya
@@ -30,7 +32,7 @@ export function OlympiadBanner() {
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
               <Link href="/olympiad" className="btn btn-primary">
-                See the Olympiad →
+                See the Olympiad <ArrowRight />
               </Link>
               <Link href="/olympiad#finder" className="btn btn-outline-light">
                 Which group am I?

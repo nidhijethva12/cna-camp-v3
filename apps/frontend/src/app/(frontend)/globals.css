@@ -202,6 +202,15 @@
   .btn-outline-light { border-color: currentColor; color: var(--color-light); }
   .btn-outline-light:hover { background: var(--color-light); border-color: var(--color-light); color: var(--color-dark); }
 
+  .icon {
+    display: inline-block;
+    flex-shrink: 0;
+    vertical-align: -0.125em;
+  }
+  .icon-nudge { transition: transform 0.2s ease; }
+  :is(a, button):hover .icon-nudge,
+  .group:hover .icon-nudge { transform: translateX(3px); }
+
   .tag {
     display: inline-flex;
     align-items: center;

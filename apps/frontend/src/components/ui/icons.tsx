@@ -1,69 +1,58 @@
-type IconProps = { size?: number; className?: string };
+import type { Icon as PhosphorIcon, IconProps } from "@phosphor-icons/react";
+import { ArrowDown as ArrowDownBase } from "@phosphor-icons/react/dist/ssr/ArrowDown";
+import { ArrowLeft as ArrowLeftBase } from "@phosphor-icons/react/dist/ssr/ArrowLeft";
+import { ArrowRight as ArrowRightBase } from "@phosphor-icons/react/dist/ssr/ArrowRight";
+import { Camera as CameraBase } from "@phosphor-icons/react/dist/ssr/Camera";
+import { CaretDown as CaretDownBase } from "@phosphor-icons/react/dist/ssr/CaretDown";
+import { Check as CheckBase } from "@phosphor-icons/react/dist/ssr/Check";
+import { CheckCircle as CheckCircleBase } from "@phosphor-icons/react/dist/ssr/CheckCircle";
+import { Clock as ClockBase } from "@phosphor-icons/react/dist/ssr/Clock";
+import { GraduationCap as GraduationCapBase } from "@phosphor-icons/react/dist/ssr/GraduationCap";
+import { Leaf as LeafBase } from "@phosphor-icons/react/dist/ssr/Leaf";
+import { List as ListBase } from "@phosphor-icons/react/dist/ssr/List";
+import { MapPin as MapPinBase } from "@phosphor-icons/react/dist/ssr/MapPin";
+import { Phone as PhoneBase } from "@phosphor-icons/react/dist/ssr/Phone";
+import { Play as PlayBase } from "@phosphor-icons/react/dist/ssr/Play";
+import { SealCheck as SealCheckBase } from "@phosphor-icons/react/dist/ssr/SealCheck";
+import { Star as StarBase } from "@phosphor-icons/react/dist/ssr/Star";
+import { Trophy as TrophyBase } from "@phosphor-icons/react/dist/ssr/Trophy";
+import { Warning as WarningBase } from "@phosphor-icons/react/dist/ssr/Warning";
+import { WarningCircle as WarningCircleBase } from "@phosphor-icons/react/dist/ssr/WarningCircle";
+import { WhatsappLogo as WhatsappLogoBase } from "@phosphor-icons/react/dist/ssr/WhatsappLogo";
+import { X as XBase } from "@phosphor-icons/react/dist/ssr/X";
+import { XCircle as XCircleBase } from "@phosphor-icons/react/dist/ssr/XCircle";
 
-export function ChevronDownIcon({ size = 10, className }: IconProps) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 10 10" aria-hidden="true" className={className}>
-      <path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" strokeWidth="1.6" />
-    </svg>
-  );
+export type { IconProps };
+
+/** Icons are decorative by default and inherit size from font-size and colour from the text colour token. */
+function decorative(Base: PhosphorIcon, { className: baseClass, ...defaults }: IconProps = {}) {
+  function DecorativeIcon({ className, ...props }: IconProps) {
+    const classes = ["icon", baseClass, className].filter(Boolean).join(" ");
+    return <Base aria-hidden="true" focusable="false" {...defaults} {...props} className={classes} />;
+  }
+  DecorativeIcon.displayName = Base.displayName;
+  return DecorativeIcon;
 }
 
-export function MenuIcon({ size = 22, className }: IconProps) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 22 22" aria-hidden="true" className={className}>
-      <path d="M3 6h16M3 11h16M3 16h16" stroke="currentColor" strokeWidth="2" />
-    </svg>
-  );
-}
-
-export function CloseIcon({ size = 22, className }: IconProps) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 22 22" aria-hidden="true" className={className}>
-      <path d="M5 5l12 12M17 5L5 17" stroke="currentColor" strokeWidth="2" />
-    </svg>
-  );
-}
-
-export function PlayIcon({ size = 26, className }: IconProps) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" className={className}>
-      <path d="M8 5v14l11-7z" />
-    </svg>
-  );
-}
-
-export function WhatsAppIcon({ size = 28, className }: IconProps) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" className={className}>
-      <path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3.1-.2 0-.3 0-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2l-.4-.3z" />
-    </svg>
-  );
-}
-
-const statPaths = {
-  mountain: "M4 20l5-9 4 6 3-4 4 7H4z",
-  bolt: "M13 3L4 14h7l-1 7 9-11h-7l1-7z",
-  people:
-    "M8 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm8 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM2 20c0-3.3 2.7-6 6-6s6 2.7 6 6M10 20c0-3.3 2.7-6 6-6s6 2.7 6 6",
-  pin: "M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11zm0-8a3 3 0 1 0 0-6 3 3 0 0 0 0 6z",
-};
-
-export type StatIconName = keyof typeof statPaths;
-
-export function StatIcon({ name, size = 34, className }: IconProps & { name: StatIconName }) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.6"
-      strokeLinejoin="round"
-      aria-hidden="true"
-      className={className}
-    >
-      <path d={statPaths[name]} />
-    </svg>
-  );
-}
+export const ArrowRight = /* @__PURE__ */ decorative(ArrowRightBase, { weight: "bold", className: "icon-nudge" });
+export const ArrowLeft = /* @__PURE__ */ decorative(ArrowLeftBase, { weight: "bold" });
+export const ArrowDown = /* @__PURE__ */ decorative(ArrowDownBase, { weight: "bold" });
+export const CaretDown = /* @__PURE__ */ decorative(CaretDownBase, { weight: "bold" });
+export const Menu = /* @__PURE__ */ decorative(ListBase, { weight: "bold" });
+export const Close = /* @__PURE__ */ decorative(XBase, { weight: "bold" });
+export const Check = /* @__PURE__ */ decorative(CheckBase, { weight: "bold" });
+export const CheckCircle = /* @__PURE__ */ decorative(CheckCircleBase, { weight: "fill" });
+export const XCircle = /* @__PURE__ */ decorative(XCircleBase, { weight: "fill" });
+export const SealCheck = /* @__PURE__ */ decorative(SealCheckBase, { weight: "fill" });
+export const Star = /* @__PURE__ */ decorative(StarBase, { weight: "fill" });
+export const Play = /* @__PURE__ */ decorative(PlayBase, { weight: "fill" });
+export const Camera = /* @__PURE__ */ decorative(CameraBase, { weight: "duotone" });
+export const WhatsApp = /* @__PURE__ */ decorative(WhatsappLogoBase, { weight: "fill" });
+export const Phone = /* @__PURE__ */ decorative(PhoneBase, { weight: "fill" });
+export const MapPin = /* @__PURE__ */ decorative(MapPinBase, { weight: "fill" });
+export const Warning = /* @__PURE__ */ decorative(WarningBase, { weight: "fill" });
+export const WarningCircle = /* @__PURE__ */ decorative(WarningCircleBase, { weight: "fill" });
+export const Clock = /* @__PURE__ */ decorative(ClockBase, { weight: "bold" });
+export const Trophy = /* @__PURE__ */ decorative(TrophyBase, { weight: "fill" });
+export const Leaf = /* @__PURE__ */ decorative(LeafBase, { weight: "fill" });
+export const GraduationCap = /* @__PURE__ */ decorative(GraduationCapBase, { weight: "duotone" });

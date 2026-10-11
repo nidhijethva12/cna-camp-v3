@@ -8,15 +8,16 @@ interface PageHeadProps {
   text?: string;
   /** With a photo: dark hero. Without: light contour-line band. */
   img?: PhotoSource | null;
+  imgAlt?: string;
   children?: ReactNode;
 }
 
-export function PageHead({ eyebrow, title, text, img, children }: PageHeadProps) {
+export function PageHead({ eyebrow, title, text, img, imgAlt, children }: PageHeadProps) {
   if (img) {
     return (
       <section className="relative isolate overflow-hidden bg-dark text-light">
         <div className="kenburns absolute inset-0 -z-10 overflow-hidden opacity-90">
-          <Photo img={img} wide preload sizes="100vw" />
+          <Photo img={img} alt={imgAlt} wide preload sizes="100vw" />
         </div>
         <div className="absolute inset-0 -z-10 bg-linear-to-r from-dark/85 to-dark/35" />
         <div className="wrap py-20 sm:py-28">

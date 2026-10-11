@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowRight } from "@/components/ui/icons";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Photo } from "@/components/media/Photo";
 import type { HomeContent } from "@/lib/content";
@@ -28,7 +29,7 @@ export function HolidayGrid({ content }: { content: HomeContent["holidays"] }) {
                 <span className="tag border-secondary bg-secondary text-dark">{h.months}</span>
                 <h3 className="display mt-3 text-[30px]">{h.title}</h3>
                 <p className="mt-1 text-[14px] text-light/80">{h.highlights.join(" · ")}</p>
-                <p className="mt-4 font-semibold text-secondary">{h.tripCount} trips →</p>
+                <p className="mt-4 font-semibold text-secondary">{h.tripCount} trips <ArrowRight /></p>
               </div>
             </Link>
           </li>

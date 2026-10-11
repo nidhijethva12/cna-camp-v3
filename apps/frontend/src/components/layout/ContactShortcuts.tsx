@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { WhatsAppIcon } from "@/components/ui/icons";
+import { Phone, WhatsApp } from "@/components/ui/icons";
 import { enquireHref } from "@/content/site";
 import { getSiteSettings } from "@/lib/content";
 
@@ -14,7 +14,7 @@ export async function ContactShortcuts() {
         className="fixed bottom-6 right-6 z-40 hidden h-14 w-14 items-center justify-center rounded-full bg-whatsapp text-light shadow-float transition hover:scale-105 lg:flex"
         aria-label="Chat on WhatsApp"
       >
-        <WhatsAppIcon />
+        <WhatsApp className="text-[30px]" />
       </a>
 
       <nav
@@ -22,7 +22,7 @@ export async function ContactShortcuts() {
         aria-label="Quick contact"
       >
         <a href={contact.phoneHref} className="flex h-16 items-center justify-center gap-2 font-semibold">
-          Call
+          <Phone className="text-[18px] text-primary" /> Call
         </a>
         <a
           href={contact.whatsappHref}
@@ -30,7 +30,7 @@ export async function ContactShortcuts() {
           target="_blank"
           className="flex h-16 items-center justify-center gap-2 border-x border-line font-semibold text-whatsapp-dark"
         >
-          <WhatsAppIcon size={20} /> WhatsApp
+          <WhatsApp className="text-[22px]" /> WhatsApp
         </a>
         <Link
           href={enquireHref()}

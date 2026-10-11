@@ -21,6 +21,7 @@
     "@payloadcms/richtext-lexical": "3.90.2",
     "@payloadcms/storage-vercel-blob": "3.90.2",
     "@payloadcms/ui": "3.90.2",
+    "@phosphor-icons/react": "2.1.10",
     "@radix-ui/react-navigation-menu": "^1.2.22",
     "@radix-ui/react-select": "^2.3.7",
     "@vercel/blob": "2.3.1",

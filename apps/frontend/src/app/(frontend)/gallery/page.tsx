@@ -4,7 +4,7 @@ import Link from "next/link";
 import { PageHead } from "@/components/layout/PageHead";
 import { Lightbox } from "@/components/media/Lightbox";
 import { Photo } from "@/components/media/Photo";
-import { PlayIcon } from "@/components/ui/icons";
+import { ArrowRight, Play } from "@/components/ui/icons";
 import { regionOrder, regions } from "@/content/site";
 import { getHome, getTrips } from "@/lib/content";
 import { photoSrc } from "@/lib/photos";
@@ -32,7 +32,8 @@ export default async function GalleryPage() {
   return (
     <>
       <PageHead
-        img="cna/manali/05"
+        img="cna/real/river-01"
+        imgAlt="CNA campers crossing a river on a wooden bridge near Manali"
         eyebrow="Gallery"
         title="Moments from the trail"
         text="Campfires, river crossings, reef walks and summit mornings. Tap any photo to see it big."
@@ -96,7 +97,7 @@ export default async function GalleryPage() {
                   aria-hidden="true"
                 >
                   <span className="absolute inset-0 animate-ping rounded-full bg-primary/40 motion-reduce:hidden" />
-                  <PlayIcon className="relative ml-1" />
+                  <Play className="relative ml-1 text-[28px]" />
                 </span>
                 <div className="absolute inset-x-0 bottom-0 p-5 text-light">
                   <span className="text-[13px] font-medium uppercase tracking-[.08em] text-light/85">Video coming soon</span>
@@ -130,7 +131,7 @@ export default async function GalleryPage() {
                       <div className="flex items-baseline justify-between gap-3">
                         <h3 className="h-card">{trip.name}</h3>
                         <Link href={`/trips/${trip.slug}`} className="shrink-0 text-[14px] font-semibold text-primary underline">
-                          View trip →
+                          View trip <ArrowRight />
                         </Link>
                       </div>
                       <div className="gal mt-3 grid grid-cols-4 gap-2">

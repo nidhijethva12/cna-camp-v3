@@ -6,6 +6,7 @@ import { Photo } from "@/components/media/Photo";
 import { BreadcrumbLd } from "@/components/seo/Breadcrumbs";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { TripCard } from "@/components/trips/TripCard";
+import { ArrowLeft } from "@/components/ui/icons";
 import { site } from "@/content/site";
 import { getPost, getPosts } from "@/lib/content";
 import { formatDate } from "@/lib/format";
@@ -59,7 +60,8 @@ export default async function PostPage({ params }: PageProps<"/blog/[slug]">) {
         <header className="wrap mt-12 max-w-3xl">
           <nav aria-label="Breadcrumb" className="font-mono text-[12px] uppercase tracking-[.08em] text-muted">
             <Link href="/blog" className="hover:text-primary">
-              ← Blog
+              <ArrowLeft className="mr-1.5" />
+              Blog
             </Link>
           </nav>
           <h1 className="display h-page mt-4">{post.title}</h1>

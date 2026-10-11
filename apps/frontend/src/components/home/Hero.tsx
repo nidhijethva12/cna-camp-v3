@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Photo } from "@/components/media/Photo";
+import { ArrowRight, Star } from "@/components/ui/icons";
 import { FOUNDED_YEAR, site } from "@/content/site";
 import type { HomeContent } from "@/lib/content";
 
@@ -39,12 +40,15 @@ export function Hero({ content }: { content: HomeContent["hero"] }) {
         <p className="mt-6 max-w-xl text-[18px] leading-relaxed text-light/85">{content.intro}</p>
         <div className="mt-8 flex flex-wrap gap-3">
           <Link href="/trips" className="btn btn-primary">
-            Explore trips →
+            Explore trips <ArrowRight />
           </Link>
         </div>
         <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-2 font-mono text-[12px] uppercase tracking-[.1em] text-light/75">
           {content.highlights.map((h) => (
-            <li key={h}>★ {h}</li>
+            <li key={h} className="flex items-center gap-2">
+              <Star className="text-[13px] text-secondary" />
+              {h}
+            </li>
           ))}
         </ul>
       </div>

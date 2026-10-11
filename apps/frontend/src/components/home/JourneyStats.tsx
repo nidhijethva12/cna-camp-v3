@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { CountUp } from "@/components/ui/CountUp";
-import { StatIcon, type StatIconName } from "@/components/ui/icons";
+import { FeatureIcon, type FeatureIconName } from "@/components/ui/FeatureIcon";
 import { FOUNDED_YEAR, yearsActive } from "@/content/site";
 
 interface JourneyStatsProps {
@@ -10,17 +10,17 @@ interface JourneyStatsProps {
 }
 
 export function JourneyStats({ tripCount, counts }: JourneyStatsProps) {
-  const stats: { icon: StatIconName; value: string; label: string }[] = [
-    { icon: "mountain", value: `${yearsActive()}+`, label: "Years of camps" },
-    { icon: "bolt", value: counts.camps, label: "Camps & treks run" },
-    { icon: "people", value: counts.campers, label: "Campers taken outdoors" },
-    { icon: "pin", value: String(tripCount), label: "Treks, camps & nature trails" },
+  const stats: { icon: FeatureIconName; value: string; label: string }[] = [
+    { icon: "mountains", value: `${yearsActive()}+`, label: "Years of camps" },
+    { icon: "lightning", value: counts.camps, label: "Camps & treks run" },
+    { icon: "users", value: counts.campers, label: "Campers taken outdoors" },
+    { icon: "mapPin", value: String(tripCount), label: "Treks, camps & nature trails" },
   ];
 
   return (
     <section className="relative isolate mt-24 overflow-hidden bg-dark text-light" aria-labelledby="journey-title">
       <div className="absolute inset-0 -z-10 opacity-40">
-        <Image src="/img/peaks-wide.jpg" alt="" fill sizes="100vw" className="object-cover" />
+        <Image src="/img/cna/real/land-02-wide.webp" alt="" fill sizes="100vw" className="object-cover" />
       </div>
       <div className="absolute inset-0 -z-10 bg-linear-to-b from-dark/75 to-dark/90" />
       <div className="wrap py-20 text-center">
@@ -33,8 +33,8 @@ export function JourneyStats({ tripCount, counts }: JourneyStatsProps) {
         </p>
         <ul className="mt-12 grid grid-cols-2 gap-4 lg:grid-cols-4">
           {stats.map((s) => (
-            <li key={s.label} className="reveal rounded-card border border-light/15 bg-light/5 px-4 py-8 backdrop-blur-sm">
-              <StatIcon name={s.icon} className="mx-auto text-secondary" />
+            <li key={s.label} className="reveal group rounded-card border border-light/15 bg-light/5 px-4 py-8 backdrop-blur-sm">
+              <FeatureIcon name={s.icon} tone="dark" size="lg" round className="transition-colors duration-300 group-hover:bg-secondary group-hover:text-dark" />
               <CountUp value={s.value} className="display mt-4 text-[44px] sm:text-[52px]" />
               <p className="mt-1 text-[15px] text-light/75">{s.label}</p>
             </li>
