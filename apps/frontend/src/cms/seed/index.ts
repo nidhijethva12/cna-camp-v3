@@ -63,7 +63,7 @@ function createPhotoUploader(payload: Payload) {
       const data = await fs.readFile(path.join(publicDir, src));
       const doc = await payload.create({
         collection: "media",
-        data: { alt, ownedByCna: false },
+        data: { alt, ownedByCna: src.startsWith("/img/cna/real/") },
         file: { data, mimetype: mimeTypes[ext], name: `${base}${ext}`, size: data.length },
         context,
       });

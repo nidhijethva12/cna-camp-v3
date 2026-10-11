@@ -285,6 +285,7 @@ export interface Media {
    * Tick only for CNA's own photos. Unticked photos must be replaced or credited before launch.
    */
   ownedByCna?: boolean | null;
+  _objectKey?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -736,6 +737,7 @@ export interface MediaSelect<T extends boolean = true> {
   alt?: T;
   credit?: T;
   ownedByCna?: T;
+  _objectKey?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;

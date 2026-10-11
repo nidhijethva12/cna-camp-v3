@@ -13,8 +13,6 @@ const otherSlots: Record<string, string> = {
   "campus-dwarka": "Bet Dwarka campus",
   "campus-hingolgadh": "Hingolgadh camp",
   tribute: "Founder tribute",
-  "aud-school": "Home: school groups",
-  "aud-solo": "Home: solo travellers",
 };
 
 export default async function PhotoCreditsPage() {

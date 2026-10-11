@@ -251,19 +251,5 @@ export const photoCredits = [
     creator: "Rishabh Tatiraju",
     license: "CC BY-SA 3.0",
     source: "https://commons.wikimedia.org/w/index.php?curid=19891723"
-  },
-  {
-    slot: "aud-school",
-    title: "Nature Study - Summer Camp - Nisana Foundation - Sibpur BE College Model High School - Howrah 2013-06-08 9483",
-    creator: "Biswarup Ganguly",
-    license: "CC BY 3.0",
-    source: "https://commons.wikimedia.org/w/index.php?curid=47928284"
-  },
-  {
-    slot: "aud-solo",
-    title: "lone hiker blue jacket walks",
-    creator: null,
-    license: "CC0 1.0",
-    source: "https://www.rawpixel.com/image/3293109/free-photo-image-adventure-alps-animal"
   }
 ];
