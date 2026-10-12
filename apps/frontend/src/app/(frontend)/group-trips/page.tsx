@@ -96,7 +96,7 @@ export default async function GroupTripsPage() {
         </div>
       </section>
 
-      <section className="topo mt-24 bg-soft py-20">
+      <section className="mt-24 bg-soft py-20">
         <div className="wrap grid gap-12 lg:grid-cols-2">
           <div>
             <SectionHeader eyebrow="What we handle" title="You bring the group. We do the rest." />

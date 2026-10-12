@@ -257,20 +257,6 @@
   }
 
   /* Contour-line background for light sections; the SVG is a mask so its colour comes from a token. */
-  .topo {
-    position: relative;
-    isolation: isolate;
-  }
-  .topo::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    background-color: var(--color-line);
-    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 240 240'%3E%3Cg fill='none' stroke='black' stroke-width='1'%3E%3Cpath d='M-20 60c40-30 80 10 120-10s70-40 160-10'/%3E%3Cpath d='M-20 90c40-30 90 15 130-5s70-35 150-5'/%3E%3Cpath d='M-20 120c50-25 90 20 130 0s80-30 150 0'/%3E%3Cpath d='M-20 150c45-20 95 25 135 5s75-25 145 5'/%3E%3Cpath d='M-20 180c50-20 100 25 140 5s70-20 140 5'/%3E%3C/g%3E%3C/svg%3E");
-    mask-size: 240px 240px;
-  }
-
   /* Uses `translate`, not `transform`, so it doesn't conflict with .reveal. */
   .lift {
     transition: translate 0.35s cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 0.35s;

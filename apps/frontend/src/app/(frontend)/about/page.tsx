@@ -83,7 +83,7 @@ export default async function AboutPage() {
         </dl>
       </section>
 
-      <section id="mission" className="topo mt-24 scroll-mt-28 bg-soft py-20">
+      <section id="mission" className="mt-24 scroll-mt-28 bg-soft py-20">
         <div className="wrap">
           <SectionHeader eyebrow="Our mission · Eco-tourism" title={mission.line} intro={mission.text} />
           <ul className="grid gap-6 md:grid-cols-3">
@@ -230,7 +230,7 @@ export default async function AboutPage() {
         <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {teamRoles.map((role, i) => (
             <div key={i} className="rounded-card border border-line p-5">
-              <div className="topo aspect-square rounded-tag bg-soft" />
+              <div className="aspect-square rounded-tag bg-soft" />
               <p className="mt-4 font-bold">Name to add</p>
               <p className="font-mono text-[11.5px] uppercase tracking-[.08em] text-muted">{role}</p>
             </div>

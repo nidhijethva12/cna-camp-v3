@@ -30,7 +30,7 @@ export function PageHead({ eyebrow, title, text, img, imgAlt, children }: PageHe
     );
   }
   return (
-    <section className="topo border-b border-line bg-soft">
+    <section className="border-b border-line bg-soft">
       <div className="wrap py-14 sm:py-20">
         <p className="eyebrow">{eyebrow}</p>
         <h1 className="h-page mt-3 max-w-3xl">{title}</h1>

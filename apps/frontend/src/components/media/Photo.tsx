@@ -38,7 +38,7 @@ export function PhotoPlaceholder({ label, kind = "photo", dark = false, classNam
     <div
       role="img"
       aria-label={label ? `${need}: ${label}` : need}
-      className={`topo absolute inset-0 flex flex-col items-center justify-center gap-3 p-6 text-center ${dark ? "bg-dark-soft text-light/70" : "bg-soft text-muted"} ${className}`}
+      className={`absolute inset-0 flex flex-col items-center justify-center gap-3 p-6 text-center ${dark ? "bg-dark-soft text-light/70" : "bg-soft text-muted"} ${className}`}
     >
       <span
         aria-hidden="true"

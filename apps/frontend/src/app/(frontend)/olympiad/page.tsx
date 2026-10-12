@@ -157,7 +157,7 @@ export default async function OlympiadPage() {
         <p className="mt-3 font-mono text-[11.5px] uppercase tracking-[.08em] text-muted">Non-refundable registration fee · online payment only</p>
       </section>
 
-      <section className="topo mt-24 bg-soft py-20">
+      <section className="mt-24 bg-soft py-20">
         <div className="wrap grid gap-12 lg:grid-cols-[1.1fr_1fr] lg:items-center">
           <div>
             <SectionHeader eyebrow="About the Olympiad" title="India’s first adventure scholarship program" />
