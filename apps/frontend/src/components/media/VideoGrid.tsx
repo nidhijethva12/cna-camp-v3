@@ -36,7 +36,13 @@ function Caption({ title, label }: { title: string; label: string }) {
 
 function PlayableVideo({ video, sizes }: { video: Video; sizes: string }) {
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
   const [open, setOpen] = useState(false);
+
+  // The dialog opens before the clip renders, so move focus to Close once it exists.
+  useEffect(() => {
+    if (open) closeRef.current?.focus();
+  }, [open]);
 
   const show = () => {
     setOpen(true);
@@ -72,7 +78,13 @@ function PlayableVideo({ video, sizes }: { video: Video; sizes: string }) {
             />
             <div className="mt-3 flex items-center justify-between gap-4 text-light">
               <p className="font-semibold">{video.title}</p>
-              <button type="button" onClick={() => dialogRef.current?.close()} className="btn btn-primary min-h-11! px-4!" aria-label="Close video">
+              <button
+                ref={closeRef}
+                type="button"
+                onClick={() => dialogRef.current?.close()}
+                className="btn btn-primary min-h-11! px-4!"
+                aria-label="Close video"
+              >
                 <Close className="text-[18px]" />
               </button>
             </div>

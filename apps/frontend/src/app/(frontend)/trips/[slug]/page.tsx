@@ -62,6 +62,8 @@ export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
   if (!trip) notFound();
 
   const region = regions[trip.region].label;
+  // Old-site photos are often 300-800px wide; only sharp ones fill the hero edge to edge.
+  const sharpHero = !trip.img || (trip.img.width ?? 0) >= 1200;
   const gallery = tripGallery(trip);
   const showPhotos = gallery.length >= 3;
   const campus = tripCampus(trip);
@@ -106,30 +108,54 @@ export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
   return (
     <>
       <section className="relative isolate overflow-hidden bg-dark text-light">
-        <div className="kenburns absolute inset-0 -z-10 overflow-hidden opacity-90">
-          <Photo img={trip.img} wide preload sizes="100vw" alt={trip.name} label={`${region} photo coming soon`} />
-        </div>
-        <div className="absolute inset-0 -z-10 bg-linear-to-b from-dark/20 to-dark/88" />
-        <div className="wrap flex min-h-[460px] flex-col justify-end pb-12 pt-20">
-          <nav className="font-mono text-[11.5px] uppercase tracking-[.08em] text-light/70" aria-label="Breadcrumb">
-            <Link href="/" className="hover:text-light">
-              Home
-            </Link>{" "}
-            /{" "}
-            <Link href="/trips" className="hover:text-light">
-              Trips
-            </Link>{" "}
-            /{" "}
-            <Link href={tripsByRegionHref(trip.region)} className="hover:text-light">
-              {region}
-            </Link>
-          </nav>
-          <h1 className="h-page mt-4 max-w-4xl">{trip.name}</h1>
-          <p className="mt-4 max-w-2xl text-[18px] text-light/85">{trip.summary}</p>
-          <div className="mt-6 flex flex-wrap items-center gap-3">
-            <span className="tag border-secondary bg-secondary text-dark">{trip.type}</span>
-            <MetaLine items={[durationShort(trip), trip.state, trip.altitude, trip.difficulty]} className="text-[15px] text-light/85" />
+        {sharpHero ? (
+          <>
+            <div className="kenburns absolute inset-0 -z-10 overflow-hidden opacity-90">
+              <Photo img={trip.img} wide preload sizes="100vw" alt={trip.name} label={`${region} photo coming soon`} />
+            </div>
+            <div className="absolute inset-0 -z-10 bg-linear-to-b from-dark/20 to-dark/88" />
+          </>
+        ) : (
+          trip.img && (
+            // Too small to stretch full width: a blurred wash behind the text, the photo itself framed at its own size.
+            <>
+              <div className="absolute inset-0 -z-10 overflow-hidden opacity-70">
+                <Photo img={trip.img} sizes="20vw" alt="" className="scale-110 blur-2xl" />
+              </div>
+              <div className="absolute inset-0 -z-10 bg-linear-to-r from-dark via-dark/85 to-dark/55" />
+            </>
+          )
+        )}
+        <div className="wrap grid min-h-[460px] items-end gap-10 pb-12 pt-20 lg:grid-cols-[1fr_auto]">
+          <div>
+            <nav className="font-mono text-[11.5px] uppercase tracking-[.08em] text-light/70" aria-label="Breadcrumb">
+              <Link href="/" className="hover:text-light">
+                Home
+              </Link>{" "}
+              /{" "}
+              <Link href="/trips" className="hover:text-light">
+                Trips
+              </Link>{" "}
+              /{" "}
+              <Link href={tripsByRegionHref(trip.region)} className="hover:text-light">
+                {region}
+              </Link>
+            </nav>
+            <h1 className="h-page mt-4 max-w-4xl">{trip.name}</h1>
+            <p className="mt-4 max-w-2xl text-[18px] text-light/85">{trip.summary}</p>
+            <div className="mt-6 flex flex-wrap items-center gap-3">
+              <span className="tag border-secondary bg-secondary text-dark">{trip.type}</span>
+              <MetaLine items={[durationShort(trip), trip.state, trip.altitude, trip.difficulty]} className="text-[15px] text-light/85" />
+            </div>
           </div>
+          {!sharpHero && trip.img && (
+            <div
+              className="relative hidden aspect-[4/3] overflow-hidden rounded-card shadow-panel ring-1 ring-light/15 lg:block"
+              style={{ width: Math.min(420, Math.max(trip.img.width ?? 320, 320)) }}
+            >
+              <Photo img={trip.img} preload sizes="420px" alt={trip.name} />
+            </div>
+          )}
         </div>
       </section>
 
@@ -278,7 +304,7 @@ export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
                 <h2 className="h-sub">Videos</h2>
                 <span className="font-mono text-[11.5px] uppercase tracking-[.08em] text-muted">Filmed on CNA trips</span>
               </div>
-              <VideoGrid videos={videos} sizes="(min-width: 1024px) 260px, 50vw" className="mt-5 grid-cols-2 sm:grid-cols-3" />
+              <VideoGrid videos={videos} sizes="(min-width: 1024px) 260px, (min-width: 640px) 33vw, 50vw" className="mt-5 grid-cols-2 sm:grid-cols-3" />
             </section>
           )}
 

@@ -12,7 +12,6 @@ export const metadata: Metadata = {
 const otherSlots: Record<string, string> = {
   "campus-dwarka": "Bet Dwarka campus",
   "campus-hingolgadh": "Hingolgadh camp",
-  tribute: "Founder tribute",
 };
 
 export default async function PhotoCreditsPage() {

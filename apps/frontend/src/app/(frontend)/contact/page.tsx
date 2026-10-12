@@ -57,7 +57,6 @@ export default async function ContactPage() {
               src={`https://www.google.com/maps?q=${encodeURIComponent(contact.address.full)}&output=embed`}
               title="Map of the CNA office in Rajkot"
               loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
               className="block aspect-[16/9] w-full border-0 bg-soft"
             />
             <div className="p-5">

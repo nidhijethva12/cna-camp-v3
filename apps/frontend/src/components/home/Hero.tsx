@@ -1,25 +1,14 @@
 import Link from "next/link";
-import { Photo } from "@/components/media/Photo";
 import { ArrowRight, Star } from "@/components/ui/icons";
 import { FOUNDED_YEAR, site } from "@/content/site";
 import type { HomeContent } from "@/lib/content";
+import { HeroSlides } from "./HeroSlides";
 
 export function Hero({ content }: { content: HomeContent["hero"] }) {
   const lines = content.headingLines;
   return (
     <section className="relative isolate overflow-hidden bg-dark text-light" aria-labelledby="hero-title">
-      <div className="absolute inset-0 -z-10 overflow-hidden">
-        <Photo
-          img={content.image}
-          preload
-          sizes="100vw"
-          className="animate-kenburns"
-        />
-      </div>
-      <div className="absolute inset-0 -z-10 bg-linear-to-b from-dark/20 via-dark/30 via-40% to-dark/92" />
-      <div className="absolute inset-0 -z-10 bg-linear-to-r from-dark/70 via-dark/35 via-45% to-transparent to-75%" />
-
-      <div className="wrap flex min-h-[640px] flex-col justify-end pb-36 pt-24 md:min-h-[720px]">
+      <HeroSlides images={content.images}>
         <p className="font-mono text-[12px] uppercase tracking-[.14em] text-light/80">
           {site.coordinates} — Rajkot · Est. {FOUNDED_YEAR}
         </p>
@@ -51,7 +40,7 @@ export function Hero({ content }: { content: HomeContent["hero"] }) {
             </li>
           ))}
         </ul>
-      </div>
+      </HeroSlides>
     </section>
   );
 }

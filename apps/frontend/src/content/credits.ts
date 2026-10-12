@@ -239,13 +239,6 @@ export const photoCredits = [
     source: "https://commons.wikimedia.org/w/index.php?curid=18005686"
   },
   {
-    slot: "tribute",
-    title: "Incredible view of a sunrise in the Himalayas. The sunlight creates a star-like pattern as it peeks above the mountain tops. The photo was taken at Manali, Northern India.",
-    creator: "Muhammed Jazeel",
-    license: "CC0 1.0",
-    source: "https://wordpress.org/photos/photo/607667a999/"
-  },
-  {
     slot: "panchgani-mahabaleshwar",
     title: "Needle Hole Point Mahabaleshwar",
     creator: "Rishabh Tatiraju",

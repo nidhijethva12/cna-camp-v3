@@ -16,10 +16,13 @@ import type { HomePage, Media, Trip } from "../../payload-types";
 const apply = process.argv.includes("apply");
 const photoDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../public/img/cna/real");
 // Outside Next.js there is no cache to refresh; the live site picks changes up on its next revalidation.
-const context = { skipRevalidate: true };
+// A fresh object per call: the storage plugin flags the request context mid-upload, and a shared object
+// keeps that flag, so every later upload would silently skip Vercel Blob.
+const context = () => ({ skipRevalidate: true });
 
 const alts = {
   "campus-02": "Blue tents on a green meadow, Manali",
+  "campus-03": "CNA’s Manali campus buildings with snow peaks behind",
   "campus-04": "CNA’s Manali campus ground with snow peaks behind",
   "campus-05": "The garden at CNA’s Manali campus, snow peaks behind",
   "climb-03": "A camper rappelling down a rock face on a rope",
@@ -38,6 +41,7 @@ const alts = {
   "land-04": "A spring meadow with yellow flowers in the Kullu valley",
   "land-05": "A tall deodar forest near Manali",
   "land-06": "The Manali valley below snow peaks, Himachal Pradesh",
+  "land-07": "Tall deodar trees in a forest near Manali",
   "land-09": "A waterfall tumbling over rocks near Manali",
   "land-10": "Panorama of the Manali valley under snow peaks",
   "land-12": "View over pine trees and mountains from a hilltop in Himachal",
@@ -55,16 +59,19 @@ type PhotoName = keyof typeof alts;
 
 const home: {
   hero: PhotoName;
+  heroSlides: PhotoName[];
   story: PhotoName;
   why: PhotoName;
   acrossIndia: PhotoName;
   audiences: Record<string, PhotoName>;
   strip: [PhotoName, string][];
 } = {
-  hero: "trek-01",
+  // Sharp, bright, wide photos: trek-01 was too hazy at full width.
+  hero: "land-06",
+  heroSlides: ["campus-03", "river-01", "land-03", "group-06", "campus-05", "land-07"],
   story: "group-06",
   why: "climb-04",
-  acrossIndia: "land-06",
+  acrossIndia: "land-12",
   // Audience cards are matched by their link, which stays stable when titles are edited.
   audiences: {
     "/group-trips#schools": "group-10",
@@ -142,7 +149,7 @@ async function photo(name: PhotoName) {
         collection: "media",
         data: { alt: alts[name], ownedByCna: true },
         file: { data, mimetype: "image/webp", name: filename, size: data.length },
-        context,
+        context: context(),
       });
       id = doc.id;
     } else {
@@ -178,6 +185,13 @@ const swap = async (where: string, current: string | Media | null | undefined, n
   return id;
 };
 next.hero.image = await swap("hero", published.hero.image, home.hero);
+const slides = await Promise.all(home.heroSlides.map(photo));
+const oldSlides = (published.hero.slides ?? []).map(idOf);
+if (oldSlides.join() !== slides.join()) {
+  changes.push(`  hero slides: ${(await Promise.all(oldSlides.map(describe))).join(", ") || "(none)"}`);
+  changes.push(`        → ${(await Promise.all(slides.map(label))).join(", ")}`);
+  next.hero.slides = slides;
+}
 next.story.image = await swap("who we are", published.story.image, home.story);
 next.why.image = await swap("why CNA", published.why.image, home.why);
 next.destinations.regionImages.acrossIndia = await swap(
@@ -240,7 +254,7 @@ console.log(`\n${apply ? "APPLYING" : "DRY RUN (add `apply` to write)"}: ${creat
 console.log(changes.join("\n"));
 
 if (apply) {
-  await payload.updateGlobal({ slug: "home-page", data: { ...contentOf(next), _status: "published" }, draft: false, depth: 0, context });
+  await payload.updateGlobal({ slug: "home-page", data: { ...contentOf(next), _status: "published" }, draft: false, depth: 0, context: context() });
   for (const { doc, heroImage, gallery } of tripUpdates) {
     await payload.update({
       collection: "trips",
@@ -248,7 +262,7 @@ if (apply) {
       data: { ...contentOf(doc), heroImage, gallery, _status: "published" },
       draft: false,
       depth: 0,
-      context,
+      context: context(),
     });
   }
   console.log(`\nDone: home page and ${tripUpdates.length} trips published.`);

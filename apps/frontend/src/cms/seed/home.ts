@@ -13,7 +13,15 @@ export const home = {
     headingLines: ["Real trails.", "Real people.", "Since 1997."],
     intro:
       "Eco-tourism treks, camps and nature trails from Gujarat to the Himalaya. For schools, colleges, families, friends, girls-only groups and solo travellers.",
-    image: photo("/img/cna/real/trek-01-wide.webp", "A line of first-time trekkers walking up a green hillside in Himachal"),
+    image: photo("/img/cna/real/land-06-wide.webp", "The Manali valley below snow peaks, Himachal Pradesh"),
+    slides: [
+      photo("/img/cna/real/campus-03-wide.webp", "CNA’s Manali campus buildings with snow peaks behind"),
+      photo("/img/cna/real/river-01-wide.webp", "Campers crossing a river on a wooden bridge near Manali"),
+      photo("/img/cna/real/land-03-wide.webp", "Snow peaks above a green valley in Himachal Pradesh"),
+      photo("/img/cna/real/group-06-wide.webp", "A large CNA group outside Hidimba temple, Manali"),
+      photo("/img/cna/real/campus-05-wide.webp", "The garden at CNA’s Manali campus, snow peaks behind"),
+      photo("/img/cna/real/land-07-wide.webp", "Tall deodar trees in a forest near Manali"),
+    ],
     highlights: ["1,00,000+ campers", "1,000+ camps", "Backed by a registered trust"],
   },
   story: {
@@ -101,7 +109,7 @@ export const home = {
     intro: "Coast, forest, desert and high mountains. We pick the right place for each season.",
     regionImages: {
       gujarat: photo("/img/cna/marinecamp/02.webp", "Marine camp at Bet Dwarka"),
-      acrossIndia: photo("/img/cna/real/land-06-wide.webp", "The Manali valley below snow peaks, Himachal Pradesh"),
+      acrossIndia: photo("/img/cna/real/land-12-wide.webp", "View over pine trees and mountains from a hilltop in Himachal"),
       northEast: photo("/img/cna/sikkim/03.webp", "Mountain views in Sikkim"),
       outsideIndia: photo("/img/cna/everest_base_camp/05.webp", "On the trail to Everest Base Camp"),
     },

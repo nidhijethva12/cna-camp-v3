@@ -24,7 +24,7 @@ import type {
 /* Every loader is wrapped in React `cache`, so a page and its layout share one query per request. */
 
 /** Payload prefixes uploads with the server URL; files on this site are served by path instead. */
-const mediaPath = (url: string) => url.replace(/^https?:\/\/[^/]+(?=\/api\/media\/)/, "");
+const mediaPath = (url: string) => url.replace(/^https?:\/\/[^/]+(?=\/api\/(media|videos)\/)/, "");
 
 function toImage(media: string | Media | null | undefined): ImageRef | null {
   if (!media || typeof media === "string" || !media.url) return null;
@@ -116,8 +116,11 @@ function toVideo(doc: VideoDoc): Video | null {
 /** Every video with its poster, in the editors' order; small enough to load whole. */
 export const getVideos = cache(async (): Promise<Video[]> => {
   const payload = await getCms();
-  const { docs } = await payload.find({ collection: "videos", sort: ["order", "createdAt"], depth: 1, pagination: false });
-  return docs.flatMap((d) => toVideo(d) ?? []);
+  const { docs } = await payload.find({ collection: "videos", sort: "createdAt", depth: 1, pagination: false });
+  // Sorted here, not in the query: MongoDB puts videos with no order number first, editors expect them last.
+  return docs
+    .sort((a, b) => (a.order ?? Infinity) - (b.order ?? Infinity))
+    .flatMap((d) => toVideo(d) ?? []);
 });
 
 export async function getTripVideos(trip: Trip) {
@@ -283,7 +286,10 @@ function toHome(doc: Partial<HomeDoc>) {
     hero: {
       headingLines: hero?.headingLines ?? [],
       intro: hero?.intro ?? "",
-      image: toImage(hero?.image),
+      // The same photo added twice would break the slideshow's keys, so repeats are dropped.
+      images: [hero?.image, ...(hero?.slides ?? [])]
+        .flatMap((m) => toImage(m) ?? [])
+        .filter((img, i, all) => all.findIndex((x) => x.src === img.src) === i),
       highlights: hero?.highlights ?? [],
     },
     story: { ...heading(story), body: story?.body ?? "", image: toImage(story?.image), points: points(story?.points) },

@@ -34,6 +34,9 @@ const nextConfig: NextConfig = {
     localPatterns: [{ pathname: "/api/media/file/**" }, { pathname: "/img/**" }],
     // Admin-uploaded photos are served from the Vercel Blob CDN.
     remotePatterns: [{ protocol: "https", hostname: "*.public.blob.vercel-storage.com" }],
+    // Some networks (NAT64 DNS) resolve Blob to a 64:ff9b:: address that Next treats as private, which
+    // breaks every CMS photo in local development. Production keeps the private-IP protection.
+    dangerouslyAllowLocalIP: process.env.NODE_ENV === "development",
   },
   async headers() {
     return [

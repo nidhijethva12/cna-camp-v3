@@ -142,15 +142,19 @@ export default async function AboutPage() {
       <section id="founder" className="mt-24 scroll-mt-20 bg-dark py-20 text-light sm:py-24">
         <div className="wrap grid gap-12 lg:grid-cols-[5fr_7fr] lg:items-start">
           <figure className="lg:sticky lg:top-28">
-            <div className="relative aspect-[4/5] overflow-hidden rounded-card">
-              <Photo img="stock/tribute" alt="Sunrise over Himalayan peaks" sizes="(min-width: 1024px) 480px, 100vw" />
-              <div className="absolute inset-x-0 bottom-0 bg-linear-to-b from-transparent to-dark/90 p-6 pt-20">
-                <p className="font-mono text-[11.5px] uppercase tracking-[.08em] text-light/70">In loving memory</p>
-                <p className="display mt-1 text-[30px]">{founder.name}</p>
-                <p className="font-mono text-[12px] text-secondary">{founder.years}</p>
-              </div>
+            {/* Landscape frame: the only photo of him is 720px wide, so it is shown near its real size. */}
+            <div className="relative aspect-[4/3] overflow-hidden rounded-card">
+              <Photo
+                img="cna/real/founder-01"
+                alt="Dr. Ketankumar P. Trivedi at a frozen lake in the Himalaya"
+                sizes="(min-width: 1024px) 480px, 100vw"
+              />
             </div>
-            <figcaption className="mt-3 font-mono text-[11px] uppercase tracking-[.08em] text-light/45">Photo of Dr. Trivedi to be added</figcaption>
+            <figcaption className="mt-5 border-l-4 border-secondary pl-4">
+              <p className="font-mono text-[11.5px] uppercase tracking-[.08em] text-light/70">In loving memory</p>
+              <p className="display mt-1 text-[30px]">{founder.name}</p>
+              <p className="font-mono text-[12px] text-secondary">{founder.years}</p>
+            </figcaption>
           </figure>
           <div>
             <p className="eyebrow text-light/60!">Our founder</p>

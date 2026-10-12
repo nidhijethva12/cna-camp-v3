@@ -1,7 +1,8 @@
 /**
  * Adds CNA's video clips (client media pack) to the Videos collection with their poster frames, and
  * links them to the Manali trips, as chosen in the client's content docs. Safe to re-run: clips and
- * posters already uploaded are reused, and trip links are only written when they differ.
+ * posters already uploaded are reused (their title, order and loop settings are set on first upload
+ * only; edit them in the admin), and trip links are only written when they differ.
  *
  * `dir` holds <slug>.mp4 + <slug>.webp (poster) for each clip below; videos are not kept in the repo.
  * Dry run by default; add `apply` to upload and publish (`payload run` drops --flags, so it is a plain word):
@@ -16,7 +17,9 @@ import type { Video } from "../../payload-types";
 const [dir, mode] = process.argv.slice(2);
 const apply = mode === "apply";
 // Outside Next.js there is no cache to refresh; the live site picks changes up on its next revalidation or deploy.
-const context = { skipRevalidate: true };
+// A fresh object per call: the storage plugin flags the request context mid-upload, and a shared object
+// keeps that flag, so every later upload would silently skip Vercel Blob.
+const context = () => ({ skipRevalidate: true });
 
 const clips = [
   {
@@ -76,7 +79,7 @@ for (const [i, clip] of clips.entries()) {
           collection: "media",
           data: { alt: clip.alt, ownedByCna: true },
           file: { ...file, name: posterName, mimetype: "image/webp" },
-          context,
+          context: context(),
         })
       ).id;
     }
@@ -102,7 +105,7 @@ for (const [i, clip] of clips.entries()) {
         collection: "videos",
         data: { ...data, poster: posterId },
         file: { ...file, mimetype: "video/mp4" },
-        context,
+        context: context(),
       });
       ids.set(clip.slug, doc.id);
     }
@@ -123,7 +126,7 @@ for (const [slug, wanted] of Object.entries(tripVideos)) {
     // Write the whole published document back so no other field can be lost in the merge.
     const doc = { ...trip } as Record<string, unknown>;
     for (const key of ["id", "createdAt", "updatedAt"]) delete doc[key];
-    await payload.update({ collection: "trips", id: trip.id, data: { ...doc, videos: next, _status: "published" }, draft: false, depth: 0, context });
+    await payload.update({ collection: "trips", id: trip.id, data: { ...doc, videos: next, _status: "published" }, draft: false, depth: 0, context: context() });
   }
 }
 

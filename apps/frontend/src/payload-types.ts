@@ -951,9 +951,13 @@ export interface HomePage {
     headingLines: string[];
     intro: string;
     /**
-     * Wide landscape photo behind the heading.
+     * Wide landscape photo behind the heading; the first slide and the one shown when motion is reduced.
      */
     image: string | Media;
+    /**
+     * Optional. They fade in one after another every few seconds. Use sharp, wide landscape photos.
+     */
+    slides?: (string | Media)[] | null;
     /**
      * Small starred facts under the button.
      */
@@ -1144,6 +1148,7 @@ export interface HomePageSelect<T extends boolean = true> {
         headingLines?: T;
         intro?: T;
         image?: T;
+        slides?: T;
         highlights?: T;
       };
   story?:

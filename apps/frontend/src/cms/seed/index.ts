@@ -18,7 +18,9 @@ import { batches, trips, type SeedTrip } from "./trips";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 const publicDir = path.resolve(dirname, "../../../public");
-const context = { skipRevalidate: true };
+// A fresh object per call: the storage plugin flags the request context mid-upload, and a shared object
+// keeps that flag, so every later upload would silently skip Vercel Blob.
+const context = () => ({ skipRevalidate: true });
 
 const mimeTypes: Record<string, string> = { ".webp": "image/webp", ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".png": "image/png" };
 
@@ -65,7 +67,7 @@ function createPhotoUploader(payload: Payload) {
         collection: "media",
         data: { alt, ownedByCna: src.startsWith("/img/cna/real/") },
         file: { data, mimetype: mimeTypes[ext], name: `${base}${ext}`, size: data.length },
-        context,
+        context: context(),
       });
       id = doc.id;
       created += 1;
@@ -140,7 +142,7 @@ async function seed() {
 
   if (await isEmpty(payload, "trips")) {
     for (const [i, t] of trips.entries()) {
-      await payload.create({ collection: "trips", data: await tripData(t, (i + 1) * 10, photos.upload), draft: false, context });
+      await payload.create({ collection: "trips", data: await tripData(t, (i + 1) * 10, photos.upload), draft: false, context: context() });
       counts.trips += 1;
     }
   }
@@ -156,7 +158,7 @@ async function seed() {
       await payload.create({
         collection: "batches",
         data: { trip, startDate: indiaNoon(b.startDate), endDate: indiaNoon(b.endDate), seatsLeft: b.seatsLeft, note: b.note, isSample: true },
-        context,
+        context: context(),
       });
       counts.batches += 1;
     }
@@ -164,7 +166,7 @@ async function seed() {
 
   if (await isEmpty(payload, "faqs")) {
     for (const [i, f] of faqs.entries()) {
-      await payload.create({ collection: "faqs", data: { ...f, order: (i + 1) * 10, showOnHome: i < HOME_FAQ_COUNT }, context });
+      await payload.create({ collection: "faqs", data: { ...f, order: (i + 1) * 10, showOnHome: i < HOME_FAQ_COUNT }, context: context() });
       counts.faqs += 1;
     }
   }
@@ -174,7 +176,7 @@ async function seed() {
       const trip = tripIds.get(tripSlug);
       if (!trip) continue;
       // Placeholders stay visible (and labelled "Sample") until real reviews replace them.
-      await payload.create({ collection: "reviews", data: { ...r, trip, consentGiven: true }, context });
+      await payload.create({ collection: "reviews", data: { ...r, trip, consentGiven: true }, context: context() });
       counts.reviews += 1;
     }
   }
@@ -187,10 +189,10 @@ async function seed() {
     await payload.updateGlobal({
       slug: "home-page",
       draft: false,
-      context,
+      context: context(),
       data: {
         _status: "published",
-        hero: { ...home.hero, image: await upload(home.hero.image) },
+        hero: { ...home.hero, image: await upload(home.hero.image), slides: await mapInOrder(home.hero.slides, upload) },
         story: { ...home.story, image: await upload(home.story.image) },
         holidays: {
           ...home.holidays,
@@ -223,7 +225,7 @@ async function seed() {
   if (!settingsSeeded) {
     await payload.updateGlobal({
       slug: "site-settings",
-      context,
+      context: context(),
       data: { ...siteSettings, social: siteSettings.social.map((s) => ({ ...s })) },
     });
   }
