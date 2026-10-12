@@ -119,6 +119,13 @@ export const Trips: CollectionConfig = {
               hasMany: true,
               admin: { description: "3 or more photos show a gallery on the trip page and an album on the Gallery page." },
             },
+            {
+              name: "videos",
+              type: "relationship",
+              relationTo: "videos",
+              hasMany: true,
+              admin: { description: "Short clips shown under the photos, in this order." },
+            },
           ],
         },
         { label: "SEO", fields: [seoField] },

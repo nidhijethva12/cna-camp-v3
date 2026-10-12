@@ -3,7 +3,7 @@ import { cache } from "react";
 import { regionOrder } from "@/content/site";
 import { todayInIndia } from "@/lib/format";
 import { getCms } from "@/lib/payload";
-import type { HomePage as HomeDoc, Media, Post as PostDoc, SiteSetting, Trip as TripDoc } from "@/payload-types";
+import type { HomePage as HomeDoc, Media, Post as PostDoc, SiteSetting, Trip as TripDoc, Video as VideoDoc } from "@/payload-types";
 import type {
   Audience,
   Batch,
@@ -18,6 +18,7 @@ import type {
   Seo,
   Trip,
   TripType,
+  Video,
 } from "@/types/content";
 
 /* Every loader is wrapped in React `cache`, so a page and its layout share one query per request. */
@@ -63,6 +64,7 @@ function toTrip(doc: TripDoc): Trip {
     price: doc.priceFrom ?? null,
     img: toImage(doc.heroImage),
     gallery: images(doc.gallery),
+    videoIds: (doc.videos ?? []).map((v) => (typeof v === "string" ? v : v.id)),
     months: doc.months.map((m) => capitalise<Month>(m)),
     start: doc.startsFrom,
     activities: texts(doc.activities) ?? [],
@@ -96,6 +98,32 @@ const getTripDocs = cache(async () => {
 });
 
 export const getTrips = cache(async () => (await getTripDocs()).map(toTrip));
+
+function toVideo(doc: VideoDoc): Video | null {
+  const poster = toImage(doc.poster);
+  if (!doc.url || !poster) return null;
+  return {
+    id: doc.id,
+    src: mediaPath(doc.url),
+    title: doc.title,
+    poster,
+    portrait: doc.orientation === "portrait",
+    ambient: Boolean(doc.ambient),
+    showInGallery: Boolean(doc.showInGallery),
+  };
+}
+
+/** Every video with its poster, in the editors' order; small enough to load whole. */
+export const getVideos = cache(async (): Promise<Video[]> => {
+  const payload = await getCms();
+  const { docs } = await payload.find({ collection: "videos", sort: ["order", "createdAt"], depth: 1, pagination: false });
+  return docs.flatMap((d) => toVideo(d) ?? []);
+});
+
+export async function getTripVideos(trip: Trip) {
+  const videos = await getVideos();
+  return trip.videoIds.flatMap((id) => videos.find((v) => v.id === id) ?? []);
+}
 
 export async function getTrip(slug: string): Promise<Trip | undefined> {
   return (await getTrips()).find((t) => t.slug === slug);

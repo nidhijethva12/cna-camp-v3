@@ -11,6 +11,7 @@ import { GraduationCap as GraduationCapBase } from "@phosphor-icons/react/dist/s
 import { Leaf as LeafBase } from "@phosphor-icons/react/dist/ssr/Leaf";
 import { List as ListBase } from "@phosphor-icons/react/dist/ssr/List";
 import { MapPin as MapPinBase } from "@phosphor-icons/react/dist/ssr/MapPin";
+import { Pause as PauseBase } from "@phosphor-icons/react/dist/ssr/Pause";
 import { Phone as PhoneBase } from "@phosphor-icons/react/dist/ssr/Phone";
 import { Play as PlayBase } from "@phosphor-icons/react/dist/ssr/Play";
 import { SealCheck as SealCheckBase } from "@phosphor-icons/react/dist/ssr/SealCheck";
@@ -45,6 +46,7 @@ export const XCircle = /* @__PURE__ */ decorative(XCircleBase, { weight: "fill" 
 export const SealCheck = /* @__PURE__ */ decorative(SealCheckBase, { weight: "fill" });
 export const Star = /* @__PURE__ */ decorative(StarBase, { weight: "fill" });
 export const Play = /* @__PURE__ */ decorative(PlayBase, { weight: "fill" });
+export const Pause = /* @__PURE__ */ decorative(PauseBase, { weight: "fill" });
 export const Camera = /* @__PURE__ */ decorative(CameraBase, { weight: "duotone" });
 export const Phone = /* @__PURE__ */ decorative(PhoneBase, { weight: "fill" });
 export const MapPin = /* @__PURE__ */ decorative(MapPinBase, { weight: "fill" });

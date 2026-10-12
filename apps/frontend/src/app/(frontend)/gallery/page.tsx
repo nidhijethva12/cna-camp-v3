@@ -4,9 +4,10 @@ import Link from "next/link";
 import { PageHead } from "@/components/layout/PageHead";
 import { Lightbox } from "@/components/media/Lightbox";
 import { Photo } from "@/components/media/Photo";
-import { ArrowRight, Play } from "@/components/ui/icons";
+import { VideoGrid } from "@/components/media/VideoGrid";
+import { ArrowRight } from "@/components/ui/icons";
 import { regionOrder, regions } from "@/content/site";
-import { getHome, getTrips } from "@/lib/content";
+import { getHome, getTrips, getVideos } from "@/lib/content";
 import { photoSrc } from "@/lib/photos";
 
 export const metadata: Metadata = {
@@ -15,14 +16,9 @@ export const metadata: Metadata = {
   alternates: { canonical: "/gallery" },
 };
 
-const videos = [
-  { img: "cna/manali/03", alt: "CNA campfire", label: "CNA in 60 seconds" },
-  { img: "cna/marinecamp/03", alt: "Marine camp reef", label: "Marine Camp, Bet Dwarka" },
-  { img: "cna/manali/09", alt: "Rafting on the Beas", label: "Rafting & climbing, Manali" },
-];
-
 export default async function GalleryPage() {
-  const [trips, home] = await Promise.all([getTrips(), getHome()]);
+  const [trips, home, allVideos] = await Promise.all([getTrips(), getHome(), getVideos()]);
+  const videos = allVideos.filter((v) => v.showInGallery);
   const albums = trips
     .filter((t) => t.gallery.length >= 3)
     .map((t) => ({ trip: t, photos: [...(t.img ? [t.img] : []), ...t.gallery.filter((g) => g.src !== t.img?.src)].slice(0, 8) }));
@@ -74,39 +70,18 @@ export default async function GalleryPage() {
           </div>
         </section>
 
-        <section className="wrap mt-16">
-          <div className="flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <p className="eyebrow">Watch</p>
-              <h2 className="h-section mt-2">Videos</h2>
-            </div>
-            <p className="max-w-md text-muted">Short clips from our camps are coming soon.</p>
-          </div>
-          <div className="mt-8 grid gap-4 md:grid-cols-3">
-            {videos.map((v) => (
-              <div
-                key={v.label}
-                className="group relative aspect-video overflow-hidden rounded-card"
-                role="img"
-                aria-label={`${v.alt}. Video coming soon: ${v.label}`}
-              >
-                <Photo img={v.img} sizes="(min-width: 768px) 400px, 100vw" className="transition duration-700 group-hover:scale-[1.04]" />
-                <div className="absolute inset-0 bg-linear-to-b from-dark/10 to-dark/65" />
-                <span
-                  className="absolute left-1/2 top-1/2 flex h-20 w-20 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-primary text-light shadow-float transition group-hover:scale-110"
-                  aria-hidden="true"
-                >
-                  <span className="absolute inset-0 animate-ping rounded-full bg-primary/40 motion-reduce:hidden" />
-                  <Play className="relative ml-1 text-[28px]" />
-                </span>
-                <div className="absolute inset-x-0 bottom-0 p-5 text-light">
-                  <span className="text-[13px] font-medium uppercase tracking-[.08em] text-light/85">Video coming soon</span>
-                  <p className="mt-2 text-[15px] font-semibold">{v.label}</p>
-                </div>
+        {videos.length > 0 && (
+          <section className="wrap mt-16">
+            <div className="flex flex-wrap items-end justify-between gap-4">
+              <div>
+                <p className="eyebrow">Watch</p>
+                <h2 className="h-section mt-2">Videos</h2>
               </div>
-            ))}
-          </div>
-        </section>
+              <p className="max-w-md text-muted">Short clips from camp, filmed on phones by people who were there.</p>
+            </div>
+            <VideoGrid videos={videos} sizes="(min-width: 1024px) 230px, (min-width: 640px) 33vw, 50vw" className="mt-8 grid-cols-2 sm:grid-cols-3 lg:grid-cols-5" />
+          </section>
+        )}
 
         <section className="wrap mt-20">
           <div>

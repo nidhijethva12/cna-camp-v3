@@ -14,6 +14,7 @@ import { Posts } from "./cms/collections/Posts";
 import { Reviews } from "./cms/collections/Reviews";
 import { Trips } from "./cms/collections/Trips";
 import { Users } from "./cms/collections/Users";
+import { Videos } from "./cms/collections/Videos";
 import { HomePage } from "./cms/globals/HomePage";
 import { SiteSettings } from "./cms/globals/SiteSettings";
 
@@ -76,7 +77,7 @@ export default buildConfig({
       },
     },
   },
-  collections: [Trips, Batches, Posts, Reviews, Faqs, Media, Enquiries, Users],
+  collections: [Trips, Batches, Posts, Reviews, Faqs, Media, Videos, Enquiries, Users],
   globals: [HomePage, SiteSettings],
   editor: lexicalEditor(),
   email: emailAdapter(),
@@ -94,7 +95,7 @@ export default buildConfig({
     vercelBlobStorage({
       enabled: Boolean(process.env.BLOB_READ_WRITE_TOKEN),
       token: process.env.BLOB_READ_WRITE_TOKEN,
-      collections: { media: { disablePayloadAccessControl: true } },
+      collections: { media: { disablePayloadAccessControl: true }, videos: { disablePayloadAccessControl: true } },
       clientUploads: true,
     }),
   ],

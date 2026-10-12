@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { EnquiryForm } from "@/components/enquiry/EnquiryForm";
 import { Lightbox } from "@/components/media/Lightbox";
 import { Photo } from "@/components/media/Photo";
+import { VideoGrid } from "@/components/media/VideoGrid";
 import { BreadcrumbLd } from "@/components/seo/Breadcrumbs";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { TripCard } from "@/components/trips/TripCard";
@@ -12,7 +13,7 @@ import { FeatureIcon } from "@/components/ui/FeatureIcon";
 import { ArrowRight, CheckCircle, XCircle } from "@/components/ui/icons";
 import { MetaLine } from "@/components/ui/MetaLine";
 import { regions, site, tripsByRegionHref } from "@/content/site";
-import { getSimilarTrips, getSiteSettings, getTrip, getTripBatches, getTrips } from "@/lib/content";
+import { getSimilarTrips, getSiteSettings, getTrip, getTripBatches, getTrips, getTripVideos } from "@/lib/content";
 import { photoSrc } from "@/lib/photos";
 import { absoluteUrl } from "@/lib/seo";
 import {
@@ -64,12 +65,18 @@ export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
   const gallery = tripGallery(trip);
   const showPhotos = gallery.length >= 3;
   const campus = tripCampus(trip);
-  const [batches, similar, contact] = await Promise.all([getTripBatches(trip.slug), getSimilarTrips(trip), getSiteSettings()]);
+  const [batches, similar, contact, videos] = await Promise.all([
+    getTripBatches(trip.slug),
+    getSimilarTrips(trip),
+    getSiteSettings(),
+    getTripVideos(trip),
+  ]);
   const days = tripItinerary(trip);
 
   const jumpLinks = [
     ["overview", "Overview"],
     ...(showPhotos ? [["photos", "Photos"]] : []),
+    ...(videos.length ? [["videos", "Videos"]] : []),
     ["itinerary", "Day by day"],
     ["inclusions", "Inclusions"],
     ["carry", "What to carry"],
@@ -262,6 +269,16 @@ export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
                   ))}
                 </div>
               </Lightbox>
+            </section>
+          )}
+
+          {videos.length > 0 && (
+            <section id="videos" className="mt-14 scroll-mt-32">
+              <div className="flex flex-wrap items-end justify-between gap-3">
+                <h2 className="h-sub">Videos</h2>
+                <span className="font-mono text-[11.5px] uppercase tracking-[.08em] text-muted">Filmed on CNA trips</span>
+              </div>
+              <VideoGrid videos={videos} sizes="(min-width: 1024px) 260px, 50vw" className="mt-5 grid-cols-2 sm:grid-cols-3" />
             </section>
           )}
 

@@ -73,6 +73,7 @@ export interface Config {
     reviews: Review;
     faqs: Faq;
     media: Media;
+    videos: Video;
     enquiries: Enquiry;
     users: User;
     'payload-kv': PayloadKv;
@@ -88,6 +89,7 @@ export interface Config {
     reviews: ReviewsSelect<false> | ReviewsSelect<true>;
     faqs: FaqsSelect<false> | FaqsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    videos: VideosSelect<false> | VideosSelect<true>;
     enquiries: EnquiriesSelect<false> | EnquiriesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -240,6 +242,10 @@ export interface Trip {
    */
   gallery?: (string | Media)[] | null;
   /**
+   * Short clips shown under the photos, in this order.
+   */
+  videos?: (string | Video)[] | null;
+  /**
    * Search engine and social sharing. Empty fields fall back to the page content.
    */
   seo?: {
@@ -307,6 +313,45 @@ export interface Media {
       filename?: string | null;
     };
   };
+}
+/**
+ * Short phone clips (MP4). Keep each under about 15 MB; visitors load a clip only when they press play.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "videos".
+ */
+export interface Video {
+  id: string;
+  /**
+   * Shown on the card, e.g. “Camp under the snow peaks”.
+   */
+  title: string;
+  /**
+   * Still frame shown until the video plays. Its alt text describes the clip.
+   */
+  poster: string | Media;
+  orientation: 'portrait' | 'landscape';
+  /**
+   * Lower numbers show first.
+   */
+  order?: number | null;
+  /**
+   * Plays on its own, muted and looping, like a moving photo. Only for clips with no people talking.
+   */
+  ambient?: boolean | null;
+  showInGallery?: boolean | null;
+  _objectKey?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
 }
 /**
  * Fixed departure dates. Past batches drop off the site automatically.
@@ -538,6 +583,10 @@ export interface PayloadLockedDocument {
         value: string | Media;
       } | null)
     | ({
+        relationTo: 'videos';
+        value: string | Video;
+      } | null)
+    | ({
         relationTo: 'enquiries';
         value: string | Enquiry;
       } | null)
@@ -648,6 +697,7 @@ export interface TripsSelect<T extends boolean = true> {
       };
   heroImage?: T;
   gallery?: T;
+  videos?: T;
   seo?:
     | T
     | {
@@ -763,6 +813,30 @@ export interface MediaSelect<T extends boolean = true> {
               filename?: T;
             };
       };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "videos_select".
+ */
+export interface VideosSelect<T extends boolean = true> {
+  title?: T;
+  poster?: T;
+  orientation?: T;
+  order?: T;
+  ambient?: T;
+  showInGallery?: T;
+  _objectKey?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

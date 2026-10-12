@@ -44,6 +44,8 @@ export interface Trip {
   price: number | null;
   img: ImageRef | null;
   gallery: ImageRef[];
+  /** Ids of the trip's videos, in the editors' order; resolve them with `getVideos`. */
+  videoIds: string[];
   months: Month[];
   start: string;
   activities: string[];
@@ -129,4 +131,15 @@ export interface Audience {
 export interface GalleryPhoto {
   image: ImageRef;
   caption: string;
+}
+
+export interface Video {
+  id: string;
+  src: string;
+  title: string;
+  poster: ImageRef;
+  portrait: boolean;
+  /** Muted, looping clip that plays on its own; others play with sound when pressed. */
+  ambient: boolean;
+  showInGallery: boolean;
 }
