@@ -19,17 +19,10 @@ export function SectionHeader({ eyebrow, title, intro, action, dark, id }: Secti
         <h2 id={id} className="h-section mt-3">
           {title}
         </h2>
-        {intro && (
-          <p className={`mt-4 max-w-2xl text-[17px] leading-relaxed ${dark ? "text-light/70" : "text-muted"}`}>
-            {intro}
-          </p>
-        )}
+        {intro && <p className={`mt-4 max-w-2xl text-[17px] leading-relaxed ${dark ? "text-light/70" : "text-muted"}`}>{intro}</p>}
       </div>
       {action && (
-        <Link
-          href={action.href}
-          className={`btn shrink-0 self-start md:self-auto ${dark ? "btn-outline-light" : "btn-outline"}`}
-        >
+        <Link href={action.href} className={`btn shrink-0 self-start md:self-auto ${dark ? "btn-outline-light" : "btn-outline"}`}>
           {action.label} <ArrowRight />
         </Link>
       )}

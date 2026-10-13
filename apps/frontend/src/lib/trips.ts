@@ -3,16 +3,11 @@ import { formatPrice } from "@/lib/format";
 import type { Faq, Trip } from "@/types/content";
 
 /** "3D/2N", or "Day trip". */
-export const durationShort = (t: Trip) =>
-  t.nights ? `${t.days}D/${t.nights}N` : t.days === 1 ? "Day trip" : `${t.days} days`;
+export const durationShort = (t: Trip) => (t.nights ? `${t.days}D/${t.nights}N` : t.days === 1 ? "Day trip" : `${t.days} days`);
 
 /** "3 days / 2 nights", or "1 day (day trip)". */
 export const durationLong = (t: Trip) =>
-  t.nights
-    ? `${t.days} days / ${t.nights} night${t.nights > 1 ? "s" : ""}`
-    : t.days === 1
-      ? "1 day (day trip)"
-      : `${t.days} days`;
+  t.nights ? `${t.days} days / ${t.nights} night${t.nights > 1 ? "s" : ""}` : t.days === 1 ? "1 day (day trip)" : `${t.days} days`;
 
 export const tripPrice = (t: Trip) => formatPrice(t.price);
 
@@ -36,8 +31,7 @@ export const tripFacts = (t: Trip): [string, string][] => [
 export const tripTypeLine: Record<Trip["type"], string> = {
   Trek: "This is a guided trek. You walk with trained leaders at a steady pace, camp in nature and learn the basics of mountain safety on the way.",
   Camp: "This is a nature camp. Adventure activities by day, nature learning (EVS) and campfire by night, with our leaders all the time.",
-  "Nature Trail":
-    "This is a nature trail. We travel together as a group, walk a lot and spend real time outdoors, not just at viewpoints.",
+  "Nature Trail": "This is a nature trail. We travel together as a group, walk a lot and spend real time outdoors, not just at viewpoints.",
 };
 
 export const tripWhoCanJoin = (t: Trip): [string, string][] => [
@@ -90,7 +84,10 @@ export function tripPackingList(t: Trip) {
 export function tripItinerary(t: Trip): { title: string; text: string }[] {
   if (t.plan) return t.plan.map(([title, text]) => ({ title, text }));
   const days = [
-    { title: `Meet at ${t.start}, travel to base`, text: "Group meets, safety briefing and travel to the base camp. Evening ice-breakers." },
+    {
+      title: `Meet at ${t.start}, travel to base`,
+      text: "Group meets, safety briefing and travel to the base camp. Evening ice-breakers.",
+    },
     { title: "Acclimatise & first trail", text: "Short hike to get used to the terrain. Learn camp basics: tent, layers, water." },
   ];
   for (let i = 3; i < t.days; i++) {
@@ -130,5 +127,4 @@ const defaultFaqs = (t: Trip): Faq[] => [
 export const tripFaqs = (t: Trip): Faq[] => t.faqs ?? defaultFaqs(t);
 
 export const tripDescription = (t: Trip) =>
-  t.seo.description ??
-  `${t.summary} ${durationShort(t)} ${t.type.toLowerCase()} in ${t.state} with CNA, Rajkot.`;
+  t.seo.description ?? `${t.summary} ${durationShort(t)} ${t.type.toLowerCase()} in ${t.state} with CNA, Rajkot.`;

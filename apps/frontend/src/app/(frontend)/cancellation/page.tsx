@@ -14,7 +14,11 @@ export default async function CancellationPage() {
   const contact = await getSiteSettings();
   return (
     <>
-      <PageHead eyebrow="Policies" title={<>Cancellation &amp; refund</>} text="Plans change. Here is exactly what happens if you need to cancel." />
+      <PageHead
+        eyebrow="Policies"
+        title={<>Cancellation &amp; refund</>}
+        text="Plans change. Here is exactly what happens if you need to cancel."
+      />
       <LegalPage
         sections={cancellationSections(contact)}
         note="Draft for the preview, based on CNA’s existing cancellation rules. Refund timeline to be confirmed by CNA."

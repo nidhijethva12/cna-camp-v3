@@ -41,11 +41,17 @@
   --animate-film-roll: film-roll 60s linear infinite;
 
   @keyframes kenburns {
-    from { transform: scale(1.12); }
-    to { transform: scale(1); }
+    from {
+      transform: scale(1.12);
+    }
+    to {
+      transform: scale(1);
+    }
   }
   @keyframes film-roll {
-    to { transform: translateX(calc(-50% - 10px)); }
+    to {
+      transform: translateX(calc(-50% - 10px));
+    }
   }
 }
 
@@ -123,32 +129,91 @@
     letter-spacing: 0.01em;
     line-height: 0.95;
   }
-  .h-hero { font-size: clamp(44px, 7.2vw, 84px); }
-  .h-page { font-size: clamp(40px, 5.6vw, 64px); }
-  .h-section { font-size: clamp(32px, 4.2vw, 48px); }
-  .h-sub { font-size: clamp(26px, 2.8vw, 32px); }
-  .h-card { font-size: 21px; font-weight: 700; }
+  .h-hero {
+    font-size: clamp(44px, 7.2vw, 84px);
+  }
+  .h-page {
+    font-size: clamp(40px, 5.6vw, 64px);
+  }
+  .h-section {
+    font-size: clamp(32px, 4.2vw, 48px);
+  }
+  .h-sub {
+    font-size: clamp(26px, 2.8vw, 32px);
+  }
+  .h-card {
+    font-size: 21px;
+    font-weight: 700;
+  }
 
   /* Long-form text written in the admin's rich-text editor (blog posts). */
   .rich-text {
     font-size: 18px;
     line-height: 1.75;
-    > * + * { margin-top: 1.1em; }
-    h2, h3, h4 { font-family: var(--font-display); font-weight: 400; line-height: 1; margin-top: 1.6em; }
-    h2 { font-size: clamp(30px, 3.4vw, 38px); }
-    h3 { font-size: clamp(24px, 2.6vw, 28px); }
-    h4 { font-size: 22px; }
-    a { color: var(--color-primary); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
-    a:hover { color: var(--color-primary-hover); }
-    ul, ol { padding-left: 1.4em; }
-    ul { list-style: disc; }
-    ol { list-style: decimal; }
-    li + li { margin-top: 0.4em; }
-    li::marker { color: var(--color-primary); }
-    blockquote { border-left: 3px solid var(--color-secondary); padding-left: 1.1em; font-style: italic; color: var(--color-muted); }
-    hr { border: 0; border-top: 1px solid var(--color-line); margin-block: 2em; }
-    img { width: 100%; height: auto; border-radius: var(--radius-card); }
-    strong { font-weight: 700; }
+    > * + * {
+      margin-top: 1.1em;
+    }
+    h2,
+    h3,
+    h4 {
+      font-family: var(--font-display);
+      font-weight: 400;
+      line-height: 1;
+      margin-top: 1.6em;
+    }
+    h2 {
+      font-size: clamp(30px, 3.4vw, 38px);
+    }
+    h3 {
+      font-size: clamp(24px, 2.6vw, 28px);
+    }
+    h4 {
+      font-size: 22px;
+    }
+    a {
+      color: var(--color-primary);
+      font-weight: 600;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    a:hover {
+      color: var(--color-primary-hover);
+    }
+    ul,
+    ol {
+      padding-left: 1.4em;
+    }
+    ul {
+      list-style: disc;
+    }
+    ol {
+      list-style: decimal;
+    }
+    li + li {
+      margin-top: 0.4em;
+    }
+    li::marker {
+      color: var(--color-primary);
+    }
+    blockquote {
+      border-left: 3px solid var(--color-secondary);
+      padding-left: 1.1em;
+      font-style: italic;
+      color: var(--color-muted);
+    }
+    hr {
+      border: 0;
+      border-top: 1px solid var(--color-line);
+      margin-block: 2em;
+    }
+    img {
+      width: 100%;
+      height: auto;
+      border-radius: var(--radius-card);
+    }
+    strong {
+      font-weight: 700;
+    }
   }
 
   .lead {
@@ -158,6 +223,13 @@
     @media (width >= 40rem) {
       font-size: 18px;
     }
+  }
+  /* Loading shimmer tinted from the surrounding text colour, so it suits light and dark sections. */
+  .skeleton {
+    background-color: color-mix(in srgb, currentColor 8%, transparent);
+    background-image: linear-gradient(100deg, transparent 30%, color-mix(in srgb, currentColor 10%, transparent) 50%, transparent 70%);
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.4s linear infinite;
   }
   .kenburns img {
     animation: var(--animate-kenburns);
@@ -187,29 +259,59 @@
     letter-spacing: 0.05em;
     text-transform: uppercase;
     cursor: pointer;
-    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+    transition:
+      background-color 0.2s,
+      color 0.2s,
+      border-color 0.2s;
   }
   .btn:disabled {
     cursor: not-allowed;
     opacity: 0.6;
   }
-  .btn-primary { background: var(--color-primary); color: var(--color-light); }
-  .btn-primary:hover { background: var(--color-primary-hover); }
-  .btn-dark { background: var(--color-dark); color: var(--color-light); }
-  .btn-dark:hover { background: var(--color-black); }
-  .btn-outline { border-color: currentColor; }
-  .btn-outline:hover { background: var(--color-dark); border-color: var(--color-dark); color: var(--color-light); }
-  .btn-outline-light { border-color: currentColor; color: var(--color-light); }
-  .btn-outline-light:hover { background: var(--color-light); border-color: var(--color-light); color: var(--color-dark); }
+  .btn-primary {
+    background: var(--color-primary);
+    color: var(--color-light);
+  }
+  .btn-primary:hover {
+    background: var(--color-primary-hover);
+  }
+  .btn-dark {
+    background: var(--color-dark);
+    color: var(--color-light);
+  }
+  .btn-dark:hover {
+    background: var(--color-black);
+  }
+  .btn-outline {
+    border-color: currentColor;
+  }
+  .btn-outline:hover {
+    background: var(--color-dark);
+    border-color: var(--color-dark);
+    color: var(--color-light);
+  }
+  .btn-outline-light {
+    border-color: currentColor;
+    color: var(--color-light);
+  }
+  .btn-outline-light:hover {
+    background: var(--color-light);
+    border-color: var(--color-light);
+    color: var(--color-dark);
+  }
 
   .icon {
     display: inline-block;
     flex-shrink: 0;
     vertical-align: -0.125em;
   }
-  .icon-nudge { transition: transform 0.2s ease; }
+  .icon-nudge {
+    transition: transform 0.2s ease;
+  }
   :is(a, button):hover .icon-nudge,
-  .group:hover .icon-nudge { transform: translateX(3px); }
+  .group:hover .icon-nudge {
+    transform: translateX(3px);
+  }
 
   .tag {
     display: inline-flex;
@@ -259,7 +361,9 @@
   /* Contour-line background for light sections; the SVG is a mask so its colour comes from a token. */
   /* Uses `translate`, not `transform`, so it doesn't conflict with .reveal. */
   .lift {
-    transition: translate 0.35s cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 0.35s;
+    transition:
+      translate 0.35s cubic-bezier(0.2, 0.7, 0.2, 1),
+      box-shadow 0.35s;
   }
   .lift:hover {
     translate: 0 -4px;
@@ -278,14 +382,14 @@
     position: absolute;
     inset-inline: 0;
     height: 10px;
-    background: repeating-linear-gradient(
-      90deg,
-      color-mix(in srgb, var(--color-light) 18%, transparent) 0 14px,
-      transparent 14px 30px
-    );
+    background: repeating-linear-gradient(90deg, color-mix(in srgb, var(--color-light) 18%, transparent) 0 14px, transparent 14px 30px);
   }
-  .film::before { top: 0; }
-  .film::after { bottom: 0; }
+  .film::before {
+    top: 0;
+  }
+  .film::after {
+    bottom: 0;
+  }
   .film-track {
     display: flex;
     align-items: flex-start;
@@ -304,9 +408,15 @@
       width: 280px;
     }
   }
-  .film-frame:nth-child(3n) { transform: rotate(-1.5deg); }
-  .film-frame:nth-child(3n + 1) { transform: rotate(1deg); }
-  .film-low { margin-top: 48px; }
+  .film-frame:nth-child(3n) {
+    transform: rotate(-1.5deg);
+  }
+  .film-frame:nth-child(3n + 1) {
+    transform: rotate(1deg);
+  }
+  .film-low {
+    margin-top: 48px;
+  }
   .film-photo {
     position: relative;
     overflow: hidden;
@@ -315,12 +425,31 @@
     border-radius: var(--radius-card);
     background: var(--color-dark-soft);
   }
-  .film-low .film-photo { aspect-ratio: 1; }
-  .film-photo img { transition: transform 0.6s; }
-  .film-frame:hover .film-photo img { transform: scale(1.06); }
+  .film-low .film-photo {
+    aspect-ratio: 1;
+  }
+  .film-photo img {
+    transition: transform 0.6s;
+  }
+  .film-frame:hover .film-photo img {
+    transform: scale(1.06);
+  }
   @media (prefers-reduced-motion: reduce) {
-    .film { overflow-x: auto; }
-    .film-track { animation: none; }
+    .film {
+      overflow-x: auto;
+    }
+    .film-track {
+      animation: none;
+    }
+  }
+}
+
+@keyframes skeleton-shimmer {
+  from {
+    background-position: 150% 0;
+  }
+  to {
+    background-position: -50% 0;
   }
 }
 

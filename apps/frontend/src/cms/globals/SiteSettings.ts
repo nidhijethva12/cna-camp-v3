@@ -24,12 +24,18 @@ export const SiteSettings: GlobalConfig = {
                   name: "whatsappNumber",
                   type: "text",
                   required: true,
-                  validate: (value: unknown) => /^\d{11,15}$/.test(String(value ?? "")) || "Digits only, with country code, e.g. 917046361009",
+                  validate: (value: unknown) =>
+                    /^\d{11,15}$/.test(String(value ?? "")) || "Digits only, with country code, e.g. 917046361009",
                   admin: { description: "Digits with country code, e.g. 917046361009" },
                 },
               ],
             },
-            { name: "whatsappMessage", type: "text", required: true, admin: { description: "Pre-filled message when someone taps WhatsApp." } },
+            {
+              name: "whatsappMessage",
+              type: "text",
+              required: true,
+              admin: { description: "Pre-filled message when someone taps WhatsApp." },
+            },
             {
               type: "row",
               fields: [
@@ -71,7 +77,12 @@ export const SiteSettings: GlobalConfig = {
                       required: true,
                       options: ["Instagram", "Facebook", "YouTube", "X", "LinkedIn"].map((p) => ({ label: p, value: p })),
                     },
-                    { name: "url", type: "text", validate: httpUrl, admin: { description: "Leave empty to show the name without a link." } },
+                    {
+                      name: "url",
+                      type: "text",
+                      validate: httpUrl,
+                      admin: { description: "Leave empty to show the name without a link." },
+                    },
                   ],
                 },
               ],

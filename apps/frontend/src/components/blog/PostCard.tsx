@@ -17,7 +17,7 @@ export function PostCard({ post }: { post: PostSummary }) {
         />
       </Link>
       <div className="flex flex-1 flex-col p-5">
-        <time dateTime={post.publishedAt} className="font-mono text-[11.5px] uppercase tracking-[.08em] text-muted">
+        <time dateTime={post.publishedAt} className="font-mono text-[11.5px] tracking-[.08em] text-muted uppercase">
           {formatDate(post.publishedAt)}
         </time>
         <h3 className="h-card mt-2">
@@ -26,7 +26,9 @@ export function PostCard({ post }: { post: PostSummary }) {
           </Link>
         </h3>
         <p className="mt-2 line-clamp-3 flex-1 text-[15px] leading-relaxed text-muted">{post.excerpt}</p>
-        <p className="mt-5 font-semibold group-hover:text-primary">Read story <ArrowRight /></p>
+        <p className="mt-5 font-semibold group-hover:text-primary">
+          Read story <ArrowRight />
+        </p>
       </div>
     </article>
   );

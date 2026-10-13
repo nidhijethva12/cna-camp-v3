@@ -58,7 +58,7 @@ export default async function PostPage({ params }: PageProps<"/blog/[slug]">) {
     <>
       <article>
         <header className="wrap mt-12 max-w-3xl">
-          <nav aria-label="Breadcrumb" className="font-mono text-[12px] uppercase tracking-[.08em] text-muted">
+          <nav aria-label="Breadcrumb" className="font-mono text-[12px] tracking-[.08em] text-muted uppercase">
             <Link href="/blog" className="hover:text-primary">
               <ArrowLeft className="mr-1.5" />
               Blog
@@ -66,7 +66,7 @@ export default async function PostPage({ params }: PageProps<"/blog/[slug]">) {
           </nav>
           <h1 className="display h-page mt-4">{post.title}</h1>
           <p className="lead mt-4">{post.excerpt}</p>
-          <time dateTime={post.publishedAt} className="mt-5 block font-mono text-[12px] uppercase tracking-[.08em] text-muted">
+          <time dateTime={post.publishedAt} className="mt-5 block font-mono text-[12px] tracking-[.08em] text-muted uppercase">
             {formatDate(post.publishedAt)} · {site.name}
           </time>
         </header>

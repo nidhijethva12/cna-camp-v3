@@ -68,10 +68,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en-IN" className={`${heading.variable} ${body.variable}`}>
       <body className="min-h-screen pb-16 lg:pb-0">
-        <a
-          href="#main"
-          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:bg-light focus:p-3"
-        >
+        <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:bg-light focus:p-3">
           Skip to content
         </a>
         <SiteHeader />

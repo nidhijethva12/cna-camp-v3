@@ -14,7 +14,11 @@ export default async function TermsPage() {
   const contact = await getSiteSettings();
   return (
     <>
-      <PageHead eyebrow="Policies" title={<>Terms &amp; conditions</>} text="How booking, payments, safety and changes work on a CNA camp, in plain words." />
+      <PageHead
+        eyebrow="Policies"
+        title={<>Terms &amp; conditions</>}
+        text="How booking, payments, safety and changes work on a CNA camp, in plain words."
+      />
       <LegalPage
         sections={termsSections(contact)}
         note="Draft for the preview, written from CNA’s existing terms. To be reviewed by CNA and a legal adviser before launch."

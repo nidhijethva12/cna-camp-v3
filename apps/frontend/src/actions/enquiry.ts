@@ -59,13 +59,21 @@ const LIMITS = {
 async function visitorKey() {
   const h = await headers();
   const ip = h.get("x-forwarded-for")?.split(",")[0]?.trim() || h.get("x-real-ip");
-  return ip ? createHmac("sha256", process.env.PAYLOAD_SECRET ?? "").update(ip).digest("hex").slice(0, 32) : undefined;
+  return ip
+    ? createHmac("sha256", process.env.PAYLOAD_SECRET ?? "")
+        .update(ip)
+        .digest("hex")
+        .slice(0, 32)
+    : undefined;
 }
 
 const since = (ms: number) => new Date(Date.now() - ms).toISOString();
 
 const text = (fd: FormData, key: string, max = 200) =>
-  String(fd.get(key) ?? "").trim().replace(/\s+/g, " ").slice(0, max);
+  String(fd.get(key) ?? "")
+    .trim()
+    .replace(/\s+/g, " ")
+    .slice(0, max);
 const oneOf = (value: string, allowed: readonly string[]) => !value || allowed.includes(value);
 
 export async function submitEnquiry(_prev: EnquiryState, fd: FormData): Promise<EnquiryState> {
@@ -84,8 +92,13 @@ export async function submitEnquiry(_prev: EnquiryState, fd: FormData): Promise<
     month: text(fd, "month"),
     days: text(fd, "days"),
     fromCity: text(fd, "fromCity", 80),
-    message: String(fd.get("message") ?? "").trim().slice(0, 1000),
-    interests: fd.getAll("interests").map(String).filter((i) => enquiryInterests.includes(i)),
+    message: String(fd.get("message") ?? "")
+      .trim()
+      .slice(0, 1000),
+    interests: fd
+      .getAll("interests")
+      .map(String)
+      .filter((i) => enquiryInterests.includes(i)),
   } satisfies EnquiryValues;
 
   const mobile = values.phone.replace(/[\s()-]/g, "").match(INDIAN_MOBILE)?.[1];
@@ -105,8 +118,10 @@ export async function submitEnquiry(_prev: EnquiryState, fd: FormData): Promise<
     if (!oneOf(values.region, regionLabels)) fieldErrors.region = "Please pick a region from the list.";
     if (!oneOf(values.days, enquiryDays)) fieldErrors.days = "Please pick a trip length from the list.";
   } else {
-    if (!(travellerTypes as readonly string[]).includes(values.travellerType)) fieldErrors.travellerType = "Please choose who is travelling.";
-    if (size !== undefined && (!Number.isInteger(size) || size < 1 || size > 5000)) fieldErrors.groupSize = "Please enter a number of people.";
+    if (!(travellerTypes as readonly string[]).includes(values.travellerType))
+      fieldErrors.travellerType = "Please choose who is travelling.";
+    if (size !== undefined && (!Number.isInteger(size) || size < 1 || size > 5000))
+      fieldErrors.groupSize = "Please enter a number of people.";
   }
   if (fd.get("consent") !== "on") fieldErrors.consent = "Please agree so we can contact you.";
 

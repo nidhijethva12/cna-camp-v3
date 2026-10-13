@@ -13,13 +13,10 @@ import path from "node:path";
 import { getPayload } from "payload";
 import config from "../../payload.config";
 import type { Video } from "../../payload-types";
+import { scriptContext } from "../scriptContext";
 
 const [dir, mode] = process.argv.slice(2);
 const apply = mode === "apply";
-// Outside Next.js there is no cache to refresh; the live site picks changes up on its next revalidation or deploy.
-// A fresh object per call: the storage plugin flags the request context mid-upload, and a shared object
-// keeps that flag, so every later upload would silently skip Vercel Blob.
-const context = () => ({ skipRevalidate: true });
 
 const clips = [
   {
@@ -34,7 +31,12 @@ const clips = [
     alt: "A girls’ group gathered outdoors on a sunny day in Himachal",
     orientation: "landscape",
   },
-  { slug: "camp-snow-peaks", title: "Camp under the snow peaks", alt: "Campers sitting by blue tents below snowy slopes", orientation: "portrait" },
+  {
+    slug: "camp-snow-peaks",
+    title: "Camp under the snow peaks",
+    alt: "Campers sitting by blue tents below snowy slopes",
+    orientation: "portrait",
+  },
   {
     slug: "snow-road-dance",
     title: "Dancing on the snow road",
@@ -68,7 +70,8 @@ async function readFile(name: string) {
 
 for (const [i, clip] of clips.entries()) {
   const posterName = `cna-video-${clip.slug}.webp`;
-  const existingPoster = (await payload.find({ collection: "media", where: { filename: { equals: posterName } }, limit: 1, depth: 0 })).docs[0];
+  const existingPoster = (await payload.find({ collection: "media", where: { filename: { equals: posterName } }, limit: 1, depth: 0 }))
+    .docs[0];
   let posterId = existingPoster?.id;
   if (!posterId) {
     changes.push(`  + poster ${posterName}`);
@@ -79,7 +82,7 @@ for (const [i, clip] of clips.entries()) {
           collection: "media",
           data: { alt: clip.alt, ownedByCna: true },
           file: { ...file, name: posterName, mimetype: "image/webp" },
-          context: context(),
+          context: scriptContext(),
         })
       ).id;
     }
@@ -105,7 +108,7 @@ for (const [i, clip] of clips.entries()) {
         collection: "videos",
         data: { ...data, poster: posterId },
         file: { ...file, mimetype: "video/mp4" },
-        context: context(),
+        context: scriptContext(),
       });
       ids.set(clip.slug, doc.id);
     }
@@ -126,7 +129,14 @@ for (const [slug, wanted] of Object.entries(tripVideos)) {
     // Write the whole published document back so no other field can be lost in the merge.
     const doc = { ...trip } as Record<string, unknown>;
     for (const key of ["id", "createdAt", "updatedAt"]) delete doc[key];
-    await payload.update({ collection: "trips", id: trip.id, data: { ...doc, videos: next, _status: "published" }, draft: false, depth: 0, context: context() });
+    await payload.update({
+      collection: "trips",
+      id: trip.id,
+      data: { ...doc, videos: next, _status: "published" },
+      draft: false,
+      depth: 0,
+      context: scriptContext(),
+    });
   }
 }
 

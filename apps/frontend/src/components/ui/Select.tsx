@@ -27,7 +27,16 @@ interface SelectProps {
 const EMPTY = "__empty__";
 
 /** Themed select that submits like a native one (via a hidden input) in GET forms and server actions. */
-export function Select({ name, options, emptyLabel, defaultValue = "", value: controlled, onValueChange, className = "", ...aria }: SelectProps) {
+export function Select({
+  name,
+  options,
+  emptyLabel,
+  defaultValue = "",
+  value: controlled,
+  onValueChange,
+  className = "",
+  ...aria
+}: SelectProps) {
   const toInternal = (v: string) => v || (emptyLabel ? EMPTY : (options[0]?.value ?? ""));
   const [uncontrolled, setUncontrolled] = useState(toInternal(defaultValue));
   const value = controlled === undefined ? uncontrolled : toInternal(controlled);
@@ -65,7 +74,7 @@ export function Select({ name, options, emptyLabel, defaultValue = "", value: co
               <RadixSelect.Item
                 key={o.value}
                 value={o.value}
-                className="relative flex min-h-10 cursor-pointer select-none items-center rounded-tag py-2 pl-3 pr-9 text-[15px] outline-none data-[highlighted]:bg-soft data-[state=checked]:font-semibold"
+                className="relative flex min-h-10 cursor-pointer items-center rounded-tag py-2 pr-9 pl-3 text-[15px] outline-none select-none data-[highlighted]:bg-soft data-[state=checked]:font-semibold"
               >
                 <RadixSelect.ItemText>{o.label}</RadixSelect.ItemText>
                 <RadixSelect.ItemIndicator className="absolute right-3 text-primary">

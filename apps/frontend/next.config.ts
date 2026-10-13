@@ -6,7 +6,9 @@ const baseCsp = [
   "base-uri 'self'",
   "form-action 'self'",
   "object-src 'none'",
-  ...(process.env.NODE_ENV === "production" && !process.env.NEXT_PUBLIC_SITE_URL?.startsWith("http://") ? ["upgrade-insecure-requests"] : []),
+  ...(process.env.NODE_ENV === "production" && !process.env.NEXT_PUBLIC_SITE_URL?.startsWith("http://")
+    ? ["upgrade-insecure-requests"]
+    : []),
 ];
 
 const blobStorage = "https://*.public.blob.vercel-storage.com";

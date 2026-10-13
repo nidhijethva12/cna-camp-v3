@@ -75,7 +75,10 @@ interface FeatureIconProps {
 export function FeatureIcon({ name, tone = "light", size = "md", round = false, className = "" }: FeatureIconProps) {
   const Glyph = featureIcons[name];
   return (
-    <span aria-hidden="true" className={`inline-flex shrink-0 items-center justify-center ${round ? "rounded-full" : "rounded-card"} ${tones[tone]} ${sizes[size]} ${className}`}>
+    <span
+      aria-hidden="true"
+      className={`inline-flex shrink-0 items-center justify-center ${round ? "rounded-full" : "rounded-card"} ${tones[tone]} ${sizes[size]} ${className}`}
+    >
       <Glyph weight="duotone" focusable="false" />
     </span>
   );

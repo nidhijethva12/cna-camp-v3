@@ -24,7 +24,13 @@ export async function SiteFooter() {
           <div className="mt-6 flex gap-5">
             {contact.social.map((s) =>
               s.href ? (
-                <a key={s.label} href={s.href} className="py-2 font-semibold text-light/85 hover:text-secondary lg:py-0" rel="noopener" target="_blank">
+                <a
+                  key={s.label}
+                  href={s.href}
+                  className="py-2 font-semibold text-light/85 hover:text-secondary lg:py-0"
+                  rel="noopener"
+                  target="_blank"
+                >
                   {s.label}
                 </a>
               ) : (
@@ -41,7 +47,7 @@ export async function SiteFooter() {
 
         <div>
           <p className="eyebrow text-light/50!">Talk to us</p>
-          <address className="mt-4 space-y-3 not-italic text-light/85">
+          <address className="mt-4 space-y-3 text-light/85 not-italic">
             <p>
               <a href={contact.phoneHref} className="font-mono hover:text-secondary">
                 {contact.phone}
@@ -63,7 +69,7 @@ export async function SiteFooter() {
       </div>
 
       <div className="border-t border-light/10">
-        <div className="wrap flex flex-col gap-3 py-6 font-mono text-[11.5px] uppercase tracking-[.08em] text-light/50 md:flex-row md:items-center md:justify-between">
+        <div className="wrap flex flex-col gap-3 py-6 font-mono text-[11.5px] tracking-[.08em] text-light/50 uppercase md:flex-row md:items-center md:justify-between">
           <span>
             © {new Date().getFullYear()} {site.legalName}
           </span>

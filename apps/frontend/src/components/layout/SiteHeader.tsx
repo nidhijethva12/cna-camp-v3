@@ -10,7 +10,7 @@ export async function SiteHeader() {
   return (
     <>
       <div className="bg-dark text-light/85">
-        <div className="wrap flex items-center justify-between gap-4 py-2 font-mono text-[11.5px] uppercase tracking-[.08em]">
+        <div className="wrap flex items-center justify-between gap-4 py-2 font-mono text-[11.5px] tracking-[.08em] uppercase">
           <span>Since {FOUNDED_YEAR} · Rajkot, Gujarat</span>
           <span className="hidden sm:inline">Backed by {site.trust.name}</span>
         </div>
@@ -22,14 +22,14 @@ export async function SiteHeader() {
             <Image src="/img/logo.png" alt="" width={48} height={48} className="h-12 w-12" />
             <span className="leading-none">
               <span className="display block text-[19px]">{site.name}</span>
-              <span className="font-mono text-[10.5px] uppercase tracking-[.1em] text-muted">Climber Nature Adventure Club</span>
+              <span className="font-mono text-[10.5px] tracking-[.1em] text-muted uppercase">Climber Nature Adventure Club</span>
             </span>
           </Link>
 
           <DesktopNav items={mainNav} />
 
           <div className="flex items-center gap-2">
-            <a href={contact.phoneHref} className="hidden whitespace-nowrap font-mono text-[13px] 2xl:block">
+            <a href={contact.phoneHref} className="hidden font-mono text-[13px] whitespace-nowrap 2xl:block">
               {contact.phone}
             </a>
             <Link href={enquireHref()} className="btn btn-primary hidden py-3! sm:inline-flex">

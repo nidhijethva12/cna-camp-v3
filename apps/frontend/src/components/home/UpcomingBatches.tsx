@@ -26,7 +26,11 @@ export function UpcomingBatches({ batches }: { batches: UpcomingBatch[] }) {
 
       {batches.length === 0 ? (
         <p className="rounded-card border border-line p-6 text-muted">
-          New dates are being planned. <Link href={enquireHref()} className="font-semibold text-primary underline">Ask us</Link> about the next batch.
+          New dates are being planned.{" "}
+          <Link href={enquireHref()} className="font-semibold text-primary underline">
+            Ask us
+          </Link>{" "}
+          about the next batch.
         </p>
       ) : (
         <ul className="reveal overflow-hidden rounded-card border border-line">
@@ -46,7 +50,7 @@ export function UpcomingBatches({ batches }: { batches: UpcomingBatch[] }) {
                   </time>
                   <div>
                     <p className="text-[18px] font-bold group-hover:text-primary">{b.trip.name}</p>
-                    <p className="font-mono text-[11.5px] uppercase tracking-[.08em] text-muted">{meta.join(" · ")}</p>
+                    <p className="font-mono text-[11.5px] tracking-[.08em] text-muted uppercase">{meta.join(" · ")}</p>
                     <p className="mt-1 font-mono text-[12px] sm:hidden">
                       <span className={b.seatsLeft <= LOW_SEATS ? "text-primary" : "text-dark"}>{b.seatsLeft} seats left</span>
                       <span className="text-muted"> · {price}</span>

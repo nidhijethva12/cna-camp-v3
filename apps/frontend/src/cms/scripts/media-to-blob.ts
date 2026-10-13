@@ -12,7 +12,13 @@ import { head, put } from "@vercel/blob";
 
 const mediaDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../media");
 const token = process.env.BLOB_READ_WRITE_TOKEN;
-const mimeTypes: Record<string, string> = { ".webp": "image/webp", ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".png": "image/png", ".avif": "image/avif" };
+const mimeTypes: Record<string, string> = {
+  ".webp": "image/webp",
+  ".jpg": "image/jpeg",
+  ".jpeg": "image/jpeg",
+  ".png": "image/png",
+  ".avif": "image/avif",
+};
 
 async function exists(pathname: string) {
   try {

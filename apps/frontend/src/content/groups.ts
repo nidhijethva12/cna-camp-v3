@@ -97,7 +97,12 @@ export const travellerKinds = [
     tag: "For girls & women",
     img: "cna/real/group-08",
     alt: "A girls’ group holding up a sign on a CNA trip",
-    points: ["Batches only for girls and women", "Separate stay at every camp", "Female volunteers with every girls’ group", "Regular updates to family"],
+    points: [
+      "Batches only for girls and women",
+      "Separate stay at every camp",
+      "Female volunteers with every girls’ group",
+      "Regular updates to family",
+    ],
   },
   {
     id: "solo",

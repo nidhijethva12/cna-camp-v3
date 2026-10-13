@@ -26,8 +26,16 @@ export function HeroSlides({ images, children }: { images: ImageRef[]; children:
   // `seen` is the furthest slide shown so far (photos up to the one after it stay mounted);
   // `turn` counts changes so a returning photo restarts its slow zoom instead of resuming it.
   const [slide, setSlide] = useState({ index: 0, seen: 0, turn: 0, turns: [0] });
-  const reduceMotion = useSyncExternalStore(subscribeMotion, () => window.matchMedia(REDUCED_MOTION).matches, () => false);
-  const hidden = useSyncExternalStore(subscribeVisibility, () => document.hidden, () => false);
+  const reduceMotion = useSyncExternalStore(
+    subscribeMotion,
+    () => window.matchMedia(REDUCED_MOTION).matches,
+    () => false,
+  );
+  const hidden = useSyncExternalStore(
+    subscribeVisibility,
+    () => document.hidden,
+    () => false,
+  );
   const count = images.length;
   const { index } = slide;
   const mounted = Math.min(count, slide.seen + 2);
@@ -68,9 +76,7 @@ export function HeroSlides({ images, children }: { images: ImageRef[]; children:
       <div className="absolute inset-0 -z-10 bg-linear-to-b from-dark/20 via-dark/30 via-40% to-dark/92" />
       <div className="absolute inset-0 -z-10 bg-linear-to-r from-dark/70 via-dark/35 via-45% to-transparent to-75%" />
 
-      <div className="wrap flex min-h-[640px] flex-col justify-end pb-36 pt-24 md:min-h-[720px]">
-        {children}
-      </div>
+      <div className="wrap flex min-h-[640px] flex-col justify-end pt-24 pb-36 md:min-h-[720px]">{children}</div>
     </>
   );
 }

@@ -46,7 +46,7 @@ export default async function ContactPage() {
             >
               <span className="min-w-0">
                 <span className="eyebrow">{w.label}</span>
-                <span className="mt-1 block break-all text-[19px] font-bold">{w.value}</span>
+                <span className="mt-1 block text-[19px] font-bold break-all">{w.value}</span>
                 <span className="text-[14px] text-muted">{w.note}</span>
               </span>
               <ArrowRight />
@@ -73,8 +73,8 @@ export default async function ContactPage() {
           <div id="payments" className="scroll-mt-28 rounded-card bg-soft p-5">
             <p className="eyebrow">Payments</p>
             <p className="mt-2">
-              Book with a 25% advance once your batch is confirmed; the balance is due 3 days before departure. Payment details are
-              shared directly by our team, never on public pages.
+              Book with a 25% advance once your batch is confirmed; the balance is due 3 days before departure. Payment details are shared
+              directly by our team, never on public pages.
             </p>
           </div>
         </div>

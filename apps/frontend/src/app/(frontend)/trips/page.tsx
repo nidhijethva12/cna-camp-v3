@@ -8,7 +8,8 @@ import { enquiryMonths } from "@/lib/enquiry";
 
 export const metadata: Metadata = {
   title: "All treks & camps",
-  description: "35 treks, camps and nature trails across Gujarat, the Himalaya, North-East India and Nepal. Filter by region, type, month or level.",
+  description:
+    "35 treks, camps and nature trails across Gujarat, the Himalaya, North-East India and Nepal. Filter by region, type, month or level.",
   alternates: { canonical: "/trips" },
 };
 

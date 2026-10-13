@@ -55,7 +55,7 @@ export default async function AboutPage() {
           <ol className="mt-10 border-l-2 border-dashed border-line pl-6">
             {timeline.map(([year, text]) => (
               <li key={year} className="relative pb-6 last:pb-0">
-                <span className="absolute -left-[31px] top-1.5 h-3 w-3 rounded-full bg-primary" />
+                <span className="absolute top-1.5 -left-[31px] h-3 w-3 rounded-full bg-primary" />
                 <p className="display text-[22px] text-primary">{year}</p>
                 <p className="mt-1">{text}</p>
               </li>
@@ -64,9 +64,15 @@ export default async function AboutPage() {
         </div>
         <figure>
           <div className="relative aspect-[4/5] overflow-hidden rounded-card">
-            <Photo img="cna/real/river-01" alt="CNA campers crossing a river on a wooden bridge near Manali" sizes="(min-width: 1024px) 590px, 100vw" />
+            <Photo
+              img="cna/real/river-01"
+              alt="CNA campers crossing a river on a wooden bridge near Manali"
+              sizes="(min-width: 1024px) 590px, 100vw"
+            />
           </div>
-          <figcaption className="mt-3 font-mono text-[11.5px] uppercase tracking-[.08em] text-muted">A CNA group crossing a river, Manali</figcaption>
+          <figcaption className="mt-3 font-mono text-[11.5px] tracking-[.08em] text-muted uppercase">
+            A CNA group crossing a river, Manali
+          </figcaption>
         </figure>
       </section>
 
@@ -74,7 +80,7 @@ export default async function AboutPage() {
         <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-card border border-line bg-line lg:grid-cols-4">
           {stats.map(([n, label]) => (
             <div key={label} className="bg-light p-6 sm:p-8">
-              <dt className="font-mono text-[11.5px] uppercase tracking-[.08em] text-muted">{label}</dt>
+              <dt className="font-mono text-[11.5px] tracking-[.08em] text-muted uppercase">{label}</dt>
               <dd>
                 <CountUp value={n} className="display mt-2 text-[40px] sm:text-[52px]" />
               </dd>
@@ -125,9 +131,17 @@ export default async function AboutPage() {
         />
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           {campLife.map((c) => (
-            <article key={c.title} className="group flex flex-col overflow-hidden rounded-card border border-line transition-colors hover:border-primary">
+            <article
+              key={c.title}
+              className="group flex flex-col overflow-hidden rounded-card border border-line transition-colors hover:border-primary"
+            >
               <div className="relative aspect-[4/3] overflow-hidden bg-soft">
-                <Photo img={c.img} alt={c.alt} sizes="(min-width: 1280px) 290px, (min-width: 768px) 50vw, 100vw" className="transition duration-700 group-hover:scale-[1.04]" />
+                <Photo
+                  img={c.img}
+                  alt={c.alt}
+                  sizes="(min-width: 1280px) 290px, (min-width: 768px) 50vw, 100vw"
+                  className="transition duration-700 group-hover:scale-[1.04]"
+                />
               </div>
               <div className="relative flex-1 px-6 pb-6">
                 <FeatureIcon name={c.icon} tone="soft" className="-mt-6 transition-colors group-hover:bg-primary group-hover:text-light" />
@@ -151,7 +165,7 @@ export default async function AboutPage() {
               />
             </div>
             <figcaption className="mt-5 border-l-4 border-secondary pl-4">
-              <p className="font-mono text-[11.5px] uppercase tracking-[.08em] text-light/70">In loving memory</p>
+              <p className="font-mono text-[11.5px] tracking-[.08em] text-light/70 uppercase">In loving memory</p>
               <p className="display mt-1 text-[30px]">{founder.name}</p>
               <p className="font-mono text-[12px] text-secondary">{founder.years}</p>
             </figcaption>
@@ -159,14 +173,14 @@ export default async function AboutPage() {
           <div>
             <p className="eyebrow text-light/60!">Our founder</p>
             <h2 className="h-section mt-3">Late {founder.name}</h2>
-            <blockquote className="mt-6 border-l-4 border-secondary pl-5 text-[22px] italic leading-snug text-light/90">
+            <blockquote className="mt-6 border-l-4 border-secondary pl-5 text-[22px] leading-snug text-light/90 italic">
               “{founder.quote}”
             </blockquote>
             <p className="mt-6 text-[17px] leading-relaxed text-light/75">{founder.intro}</p>
             <dl className="mt-10 divide-y divide-light/10 border-y border-light/10">
               {founder.facts.map(([k, v]) => (
                 <div key={k} className="grid gap-1 py-5 sm:grid-cols-[150px_1fr] sm:gap-6">
-                  <dt className="font-mono text-[11.5px] uppercase tracking-[.08em] text-secondary">{k}</dt>
+                  <dt className="font-mono text-[11.5px] tracking-[.08em] text-secondary uppercase">{k}</dt>
                   <dd className="text-light/85">{v}</dd>
                 </div>
               ))}
@@ -182,7 +196,11 @@ export default async function AboutPage() {
       </section>
 
       <section id="different" className="wrap mt-24 scroll-mt-28">
-        <SectionHeader eyebrow="Why CNA" title="What makes CNA different" intro="Many companies sell trips. CNA is a nature club with a purpose." />
+        <SectionHeader
+          eyebrow="Why CNA"
+          title="What makes CNA different"
+          intro="Many companies sell trips. CNA is a nature club with a purpose."
+        />
         <ol className="grid gap-px overflow-hidden rounded-card border border-line bg-line sm:grid-cols-2 lg:grid-cols-3">
           {different.map(([title, text], i) => (
             <li key={title} className="bg-light p-6 sm:p-8">
@@ -236,7 +254,7 @@ export default async function AboutPage() {
             <div key={i} className="rounded-card border border-line p-5">
               <div className="aspect-square rounded-tag bg-soft" />
               <p className="mt-4 font-bold">Name to add</p>
-              <p className="font-mono text-[11.5px] uppercase tracking-[.08em] text-muted">{role}</p>
+              <p className="font-mono text-[11.5px] tracking-[.08em] text-muted uppercase">{role}</p>
             </div>
           ))}
         </div>

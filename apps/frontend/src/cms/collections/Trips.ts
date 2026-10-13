@@ -26,7 +26,13 @@ export const Trips: CollectionConfig = {
           label: "Basics",
           fields: [
             { name: "name", type: "text", required: true },
-            { name: "summary", type: "textarea", required: true, maxLength: 220, admin: { description: "One or two lines for trip cards." } },
+            {
+              name: "summary",
+              type: "textarea",
+              required: true,
+              maxLength: 220,
+              admin: { description: "One or two lines for trip cards." },
+            },
             {
               type: "row",
               fields: [
@@ -46,7 +52,13 @@ export const Trips: CollectionConfig = {
               fields: [
                 { name: "days", type: "number", required: true, min: 1 },
                 { name: "nights", type: "number", required: true, min: 0, admin: { description: "0 shows as “Day trip”." } },
-                { name: "altitudeM", label: "Max altitude (m)", type: "number", min: 0, admin: { description: "Leave empty for low-altitude trips." } },
+                {
+                  name: "altitudeM",
+                  label: "Max altitude (m)",
+                  type: "number",
+                  min: 0,
+                  admin: { description: "Leave empty for low-altitude trips." },
+                },
               ],
             },
             {
@@ -56,7 +68,14 @@ export const Trips: CollectionConfig = {
                 { name: "startsFrom", type: "text", required: true, admin: { description: "Departure city, e.g. Ahmedabad" } },
               ],
             },
-            { name: "months", type: "select", hasMany: true, required: true, options: monthOptions, admin: { description: "Months this trip runs." } },
+            {
+              name: "months",
+              type: "select",
+              hasMany: true,
+              required: true,
+              options: monthOptions,
+              admin: { description: "Months this trip runs." },
+            },
             textList("activities"),
             {
               name: "campus",
@@ -111,7 +130,12 @@ export const Trips: CollectionConfig = {
         {
           label: "Photos",
           fields: [
-            { name: "heroImage", type: "upload", relationTo: "media", admin: { description: "Main photo. Empty shows “Photo coming soon”." } },
+            {
+              name: "heroImage",
+              type: "upload",
+              relationTo: "media",
+              admin: { description: "Main photo. Empty shows “Photo coming soon”." },
+            },
             {
               name: "gallery",
               type: "upload",
@@ -139,7 +163,12 @@ export const Trips: CollectionConfig = {
       defaultValue: 100,
       admin: { position: "sidebar", description: "Lower numbers show first in trip lists." },
     },
-    { name: "featured", type: "checkbox", defaultValue: false, admin: { position: "sidebar", description: "Show in “Popular trips” on the home page." } },
+    {
+      name: "featured",
+      type: "checkbox",
+      defaultValue: false,
+      admin: { position: "sidebar", description: "Show in “Popular trips” on the home page." },
+    },
     sampleField,
   ],
 };

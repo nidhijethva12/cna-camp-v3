@@ -62,7 +62,7 @@ export default async function GalleryPage() {
                   sizes="(min-width: 1024px) 300px, (min-width: 640px) 33vw, 50vw"
                   className="h-auto w-full transition duration-500 group-hover:scale-[1.04]"
                 />
-                <span className="absolute inset-x-0 bottom-0 bg-linear-to-b from-transparent to-dark/75 p-3 pt-8 text-left font-mono text-[11px] uppercase tracking-[.08em] text-light opacity-0 transition group-hover:opacity-100">
+                <span className="absolute inset-x-0 bottom-0 bg-linear-to-b from-transparent to-dark/75 p-3 pt-8 text-left font-mono text-[11px] tracking-[.08em] text-light uppercase opacity-0 transition group-hover:opacity-100">
                   {m.caption}
                 </span>
               </button>
@@ -79,7 +79,11 @@ export default async function GalleryPage() {
               </div>
               <p className="max-w-md text-muted">Short clips from camp, filmed on phones by people who were there.</p>
             </div>
-            <VideoGrid videos={videos} sizes="(min-width: 1024px) 230px, (min-width: 640px) 33vw, 50vw" className="mt-8 grid-cols-2 sm:grid-cols-3 lg:grid-cols-5" />
+            <VideoGrid
+              videos={videos}
+              sizes="(min-width: 1024px) 230px, (min-width: 640px) 33vw, 50vw"
+              className="mt-8 grid-cols-2 sm:grid-cols-3 lg:grid-cols-5"
+            />
           </section>
         )}
 

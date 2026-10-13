@@ -8,10 +8,7 @@ export function WhyCna({ content }: { content: HomeContent["why"] }) {
     <section className="mt-24 bg-dark text-light" aria-labelledby="why-title">
       <div className="wrap grid items-center gap-12 py-20 lg:grid-cols-2">
         <div className="reveal relative aspect-[4/3] overflow-hidden rounded-card">
-          <Photo
-            img={content.image}
-            sizes="(min-width: 1024px) 590px, 100vw"
-          />
+          <Photo img={content.image} sizes="(min-width: 1024px) 590px, 100vw" />
           {content.imageLabel && <span className="tag tag-solid absolute bottom-4 left-4 border-light/30">{content.imageLabel}</span>}
         </div>
         <div className="reveal">

@@ -41,18 +41,22 @@ export default async function GroupTripsPage() {
       </PageHead>
 
       <section className="wrap mt-20">
-        <SectionHeader eyebrow="Who we plan for" title="Every kind of group" intro="Tell us who is coming. We shape the trip around them." />
+        <SectionHeader
+          eyebrow="Who we plan for"
+          title="Every kind of group"
+          intro="Tell us who is coming. We shape the trip around them."
+        />
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {groupKinds.map((k) => (
             <article key={k.id} id={k.id} className="flex scroll-mt-28 flex-col overflow-hidden rounded-card border border-line">
               <div className="relative aspect-[16/10] bg-soft">
                 <Photo img={k.img} alt={k.alt} sizes="(min-width: 1024px) 400px, (min-width: 640px) 50vw, 100vw" />
-                <span className="tag absolute left-3 top-3 border-secondary bg-secondary text-dark">{k.who}</span>
+                <span className="tag absolute top-3 left-3 border-secondary bg-secondary text-dark">{k.who}</span>
               </div>
               <div className="flex flex-1 flex-col p-6">
                 <h3 className="h-card">{k.title}</h3>
                 <p className="mt-2 flex-1 text-muted">{k.text}</p>
-                <p className="mt-5 font-mono text-[11.5px] uppercase tracking-[.08em] text-muted">
+                <p className="mt-5 font-mono text-[11.5px] tracking-[.08em] text-muted uppercase">
                   Popular: <span className="text-dark">{k.popular}</span>
                 </p>
               </div>
@@ -65,11 +69,11 @@ export default async function GroupTripsPage() {
         <div className="relative overflow-hidden rounded-card bg-primary p-6 text-light sm:p-10">
           <div className="grid gap-6 lg:grid-cols-[1.4fr_1fr] lg:items-center">
             <div>
-              <p className="font-mono text-[12px] uppercase tracking-[.14em] text-light/80">For teachers &amp; principals</p>
+              <p className="font-mono text-[12px] tracking-[.14em] text-light/80 uppercase">For teachers &amp; principals</p>
               <h2 className="h-section mt-2 [zoom:1]">Every 25 students, one teacher travels free.</h2>
               <p className="mt-3 max-w-xl text-light/85">
-                School trips with CNA start at 50 students. For every 25 students, one teacher or escort joins at no cost. Nature
-                learning, safety and the full plan handled by us.
+                School trips with CNA start at 50 students. For every 25 students, one teacher or escort joins at no cost. Nature learning,
+                safety and the full plan handled by us.
               </p>
             </div>
             <div className="flex flex-wrap gap-3 lg:justify-end">
@@ -139,8 +143,8 @@ export default async function GroupTripsPage() {
           <p className="eyebrow">Custom trip</p>
           <h2 className="h-section mt-3">Don&apos;t see your trip? We build it.</h2>
           <p className="mt-4 text-[17px] leading-relaxed text-muted">
-            Any destination from our list, your dates, your group size. Fill the form or call us. Booking is simple: 25% advance to
-            block dates, balance 3 days before you leave.
+            Any destination from our list, your dates, your group size. Fill the form or call us. Booking is simple: 25% advance to block
+            dates, balance 3 days before you leave.
           </p>
           <div className="mt-8 space-y-3">
             <a href={contact.phoneHref} className="flex items-center justify-between rounded-card border border-line p-4 hover:border-dark">

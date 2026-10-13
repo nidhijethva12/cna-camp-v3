@@ -33,7 +33,11 @@ export default async function BlogPage() {
           </ul>
         ) : (
           <p className="rounded-card border border-line p-6 text-muted">
-            The first stories are on their way. Meanwhile, <Link href="/trips" className="font-semibold text-primary underline">browse our trips</Link>.
+            The first stories are on their way. Meanwhile,{" "}
+            <Link href="/trips" className="font-semibold text-primary underline">
+              browse our trips
+            </Link>
+            .
           </p>
         )}
       </section>

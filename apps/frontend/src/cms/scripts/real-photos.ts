@@ -13,13 +13,10 @@ import { fileURLToPath } from "node:url";
 import { getPayload } from "payload";
 import config from "../../payload.config";
 import type { HomePage, Media, Trip } from "../../payload-types";
+import { scriptContext } from "../scriptContext";
 
 const apply = process.argv.includes("apply");
 const imgDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../public/img");
-// Outside Next.js there is no cache to refresh; the live site picks changes up on its next revalidation.
-// A fresh object per call: the storage plugin flags the request context mid-upload, and a shared object
-// keeps that flag, so every later upload would silently skip Vercel Blob.
-const context = () => ({ skipRevalidate: true });
 
 const alts = {
   "home-banner-1": "A forested Himalayan valley with a river below snow peaks",
@@ -111,7 +108,11 @@ const trips: Record<string, { hero: PhotoName; gallery: PhotoName[]; keepPlacePh
     gallery: ["climb-03", "climb-04", "river-01", "river-02", "trek-02", "trek-03", "group-06", "land-09"],
   },
   "shimla-manali-amritsar": { hero: "land-06", gallery: ["group-06", "group-03", "trek-03"], keepPlacePhotos: true },
-  "kullu-shimla-manali": { hero: "campus-05", gallery: ["campus-02", "land-04", "land-10", "group-02", "travel-01"], keepPlacePhotos: true },
+  "kullu-shimla-manali": {
+    hero: "campus-05",
+    gallery: ["campus-02", "land-04", "land-10", "group-02", "travel-01"],
+    keepPlacePhotos: true,
+  },
   "kullu-manali-dalhousie": { hero: "campus-04", gallery: ["land-05", "land-12", "group-11", "group-05"], keepPlacePhotos: true },
 };
 
@@ -157,7 +158,7 @@ async function photo(name: PhotoName) {
         collection: "media",
         data: { alt: alts[name], ownedByCna: !stock, credit: stock ? "Free stock photo (Pexels/Unsplash licence)" : undefined },
         file: { data, mimetype: "image/webp", name: filename, size: data.length },
-        context: context(),
+        context: scriptContext(),
       });
       id = doc.id;
       newIds.push(id);
@@ -212,7 +213,8 @@ for (const item of next.audiences.items ?? []) {
   if (name) item.image = await swap(`audience: ${item.title}`, item.image, name);
   else changes.push(`  ⚠ audience "${item.title}" (${item.link}) has no new photo; left as is.`);
 }
-const stripKey = (rows: { image: string | Media | null | undefined; caption: string }[]) => rows.map((r) => `${idOf(r.image)}|${r.caption}`).join();
+const stripKey = (rows: { image: string | Media | null | undefined; caption: string }[]) =>
+  rows.map((r) => `${idOf(r.image)}|${r.caption}`).join();
 const newStrip = await Promise.all(home.strip.map(async ([name, caption]) => ({ image: await photo(name), caption })));
 if (stripKey(published.gallery.photos ?? []) !== stripKey(newStrip)) {
   changes.push(`  photo strip: ${published.gallery.photos?.length ?? 0} photos → ${newStrip.length} real photos`);
@@ -262,7 +264,13 @@ console.log(`\n${apply ? "APPLYING" : "DRY RUN (add `apply` to write)"}: ${creat
 console.log(changes.join("\n"));
 
 if (apply) {
-  await payload.updateGlobal({ slug: "home-page", data: { ...contentOf(next), _status: "published" }, draft: false, depth: 0, context: context() });
+  await payload.updateGlobal({
+    slug: "home-page",
+    data: { ...contentOf(next), _status: "published" },
+    draft: false,
+    depth: 0,
+    context: scriptContext(),
+  });
   for (const { doc, heroImage, gallery } of tripUpdates) {
     await payload.update({
       collection: "trips",
@@ -270,7 +278,7 @@ if (apply) {
       data: { ...contentOf(doc), heroImage, gallery, _status: "published" },
       draft: false,
       depth: 0,
-      context: context(),
+      context: scriptContext(),
     });
   }
   console.log(`\nDone: home page and ${tripUpdates.length} trips published.`);

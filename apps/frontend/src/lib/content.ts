@@ -119,9 +119,7 @@ export const getVideos = cache(async (): Promise<Video[]> => {
   const payload = await getCms();
   const { docs } = await payload.find({ collection: "videos", sort: "createdAt", depth: 1, pagination: false });
   // Sorted here, not in the query: MongoDB puts videos with no order number first, editors expect them last.
-  return docs
-    .sort((a, b) => (a.order ?? Infinity) - (b.order ?? Infinity))
-    .flatMap((d) => toVideo(d) ?? []);
+  return docs.sort((a, b) => (a.order ?? Infinity) - (b.order ?? Infinity)).flatMap((d) => toVideo(d) ?? []);
 });
 
 export async function getTripVideos(trip: Trip) {
@@ -295,24 +293,25 @@ function toHome(doc: Partial<HomeDoc>) {
     },
     holidays: {
       ...heading(holidays),
-      items: (holidays?.items ?? []).map(
-        (h): HolidayGroup => ({
-          key: h.id ?? h.title,
-          months: h.months,
-          title: h.title,
-          highlights: h.highlights ?? [],
-          tripCount: h.tripCount,
-          href: h.link,
-          image: toImage(h.image),
-        }),
-      ),
+      items: (holidays?.items ?? []).map((h): HolidayGroup => ({
+        key: h.id ?? h.title,
+        months: h.months,
+        title: h.title,
+        highlights: h.highlights ?? [],
+        tripCount: h.tripCount,
+        href: h.link,
+        image: toImage(h.image),
+      })),
     },
     destinations: { ...heading(destinations), regionImages },
     audiences: {
       ...heading(audiences),
-      items: (audiences?.items ?? []).map(
-        (a): Audience => ({ title: a.title, description: a.description, href: a.link, image: toImage(a.image) }),
-      ),
+      items: (audiences?.items ?? []).map((a): Audience => ({
+        title: a.title,
+        description: a.description,
+        href: a.link,
+        image: toImage(a.image),
+      })),
       teacherNote: audiences?.teacherNote || null,
     },
     why: { ...heading(why), image: toImage(why?.image), imageLabel: why?.imageLabel || null, points: points(why?.points) },

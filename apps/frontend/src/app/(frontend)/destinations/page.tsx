@@ -33,7 +33,7 @@ export default async function DestinationsPage() {
             <div key={r} id={r} className="grid scroll-mt-28 gap-8 lg:grid-cols-[420px_1fr]">
               <Link href={tripsByRegionHref(r)} className="relative block aspect-[4/3] overflow-hidden rounded-card">
                 <Photo img={regionImages[r]} alt="" sizes="(min-width: 1024px) 420px, 100vw" />
-                <span className="tag tag-solid absolute left-4 top-4">
+                <span className="tag tag-solid absolute top-4 left-4">
                   {list.length} {list.length === 1 ? "trip" : "trips"}
                 </span>
               </Link>
@@ -46,7 +46,7 @@ export default async function DestinationsPage() {
                       <Link href={`/trips/${t.slug}`} className="flex items-center justify-between gap-3 p-4 hover:bg-soft">
                         <span>
                           <span className="block font-bold">{t.name}</span>
-                          <span className="font-mono text-[11.5px] uppercase tracking-[.08em] text-muted">
+                          <span className="font-mono text-[11.5px] tracking-[.08em] text-muted uppercase">
                             {t.type} · {durationShort(t)} · {t.months.slice(0, 3).join(" ")}
                           </span>
                         </span>

@@ -20,12 +20,12 @@ export function TripCard({ trip, badge }: { trip: Trip; badge?: string }) {
           sizes="(min-width: 1024px) 380px, (min-width: 640px) 50vw, 100vw"
           className="transition duration-500 group-hover:scale-[1.04]"
         />
-        <span className="tag tag-solid absolute left-3 top-3">{trip.type}</span>
-        {badge && <span className="tag absolute right-3 top-3 border-secondary bg-secondary text-dark">{badge}</span>}
+        <span className="tag tag-solid absolute top-3 left-3">{trip.type}</span>
+        {badge && <span className="tag absolute top-3 right-3 border-secondary bg-secondary text-dark">{badge}</span>}
       </Link>
       <div className="flex flex-1 flex-col p-5">
         {/* Fixed line counts keep every row aligned across a grid of cards. */}
-        <p className="truncate font-mono text-[11.5px] uppercase tracking-[.08em] text-muted">
+        <p className="truncate font-mono text-[11.5px] tracking-[.08em] text-muted uppercase">
           {region}
           {trip.state !== region && ` · ${trip.state}`}
         </p>
@@ -41,7 +41,7 @@ export function TripCard({ trip, badge }: { trip: Trip; badge?: string }) {
         </div>
         <div className="mt-4 flex items-end justify-between gap-3">
           <div>
-            <p className="font-mono text-[11px] uppercase tracking-[.08em] text-muted">{trip.price ? "From" : "Price"}</p>
+            <p className="font-mono text-[11px] tracking-[.08em] text-muted uppercase">{trip.price ? "From" : "Price"}</p>
             <p className="display text-[22px]">{tripPrice(trip)}</p>
           </div>
           <Link

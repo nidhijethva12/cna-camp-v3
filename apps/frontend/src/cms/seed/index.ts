@@ -15,12 +15,11 @@ import type { Trip as TripDoc } from "../../payload-types";
 import { faqs, HOME_FAQ_COUNT } from "./faqs";
 import { home, reviews, siteSettings, type SeedPhoto } from "./home";
 import { batches, trips, type SeedTrip } from "./trips";
+import { photoSrc } from "../../lib/photos";
+import { scriptContext } from "../scriptContext";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 const publicDir = path.resolve(dirname, "../../../public");
-// A fresh object per call: the storage plugin flags the request context mid-upload, and a shared object
-// keeps that flag, so every later upload would silently skip Vercel Blob.
-const context = () => ({ skipRevalidate: true });
 
 const mimeTypes: Record<string, string> = { ".webp": "image/webp", ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".png": "image/png" };
 
@@ -32,9 +31,8 @@ const exists = (file: string) =>
 
 /** Design key → public path, preferring the larger "-wide" file when there is one. */
 async function keyToPath(key: string) {
-  const ext = /^(stock|cna)\//.test(key) ? ".webp" : ".jpg";
-  const wide = `/img/${key}-wide${ext}`;
-  return (await exists(path.join(publicDir, wide))) ? wide : `/img/${key}${ext}`;
+  const wide = photoSrc(key, { wide: true });
+  return (await exists(path.join(publicDir, wide))) ? wide : photoSrc(key);
 }
 
 function createPhotoUploader(payload: Payload) {
@@ -67,7 +65,7 @@ function createPhotoUploader(payload: Payload) {
         collection: "media",
         data: { alt, ownedByCna: src.startsWith("/img/cna/real/") },
         file: { data, mimetype: mimeTypes[ext], name: `${base}${ext}`, size: data.length },
-        context: context(),
+        context: scriptContext(),
       });
       id = doc.id;
       created += 1;
@@ -142,7 +140,12 @@ async function seed() {
 
   if (await isEmpty(payload, "trips")) {
     for (const [i, t] of trips.entries()) {
-      await payload.create({ collection: "trips", data: await tripData(t, (i + 1) * 10, photos.upload), draft: false, context: context() });
+      await payload.create({
+        collection: "trips",
+        data: await tripData(t, (i + 1) * 10, photos.upload),
+        draft: false,
+        context: scriptContext(),
+      });
       counts.trips += 1;
     }
   }
@@ -157,8 +160,15 @@ async function seed() {
       if (!trip) continue;
       await payload.create({
         collection: "batches",
-        data: { trip, startDate: indiaNoon(b.startDate), endDate: indiaNoon(b.endDate), seatsLeft: b.seatsLeft, note: b.note, isSample: true },
-        context: context(),
+        data: {
+          trip,
+          startDate: indiaNoon(b.startDate),
+          endDate: indiaNoon(b.endDate),
+          seatsLeft: b.seatsLeft,
+          note: b.note,
+          isSample: true,
+        },
+        context: scriptContext(),
       });
       counts.batches += 1;
     }
@@ -166,7 +176,11 @@ async function seed() {
 
   if (await isEmpty(payload, "faqs")) {
     for (const [i, f] of faqs.entries()) {
-      await payload.create({ collection: "faqs", data: { ...f, order: (i + 1) * 10, showOnHome: i < HOME_FAQ_COUNT }, context: context() });
+      await payload.create({
+        collection: "faqs",
+        data: { ...f, order: (i + 1) * 10, showOnHome: i < HOME_FAQ_COUNT },
+        context: scriptContext(),
+      });
       counts.faqs += 1;
     }
   }
@@ -176,7 +190,7 @@ async function seed() {
       const trip = tripIds.get(tripSlug);
       if (!trip) continue;
       // Placeholders stay visible (and labelled "Sample") until real reviews replace them.
-      await payload.create({ collection: "reviews", data: { ...r, trip, consentGiven: true }, context: context() });
+      await payload.create({ collection: "reviews", data: { ...r, trip, consentGiven: true }, context: scriptContext() });
       counts.reviews += 1;
     }
   }
@@ -189,7 +203,7 @@ async function seed() {
     await payload.updateGlobal({
       slug: "home-page",
       draft: false,
-      context: context(),
+      context: scriptContext(),
       data: {
         _status: "published",
         hero: { ...home.hero, image: await upload(home.hero.image), slides: await mapInOrder(home.hero.slides, upload) },
@@ -224,7 +238,7 @@ async function seed() {
   if (!settingsSeeded) {
     await payload.updateGlobal({
       slug: "site-settings",
-      context: context(),
+      context: scriptContext(),
       data: { ...siteSettings, social: siteSettings.social.map((s) => ({ ...s })) },
     });
   }

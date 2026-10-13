@@ -3,8 +3,7 @@ const isoDateInIndia = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Kolkat
 
 const MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
 
-export const formatPrice = (price: number | null | undefined) =>
-  price == null ? "On request" : `₹${inr.format(price)}`;
+export const formatPrice = (price: number | null | undefined) => (price == null ? "On request" : `₹${inr.format(price)}`);
 
 const longDateInIndia = new Intl.DateTimeFormat("en-IN", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Kolkata" });
 

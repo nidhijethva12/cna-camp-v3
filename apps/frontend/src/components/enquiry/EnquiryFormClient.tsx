@@ -224,7 +224,8 @@ export function EnquiryFormClient({ trips, phone, variant = "quick", defaultTrip
         <div role="status" className="mt-5 rounded-card border border-success bg-light px-4 py-3 text-[15px]">
           <p className="flex items-center gap-2 font-bold text-success">
             <CheckCircle className="text-[20px]" />
-            Your {isGroup ? "trip request" : "enquiry"} has been sent successfully.</p>
+            Your {isGroup ? "trip request" : "enquiry"} has been sent successfully.
+          </p>
           <p className="mt-1 text-muted">
             Our team will reply within a day, usually on WhatsApp. For anything urgent, call{" "}
             <a href={phone.href} className="font-semibold text-dark underline">

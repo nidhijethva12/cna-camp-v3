@@ -11,9 +11,20 @@ const typeOptions = [
   { value: "nature-trail", label: "Nature Trail" },
 ];
 
-const monthOptions = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"].map(
-  (m) => ({ value: m.slice(0, 3).toLowerCase(), label: m }),
-);
+const monthOptions = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+].map((m) => ({ value: m.slice(0, 3).toLowerCase(), label: m }));
 
 export function TripSearch() {
   return (

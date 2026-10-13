@@ -21,12 +21,15 @@ export function DesktopNav({ items }: { items: NavItem[] }) {
                 {item.label}
                 <CaretDown className="text-[12px] transition-transform duration-200 group-data-[state=open]:rotate-180" />
               </NavigationMenu.Trigger>
-              <NavigationMenu.Content className="absolute left-0 top-full z-50 mt-1 min-w-[220px] rounded-card border border-line bg-light p-2 shadow-menu">
+              <NavigationMenu.Content className="absolute top-full left-0 z-50 mt-1 min-w-[220px] rounded-card border border-line bg-light p-2 shadow-menu">
                 <ul>
                   {item.children.map((c) => (
                     <li key={c.href}>
                       <NavigationMenu.Link asChild>
-                        <Link href={c.href} className="block rounded-tag px-3 py-2 text-[15px] hover:bg-soft focus:bg-soft focus:outline-none">
+                        <Link
+                          href={c.href}
+                          className="block rounded-tag px-3 py-2 text-[15px] hover:bg-soft focus:bg-soft focus:outline-none"
+                        >
                           {c.label}
                         </Link>
                       </NavigationMenu.Link>

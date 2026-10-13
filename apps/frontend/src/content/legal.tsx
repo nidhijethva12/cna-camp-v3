@@ -38,8 +38,8 @@ export const termsSections = (contact: SiteSettings): LegalSection[] => [
       "Choose a camp and contact us by phone, WhatsApp or email. We share written details of the programme.",
       "Fix the dates and duration with us.",
       <>
-        <strong>Group camps need at least 50 members.</strong> If a group has fewer than 50, the charges of 50 people apply. Very
-        large groups (100 to 1,000) are split into batches.
+        <strong>Group camps need at least 50 members.</strong> If a group has fewer than 50, the charges of 50 people apply. Very large
+        groups (100 to 1,000) are split into batches.
       </>,
       "Send the group list, a registration form and a risk certificate for every member, your choice of travel (train, bus, car or air) and the 25% advance.",
       "We hold a group meeting before the camp to explain activities, travel, food and camp rules.",
@@ -156,8 +156,8 @@ export const cancellationSections = (contact: SiteSettings): LegalSection[] => [
     title: "If CNA changes or cancels",
     body: [
       <>
-        If we must cancel a camp, we offer another date or a refund. Changes caused by weather, roads, strikes or other events outside
-        our control are explained in our{" "}
+        If we must cancel a camp, we offer another date or a refund. Changes caused by weather, roads, strikes or other events outside our
+        control are explained in our{" "}
         <Link className={linkClass} href="/terms#liability">
           terms
         </Link>
@@ -186,8 +186,8 @@ export const privacySections = (contact: SiteSettings): LegalSection[] => [
         message.
       </>,
       <>
-        <strong>Camp registration:</strong> participant details, emergency contact, medical and fitness information, parent consent
-        for under-18s, and the risk declaration.
+        <strong>Camp registration:</strong> participant details, emergency contact, medical and fitness information, parent consent for
+        under-18s, and the risk declaration.
       </>,
       <>
         <strong>Adventure Olympiad:</strong> student details, school or college, class and payment confirmation.

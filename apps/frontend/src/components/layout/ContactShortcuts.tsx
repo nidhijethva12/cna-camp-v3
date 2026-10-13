@@ -11,7 +11,7 @@ export async function ContactShortcuts() {
         href={contact.whatsappHref}
         rel="noopener"
         target="_blank"
-        className="fixed bottom-6 right-6 z-40 hidden h-14 w-14 items-center justify-center rounded-full bg-whatsapp text-light shadow-float transition hover:scale-105 lg:flex"
+        className="fixed right-6 bottom-6 z-40 hidden h-14 w-14 items-center justify-center rounded-full bg-whatsapp text-light shadow-float transition hover:scale-105 lg:flex"
         aria-label="Chat on WhatsApp"
       >
         <WhatsApp className="text-[28px]" />
@@ -34,7 +34,7 @@ export async function ContactShortcuts() {
         </a>
         <Link
           href={enquireHref()}
-          className="flex h-16 items-center justify-center bg-primary font-bold uppercase tracking-[.04em] text-light"
+          className="flex h-16 items-center justify-center bg-primary font-bold tracking-[.04em] text-light uppercase"
         >
           Enquire
         </Link>

@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { useState } from "react";
 import { Camera, Play } from "@/components/ui/icons";
 import { photoSrc } from "@/lib/photos";
 import type { PhotoSource } from "@/types/content";
@@ -16,8 +19,9 @@ interface PhotoProps {
   className?: string;
 }
 
-/** Fills its (positioned) parent. Missing photos render a "Photo coming soon" placeholder. */
+/** Fills its (positioned) parent, shimmering until the photo arrives. Missing photos render a "Photo coming soon" placeholder. */
 export function Photo({ img, alt, label, wide, preload, sizes = "(min-width: 1024px) 50vw, 100vw", className = "" }: PhotoProps) {
+  const [loaded, setLoaded] = useState(false);
   if (!img) return <PhotoPlaceholder label={label} className={className} />;
   return (
     <Image
@@ -26,7 +30,9 @@ export function Photo({ img, alt, label, wide, preload, sizes = "(min-width: 102
       fill
       preload={preload}
       sizes={sizes}
-      className={`object-cover ${className}`}
+      onLoad={() => setLoaded(true)}
+      onError={() => setLoaded(true)}
+      className={`object-cover ${loaded ? "" : "skeleton"} ${className}`}
       style={typeof img !== "string" && img.focalX != null ? { objectPosition: `${img.focalX}% ${img.focalY ?? 50}%` } : undefined}
     />
   );

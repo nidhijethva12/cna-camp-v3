@@ -34,7 +34,13 @@ export function JourneyStats({ tripCount, counts }: JourneyStatsProps) {
         <ul className="mt-12 grid grid-cols-2 gap-4 lg:grid-cols-4">
           {stats.map((s) => (
             <li key={s.label} className="reveal group rounded-card border border-light/15 bg-light/5 px-4 py-8 backdrop-blur-sm">
-              <FeatureIcon name={s.icon} tone="dark" size="lg" round className="transition-colors duration-300 group-hover:bg-secondary group-hover:text-dark" />
+              <FeatureIcon
+                name={s.icon}
+                tone="dark"
+                size="lg"
+                round
+                className="transition-colors duration-300 group-hover:bg-secondary group-hover:text-dark"
+              />
               <CountUp value={s.value} className="display mt-4 text-[44px] sm:text-[52px]" />
               <p className="mt-1 text-[15px] text-light/75">{s.label}</p>
             </li>

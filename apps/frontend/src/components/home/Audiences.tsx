@@ -26,12 +26,14 @@ export function Audiences({ content }: { content: HomeContent["audiences"] }) {
                   sizes="(min-width: 1024px) 300px, (min-width: 640px) 50vw, 100vw"
                   className="transition duration-500 group-hover:scale-[1.05]"
                 />
-                <span className="tag tag-solid absolute left-3 top-3">{String(i + 1).padStart(2, "0")}</span>
+                <span className="tag tag-solid absolute top-3 left-3">{String(i + 1).padStart(2, "0")}</span>
               </div>
               <div className="flex flex-1 flex-col p-5">
                 <h3 className="display text-[24px]">{a.title}</h3>
                 <p className="mt-2 flex-1 text-[15px] text-muted">{a.description}</p>
-                <p className="mt-5 font-semibold group-hover:text-primary">Find trips <ArrowRight /></p>
+                <p className="mt-5 font-semibold group-hover:text-primary">
+                  Find trips <ArrowRight />
+                </p>
               </div>
             </Link>
           </li>

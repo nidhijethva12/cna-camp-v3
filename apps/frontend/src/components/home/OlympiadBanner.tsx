@@ -19,7 +19,7 @@ export function OlympiadBanner() {
         <div className="absolute inset-0 bg-linear-to-r from-dark/95 to-dark/60" />
         <div className="relative grid gap-8 p-6 sm:p-10 lg:grid-cols-[1.3fr_1fr] lg:items-center">
           <div>
-            <p className="inline-flex items-center gap-2 rounded-tag bg-secondary px-3 py-1.5 font-mono text-[11.5px] font-medium uppercase tracking-[.1em] text-dark">
+            <p className="inline-flex items-center gap-2 rounded-tag bg-secondary px-3 py-1.5 font-mono text-[11.5px] font-medium tracking-[.1em] text-dark uppercase">
               <Star className="text-[13px]" />
               India’s 1st Adventure Olympiad
             </p>
@@ -27,8 +27,8 @@ export function OlympiadBanner() {
               Adventure Olympiad: take the quiz, win the Himalaya
             </h2>
             <p className="mt-3 max-w-xl text-light/80">
-              An Eco-STEM online quiz for ages 14–25 and teachers from every district of Gujarat. Top scorers win up to
-              100% scholarship for the ₹18,000 Astro Adventure Trekking Camp in Manali.
+              An Eco-STEM online quiz for ages 14–25 and teachers from every district of Gujarat. Top scorers win up to 100% scholarship for
+              the ₹18,000 Astro Adventure Trekking Camp in Manali.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
               <Link href="/olympiad" className="btn btn-primary">
@@ -42,7 +42,7 @@ export function OlympiadBanner() {
           <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-card bg-light/10">
             {facts.map((f) => (
               <div key={f.label} className="bg-dark/80 p-5">
-                <dt className="font-mono text-[11px] uppercase tracking-[.08em] text-light/60">{f.label}</dt>
+                <dt className="font-mono text-[11px] tracking-[.08em] text-light/60 uppercase">{f.label}</dt>
                 <dd className="display mt-1 text-[40px] text-secondary">{f.value}</dd>
               </div>
             ))}

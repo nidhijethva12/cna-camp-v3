@@ -49,7 +49,11 @@ export async function generateMetadata({ params }: PageProps<"/trips/[slug]">): 
     title: trip.seo.title ?? trip.name,
     description: tripDescription(trip),
     alternates: { canonical: path },
-    openGraph: { url: path, title: trip.seo.title ?? trip.name, images: image ? [{ url: photoSrc(image), alt: image.alt || trip.name }] : undefined },
+    openGraph: {
+      url: path,
+      title: trip.seo.title ?? trip.name,
+      images: image ? [{ url: photoSrc(image), alt: image.alt || trip.name }] : undefined,
+    },
   };
 }
 
@@ -133,11 +137,11 @@ export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
         <div
           className={
             sharpHero
-              ? "wrap flex min-h-[460px] flex-col justify-end pb-12 pt-20"
+              ? "wrap flex min-h-[460px] flex-col justify-end pt-20 pb-12"
               : "wrap flex min-h-[560px] flex-col items-center justify-center py-24 text-center"
           }
         >
-          <nav className="font-mono text-[11.5px] uppercase tracking-[.08em] text-light/70" aria-label="Breadcrumb">
+          <nav className="font-mono text-[11.5px] tracking-[.08em] text-light/70 uppercase" aria-label="Breadcrumb">
             <Link href="/" className="hover:text-light">
               Home
             </Link>{" "}
@@ -153,7 +157,7 @@ export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
           <h1 className="h-page mt-4 max-w-4xl">{trip.name}</h1>
           <p className="mt-4 max-w-2xl text-[18px] text-light/85">{trip.summary}</p>
           <ul className={`mt-7 flex flex-wrap items-center gap-2.5 ${sharpHero ? "" : "justify-center"}`} aria-label="Trip facts">
-            <li className="rounded-full bg-secondary px-4 py-2 text-[13px] font-bold uppercase tracking-[.06em] text-dark">{trip.type}</li>
+            <li className="rounded-full bg-secondary px-4 py-2 text-[13px] font-bold tracking-[.06em] text-dark uppercase">{trip.type}</li>
             {heroFacts.map(({ Icon, label, value }) => (
               <li
                 key={label}
@@ -169,7 +173,7 @@ export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
       </section>
 
       <nav className="sticky top-[72px] z-20 border-b border-line bg-light/95 backdrop-blur" aria-label="On this page">
-        <div className="wrap flex gap-7 overflow-x-auto py-3.5 text-[15px] font-semibold text-muted [scrollbar-width:none]">
+        <div className="wrap flex [scrollbar-width:none] gap-7 overflow-x-auto py-3.5 text-[15px] font-semibold text-muted">
           {jumpLinks.map(([id, label]) => (
             <a key={id} href={`#${id}`} className="shrink-0 hover:text-primary">
               {label}
@@ -185,7 +189,7 @@ export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
             <dl className="mt-4 grid grid-cols-2 gap-px overflow-hidden rounded-card border border-line bg-line md:grid-cols-3">
               {tripFacts(trip).map(([k, v]) => (
                 <div key={k} className="bg-light p-4">
-                  <dt className="font-mono text-[11px] uppercase tracking-[.08em] text-muted">{k}</dt>
+                  <dt className="font-mono text-[11px] tracking-[.08em] text-muted uppercase">{k}</dt>
                   <dd className="mt-1 font-bold">{v}</dd>
                 </div>
               ))}
@@ -198,8 +202,8 @@ export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
               {trip.overview ?? trip.summary} {tripTypeLine[trip.type]}
             </p>
             <p className="lead mt-3">
-              Like every CNA trip, it is run by a nature club backed by {site.trust.name}, on a no-profit-no-loss model.
-              Small groups, trained leaders, leave-no-trace.
+              Like every CNA trip, it is run by a nature club backed by {site.trust.name}, on a no-profit-no-loss model. Small groups,
+              trained leaders, leave-no-trace.
             </p>
             <div className="mt-8 grid gap-6 md:grid-cols-2">
               <div className="rounded-card bg-soft p-6">
@@ -236,7 +240,7 @@ export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
                 <div className="p-6">
                   <p className="eyebrow">Where you stay</p>
                   <h2 className="h-sub mt-2">{campus.name}</h2>
-                  <p className="font-mono text-[11.5px] uppercase tracking-[.08em] text-muted">
+                  <p className="font-mono text-[11.5px] tracking-[.08em] text-muted uppercase">
                     {campus.place} · {campus.own}
                   </p>
                   <dl className="mt-4 grid gap-3 text-[15px] sm:grid-cols-2">
@@ -265,7 +269,7 @@ export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
             <div className="flex gap-4">
               <FeatureIcon name="graduationCap" tone="dark" size="lg" />
               <div>
-                <p className="font-mono text-[11.5px] uppercase tracking-[.12em] text-secondary">For schools</p>
+                <p className="font-mono text-[11.5px] tracking-[.12em] text-secondary uppercase">For schools</p>
                 <p className="mt-1 text-[19px] font-bold">Bring your school on this trip</p>
                 <p className="mt-1 text-light/70">
                   Minimum 50 students. <strong className="text-light">1 teacher or escort travels free with every 25 students.</strong>
@@ -281,7 +285,7 @@ export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
             <section id="photos" className="mt-14 scroll-mt-32">
               <div className="flex flex-wrap items-end justify-between gap-3">
                 <h2 className="h-sub">Photos</h2>
-                <span className="font-mono text-[11.5px] uppercase tracking-[.08em] text-muted">{gallery.length} photos · tap to open</span>
+                <span className="font-mono text-[11.5px] tracking-[.08em] text-muted uppercase">{gallery.length} photos · tap to open</span>
               </div>
               <Lightbox>
                 <div className="gal mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3">
@@ -311,9 +315,13 @@ export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
             <section id="videos" className="mt-14 scroll-mt-32">
               <div className="flex flex-wrap items-end justify-between gap-3">
                 <h2 className="h-sub">Videos</h2>
-                <span className="font-mono text-[11.5px] uppercase tracking-[.08em] text-muted">Filmed on CNA trips</span>
+                <span className="font-mono text-[11.5px] tracking-[.08em] text-muted uppercase">Filmed on CNA trips</span>
               </div>
-              <VideoGrid videos={videos} sizes="(min-width: 1024px) 260px, (min-width: 640px) 33vw, 50vw" className="mt-5 grid-cols-2 sm:grid-cols-3" />
+              <VideoGrid
+                videos={videos}
+                sizes="(min-width: 1024px) 260px, (min-width: 640px) 33vw, 50vw"
+                className="mt-5 grid-cols-2 sm:grid-cols-3"
+              />
             </section>
           )}
 
@@ -327,10 +335,10 @@ export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
             <ol className="mt-6 border-l-2 border-dashed border-line pl-6">
               {days.map((d, i) => (
                 <li key={i} className="relative pb-8 last:pb-0">
-                  <span className="absolute -left-[37px] top-0 flex h-6 w-6 items-center justify-center rounded-full bg-dark font-mono text-[11px] text-light">
+                  <span className="absolute top-0 -left-[37px] flex h-6 w-6 items-center justify-center rounded-full bg-dark font-mono text-[11px] text-light">
                     {i + 1}
                   </span>
-                  <p className="font-mono text-[11.5px] uppercase tracking-[.08em] text-primary">Day {i + 1}</p>
+                  <p className="font-mono text-[11.5px] tracking-[.08em] text-primary uppercase">Day {i + 1}</p>
                   <p className="mt-1 text-[19px] font-bold">{d.title}</p>
                   <p className="mt-1 text-muted">{d.text}</p>
                 </li>
@@ -361,7 +369,7 @@ export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
                 ))}
               </ul>
             </div>
-            <p className="font-mono text-[11.5px] uppercase tracking-[.08em] text-muted md:col-span-2">
+            <p className="font-mono text-[11.5px] tracking-[.08em] text-muted uppercase md:col-span-2">
               Typical list · final inclusions confirmed at booking
             </p>
           </section>
@@ -386,8 +394,8 @@ export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
           <section className="mt-14 rounded-card bg-soft p-6">
             <h2 className="h-sub">Booking &amp; cancellation</h2>
             <p className="mt-3 text-muted">
-              Pay 25% advance to book. Balance 3 days before departure. Cancellation charges: 10% (2 months before), 15% (1
-              month), 25% (1 week), 50% (2 days), 100% (same day).{" "}
+              Pay 25% advance to book. Balance 3 days before departure. Cancellation charges: 10% (2 months before), 15% (1 month), 25% (1
+              week), 50% (2 days), 100% (same day).{" "}
               <Link href="/cancellation" className="font-semibold text-dark underline">
                 Full policy
               </Link>{" "}
@@ -417,7 +425,7 @@ export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
 
         <aside className="lg:sticky lg:top-36 lg:self-start">
           <div className="rounded-card border border-dark p-6">
-            <p className="font-mono text-[11px] uppercase tracking-[.08em] text-muted">{trip.price ? "Starts from" : "Price"}</p>
+            <p className="font-mono text-[11px] tracking-[.08em] text-muted uppercase">{trip.price ? "Starts from" : "Price"}</p>
             <p className="display mt-1 text-[36px]">{tripPrice(trip)}</p>
             <p className="text-[14px] text-muted">{trip.price ? "per person" : "Depends on group size and dates"}</p>
             <div className="trail-line my-5" />
@@ -440,7 +448,10 @@ export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
             <a href={contact.whatsappHref} target="_blank" rel="noopener" className="btn btn-outline mt-3 w-full">
               WhatsApp us
             </a>
-            <Link href="/group-trips#custom" className="mt-4 block text-center text-[14px] font-semibold text-muted underline hover:text-primary">
+            <Link
+              href="/group-trips#custom"
+              className="mt-4 block text-center text-[14px] font-semibold text-muted underline hover:text-primary"
+            >
               Plan this for your group
             </Link>
           </div>
@@ -448,11 +459,7 @@ export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
       </div>
 
       <section id="enquire" className="wrap mt-20 scroll-mt-28">
-        <EnquiryForm
-          variant="trip"
-          defaultTrip={trip.slug}
-          title={`Ask about ${trip.name}`}
-        />
+        <EnquiryForm variant="trip" defaultTrip={trip.slug} title={`Ask about ${trip.name}`} />
       </section>
 
       <JsonLd data={tripLd} />

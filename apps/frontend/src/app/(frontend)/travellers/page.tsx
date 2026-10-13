@@ -16,7 +16,10 @@ export const metadata: Metadata = {
 
 export default async function TravellersPage() {
   const [trips, contact] = await Promise.all([getTrips(), getSiteSettings()]);
-  const easy = [...trips.filter((t) => t.difficulty === "Easy" && t.featured), ...trips.filter((t) => t.difficulty === "Easy" && !t.featured)].slice(0, 3);
+  const easy = [
+    ...trips.filter((t) => t.difficulty === "Easy" && t.featured),
+    ...trips.filter((t) => t.difficulty === "Easy" && !t.featured),
+  ].slice(0, 3);
 
   return (
     <>
@@ -35,7 +38,7 @@ export default async function TravellersPage() {
             <article key={k.id} id={k.id} className="scroll-mt-28 overflow-hidden rounded-card border border-line">
               <div className="relative aspect-[16/10] bg-soft">
                 <Photo img={k.img} alt={k.alt} sizes="(min-width: 768px) 400px, 100vw" />
-                <span className="tag absolute left-3 top-3 border-secondary bg-secondary text-dark">{k.tag}</span>
+                <span className="tag absolute top-3 left-3 border-secondary bg-secondary text-dark">{k.tag}</span>
               </div>
               <div className="p-6">
                 <h2 className="h-sub">{k.title}</h2>
@@ -54,7 +57,11 @@ export default async function TravellersPage() {
       </section>
 
       <section className="wrap mt-20">
-        <SectionHeader eyebrow="Easy starts" title="Good trips to start with" action={{ label: "All easy trips", href: "/trips?level=easy" }} />
+        <SectionHeader
+          eyebrow="Easy starts"
+          title="Good trips to start with"
+          action={{ label: "All easy trips", href: "/trips?level=easy" }}
+        />
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {easy.map((t) => (
             <TripCard key={t.slug} trip={t} />

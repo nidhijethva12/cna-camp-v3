@@ -12,7 +12,12 @@ export const Reviews: CollectionConfig = {
     description: "The 3 most recent reviews with consent appear on the home page.",
   },
   // Reviews without consent stay private through the API too, not only on the site.
-  access: { read: ({ req }) => (req.user ? true : { consentGiven: { equals: true } }), create: signedIn, update: signedIn, delete: signedIn },
+  access: {
+    read: ({ req }) => (req.user ? true : { consentGiven: { equals: true } }),
+    create: signedIn,
+    update: signedIn,
+    delete: signedIn,
+  },
   defaultSort: "-createdAt",
   hooks: revalidateSite,
   fields: [

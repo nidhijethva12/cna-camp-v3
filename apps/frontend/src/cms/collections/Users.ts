@@ -9,7 +9,9 @@ const MIN_PASSWORD_LENGTH = 12;
 
 function checkPassword(password: unknown, email: unknown, collection: string) {
   if (typeof password !== "string" || !password) return;
-  const emailName = String(email ?? "").toLowerCase().split("@")[0];
+  const emailName = String(email ?? "")
+    .toLowerCase()
+    .split("@")[0];
   const problems: string[] = [];
   if (password.length < MIN_PASSWORD_LENGTH) problems.push(`be at least ${MIN_PASSWORD_LENGTH} characters`);
   if (!/[a-z]/i.test(password) || !/\d/.test(password)) problems.push("include letters and numbers");
