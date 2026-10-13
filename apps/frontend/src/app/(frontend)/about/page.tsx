@@ -12,25 +12,31 @@ import { site, yearsActive } from "@/content/site";
 import { getFaqs, getTrips } from "@/lib/content";
 
 export const metadata: Metadata = {
-  title: "About us",
+  title: { absolute: "About CNA: Rajkot's Nature & Adventure Club | CNA Camp" },
   description:
-    "Climber Nature Adventure Club (CNA) is an eco-tourism and adventure club from Rajkot, backed by Saurashtra Education & Charitable Trust. Camps since 1997.",
+    "How one low-tide walk at Bet Dwarka became CNA: 1,000+ camps, a Manali campus, trust-backed and no-profit-no-loss. Meet our founder and safety team.",
+  openGraph: {
+    title: "About CNA: a nature club, not a tour company",
+    description: "The story, the founder and the safety rules behind 1,000+ CNA camps.",
+  },
   alternates: { canonical: "/about" },
 };
 
 export default async function AboutPage() {
-  const [trips, faqs] = await Promise.all([getTrips(), getFaqs()]);
+  const [trips, allFaqs] = await Promise.all([getTrips(), getFaqs()]);
+  // The home page answers the general questions; this page keeps the booking and trip-planning ones.
+  const faqs = allFaqs.filter((f) => !f.showOnHome);
   const stats = [
     [`${yearsActive()}+`, "Years of camps"],
-    ["1,000+", "Camps & treks run"],
-    ["1,00,000+", "Campers taken outdoors"],
-    [String(trips.length), "Treks, camps & nature trails"],
+    ["1,000+", "Camps and treks"],
+    ["1,00,000+", "Campers"],
+    [String(trips.length), "Treks, camps and nature trails"],
   ];
   const timeline = [
-    ["1997", "First camp: a Marine Camp at Bet Dwarka, walking the coral reef at low tide."],
+    ["1997", "First camp: a marine camp at Bet Dwarka, walking the reef at low tide."],
     ["2000", `${site.trust.name} registered (Reg. ${site.trust.registration}). CNA camps run with its backing.`],
-    ["Today", `Own campus in Manali, partner campus at Bet Dwarka, ${trips.length} treks, camps and nature trails.`],
-    ["2026", "Adventure Olympiad 1.0: an Eco-STEM quiz with Himalayan camp scholarships."],
+    ["Today", `Our own campus in Manali, a partner campus at Bet Dwarka, and ${trips.length} treks, camps and nature trails.`],
+    ["2026", "Adventure Olympiad 1.0, an Eco-STEM quiz with Himalayan camp scholarships."],
   ];
 
   return (
@@ -39,14 +45,14 @@ export default async function AboutPage() {
         img="cna/real/campus-04"
         imgAlt="CNA’s Manali campus ground with snow peaks behind"
         eyebrow="About CNA"
-        title="A nature club that takes you outdoors. Since 1997."
-        text={`Climber Nature Adventure Club (CNA) is an eco-tourism and adventure club from Rajkot. Backed by ${site.trust.name}.`}
+        title="We take people outdoors. Then we teach them to look after it."
+        text={`Climber Nature Adventure Club (CNA) is an eco-tourism and adventure club from Rajkot, backed by ${site.trust.name}.`}
       />
 
       <section className="wrap mt-20 grid gap-12 lg:grid-cols-2 lg:items-start">
         <div>
           <p className="eyebrow">Our story</p>
-          <h2 className="h-section mt-3">It started with one marine camp</h2>
+          <h2 className="h-section mt-3">One low tide changed everything</h2>
           <div className="mt-5 space-y-4 text-[17px] leading-relaxed text-muted">
             {storyParagraphs.map((p) => (
               <p key={p}>{p}</p>
@@ -106,7 +112,7 @@ export default async function AboutPage() {
               <p className="eyebrow">What eco-tourism means to us</p>
               <p className="display h-sub mt-2">Travel that protects nature and supports local people</p>
               <p className="mt-3 text-muted">
-                That is how The International Ecotourism Society describes it, and it is how we have run camps since 1997.
+                That is how The International Ecotourism Society defines it, and it is how we run every camp.
               </p>
             </div>
             <ul className="grid gap-3 sm:grid-cols-2">
@@ -126,8 +132,8 @@ export default async function AboutPage() {
       <section id="camp-life" className="wrap mt-24 scroll-mt-28">
         <SectionHeader
           eyebrow="Life at camp"
-          title="What a CNA camp is like"
-          intro="The same simple rhythm since 1997: adventure by day, good food, rest, and the outdoors all around."
+          title="What a CNA day actually looks like"
+          intro="Simple, and it works. Adventure by day, good food, a little rest, and the outdoors all around you."
         />
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           {campLife.map((c) => (
@@ -196,11 +202,7 @@ export default async function AboutPage() {
       </section>
 
       <section id="different" className="wrap mt-24 scroll-mt-28">
-        <SectionHeader
-          eyebrow="Why CNA"
-          title="What makes CNA different"
-          intro="Many companies sell trips. CNA is a nature club with a purpose."
-        />
+        <SectionHeader eyebrow="Why CNA" title="Five things you will not find in a brochure" />
         <ol className="grid gap-px overflow-hidden rounded-card border border-line bg-line sm:grid-cols-2 lg:grid-cols-3">
           {different.map(([title, text], i) => (
             <li key={title} className="bg-light p-6 sm:p-8">
@@ -236,6 +238,9 @@ export default async function AboutPage() {
         <div className="wrap">
           <p className="eyebrow text-light/60!">Safety</p>
           <h2 className="h-section mt-3">How we keep trips safe</h2>
+          <p className="mt-4 max-w-2xl text-[17px] leading-relaxed text-light/70">
+            The question every parent asks first. Here is our honest answer.
+          </p>
           <ul className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {safetyPoints.map(([title, text]) => (
               <li key={title} className="border-t border-light/15 pt-4">
@@ -248,7 +253,8 @@ export default async function AboutPage() {
       </section>
 
       <section className="wrap mt-20">
-        <h2 className="h-section">Team &amp; trip leaders</h2>
+        <p className="eyebrow">Team &amp; trip leaders</p>
+        <h2 className="h-section mt-3">The people who will hold your rope</h2>
         <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {teamRoles.map((role, i) => (
             <div key={i} className="rounded-card border border-line p-5">
@@ -264,6 +270,13 @@ export default async function AboutPage() {
         <p className="eyebrow">FAQs</p>
         <h2 className="h-section mt-3">Questions people ask</h2>
         <FaqList faqs={faqs} className="mt-6" />
+        <p className="mt-6 text-muted">
+          Who can join, travelling alone, families and more are answered on our{" "}
+          <Link href="/#faq-title" className="font-semibold text-primary underline">
+            home page FAQs
+          </Link>
+          .
+        </p>
       </section>
     </>
   );

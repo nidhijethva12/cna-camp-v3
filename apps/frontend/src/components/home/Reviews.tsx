@@ -18,8 +18,8 @@ export function Reviews({ reviews }: { reviews: Review[] }) {
       <SectionHeader
         id="reviews-title"
         eyebrow="Reviews"
-        title="What campers say"
-        intro="Real words from campers, parents and teachers. Shared with their permission."
+        title="In their words"
+        intro="Campers, parents and teachers, shared with their permission."
       />
       <ul className="grid gap-4 md:grid-cols-3">
         {reviews.map((r) => (

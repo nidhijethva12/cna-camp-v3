@@ -20,8 +20,8 @@ export const site = {
 export const yearsActive = (now = new Date()) => now.getFullYear() - FOUNDED_YEAR - (now.getMonth() < 11 ? 1 : 0);
 
 export const regions: Record<RegionSlug, { label: string; blurb: string }> = {
-  gujarat: { label: "Gujarat", blurb: "Bet Dwarka coast, Gir forest, Kutch & Saputara hills" },
-  "across-india": { label: "Across India", blurb: "Himalaya, Sahyadri, Satpura & the southern hills" },
+  gujarat: { label: "Gujarat", blurb: "Bet Dwarka coast, Gir forest, Kutch and the Saputara hills" },
+  "across-india": { label: "Across India", blurb: "Himalaya, Sahyadri, Satpura and the southern hills" },
   "north-east": { label: "North-East", blurb: "Sikkim and the eastern Himalaya" },
   "outside-india": { label: "Outside India", blurb: "Everest Base Camp, Nepal" },
 };

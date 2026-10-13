@@ -55,6 +55,14 @@ export const HomePage: GlobalConfig = {
               required: true,
               admin: { description: "Each entry is one line; the last line is highlighted in yellow." },
             },
+            {
+              name: "heading",
+              type: "text",
+              admin: {
+                description:
+                  "The page's main heading for Google (H1), shown under the big lines, e.g. “Treks, camps and nature trails from Gujarat to the Himalaya”.",
+              },
+            },
             { name: "intro", type: "textarea", required: true },
             photo("image", "Wide landscape photo behind the heading; the first slide and the one shown when motion is reduced."),
             {
@@ -139,7 +147,7 @@ export const HomePage: GlobalConfig = {
           label: "Why CNA",
           name: "why",
           fields: [
-            ...sectionHeading(false),
+            ...sectionHeading(),
             photo(),
             { name: "imageLabel", type: "text", admin: { description: "Small label on the photo, e.g. Rock climbing" } },
             points(6),

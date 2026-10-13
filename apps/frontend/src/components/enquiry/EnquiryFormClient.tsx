@@ -46,7 +46,7 @@ export function EnquiryFormClient({ trips, phone, variant = "quick", defaultTrip
       <p className="mt-2 text-[15px] text-muted">
         {isGroup
           ? "Tell us about your group. We suggest 2-3 options within a day, usually on WhatsApp."
-          : "We reply within a day, usually on WhatsApp."}
+          : "Tell us where you want to go. We reply within a day, usually on WhatsApp."}
       </p>
 
       <input type="hidden" name="variant" value={variant} />

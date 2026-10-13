@@ -949,6 +949,10 @@ export interface HomePage {
      * Each entry is one line; the last line is highlighted in yellow.
      */
     headingLines: string[];
+    /**
+     * The page's main heading for Google (H1), shown under the big lines, e.g. “Treks, camps and nature trails from Gujarat to the Himalaya”.
+     */
+    heading?: string | null;
     intro: string;
     /**
      * Wide landscape photo behind the heading; the first slide and the one shown when motion is reduced.
@@ -1025,6 +1029,7 @@ export interface HomePage {
   why: {
     eyebrow: string;
     title: string;
+    intro?: string | null;
     image: string | Media;
     /**
      * Small label on the photo, e.g. Rock climbing
@@ -1133,6 +1138,7 @@ export interface HomePageSelect<T extends boolean = true> {
     | T
     | {
         headingLines?: T;
+        heading?: T;
         intro?: T;
         image?: T;
         slides?: T;
@@ -1192,6 +1198,7 @@ export interface HomePageSelect<T extends boolean = true> {
     | {
         eyebrow?: T;
         title?: T;
+        intro?: T;
         image?: T;
         imageLabel?: T;
         points?:

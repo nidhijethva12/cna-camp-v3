@@ -36,19 +36,19 @@ export function TripSearch() {
         className="grid gap-3 rounded-card bg-light p-4 shadow-panel sm:grid-cols-2 lg:grid-cols-[1fr_1fr_1fr_auto] lg:p-5"
       >
         <label className="block">
-          <span className="eyebrow">Where</span>
+          <span className="eyebrow">Where do you want to go?</span>
           <Select name="region" emptyLabel="Anywhere" options={regionOptions} className="mt-2" />
         </label>
         <label className="block">
-          <span className="eyebrow">What</span>
+          <span className="eyebrow">What kind of trip?</span>
           <Select name="type" emptyLabel="Treks, camps & trails" options={typeOptions} className="mt-2" />
         </label>
         <label className="block">
-          <span className="eyebrow">When</span>
+          <span className="eyebrow">When can you travel?</span>
           <Select name="month" emptyLabel="Any month" options={monthOptions} className="mt-2" />
         </label>
         <button type="submit" className="btn btn-dark self-end">
-          Find trips <ArrowRight />
+          Show me trips <ArrowRight />
         </button>
       </Form>
     </div>

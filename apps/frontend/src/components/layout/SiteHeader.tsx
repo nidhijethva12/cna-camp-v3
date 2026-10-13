@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { enquireHref, FOUNDED_YEAR, mainNav, site } from "@/content/site";
+import { enquireHref, mainNav, site } from "@/content/site";
 import { getSiteSettings } from "@/lib/content";
 import { DesktopNav } from "./DesktopNav";
 import { MobileNav } from "./MobileNav";
@@ -11,7 +11,7 @@ export async function SiteHeader() {
     <>
       <div className="bg-dark text-light/85">
         <div className="wrap flex items-center justify-between gap-4 py-2 font-mono text-[11.5px] tracking-[.08em] uppercase">
-          <span>Since {FOUNDED_YEAR} · Rajkot, Gujarat</span>
+          <span>Rajkot, Gujarat · 20+ years of treks and camps</span>
           <span className="hidden sm:inline">Backed by {site.trust.name}</span>
         </div>
       </div>

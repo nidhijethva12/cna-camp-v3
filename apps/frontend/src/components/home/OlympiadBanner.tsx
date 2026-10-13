@@ -3,10 +3,10 @@ import Link from "next/link";
 import { ArrowRight, Star } from "@/components/ui/icons";
 
 const facts = [
-  { label: "Max scholarship", value: "100%" },
+  { label: "Scholarship, up to", value: "100%" },
   { label: "Registration from", value: "₹90" },
-  { label: "MCQ questions", value: "100" },
-  { label: "Quiz rounds", value: "5" },
+  { label: "MCQs", value: "100" },
+  { label: "Rounds", value: "5" },
 ];
 
 export function OlympiadBanner() {
@@ -24,11 +24,11 @@ export function OlympiadBanner() {
               India’s 1st Adventure Olympiad
             </p>
             <h2 id="olympiad-title" className="h-section mt-4 [zoom:1]">
-              Adventure Olympiad: take the quiz, win the Himalaya
+              Take the quiz. Win the Himalaya.
             </h2>
             <p className="mt-3 max-w-xl text-light/80">
-              An Eco-STEM online quiz for ages 14–25 and teachers from every district of Gujarat. Top scorers win up to 100% scholarship for
-              the ₹18,000 Astro Adventure Trekking Camp in Manali.
+              An Eco-STEM online quiz for ages 14 to 25 and teachers from every district of Gujarat. Top scorers win up to a 100%
+              scholarship on the ₹18,000 Astro Adventure Trekking Camp in Manali.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
               <Link href="/olympiad" className="btn btn-primary">

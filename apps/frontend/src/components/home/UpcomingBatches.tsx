@@ -20,8 +20,8 @@ export function UpcomingBatches({ batches }: { batches: UpcomingBatch[] }) {
             Pack your bag.
           </>
         }
-        intro="Fixed departures you can join alone or with friends. Seats are limited on every batch."
-        action={{ label: "All batches", href: "/batches" }}
+        intro="Fixed departures you can join alone or with your gang. Seats are limited, and they do go."
+        action={{ label: "See all batches", href: "/batches" }}
       />
 
       {batches.length === 0 ? (

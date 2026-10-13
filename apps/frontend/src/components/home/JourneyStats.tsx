@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { CountUp } from "@/components/ui/CountUp";
 import { FeatureIcon, type FeatureIconName } from "@/components/ui/FeatureIcon";
-import { FOUNDED_YEAR, yearsActive } from "@/content/site";
+import { yearsActive } from "@/content/site";
 
 interface JourneyStatsProps {
   tripCount: number;
@@ -12,9 +12,9 @@ interface JourneyStatsProps {
 export function JourneyStats({ tripCount, counts }: JourneyStatsProps) {
   const stats: { icon: FeatureIconName; value: string; label: string }[] = [
     { icon: "mountains", value: `${yearsActive()}+`, label: "Years of camps" },
-    { icon: "lightning", value: counts.camps, label: "Camps & treks run" },
+    { icon: "lightning", value: counts.camps, label: "Camps and treks run" },
     { icon: "users", value: counts.campers, label: "Campers taken outdoors" },
-    { icon: "mapPin", value: String(tripCount), label: "Treks, camps & nature trails" },
+    { icon: "mapPin", value: String(tripCount), label: "Treks, camps and nature trails" },
   ];
 
   return (
@@ -26,10 +26,10 @@ export function JourneyStats({ tripCount, counts }: JourneyStatsProps) {
       <div className="wrap py-20 text-center">
         <p className="eyebrow text-secondary!">Our journey so far</p>
         <h2 id="journey-title" className="h-section mx-auto mt-3 max-w-3xl">
-          Trusted by campers across Gujarat for nearly 30 years
+          Almost three decades of getting people outdoors
         </h2>
         <p className="mx-auto mt-4 max-w-2xl text-[17px] text-light/75">
-          From one marine camp in {FOUNDED_YEAR} to {counts.camps} camps across India and Nepal. Here is CNA in numbers.
+          It started with one marine camp. Today it is {counts.camps} camps across India and Nepal, and a lot of happy, tired campers.
         </p>
         <ul className="mt-12 grid grid-cols-2 gap-4 lg:grid-cols-4">
           {stats.map((s) => (

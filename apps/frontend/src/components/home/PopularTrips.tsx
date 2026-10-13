@@ -8,7 +8,7 @@ export function PopularTrips({ trips }: { trips: Trip[] }) {
       <SectionHeader
         id="popular-title"
         eyebrow="Popular trips"
-        title="Trips people keep coming back for"
+        title="The trips people come back for"
         action={{ label: "All trips", href: "/trips" }}
       />
       <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

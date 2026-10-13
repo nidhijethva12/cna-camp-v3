@@ -2,53 +2,49 @@ import type { FeatureIconName } from "@/components/ui/FeatureIcon";
 import type { PhotoKey } from "@/types/content";
 
 export const mission = {
-  line: "Bring people closer to nature, through adventure.",
-  text: "CNA is an eco-tourism club, not a sightseeing company. Every camp is built around a nature experience: walking a coral reef at low tide, reading the night sky, crossing a Himalayan river, watching birds at dawn. Adventure activities are the way in. Respect for nature is what people take home.",
+  line: "Bring people closer to nature, through adventure",
+  text: "Anyone can show you a viewpoint. We want you to understand what you are looking at. So every camp is built around one real nature experience: a coral reef at low tide, a night sky away from city lights, a Himalayan river you cross with your team, birds at first light. The adventure gets you there. The nature is why you go.",
   points: [
-    ["Learn outdoors", "Every camp mixes adventure with nature learning (EVS): forests, marine life, birds, stars."],
+    ["Learn outdoors", "Every camp mixes adventure with nature learning: forests, marine life, birds and stars."],
     ["Leave no trace", "Small groups, no plastic left behind, and respect for local people and wildlife."],
-    ["Build confidence", "Climbing, trekking and camping teach courage, teamwork and self-reliance."],
+    ["Build confidence", "Climbing, trekking and camping teach courage, teamwork and how to look after yourself."],
   ],
 };
 
 export const founder = {
   name: "Sir Dr. Ketankumar P. Trivedi",
-  years: "1971 – 2024",
-  quote: "A Lamp of Nature – for Back to Nature movements.",
+  years: "1971 to 2024",
+  quote: "A lamp of nature, for back to nature movements.",
   intro:
-    "Dr. Ketankumar Prafullchandra Trivedi gave his life to sports, youth development, nature conservation and wildlife conservation. CNA camps carry his spirit: get young people outdoors, make them strong, and make them care for nature.",
+    "He was a boxer, a coach, a mountain man and a teacher, and he spent his life getting young people outdoors. He believed a day in the hills could do what a month in a classroom could not: make you stronger, calmer and more caring towards nature. Every CNA camp still carries that belief.",
   facts: [
     ["Education", "Doctorate in Boxing, Master in Physical Education and Bachelor in Geography, Saurashtra University."],
     [
       "Outdoors",
-      "Instructor certificate, Back to Nature movement (1992). Basic Snow Skiing course, Govt. of Himachal Pradesh (1996). Mountain Rescue course, Himachal Mountaineering Institute (1996).",
+      "Instructor certificate, Back to Nature movement (1992). Basic Snow Skiing course, Govt. of Himachal Pradesh (1996). Mountain Rescue course (1996).",
     ],
     [
       "Sports",
-      "Official committee member, Indian Olympic Association from Gujarat. Organising committee, Commonwealth Games, New Delhi (2010). State champion in boxing, judo and archery.",
+      "Committee member, Indian Olympic Association, from Gujarat. Organising committee, Commonwealth Games, New Delhi (2010). State champion in boxing, judo and archery.",
     ],
     [
       "Coach & mentor",
-      "15+ years coaching many sports. Gym coach at Saurashtra University and the Rajkot Indoor Stadium. Many of his students won state and national medals.",
+      "15+ years coaching many sports, including at Saurashtra University and the Rajkot Indoor Stadium. Many of his students went on to win state and national medals.",
     ],
     [
       "Service",
-      "Life member of the Red Cross Society and 20+ Gujarat sports associations. Voluntary service with RMC and non-profit organisations.",
+      "Life member of the Red Cross Society and 20+ Gujarat sports associations. Voluntary work with RMC and non-profit organisations.",
     ],
   ],
-  legacy:
-    "The Saurashtra Education & Charitable Trust has dedicated the Adventure Olympiad Group C scholarship to him, for his lifetime of work for sports, youth and nature.",
+  legacy: "Saurashtra Education & Charitable Trust has dedicated the Adventure Olympiad Group C scholarship to him.",
 };
 
 export const different = [
-  ["Eco-tourism first", "We are a nature club, not a tour company. Every trip has a nature learning goal, not just sightseeing."],
-  ["Our own campuses", "Our own Manali campus and a partner campus at Bet Dwarka, so stay, food and safety stay in our hands."],
-  ["Since 1997, no-profit-no-loss", "Nearly 30 years, 1,000+ camps and 1,00,000+ campers. Fees cover the camp, not a profit margin."],
-  ["Backed by a registered trust", "Supported by Saurashtra Education & Charitable Trust (Reg. E-5718/2000)."],
-  [
-    "10 adventure activities, trained leaders",
-    "Trekking, mountaineering, rock climbing, rappelling, rafting, river crossing, paragliding, bird watching, star gazing and marine life, led by trained instructors.",
-  ],
+  ["Eco-tourism first", "Every trip has a nature learning goal. Sightseeing is a bonus, not the plan."],
+  ["Our own campuses", "Our Manali campus and a partner campus at Bet Dwarka keep stay, food and safety in our own hands."],
+  ["No profit, no loss", "1,000+ camps and 1,00,000+ campers, and the fee still only covers the camp."],
+  ["Backed by a registered trust", "Saurashtra Education & Charitable Trust (Reg. E-5718/2000)."],
+  ["10 activities, trained leaders", "Trekking to star gazing, each led by people who know that activity well."],
 ];
 
 export const whoCanJoin = [
@@ -86,32 +82,32 @@ export const whoCanJoin = [
   },
 ];
 export const storyParagraphs = [
-  "In December 1997, a small group from Rajkot went to Bet Dwarka to walk the coral reef at low tide. Starfish, sea anemones, birds over the water, a night sky full of stars. That first Marine Camp became CNA.",
-  "Nearly 30 years later we have run 1,000+ camps and taken 1,00,000+ people outdoors: school and college groups, families, friends, girls-only groups and solo travellers. From the Gujarat coast to the Himalaya, the North-East and Nepal.",
-  "We still work the same way: no profit, no loss, safety first, and nature at the centre of every trip.",
+  "December 1997. A small group from Rajkot reached Bet Dwarka, waited for the sea to pull back, and walked out onto a living coral reef. Starfish under their feet. Birds over the water. A sky so full of stars that nobody wanted to sleep. That trip became CNA.",
+  "Since then we have run 1,000+ camps and taken more than 1,00,000 people outdoors: school and college groups, families, friends, girls-only batches and solo travellers. The places grew, from the Gujarat coast to the Himalaya, the North-East and Nepal. The way we work did not.",
+  "No profit, no loss. Safety before schedule. Nature at the centre of every day.",
 ];
 
 export const ecoPrinciples = [
   ["Leave a small footprint", "Small groups, no litter, quiet trails."],
-  ["Learn the place", "Every stop starts with a briefing: wildlife distances, fragile species, local rules."],
-  ["Respect local culture", "We explain the history and way of life of each place and meet local people."],
-  ["Teach on the way", "Bus and trail time becomes discussion time on nature and local issues."],
-  ["Good for hosts too", "Positive experiences for visitors and the communities who host us."],
-  ["Support conservation", "Campers learn what is being done to protect each place, and how to help."],
+  ["Learn the place", "Every stop starts with a briefing on wildlife, fragile species and local rules."],
+  ["Respect local culture", "We explain the history and way of life of each place and meet the people who live there."],
+  ["Teach on the way", "Bus and trail time turns into conversations about nature and local issues."],
+  ["Good for hosts too", "Our visits should help the communities who host us."],
+  ["Support conservation", "Campers learn what is being done to protect each place, and how they can help."],
 ];
 
 export const campLife: { icon: FeatureIconName; title: string; text: string; img: PhotoKey; alt: string }[] = [
   {
     icon: "sun",
     title: "A day at camp",
-    text: "Activities start after breakfast. We come back to camp for lunch and a short rest, then head out again and return before dinner. On full-day programmes we carry packed lunch.",
+    text: "Activities start after breakfast. We come back for lunch and a short rest, head out again, and return before dinner. On full-day programmes we carry packed lunch.",
     img: "cna/real/group-05",
     alt: "Camp leaders briefing a group of campers before an activity",
   },
   {
     icon: "tent",
     title: "Where you stay",
-    text: "Hotels where they exist (about 5 people per room) or tents for 2, 4, 6 or 10 people. Where both are possible, the group leader chooses before the camp.",
+    text: "Hotels where they exist (about 5 people per room) or tents for 2, 4, 6 or 10 people. Where both are possible, your group leader picks before the camp.",
     img: "cna/real/campus-01",
     alt: "Campers seated on the terrace of CNA’s Manali campus, mountains behind",
   },
@@ -132,10 +128,10 @@ export const campLife: { icon: FeatureIconName; title: string; text: string; img
 ];
 
 export const safetyPoints = [
-  ["Expert-led activities", "Trekking, climbing, rafting and every other activity is guided by experts in that field."],
+  ["Expert-led activities", "Trekking, climbing, rafting and every other activity is guided by people trained in it."],
   ["Medical cover at camp", "A medical kit at every camp, a doctor nearby, volunteer staff and ambulance access for emergencies."],
-  ["Insured long camps", "For camps longer than 5 days CNA arranges mediclaim cover for the camp period, at our cost."],
-  ["Right volunteers", "Female volunteers with girls’ groups, male volunteers with boys’ groups, both with mixed groups."],
+  ["Insured long camps", "For camps longer than 5 days, CNA arranges mediclaim cover for the camp period, at our cost."],
+  ["The right volunteers", "Female volunteers with girls’ groups, male volunteers with boys’ groups, and both with mixed groups."],
   ["Safe gear, clean stay", "ISI-marked safety equipment, and washed bedding in every hotel and tent."],
   ["Plans bend for safety", "Weather, roads or a tired group can change the day. A group meeting before every camp sets the rules."],
 ];

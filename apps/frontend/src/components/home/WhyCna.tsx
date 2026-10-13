@@ -16,6 +16,7 @@ export function WhyCna({ content }: { content: HomeContent["why"] }) {
           <h2 id="why-title" className="h-section mt-3">
             {content.title}
           </h2>
+          {content.intro && <p className="mt-4 text-[17px] leading-relaxed text-light/70">{content.intro}</p>}
           <ul className="mt-8 grid gap-6 sm:grid-cols-2">
             {content.points.map((w) => (
               <li key={w.title} className="border-t border-light/15 pt-4">
@@ -24,8 +25,8 @@ export function WhyCna({ content }: { content: HomeContent["why"] }) {
               </li>
             ))}
           </ul>
-          <Link href="/about" className="btn btn-primary mt-10">
-            Our story <ArrowRight />
+          <Link href="/about#safety" className="btn btn-primary mt-10">
+            How we keep trips safe <ArrowRight />
           </Link>
         </div>
       </div>

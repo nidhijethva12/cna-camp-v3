@@ -9,10 +9,16 @@ export interface SeedPhoto {
 const photo = (src: string, alt: string): SeedPhoto => ({ src, alt });
 
 export const home = {
+  seo: {
+    title: "Treks & Camps from Gujarat to the Himalaya | CNA Camp",
+    description:
+      "Treks, camps and nature trails from Rajkot to the Himalaya. 20+ years, 1,000+ camps, small groups and trained leaders. See upcoming batches and plan.",
+  },
   hero: {
-    headingLines: ["Real trails.", "Real people.", "Since 1997."],
+    headingLines: ["Real trails.", "Real people.", "Real campfires."],
+    heading: "Treks, camps and nature trails from Gujarat to the Himalaya",
     intro:
-      "Eco-tourism treks, camps and nature trails from Gujarat to the Himalaya. For schools, colleges, families, friends, girls-only groups and solo travellers.",
+      "Small groups, trained leaders and a plan built around nature. For schools, colleges, families, friends, girls-only groups and solo travellers.",
     image: photo("/img/stock/home-banner-1-wide.webp", "A forested Himalayan valley with a river below snow peaks"),
     slides: [
       photo("/img/stock/home-banner-2-wide.webp", "A trekker on a green mountain trail below rocky peaks"),
@@ -26,10 +32,10 @@ export const home = {
   holidays: {
     eyebrow: "Plan by holiday",
     title: "A trip for every school break",
-    intro: "Diwali, Christmas, summer vacation or just a weekend: here is what runs when.",
+    intro: "Diwali, Christmas, summer vacation or a free weekend. Here is what runs when.",
     items: [
       {
-        months: "Oct – Nov",
+        months: "Oct to Nov",
         title: "Diwali break",
         highlights: ["Astro Adventure Trekking Camp", "Sikkim Trek", "Everest Base Camp Trek"],
         tripCount: 22,
@@ -37,7 +43,7 @@ export const home = {
         image: photo("/img/cna/manali/11.webp", "A CNA group on a Himalayan trail"),
       },
       {
-        months: "Dec – Jan",
+        months: "Dec to Jan",
         title: "Christmas & New Year",
         highlights: ["Marine Camp, Bet Dwarka", "Sasan Gir Wildlife Camp", "Kullu, Shimla & Manali"],
         tripCount: 16,
@@ -45,7 +51,7 @@ export const home = {
         image: photo("/img/cna/marinecamp/02.webp", "Marine camp at Bet Dwarka"),
       },
       {
-        months: "Dec – Mar",
+        months: "Dec to Mar",
         title: "Snow season",
         highlights: ["Manali Snow Camp", "Kullu, Shimla & Manali"],
         tripCount: 2,
@@ -53,7 +59,7 @@ export const home = {
         image: photo("/img/cna/manali/01.webp", "Snow camp in Manali"),
       },
       {
-        months: "May – Jun",
+        months: "May to Jun",
         title: "Summer vacation",
         highlights: ["Astro Adventure Trekking Camp", "Sikkim Trek", "Ladakh Trek"],
         tripCount: 11,
@@ -61,7 +67,7 @@ export const home = {
         image: photo("/img/cna/manali/11.webp", "A CNA group on a Himalayan trail"),
       },
       {
-        months: "Jul – Sep",
+        months: "Jul to Sep",
         title: "Monsoon treks",
         highlights: ["Sikkim Trek", "Ladakh Trek", "Grand Uttaranchal Trek"],
         tripCount: 12,
@@ -69,7 +75,7 @@ export const home = {
         image: photo("/img/cna/sikkim/03.webp", "Mountain views in Sikkim"),
       },
       {
-        months: "1 – 3 days",
+        months: "1 to 3 days",
         title: "Weekend & day trips",
         highlights: ["Sasan Gir Wildlife Camp", "Mount Abu", "Narara Island Coral Walk"],
         tripCount: 9,
@@ -81,7 +87,7 @@ export const home = {
   destinations: {
     eyebrow: "Where we go",
     title: "From Gujarat's coast to the Himalaya",
-    intro: "Coast, forest, desert and high mountains. We pick the right place for each season.",
+    intro: "Coast, forest, desert and high mountains. We match the place to the season, so you go when it is at its best.",
     regionImages: {
       gujarat: photo("/img/cna/marinecamp/02.webp", "Marine camp at Bet Dwarka"),
       acrossIndia: photo("/img/cna/real/land-12-wide.webp", "View over pine trees and mountains from a hilltop in Himachal"),
@@ -95,25 +101,25 @@ export const home = {
     items: [
       {
         title: "School groups",
-        description: "Safe, well-planned camps that teach outside the classroom.",
+        description: "Camps that teach what a textbook cannot. Planned, supervised, safe.",
         link: "/group-trips#schools",
         image: photo("/img/cna/real/group-10-wide.webp", "A boys’ batch with their bags outside a wooden hut in Himachal"),
       },
       {
         title: "College & friends",
-        description: "Treks and camps for your gang, with every detail handled.",
+        description: "Your gang, one trail, zero planning stress. We handle the details.",
         link: "/group-trips#families",
         image: photo("/img/cna/real/group-11-wide.webp", "A group of campers cheering together in a deodar forest"),
       },
       {
         title: "Girls-only",
-        description: "Batches just for girls and women, with a safe, easy vibe.",
+        description: "Batches for girls and women, with female volunteers on every trip.",
         link: "/travellers#girls",
         image: photo("/img/cna/real/river-01-wide.webp", "Campers crossing a river on a wooden bridge near Manali"),
       },
       {
         title: "Solo travellers",
-        description: "Come alone (18+), leave with a group of new trail friends.",
+        description: "Come alone (18+). Leave with a group of trail friends.",
         link: "/travellers#solo",
         image: photo("/img/cna/real/land-03-wide.webp", "Snow peaks above a green valley in Himachal Pradesh"),
       },
@@ -122,23 +128,24 @@ export const home = {
   },
   why: {
     eyebrow: "Why CNA",
-    title: "Nearly 30 years of getting people home happy",
+    title: "The boring stuff we take seriously",
+    intro: "Good trips are built on things you never notice: the right leader, the right gear, the right call when the weather turns.",
     image: photo("/img/cna/real/climb-04-wide.webp", "A girl rock climbing on a boulder in a pine forest, Manali"),
     imageLabel: "Rock climbing",
     points: [
-      { title: "Instructors with 20+ years", text: "Qualified, experienced instructors and first aid on every batch." },
+      { title: "Trained, experienced leaders", text: "Qualified instructors and first aid on every batch." },
       {
         title: "Nature learning built in",
-        text: "Sea awareness, EVS sessions, bird watching and star gazing are part of the plan.",
+        text: "Sea awareness, EVS sessions, bird watching and star gazing are part of the plan, not an extra.",
       },
-      { title: "Your travel, your menu", text: "Choose train, bus, car or air. Meals at camp follow your group’s menu." },
-      { title: "No profit, no loss", text: "Fees cover the camp. That is how a trust-backed club works." },
+      { title: "Your travel, your menu", text: "Train, bus, car or air. Camp meals follow your group’s menu." },
+      { title: "No profit, no loss", text: "Your fee covers the camp. That is how a trust-backed club works." },
     ],
   },
   gallery: {
     eyebrow: "From the trail",
     title: "Moments from our trips",
-    intro: "Real moments from CNA camps: campfires, rafting, climbing and the friends you make. Hover to pause.",
+    intro: "Campfires, river crossings, first climbs and the friends you make along the way. Hover to pause.",
     photos: [
       ["river-01", "Crossing the river, Manali"],
       ["river-02", "Hold hands, keep moving"],
