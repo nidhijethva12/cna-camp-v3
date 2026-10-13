@@ -55,6 +55,10 @@ export default async function PhotoCreditsPage() {
           Photos are resized and compressed for the web. Licence texts:{" "}
           <a href="https://creativecommons.org/licenses/" target="_blank" rel="noopener" className="underline">
             creativecommons.org/licenses
+          </a>{" "}
+          and{" "}
+          <a href="https://unsplash.com/license" target="_blank" rel="noopener" className="underline">
+            unsplash.com/license
           </a>
           .
         </p>
