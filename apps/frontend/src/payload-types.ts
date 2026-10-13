@@ -963,19 +963,6 @@ export interface HomePage {
      */
     highlights?: string[] | null;
   };
-  story: {
-    eyebrow: string;
-    title: string;
-    body: string;
-    image: string | Media;
-    points?:
-      | {
-          title: string;
-          text: string;
-          id?: string | null;
-        }[]
-      | null;
-  };
   holidays: {
     eyebrow: string;
     title: string;
@@ -1150,21 +1137,6 @@ export interface HomePageSelect<T extends boolean = true> {
         image?: T;
         slides?: T;
         highlights?: T;
-      };
-  story?:
-    | T
-    | {
-        eyebrow?: T;
-        title?: T;
-        body?: T;
-        image?: T;
-        points?:
-          | T
-          | {
-              title?: T;
-              text?: T;
-              id?: T;
-            };
       };
   holidays?:
     | T

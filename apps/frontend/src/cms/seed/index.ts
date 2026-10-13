@@ -193,7 +193,6 @@ async function seed() {
       data: {
         _status: "published",
         hero: { ...home.hero, image: await upload(home.hero.image), slides: await mapInOrder(home.hero.slides, upload) },
-        story: { ...home.story, image: await upload(home.story.image) },
         holidays: {
           ...home.holidays,
           items: await mapInOrder(home.holidays.items, async (h) => ({ ...h, image: await upload(h.image) })),

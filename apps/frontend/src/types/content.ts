@@ -44,6 +44,8 @@ export interface Trip {
   price: number | null;
   img: ImageRef | null;
   gallery: ImageRef[];
+  /** ISO date of the last published change. */
+  updatedAt: string;
   /** Ids of the trip's videos, in the editors' order; resolve them with `getVideos`. */
   videoIds: string[];
   months: Month[];

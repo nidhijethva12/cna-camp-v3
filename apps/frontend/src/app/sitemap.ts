@@ -2,8 +2,16 @@ import type { MetadataRoute } from "next";
 import { getPosts, getTrips } from "@/lib/content";
 import { absoluteUrl } from "@/lib/seo";
 
-type Entry = { path: string; priority: number; changeFrequency: MetadataRoute.Sitemap[number]["changeFrequency"] };
+type Entry = {
+  path: string;
+  priority: number;
+  changeFrequency: MetadataRoute.Sitemap[number]["changeFrequency"];
+  /** Only real dates: a fake "now" on every page teaches search engines to ignore the field. */
+  lastModified?: string;
+};
 
+// Rebuilt hourly so new trips and posts appear without a deploy.
+export const revalidate = 3600;
 const pages: Entry[] = [
   { path: "/", priority: 1, changeFrequency: "weekly" },
   { path: "/trips", priority: 0.9, changeFrequency: "weekly" },
@@ -24,10 +32,9 @@ const pages: Entry[] = [
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [trips, posts] = await Promise.all([getTrips(), getPosts()]);
-  const lastModified = new Date();
   return [
     ...pages,
-    ...trips.map((t): Entry => ({ path: `/trips/${t.slug}`, priority: 0.8, changeFrequency: "monthly" })),
-    ...posts.map((p): Entry => ({ path: `/blog/${p.slug}`, priority: 0.6, changeFrequency: "yearly" })),
-  ].map((e) => ({ url: absoluteUrl(e.path), lastModified, changeFrequency: e.changeFrequency, priority: e.priority }));
+    ...trips.map((t): Entry => ({ path: `/trips/${t.slug}`, priority: 0.8, changeFrequency: "monthly", lastModified: t.updatedAt })),
+    ...posts.map((p): Entry => ({ path: `/blog/${p.slug}`, priority: 0.6, changeFrequency: "yearly", lastModified: p.publishedAt })),
+  ].map((e) => ({ url: absoluteUrl(e.path), lastModified: e.lastModified, changeFrequency: e.changeFrequency, priority: e.priority }));
 }

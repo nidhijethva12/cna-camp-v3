@@ -24,18 +24,21 @@ export function TripCard({ trip, badge }: { trip: Trip; badge?: string }) {
         {badge && <span className="tag absolute right-3 top-3 border-secondary bg-secondary text-dark">{badge}</span>}
       </Link>
       <div className="flex flex-1 flex-col p-5">
-        <p className="font-mono text-[11.5px] uppercase tracking-[.08em] text-muted">
+        {/* Fixed line counts keep every row aligned across a grid of cards. */}
+        <p className="truncate font-mono text-[11.5px] uppercase tracking-[.08em] text-muted">
           {region}
           {trip.state !== region && ` · ${trip.state}`}
         </p>
-        <h3 className="h-card mt-2">
+        <h3 className="h-card mt-2 line-clamp-2 min-h-[2lh]">
           <Link href={href} className="hover:text-primary">
             {trip.name}
           </Link>
         </h3>
-        <p className="mt-2 line-clamp-2 text-[15px] leading-relaxed text-muted">{trip.summary}</p>
+        <p className="mt-2 line-clamp-2 min-h-[2lh] text-[15px] leading-relaxed text-muted">{trip.summary}</p>
         <MetaLine items={[durationShort(trip), trip.altitude, trip.difficulty]} className="mt-4 text-[14px] text-dark/80" />
-        <div className="trail-line mt-5" />
+        <div className="mt-auto pt-5">
+          <div className="trail-line" />
+        </div>
         <div className="mt-4 flex items-end justify-between gap-3">
           <div>
             <p className="font-mono text-[11px] uppercase tracking-[.08em] text-muted">{trip.price ? "From" : "Price"}</p>

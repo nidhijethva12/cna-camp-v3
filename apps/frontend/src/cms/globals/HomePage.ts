@@ -70,11 +70,6 @@ export const HomePage: GlobalConfig = {
           ],
         },
         {
-          label: "Who we are",
-          name: "story",
-          fields: [...sectionHeading(false), { name: "body", type: "textarea", required: true }, photo(), points(6)],
-        },
-        {
           label: "Plan by holiday",
           name: "holidays",
           fields: [

@@ -10,8 +10,7 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { TripCard } from "@/components/trips/TripCard";
 import { FaqList } from "@/components/ui/FaqList";
 import { FeatureIcon } from "@/components/ui/FeatureIcon";
-import { ArrowRight, CheckCircle, XCircle } from "@/components/ui/icons";
-import { MetaLine } from "@/components/ui/MetaLine";
+import { ArrowRight, CheckCircle, Clock, Gauge, MapPin, Mountains, XCircle } from "@/components/ui/icons";
 import { regions, site, tripsByRegionHref } from "@/content/site";
 import { getSimilarTrips, getSiteSettings, getTrip, getTripBatches, getTrips, getTripVideos } from "@/lib/content";
 import { photoSrc } from "@/lib/photos";
@@ -64,6 +63,12 @@ export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
   const region = regions[trip.region].label;
   // Old-site photos are often 300-800px wide; only sharp ones fill the hero edge to edge.
   const sharpHero = !trip.img || (trip.img.width ?? 0) >= 1200;
+  const heroFacts = [
+    { Icon: Clock, label: "Duration", value: durationShort(trip) },
+    { Icon: MapPin, label: "State", value: trip.state },
+    { Icon: Mountains, label: "Altitude", value: trip.altitude },
+    { Icon: Gauge, label: "Level", value: trip.difficulty },
+  ].filter((f): f is typeof f & { value: string } => Boolean(f.value));
   const gallery = tripGallery(trip);
   const showPhotos = gallery.length >= 3;
   const campus = tripCampus(trip);
@@ -116,51 +121,55 @@ export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
             <div className="absolute inset-0 -z-10 bg-linear-to-b from-dark/20 to-dark/88" />
           </>
         ) : (
-          trip.img && (
-            // Too small to stretch full width: a blurred wash behind the text, the photo itself framed at its own size.
-            <>
-              <div className="absolute inset-0 -z-10 overflow-hidden opacity-70">
-                <Photo img={trip.img} sizes="20vw" alt="" className="scale-110 blur-2xl" />
-              </div>
-              <div className="absolute inset-0 -z-10 bg-linear-to-r from-dark via-dark/85 to-dark/55" />
-            </>
-          )
+          <>
+            {/* Too small to show sharp at full width: a soft blur hides the pixels but keeps the scene. */}
+            <div className="absolute inset-0 -z-10 overflow-hidden">
+              <Photo img={trip.img} preload sizes="50vw" alt={trip.name} className="scale-110 blur-[6px]" />
+            </div>
+            <div className="absolute inset-0 -z-10 bg-dark/55" />
+            <div className="absolute inset-0 -z-10 bg-linear-to-b from-dark/10 via-transparent to-dark/70" />
+          </>
         )}
-        <div className="wrap grid min-h-[460px] items-end gap-10 pb-12 pt-20 lg:grid-cols-[1fr_auto]">
-          <div>
-            <nav className="font-mono text-[11.5px] uppercase tracking-[.08em] text-light/70" aria-label="Breadcrumb">
-              <Link href="/" className="hover:text-light">
-                Home
-              </Link>{" "}
-              /{" "}
-              <Link href="/trips" className="hover:text-light">
-                Trips
-              </Link>{" "}
-              /{" "}
-              <Link href={tripsByRegionHref(trip.region)} className="hover:text-light">
-                {region}
-              </Link>
-            </nav>
-            <h1 className="h-page mt-4 max-w-4xl">{trip.name}</h1>
-            <p className="mt-4 max-w-2xl text-[18px] text-light/85">{trip.summary}</p>
-            <div className="mt-6 flex flex-wrap items-center gap-3">
-              <span className="tag border-secondary bg-secondary text-dark">{trip.type}</span>
-              <MetaLine items={[durationShort(trip), trip.state, trip.altitude, trip.difficulty]} className="text-[15px] text-light/85" />
-            </div>
-          </div>
-          {!sharpHero && trip.img && (
-            <div
-              className="relative hidden aspect-[4/3] overflow-hidden rounded-card shadow-panel ring-1 ring-light/15 lg:block"
-              style={{ width: Math.min(420, Math.max(trip.img.width ?? 320, 320)) }}
-            >
-              <Photo img={trip.img} preload sizes="420px" alt={trip.name} />
-            </div>
-          )}
+        <div
+          className={
+            sharpHero
+              ? "wrap flex min-h-[460px] flex-col justify-end pb-12 pt-20"
+              : "wrap flex min-h-[560px] flex-col items-center justify-center py-24 text-center"
+          }
+        >
+          <nav className="font-mono text-[11.5px] uppercase tracking-[.08em] text-light/70" aria-label="Breadcrumb">
+            <Link href="/" className="hover:text-light">
+              Home
+            </Link>{" "}
+            /{" "}
+            <Link href="/trips" className="hover:text-light">
+              Trips
+            </Link>{" "}
+            /{" "}
+            <Link href={tripsByRegionHref(trip.region)} className="hover:text-light">
+              {region}
+            </Link>
+          </nav>
+          <h1 className="h-page mt-4 max-w-4xl">{trip.name}</h1>
+          <p className="mt-4 max-w-2xl text-[18px] text-light/85">{trip.summary}</p>
+          <ul className={`mt-7 flex flex-wrap items-center gap-2.5 ${sharpHero ? "" : "justify-center"}`} aria-label="Trip facts">
+            <li className="rounded-full bg-secondary px-4 py-2 text-[13px] font-bold uppercase tracking-[.06em] text-dark">{trip.type}</li>
+            {heroFacts.map(({ Icon, label, value }) => (
+              <li
+                key={label}
+                className="flex items-center gap-2 rounded-full border border-light/25 bg-dark/40 px-4 py-2 text-[14px] font-semibold text-light backdrop-blur-sm"
+              >
+                <Icon className="text-[16px] text-secondary" />
+                <span className="sr-only">{label}: </span>
+                {value}
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 
       <nav className="sticky top-[72px] z-20 border-b border-line bg-light/95 backdrop-blur" aria-label="On this page">
-        <div className="wrap flex gap-6 overflow-x-auto py-3 font-mono text-[11.5px] uppercase tracking-[.08em] text-muted [scrollbar-width:none]">
+        <div className="wrap flex gap-7 overflow-x-auto py-3.5 text-[15px] font-semibold text-muted [scrollbar-width:none]">
           {jumpLinks.map(([id, label]) => (
             <a key={id} href={`#${id}`} className="shrink-0 hover:text-primary">
               {label}

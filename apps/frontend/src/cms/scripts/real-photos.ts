@@ -1,7 +1,8 @@
 /**
  * Puts CNA's own photos (public/img/cna/real, from the client's media pack) on the home page and
- * the Manali trips, as chosen in the client's content docs. Only the photo fields named below
- * change; everything else is written back exactly as published.
+ * the Manali trips, as chosen in the client's content docs, plus the free-licence stock photos for the
+ * home banner (public/img/stock/home-banner-*). Only the photo fields named below change; everything
+ * else is written back exactly as published.
  *
  * Dry run by default: prints every change. Add `apply` to upload the photos and publish
  * (`payload run` drops --flags, so it is a plain word): `npx payload run src/cms/scripts/real-photos.ts [apply]`
@@ -14,13 +15,19 @@ import config from "../../payload.config";
 import type { HomePage, Media, Trip } from "../../payload-types";
 
 const apply = process.argv.includes("apply");
-const photoDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../public/img/cna/real");
+const imgDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../public/img");
 // Outside Next.js there is no cache to refresh; the live site picks changes up on its next revalidation.
 // A fresh object per call: the storage plugin flags the request context mid-upload, and a shared object
 // keeps that flag, so every later upload would silently skip Vercel Blob.
 const context = () => ({ skipRevalidate: true });
 
 const alts = {
+  "home-banner-1": "A forested Himalayan valley with a river below snow peaks",
+  "home-banner-2": "A trekker on a green mountain trail below rocky peaks",
+  "home-banner-3": "A trekker crossing a stony mountain stream below snow peaks",
+  "home-banner-4": "A green meadow camp with mountains behind",
+  "home-banner-5": "A hiker facing snow-covered Himalayan peaks",
+  "home-banner-6": "Mist rolling over green tea-covered hills",
   "campus-02": "Blue tents on a green meadow, Manali",
   "campus-03": "CNA’s Manali campus buildings with snow peaks behind",
   "campus-04": "CNA’s Manali campus ground with snow peaks behind",
@@ -60,16 +67,15 @@ type PhotoName = keyof typeof alts;
 const home: {
   hero: PhotoName;
   heroSlides: PhotoName[];
-  story: PhotoName;
   why: PhotoName;
   acrossIndia: PhotoName;
   audiences: Record<string, PhotoName>;
   strip: [PhotoName, string][];
 } = {
-  // Sharp, bright, wide photos: trek-01 was too hazy at full width.
-  hero: "land-06",
-  heroSlides: ["campus-03", "river-01", "land-03", "group-06", "campus-05", "land-07"],
-  story: "group-06",
+  // Free-licence stock photos chosen for the banner: CNA's own photos are too small for full width.
+  // The first has dark trees on the left, where the heading sits.
+  hero: "home-banner-1",
+  heroSlides: ["home-banner-2", "home-banner-5", "home-banner-3", "home-banner-4", "home-banner-6"],
   why: "climb-04",
   acrossIndia: "land-12",
   // Audience cards are matched by their link, which stays stable when titles are edited.
@@ -135,23 +141,26 @@ const describe = async (id: string | null) => {
 
 const uploaded = new Map<PhotoName, string>();
 let created = 0;
+const newIds: string[] = [];
 /** Returns the Media id for a pack photo, uploading it once. In a dry run new uploads get a placeholder id. */
 async function photo(name: PhotoName) {
   const known = uploaded.get(name);
   if (known) return known;
-  const filename = `cna-real-${name}.webp`;
+  const stock = name.startsWith("home-banner-");
+  const filename = `${stock ? "stock" : "cna-real"}-${name}.webp`;
   const { docs } = await payload.find({ collection: "media", where: { filename: { equals: filename } }, limit: 1, depth: 0 });
   let id = docs[0]?.id;
   if (!id) {
     if (apply) {
-      const data = await fs.readFile(path.join(photoDir, `${name}-wide.webp`));
+      const data = await fs.readFile(path.join(imgDir, stock ? "stock" : "cna/real", `${name}-wide.webp`));
       const doc = await payload.create({
         collection: "media",
-        data: { alt: alts[name], ownedByCna: true },
+        data: { alt: alts[name], ownedByCna: !stock, credit: stock ? "Free stock photo (Pexels/Unsplash licence)" : undefined },
         file: { data, mimetype: "image/webp", name: filename, size: data.length },
         context: context(),
       });
       id = doc.id;
+      newIds.push(id);
     } else {
       id = `new:${filename}`;
     }
@@ -192,7 +201,6 @@ if (oldSlides.join() !== slides.join()) {
   changes.push(`        → ${(await Promise.all(slides.map(label))).join(", ")}`);
   next.hero.slides = slides;
 }
-next.story.image = await swap("who we are", published.story.image, home.story);
 next.why.image = await swap("why CNA", published.why.image, home.why);
 next.destinations.regionImages.acrossIndia = await swap(
   "region: across India",
@@ -266,5 +274,14 @@ if (apply) {
     });
   }
   console.log(`\nDone: home page and ${tripUpdates.length} trips published.`);
+
+  // A record can save while its file never reaches storage, so every new upload is fetched back.
+  const missing: string[] = [];
+  for (const [doc] of await Promise.all(newIds.map((id) => mediaById([id])))) {
+    const status = doc?.url ? (await fetch(doc.url, { method: "HEAD" })).status : 0;
+    if (status !== 200) missing.push(`${doc?.filename ?? "?"} (${status})`);
+  }
+  if (missing.length) throw new Error(`Uploaded but not in storage: ${missing.join(", ")}`);
+  console.log(`Checked: all ${newIds.length} new uploads are in storage.`);
 }
 process.exit(0);

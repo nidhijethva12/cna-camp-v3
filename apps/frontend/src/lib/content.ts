@@ -64,6 +64,7 @@ function toTrip(doc: TripDoc): Trip {
     price: doc.priceFrom ?? null,
     img: toImage(doc.heroImage),
     gallery: images(doc.gallery),
+    updatedAt: doc.updatedAt,
     videoIds: (doc.videos ?? []).map((v) => (typeof v === "string" ? v : v.id)),
     months: doc.months.map((m) => capitalise<Month>(m)),
     start: doc.startsFrom,
@@ -274,7 +275,7 @@ const points = (list: { title: string; text: string }[] | null | undefined) => (
  * deleted from the library leaves only its id, which maps to null and shows "Photo coming soon".
  */
 function toHome(doc: Partial<HomeDoc>) {
-  const { hero, story, holidays, destinations, audiences, why, gallery } = doc;
+  const { hero, holidays, destinations, audiences, why, gallery } = doc;
   const regions = destinations?.regionImages;
   const regionImages: Record<RegionSlug, ImageRef | null> = {
     gujarat: toImage(regions?.gujarat),
@@ -292,7 +293,6 @@ function toHome(doc: Partial<HomeDoc>) {
         .filter((img, i, all) => all.findIndex((x) => x.src === img.src) === i),
       highlights: hero?.highlights ?? [],
     },
-    story: { ...heading(story), body: story?.body ?? "", image: toImage(story?.image), points: points(story?.points) },
     holidays: {
       ...heading(holidays),
       items: (holidays?.items ?? []).map(

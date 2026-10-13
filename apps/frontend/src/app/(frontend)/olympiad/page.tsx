@@ -109,7 +109,7 @@ export default async function OlympiadPage() {
       </section>
 
       <nav className="sticky top-[72px] z-20 border-b border-line bg-light/95 backdrop-blur" aria-label="On this page">
-        <div className="wrap flex gap-6 overflow-x-auto py-3 font-mono text-[11.5px] uppercase tracking-[.08em] text-muted [scrollbar-width:none]">
+        <div className="wrap flex gap-7 overflow-x-auto py-3.5 text-[15px] font-semibold text-muted [scrollbar-width:none]">
           {jumpLinks.map(([id, label]) => (
             <a key={id} href={`#${id}`} className="shrink-0 hover:text-primary">
               {label}

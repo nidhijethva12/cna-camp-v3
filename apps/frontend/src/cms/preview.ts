@@ -1,4 +1,4 @@
-const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? "").replace(/\/$/, "");
+import { siteUrl } from "../lib/seo";
 
 /** Adds a "Preview" button in the admin that opens the published page on the site. */
 export const sitePreview =

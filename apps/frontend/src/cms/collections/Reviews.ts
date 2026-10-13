@@ -1,5 +1,5 @@
 import type { CollectionConfig } from "payload";
-import { anyone, signedIn } from "../access";
+import { signedIn } from "../access";
 import { sampleField } from "../fields";
 import { revalidateSite } from "../hooks/revalidate";
 
@@ -11,7 +11,8 @@ export const Reviews: CollectionConfig = {
     defaultColumns: ["name", "role", "rating", "trip", "isSample"],
     description: "The 3 most recent reviews with consent appear on the home page.",
   },
-  access: { read: anyone, create: signedIn, update: signedIn, delete: signedIn },
+  // Reviews without consent stay private through the API too, not only on the site.
+  access: { read: ({ req }) => (req.user ? true : { consentGiven: { equals: true } }), create: signedIn, update: signedIn, delete: signedIn },
   defaultSort: "-createdAt",
   hooks: revalidateSite,
   fields: [

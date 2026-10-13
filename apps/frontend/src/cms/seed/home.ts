@@ -13,40 +13,15 @@ export const home = {
     headingLines: ["Real trails.", "Real people.", "Since 1997."],
     intro:
       "Eco-tourism treks, camps and nature trails from Gujarat to the Himalaya. For schools, colleges, families, friends, girls-only groups and solo travellers.",
-    image: photo("/img/cna/real/land-06-wide.webp", "The Manali valley below snow peaks, Himachal Pradesh"),
+    image: photo("/img/stock/home-banner-1-wide.webp", "A forested Himalayan valley with a river below snow peaks"),
     slides: [
-      photo("/img/cna/real/campus-03-wide.webp", "CNA’s Manali campus buildings with snow peaks behind"),
-      photo("/img/cna/real/river-01-wide.webp", "Campers crossing a river on a wooden bridge near Manali"),
-      photo("/img/cna/real/land-03-wide.webp", "Snow peaks above a green valley in Himachal Pradesh"),
-      photo("/img/cna/real/group-06-wide.webp", "A large CNA group outside Hidimba temple, Manali"),
-      photo("/img/cna/real/campus-05-wide.webp", "The garden at CNA’s Manali campus, snow peaks behind"),
-      photo("/img/cna/real/land-07-wide.webp", "Tall deodar trees in a forest near Manali"),
+      photo("/img/stock/home-banner-2-wide.webp", "A trekker on a green mountain trail below rocky peaks"),
+      photo("/img/stock/home-banner-5-wide.webp", "A hiker facing snow-covered Himalayan peaks"),
+      photo("/img/stock/home-banner-3-wide.webp", "A trekker crossing a stony mountain stream below snow peaks"),
+      photo("/img/stock/home-banner-4-wide.webp", "A green meadow camp with mountains behind"),
+      photo("/img/stock/home-banner-6-wide.webp", "Mist rolling over green tea-covered hills"),
     ],
     highlights: ["1,00,000+ campers", "1,000+ camps", "Backed by a registered trust"],
-  },
-  story: {
-    eyebrow: "Who we are",
-    title: "A nature club, not a tour company",
-    body: "Climber Nature Adventure Club (CNA) is an eco-tourism and adventure club from Rajkot. Since our first Marine Camp at Bet Dwarka in 1997, we have taken 1,00,000+ people into forests, mountains and the sea. Adventure is the way in. Coming closer to nature is the goal.",
-    image: photo("/img/cna/real/group-06-wide.webp", "A large CNA group outside Hidimba temple, Manali"),
-    points: [
-      {
-        title: "Eco-tourism first",
-        text: "Every camp has a nature goal: reefs, forests, birds, stars. Leave-no-trace on every trip.",
-      },
-      {
-        title: "10 adventure activities",
-        text: "Trekking, mountaineering, rock climbing, rappelling, rafting, river crossing, paragliding, bird watching, star gazing and marine life.",
-      },
-      {
-        title: "Our own Manali campus",
-        text: "Swiss tents and rooms for 200 in Vashisht, plus a partner campus at Bet Dwarka.",
-      },
-      {
-        title: "Backed by a trust",
-        text: "Supported by Saurashtra Education & Charitable Trust (Reg. E-5718/2000). No-profit-no-loss.",
-      },
-    ],
   },
   holidays: {
     eyebrow: "Plan by holiday",

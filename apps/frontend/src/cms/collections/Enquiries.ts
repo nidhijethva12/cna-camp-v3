@@ -14,6 +14,8 @@ export const Enquiries: CollectionConfig = {
   // Personal data (DPDP Act): the signed-in admin only, never the public API.
   access: { create: () => false, read: signedIn, update: signedIn, delete: signedIn },
   defaultSort: "-createdAt",
+  // The enquiry action's rate limits count recent rows per visitor and per address.
+  indexes: [{ fields: ["meta.ipHash", "createdAt"] }, { fields: ["email", "createdAt"] }],
   fields: [
     {
       type: "row",

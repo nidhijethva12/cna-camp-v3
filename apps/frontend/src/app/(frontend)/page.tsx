@@ -9,7 +9,6 @@ import { JourneyStats } from "@/components/home/JourneyStats";
 import { OlympiadBanner } from "@/components/home/OlympiadBanner";
 import { PopularTrips } from "@/components/home/PopularTrips";
 import { Reviews } from "@/components/home/Reviews";
-import { StorySection } from "@/components/home/StorySection";
 import { TripSearch } from "@/components/home/TripSearch";
 import { UpcomingBatches } from "@/components/home/UpcomingBatches";
 import { WhyCna } from "@/components/home/WhyCna";
@@ -77,7 +76,6 @@ export default async function HomePage() {
     <>
       <Hero content={home.hero} />
       <TripSearch />
-      <StorySection content={home.story} />
       <UpcomingBatches batches={batches} />
       <PopularTrips trips={popular} />
       <HolidayGrid content={home.holidays} />

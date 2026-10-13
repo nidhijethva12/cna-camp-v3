@@ -13,7 +13,7 @@ export const Media: CollectionConfig = {
   access: { read: anyone, create: signedIn, update: signedIn, delete: signedIn },
   hooks: revalidateSite,
   upload: {
-    // Local disk (gitignored). Production needs a cloud storage adapter instead.
+    // Local disk (gitignored) in development; Vercel Blob when its token is set (payload.config.ts).
     staticDir: path.resolve(dirname, "../../../media"),
     // Raster formats only: SVG can carry scripts.
     mimeTypes: ["image/jpeg", "image/png", "image/webp", "image/avif"],

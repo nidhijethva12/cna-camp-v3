@@ -17,6 +17,7 @@ import { Users } from "./cms/collections/Users";
 import { Videos } from "./cms/collections/Videos";
 import { HomePage } from "./cms/globals/HomePage";
 import { SiteSettings } from "./cms/globals/SiteSettings";
+import { siteUrl } from "./lib/seo";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -58,7 +59,7 @@ function emailAdapter() {
   });
 }
 
-const siteUrl = requireEnv("NEXT_PUBLIC_SITE_URL").replace(/\/$/, "");
+requireEnv("NEXT_PUBLIC_SITE_URL");
 
 export default buildConfig({
   serverURL: siteUrl,
