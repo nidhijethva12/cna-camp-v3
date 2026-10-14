@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Phone, WhatsApp } from "@/components/ui/icons";
+import { ArrowRight, WhatsApp } from "@/components/ui/icons";
 import { enquireHref } from "@/content/site";
 import { getSiteSettings } from "@/lib/content";
 
@@ -18,22 +18,19 @@ export async function ContactShortcuts() {
       </a>
 
       <nav
-        className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-3 border-t border-line bg-light pb-[env(safe-area-inset-bottom)] lg:hidden"
+        className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-2 border-t border-line bg-light pb-[env(safe-area-inset-bottom)] lg:hidden"
         aria-label="Quick contact"
       >
-        <a href={contact.phoneHref} className="flex h-16 items-center justify-center gap-2 font-semibold">
-          <Phone className="text-[18px] text-primary" /> Call
-        </a>
         <a
           href={contact.whatsappHref}
           rel="noopener"
           target="_blank"
-          className="flex h-16 items-center justify-center gap-2 border-x border-line font-semibold text-whatsapp-dark"
+          className="flex h-16 items-center justify-center gap-2 font-semibold text-whatsapp-dark"
         >
           <WhatsApp className="text-[22px]" /> WhatsApp
         </a>
-        <Link href={enquireHref()} className="flex h-16 items-center justify-center bg-primary font-bold text-light">
-          Enquire
+        <Link href={enquireHref()} className="flex h-16 items-center justify-center gap-2 bg-primary font-bold text-light">
+          Enquire now <ArrowRight />
         </Link>
       </nav>
     </>

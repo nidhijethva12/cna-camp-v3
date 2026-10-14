@@ -8,7 +8,7 @@ export function Filmstrip({ content }: { content: HomeContent["gallery"] }) {
   const frames = [...photos, ...photos];
 
   return (
-    <section className="mt-24 overflow-hidden bg-dark py-16 text-light" aria-labelledby="film-title">
+    <section className="mt-16 overflow-hidden bg-dark py-16 text-light sm:mt-24" aria-labelledby="film-title">
       <div className="wrap">
         <SectionHeader
           id="film-title"

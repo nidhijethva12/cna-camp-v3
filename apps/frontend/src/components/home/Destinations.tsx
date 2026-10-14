@@ -12,7 +12,7 @@ interface DestinationsProps {
 
 export function Destinations({ content, counts }: DestinationsProps) {
   return (
-    <section className="bg-soft py-20" aria-labelledby="destinations-title">
+    <section className="bg-soft py-14 sm:py-20" aria-labelledby="destinations-title">
       <div className="wrap">
         <SectionHeader
           id="destinations-title"
@@ -21,7 +21,7 @@ export function Destinations({ content, counts }: DestinationsProps) {
           intro={content.intro ?? undefined}
           action={{ label: "All destinations", href: "/destinations" }}
         />
-        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <ul className="rail grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {regionOrder.map((r) => (
             <li key={r} className="reveal">
               <Link

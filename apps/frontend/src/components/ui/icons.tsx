@@ -4,9 +4,11 @@ import { ArrowLeft as ArrowLeftBase } from "@phosphor-icons/react/dist/ssr/Arrow
 import { ArrowRight as ArrowRightBase } from "@phosphor-icons/react/dist/ssr/ArrowRight";
 import { Camera as CameraBase } from "@phosphor-icons/react/dist/ssr/Camera";
 import { CaretDown as CaretDownBase } from "@phosphor-icons/react/dist/ssr/CaretDown";
+import { CaretRight as CaretRightBase } from "@phosphor-icons/react/dist/ssr/CaretRight";
 import { Check as CheckBase } from "@phosphor-icons/react/dist/ssr/Check";
 import { CheckCircle as CheckCircleBase } from "@phosphor-icons/react/dist/ssr/CheckCircle";
 import { Clock as ClockBase } from "@phosphor-icons/react/dist/ssr/Clock";
+import { Fire as FireBase } from "@phosphor-icons/react/dist/ssr/Fire";
 import { Gauge as GaugeBase } from "@phosphor-icons/react/dist/ssr/Gauge";
 import { GraduationCap as GraduationCapBase } from "@phosphor-icons/react/dist/ssr/GraduationCap";
 import { Leaf as LeafBase } from "@phosphor-icons/react/dist/ssr/Leaf";
@@ -43,6 +45,7 @@ export const ArrowRight = /* @__PURE__ */ decorative(ArrowRightBase, { weight: "
 export const ArrowLeft = /* @__PURE__ */ decorative(ArrowLeftBase, { weight: "bold" });
 export const ArrowDown = /* @__PURE__ */ decorative(ArrowDownBase, { weight: "bold" });
 export const CaretDown = /* @__PURE__ */ decorative(CaretDownBase, { weight: "bold" });
+export const CaretRight = /* @__PURE__ */ decorative(CaretRightBase, { weight: "bold" });
 export const Menu = /* @__PURE__ */ decorative(ListBase, { weight: "bold" });
 export const Close = /* @__PURE__ */ decorative(XBase, { weight: "bold" });
 export const Check = /* @__PURE__ */ decorative(CheckBase, { weight: "bold" });
@@ -50,6 +53,7 @@ export const CheckCircle = /* @__PURE__ */ decorative(CheckCircleBase, { weight:
 export const XCircle = /* @__PURE__ */ decorative(XCircleBase, { weight: "fill" });
 export const SealCheck = /* @__PURE__ */ decorative(SealCheckBase, { weight: "fill" });
 export const Star = /* @__PURE__ */ decorative(StarBase, { weight: "fill" });
+export const Fire = /* @__PURE__ */ decorative(FireBase, { weight: "fill" });
 export const Play = /* @__PURE__ */ decorative(PlayBase, { weight: "fill" });
 export const Pause = /* @__PURE__ */ decorative(PauseBase, { weight: "fill" });
 export const Camera = /* @__PURE__ */ decorative(CameraBase, { weight: "duotone" });

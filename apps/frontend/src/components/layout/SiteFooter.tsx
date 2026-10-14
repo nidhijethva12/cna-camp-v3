@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { footerNav, site } from "@/content/site";
+import { Fire } from "@/components/ui/icons";
 import { getPosts, getSiteSettings } from "@/lib/content";
 import { FooterGroup } from "./FooterGroup";
 
@@ -52,11 +53,6 @@ export async function SiteFooter() {
               </a>
             </p>
             <p>
-              <a href={contact.whatsappHref} className="hover:text-secondary" rel="noopener" target="_blank">
-                WhatsApp chat
-              </a>
-            </p>
-            <p>
               <a href={`mailto:${contact.email}`} className="break-all hover:text-secondary">
                 {contact.email}
               </a>
@@ -84,14 +80,20 @@ export async function SiteFooter() {
   );
 }
 
-function FooterLinks({ title, links }: { title: string; links: { label: string; href: string }[] }) {
+function FooterLinks({ title, links }: { title: string; links: { label: string; href: string; hot?: boolean }[] }) {
   return (
     <FooterGroup title={title}>
       <ul className="space-y-2" aria-label={title}>
         {links.map((l) => (
           <li key={l.href}>
-            <Link href={l.href} className="inline-block py-1 hover:text-secondary lg:py-0">
+            <Link href={l.href} className="inline-flex items-center gap-2 py-1 hover:text-secondary lg:py-0">
               {l.label}
+              {l.hot && (
+                <span className="hot-badge inline-flex items-center gap-1 rounded-full bg-primary px-2 py-0.5 text-[11px] font-bold tracking-wide text-light uppercase">
+                  <Fire className="flame text-[13px] text-secondary" />
+                  Hot
+                </span>
+              )}
             </Link>
           </li>
         ))}

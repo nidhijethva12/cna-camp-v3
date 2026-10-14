@@ -6,7 +6,7 @@ import type { HomeContent } from "@/lib/content";
 
 export function HolidayGrid({ content }: { content: HomeContent["holidays"] }) {
   return (
-    <section className="wrap mt-24" aria-labelledby="holiday-title">
+    <section className="wrap mt-16 sm:mt-24" aria-labelledby="holiday-title">
       <SectionHeader
         id="holiday-title"
         eyebrow={content.eyebrow}
@@ -14,7 +14,7 @@ export function HolidayGrid({ content }: { content: HomeContent["holidays"] }) {
         intro={content.intro ?? undefined}
         action={{ label: "All trips", href: "/trips" }}
       />
-      <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <ul className="rail grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {content.items.map((h) => (
           <li key={h.key} className="reveal">
             <Link

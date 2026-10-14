@@ -2,95 +2,183 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { createPortal } from "react-dom";
+import { ArrowLeft, CaretRight, Close, Fire, Phone, WhatsApp } from "@/components/ui/icons";
 import { enquireHref, isNavActive, type NavItem } from "@/content/site";
 
-/** Three bars that fold into an ✕ while the menu is open. */
-function MenuGlyph({ open }: { open: boolean }) {
-  const bar = "absolute left-0 h-0.5 w-[22px] rounded-full bg-current transition-transform duration-300 ease-out";
-  return (
-    <span aria-hidden="true" className="relative block h-[16px] w-[22px]">
-      <span className={`${bar} top-0 ${open ? "translate-y-[7px] rotate-45" : ""}`} />
-      <span className={`${bar} top-[7px] transition-opacity ${open ? "opacity-0" : ""}`} />
-      <span className={`${bar} top-[14px] ${open ? "-translate-y-[7px] -rotate-45" : ""}`} />
-    </span>
-  );
+interface Contact {
+  phone: string;
+  phoneHref: string;
+  whatsappHref: string;
 }
 
-export function MobileNav({ items }: { items: NavItem[] }) {
+const MenuGlyph = () => (
+  <span aria-hidden="true" className="flex w-[22px] flex-col gap-[5px]">
+    {[0, 1, 2].map((i) => (
+      <span key={i} className="h-0.5 rounded-full bg-current" />
+    ))}
+  </span>
+);
+
+const HotBadge = () => (
+  <span className="hot-badge inline-flex items-center gap-1 rounded-full bg-primary px-2 py-0.5 text-[11px] font-bold tracking-wide text-light uppercase">
+    <Fire className="flame text-[13px] text-secondary" />
+    Hot
+  </span>
+);
+
+const noop = () => () => {};
+const useMounted = () =>
+  useSyncExternalStore(
+    noop,
+    () => true,
+    () => false,
+  );
+
+/** Side drawer for phones and tablets. Sections with sub-pages open a second panel (drill-down) with a Back button. */
+export function MobileNav({ items, contact }: { items: NavItem[]; contact: Contact }) {
   const [open, setOpen] = useState(false);
-  const rootRef = useRef<HTMLDivElement>(null);
+  const [section, setSection] = useState<number | null>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
   const pathname = usePathname();
+  const mounted = useMounted();
 
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
-    const onPointer = (e: PointerEvent) => {
-      if (!rootRef.current?.contains(e.target as Node)) setOpen(false);
-    };
     document.addEventListener("keydown", onKey);
-    document.addEventListener("pointerdown", onPointer);
+    const { overflow } = document.body.style;
+    document.body.style.overflow = "hidden";
+    closeRef.current?.focus();
     return () => {
       document.removeEventListener("keydown", onKey);
-      document.removeEventListener("pointerdown", onPointer);
+      document.body.style.overflow = overflow;
     };
   }, [open]);
 
-  return (
-    <div ref={rootRef} className="lg:hidden">
-      <button
-        type="button"
-        className={`flex h-12 w-12 items-center justify-center rounded-card border transition-colors duration-300 ${
-          open ? "border-dark bg-dark text-light" : "border-line"
-        }`}
-        aria-expanded={open}
-        aria-controls="mobile-nav"
-        aria-label={open ? "Close menu" : "Open menu"}
-        onClick={() => setOpen((o) => !o)}
-      >
-        <MenuGlyph open={open} />
-      </button>
+  const openMenu = () => {
+    setSection(null);
+    setOpen(true);
+  };
+  const current = section === null ? null : items[section];
+  const row = "flex w-full items-center justify-between gap-3 border-b border-line py-4 text-left text-[17px] font-bold";
 
-      {/* Always rendered so it can animate; `inert` keeps the closed menu out of tab order and screen readers. */}
+  const drawer = (
+    <div className={`fixed inset-0 z-50 lg:hidden ${open ? "" : "pointer-events-none"}`} inert={!open}>
+      <div
+        aria-hidden="true"
+        className={`absolute inset-0 bg-dark/50 transition-opacity duration-300 ${open ? "opacity-100" : "opacity-0"}`}
+        onClick={() => setOpen(false)}
+      />
       <nav
         id="mobile-nav"
         aria-label="Mobile"
-        inert={!open}
-        className={`absolute inset-x-0 top-full grid border-t border-line bg-light shadow-panel transition-[grid-template-rows,opacity] duration-300 ease-out ${
-          open ? "grid-rows-[1fr] opacity-100" : "pointer-events-none grid-rows-[0fr] opacity-0"
+        className={`absolute inset-y-0 right-0 flex w-[min(86vw,380px)] flex-col bg-light shadow-panel transition-transform duration-300 ease-out ${
+          open ? "translate-x-0" : "translate-x-full"
         }`}
         onClick={(e) => (e.target as HTMLElement).closest("a") && setOpen(false)}
       >
-        <div className="max-h-[calc(100dvh-72px)] min-h-0 overflow-y-auto">
-          <ul className="wrap py-3">
-            {items.map((item, i) => (
-              <li
-                key={item.href}
-                className={`border-b border-line transition duration-300 ease-out last:border-0 ${open ? "translate-y-0 opacity-100" : "-translate-y-2 opacity-0"}`}
-                style={{ transitionDelay: open ? `${60 + i * 40}ms` : "0ms" }}
-              >
-                <Link href={item.href} className={`block py-3 text-lg font-bold ${isNavActive(item, pathname) ? "text-primary" : ""}`}>
-                  {item.label}
-                </Link>
-                {item.children && (
-                  <div className="grid grid-cols-2 gap-x-4 pb-3">
-                    {item.children.map((c) => (
-                      <Link key={c.href} href={c.href} className="py-2 text-[15px] text-muted hover:text-primary">
-                        {c.label}
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </li>
-            ))}
-            <li className="pt-3">
-              <Link href={enquireHref()} className="btn btn-primary w-full">
-                Enquire now
-              </Link>
-            </li>
+        <div className="flex h-[72px] shrink-0 items-center justify-between border-b border-line px-5">
+          {current ? (
+            <button type="button" className="flex items-center gap-2 font-semibold text-muted" onClick={() => setSection(null)}>
+              <ArrowLeft /> Back
+            </button>
+          ) : (
+            <span className="display text-[19px]">Menu</span>
+          )}
+          <button
+            ref={closeRef}
+            type="button"
+            className="flex h-11 w-11 items-center justify-center rounded-card border border-line text-[20px]"
+            aria-label="Close menu"
+            onClick={() => setOpen(false)}
+          >
+            <Close />
+          </button>
+        </div>
+
+        <div className="relative min-h-0 flex-1 overflow-hidden">
+          <ul
+            className={`absolute inset-0 overflow-y-auto px-5 transition-transform duration-300 ease-out ${current ? "-translate-x-full" : "translate-x-0"}`}
+            inert={Boolean(current)}
+          >
+            {items.map((item, i) => {
+              const active = isNavActive(item, pathname) ? "text-primary" : "";
+              return (
+                <li key={item.href}>
+                  {item.children ? (
+                    <button type="button" className={`${row} ${active}`} aria-haspopup="true" onClick={() => setSection(i)}>
+                      {item.label}
+                      <CaretRight className="text-[18px] text-muted" />
+                    </button>
+                  ) : (
+                    <Link href={item.href} className={`${row} ${active}`}>
+                      <span className="flex items-center gap-2">
+                        {item.label}
+                        {item.hot && <HotBadge />}
+                      </span>
+                    </Link>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+
+          <ul
+            className={`absolute inset-0 overflow-y-auto px-5 transition-transform duration-300 ease-out ${current ? "translate-x-0" : "translate-x-full"}`}
+            inert={!current}
+          >
+            {current && (
+              <>
+                <li className="pt-5 pb-1">
+                  <p className="eyebrow">{current.label}</p>
+                </li>
+                {current.children?.map((c) => (
+                  <li key={c.href}>
+                    <Link
+                      href={c.href}
+                      className={`block border-b border-line py-3.5 text-[16px] font-semibold ${pathname === c.href ? "text-primary" : ""}`}
+                    >
+                      {c.label}
+                    </Link>
+                  </li>
+                ))}
+              </>
+            )}
           </ul>
         </div>
+
+        <div className="shrink-0 space-y-3 border-t border-line p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))]">
+          <Link href={enquireHref()} className="btn btn-primary w-full">
+            Enquire now
+          </Link>
+          <div className="grid grid-cols-2 gap-3">
+            <a href={contact.whatsappHref} rel="noopener" target="_blank" className="btn btn-outline w-full text-whatsapp-dark">
+              <WhatsApp className="text-[20px]" /> WhatsApp
+            </a>
+            <a href={contact.phoneHref} className="btn btn-outline w-full">
+              <Phone className="text-primary" /> Call
+            </a>
+          </div>
+        </div>
       </nav>
+    </div>
+  );
+
+  return (
+    <div className="lg:hidden">
+      <button
+        type="button"
+        className="flex h-12 w-12 items-center justify-center rounded-card border border-line"
+        aria-expanded={open}
+        aria-controls="mobile-nav"
+        aria-label="Open menu"
+        onClick={openMenu}
+      >
+        <MenuGlyph />
+      </button>
+      {mounted && createPortal(drawer, document.body)}
     </div>
   );
 }

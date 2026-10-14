@@ -14,14 +14,14 @@ export function Reviews({ reviews }: { reviews: Review[] }) {
   if (!reviews.length) return null;
 
   return (
-    <section className="wrap mt-24" aria-labelledby="reviews-title">
+    <section className="wrap mt-16 sm:mt-24" aria-labelledby="reviews-title">
       <SectionHeader
         id="reviews-title"
         eyebrow="Reviews"
         title="In their words"
         intro="Campers, parents and teachers, shared with their permission."
       />
-      <ul className="grid gap-4 md:grid-cols-3">
+      <ul className="rail grid gap-4 md:grid-cols-3">
         {reviews.map((r) => (
           <li key={`${r.name}-${r.quote}`} className="reveal">
             <figure className="relative flex h-full flex-col rounded-card border border-line bg-light p-6">

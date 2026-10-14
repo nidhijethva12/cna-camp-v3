@@ -4,7 +4,7 @@ import type { Faq } from "@/types/content";
 
 export function FaqEnquiry({ faqs }: { faqs: Faq[] }) {
   return (
-    <section className="wrap mt-24 grid gap-12 lg:grid-cols-[1fr_1.1fr]" aria-labelledby="faq-title">
+    <section className="wrap mt-16 grid gap-12 sm:mt-24 lg:grid-cols-[1fr_1.1fr]" aria-labelledby="faq-title">
       <div>
         <div className="mb-10">
           <p className="eyebrow">FAQs</p>

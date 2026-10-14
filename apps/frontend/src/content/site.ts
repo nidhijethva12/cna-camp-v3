@@ -35,6 +35,7 @@ export const enquireHref = (tripSlug?: string) => (tripSlug ? `/trips/${tripSlug
 export interface NavItem {
   label: string;
   href: string;
+  hot?: boolean;
   children?: { label: string; href: string }[];
 }
 
@@ -63,12 +64,13 @@ export const mainNav: NavItem[] = [
       { label: "Plan a custom trip", href: "/group-trips#custom" },
     ],
   },
-  { label: "Olympiad", href: "/olympiad" },
+  { label: "Olympiad", href: "/olympiad", hot: true },
   {
     label: "About",
     href: "/about",
     children: [
       { label: "About us", href: "/about" },
+      { label: "Blog", href: "/blog" },
       { label: "Contact us", href: "/contact" },
     ],
   },
@@ -82,7 +84,7 @@ export const footerNav = {
   company: [
     { label: "About us", href: "/about" },
     { label: "Group trips", href: "/group-trips" },
-    { label: "Adventure Olympiad", href: "/olympiad" },
+    { label: "Adventure Olympiad", href: "/olympiad", hot: true },
     { label: "Gallery", href: "/gallery" },
     { label: "Contact & payments", href: "/contact" },
   ],

@@ -375,5 +375,6 @@ export const getPost = cache(async (slug: string) => {
   const post = docs[0];
   if (!post) return undefined;
   const relatedTrips = (post.relatedTrips ?? []).flatMap((t) => (typeof t === "object" && t._status === "published" ? [toTrip(t)] : []));
-  return { ...toPostSummary(post), content: post.content, seo: toSeo(post.seo), relatedTrips };
+  const faqs = (post.faqs ?? []).map(({ question, answer }) => ({ question, answer }));
+  return { ...toPostSummary(post), content: post.content, seo: toSeo(post.seo), relatedTrips, faqs };
 });

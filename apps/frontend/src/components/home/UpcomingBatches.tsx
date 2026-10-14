@@ -10,7 +10,7 @@ const LOW_SEATS = 8;
 
 export function UpcomingBatches({ batches }: { batches: UpcomingBatch[] }) {
   return (
-    <section className="wrap mt-24" aria-labelledby="batches-title">
+    <section className="wrap mt-16 sm:mt-24" aria-labelledby="batches-title">
       <SectionHeader
         id="batches-title"
         eyebrow="Upcoming batches"
@@ -39,7 +39,10 @@ export function UpcomingBatches({ batches }: { batches: UpcomingBatch[] }) {
             const meta = [regions[b.trip.region].label, durationShort(b.trip), b.note].filter(Boolean);
             const price = tripPriceShort(b.trip);
             return (
-              <li key={`${b.tripSlug}-${b.startDate}`} className={i > 0 ? "border-t border-line" : undefined}>
+              <li
+                key={`${b.tripSlug}-${b.startDate}`}
+                className={[i > 0 && "border-t border-line", i > 2 && "max-sm:hidden"].filter(Boolean).join(" ") || undefined}
+              >
                 <Link
                   href={`/trips/${b.trip.slug}`}
                   className="group grid grid-cols-[64px_1fr_auto] items-center gap-4 p-4 transition hover:bg-soft sm:grid-cols-[84px_1.4fr_1fr_1fr_auto] sm:p-5"

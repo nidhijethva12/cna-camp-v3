@@ -6,6 +6,7 @@ import { Photo } from "@/components/media/Photo";
 import { BreadcrumbLd } from "@/components/seo/Breadcrumbs";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { TripCard } from "@/components/trips/TripCard";
+import { FaqList } from "@/components/ui/FaqList";
 import { ArrowLeft } from "@/components/ui/icons";
 import { site } from "@/content/site";
 import { getPost, getPosts } from "@/lib/content";
@@ -24,7 +25,7 @@ export async function generateMetadata({ params }: PageProps<"/blog/[slug]">): P
   const path = `/blog/${post.slug}`;
   const image = post.seo.image ?? post.cover;
   return {
-    title: post.seo.title ?? post.title,
+    title: post.seo.title ? { absolute: post.seo.title } : post.title,
     description: post.seo.description ?? post.excerpt,
     alternates: { canonical: path },
     openGraph: {
@@ -53,6 +54,17 @@ export default async function PostPage({ params }: PageProps<"/blog/[slug]">) {
     author: { "@type": "Organization", name: site.legalName },
     publisher: { "@id": absoluteUrl("/#organization") },
   };
+  const faqLd = post.faqs.length
+    ? {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: post.faqs.map((f) => ({
+          "@type": "Question",
+          name: f.question,
+          acceptedAnswer: { "@type": "Answer", text: f.answer },
+        })),
+      }
+    : null;
 
   return (
     <>
@@ -82,6 +94,15 @@ export default async function PostPage({ params }: PageProps<"/blog/[slug]">) {
         <div className="wrap mt-10 max-w-3xl">
           <RichText data={post.content} />
         </div>
+
+        {post.faqs.length > 0 && (
+          <section className="wrap mt-16 max-w-3xl" aria-labelledby="faq-title">
+            <h2 id="faq-title" className="h-sub">
+              Questions we get asked
+            </h2>
+            <FaqList faqs={post.faqs} className="mt-4" />
+          </section>
+        )}
       </article>
 
       {post.relatedTrips.length > 0 && (
@@ -100,6 +121,7 @@ export default async function PostPage({ params }: PageProps<"/blog/[slug]">) {
       )}
 
       <JsonLd data={articleLd} />
+      {faqLd && <JsonLd data={faqLd} />}
       <BreadcrumbLd
         items={[
           { name: "Home", path: "/" },

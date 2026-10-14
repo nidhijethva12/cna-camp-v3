@@ -35,7 +35,10 @@ export async function SiteHeader() {
             <Link href={enquireHref()} className="btn btn-primary hidden py-3! sm:inline-flex">
               Enquire
             </Link>
-            <MobileNav items={mainNav} />
+            <MobileNav
+              items={mainNav}
+              contact={{ phone: contact.phone, phoneHref: contact.phoneHref, whatsappHref: contact.whatsappHref }}
+            />
           </div>
         </div>
       </header>

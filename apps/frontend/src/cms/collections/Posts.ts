@@ -23,6 +23,16 @@ export const Posts: CollectionConfig = {
     { name: "coverImage", type: "upload", relationTo: "media", required: true },
     { name: "content", type: "richText", required: true },
     { name: "relatedTrips", type: "relationship", relationTo: "trips", hasMany: true },
+    {
+      name: "faqs",
+      label: "FAQs",
+      type: "array",
+      admin: { description: "Shown under the post and marked up for search engines." },
+      fields: [
+        { name: "question", type: "text", required: true },
+        { name: "answer", type: "textarea", required: true },
+      ],
+    },
     seoField,
     slugField("title"),
     {

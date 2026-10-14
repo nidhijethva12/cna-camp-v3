@@ -498,3 +498,53 @@
     transform: none;
   }
 }
+
+@media (prefers-reduced-motion: no-preference) {
+  .hot-badge {
+    animation: hot-glow 2s ease-in-out infinite;
+  }
+  .hot-badge .flame {
+    transform-origin: 50% 90%;
+    animation: flame 1.1s ease-in-out infinite;
+  }
+}
+@keyframes hot-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-primary) 60%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 0 6px transparent;
+  }
+}
+@keyframes flame {
+  0%,
+  100% {
+    transform: scale(1) rotate(-6deg);
+  }
+  50% {
+    transform: scale(1.18) rotate(6deg);
+  }
+}
+
+/* Card lists become a swipeable row on phones instead of a long stack. */
+@media (max-width: 639px) {
+  .rail {
+    display: flex;
+    gap: 14px;
+    margin-inline: -20px;
+    padding-inline: 20px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 20px;
+    scrollbar-width: none;
+  }
+  .rail::-webkit-scrollbar {
+    display: none;
+  }
+  .rail > * {
+    flex: 0 0 82%;
+    scroll-snap-align: start;
+  }
+}

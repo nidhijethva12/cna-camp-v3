@@ -403,6 +403,16 @@ export interface Post {
   };
   relatedTrips?: (string | Trip)[] | null;
   /**
+   * Shown under the post and marked up for search engines.
+   */
+  faqs?:
+    | {
+        question: string;
+        answer: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
    * Search engine and social sharing. Empty fields fall back to the page content.
    */
   seo?: {
@@ -738,6 +748,13 @@ export interface PostsSelect<T extends boolean = true> {
   coverImage?: T;
   content?: T;
   relatedTrips?: T;
+  faqs?:
+    | T
+    | {
+        question?: T;
+        answer?: T;
+        id?: T;
+      };
   seo?:
     | T
     | {

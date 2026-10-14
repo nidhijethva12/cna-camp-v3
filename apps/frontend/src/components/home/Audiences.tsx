@@ -6,14 +6,14 @@ import type { HomeContent } from "@/lib/content";
 
 export function Audiences({ content }: { content: HomeContent["audiences"] }) {
   return (
-    <section className="wrap mt-24" aria-labelledby="audiences-title">
+    <section className="wrap mt-16 sm:mt-24" aria-labelledby="audiences-title">
       <SectionHeader
         id="audiences-title"
         eyebrow={content.eyebrow}
         title={content.title}
         action={{ label: "Group trips", href: "/group-trips" }}
       />
-      <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <ul className="rail grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {content.items.map((a, i) => (
           <li key={a.title} className="reveal">
             <Link

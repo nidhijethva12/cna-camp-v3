@@ -5,9 +5,9 @@ import type { HomeContent } from "@/lib/content";
 
 export function WhyCna({ content }: { content: HomeContent["why"] }) {
   return (
-    <section className="mt-24 bg-dark text-light" aria-labelledby="why-title">
-      <div className="wrap grid items-center gap-12 py-20 lg:grid-cols-2">
-        <div className="reveal relative aspect-[4/3] overflow-hidden rounded-card">
+    <section className="mt-16 bg-dark text-light sm:mt-24" aria-labelledby="why-title">
+      <div className="wrap grid items-center gap-12 py-14 sm:py-20 lg:grid-cols-2">
+        <div className="reveal relative hidden aspect-[4/3] overflow-hidden rounded-card sm:block">
           <Photo img={content.image} sizes="(min-width: 1024px) 590px, 100vw" />
           {content.imageLabel && <span className="tag tag-solid absolute bottom-4 left-4 border-light/30">{content.imageLabel}</span>}
         </div>
@@ -17,7 +17,7 @@ export function WhyCna({ content }: { content: HomeContent["why"] }) {
             {content.title}
           </h2>
           {content.intro && <p className="mt-4 text-[17px] leading-relaxed text-light/70">{content.intro}</p>}
-          <ul className="mt-8 grid gap-6 sm:grid-cols-2">
+          <ul className="mt-6 grid gap-4 sm:mt-8 sm:grid-cols-2 sm:gap-6">
             {content.points.map((w) => (
               <li key={w.title} className="border-t border-light/15 pt-4">
                 <h3 className="text-[18px] leading-normal">{w.title}</h3>
@@ -25,7 +25,7 @@ export function WhyCna({ content }: { content: HomeContent["why"] }) {
               </li>
             ))}
           </ul>
-          <Link href="/about#safety" className="btn btn-primary mt-10">
+          <Link href="/about#safety" className="btn btn-primary mt-8 sm:mt-10">
             How we keep trips safe <ArrowRight />
           </Link>
         </div>

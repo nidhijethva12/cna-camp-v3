@@ -4,14 +4,14 @@ import type { Trip } from "@/types/content";
 
 export function PopularTrips({ trips }: { trips: Trip[] }) {
   return (
-    <section className="wrap mt-24" aria-labelledby="popular-title">
+    <section className="wrap mt-16 sm:mt-24" aria-labelledby="popular-title">
       <SectionHeader
         id="popular-title"
         eyebrow="Popular trips"
         title="The trips people come back for"
         action={{ label: "All trips", href: "/trips" }}
       />
-      <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <ul className="rail grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {trips.map((t) => (
           <li key={t.slug} className="reveal">
             <TripCard trip={t} />

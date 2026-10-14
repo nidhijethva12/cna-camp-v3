@@ -18,12 +18,12 @@ export function JourneyStats({ tripCount, counts }: JourneyStatsProps) {
   ];
 
   return (
-    <section className="relative isolate mt-24 overflow-hidden bg-dark text-light" aria-labelledby="journey-title">
+    <section className="relative isolate mt-16 overflow-hidden bg-dark text-light sm:mt-24" aria-labelledby="journey-title">
       <div className="absolute inset-0 -z-10 opacity-40">
         <Image src="/img/cna/real/land-02-wide.webp" alt="" fill sizes="100vw" className="object-cover" />
       </div>
       <div className="absolute inset-0 -z-10 bg-linear-to-b from-dark/75 to-dark/90" />
-      <div className="wrap py-20 text-center">
+      <div className="wrap py-14 text-center sm:py-20">
         <p className="eyebrow text-secondary!">Our journey so far</p>
         <h2 id="journey-title" className="h-section mx-auto mt-3 max-w-3xl">
           Almost three decades of getting people outdoors
@@ -31,9 +31,12 @@ export function JourneyStats({ tripCount, counts }: JourneyStatsProps) {
         <p className="mx-auto mt-4 max-w-2xl text-[17px] text-light/75">
           It started with one marine camp. Today it is {counts.camps} camps across India and Nepal, and a lot of happy, tired campers.
         </p>
-        <ul className="mt-12 grid grid-cols-2 gap-4 lg:grid-cols-4">
+        <ul className="mt-8 grid grid-cols-2 gap-3 sm:mt-12 sm:gap-4 lg:grid-cols-4">
           {stats.map((s) => (
-            <li key={s.label} className="reveal group rounded-card border border-light/15 bg-light/5 px-4 py-8 backdrop-blur-sm">
+            <li
+              key={s.label}
+              className="reveal group rounded-card border border-light/15 bg-light/5 px-3 py-5 backdrop-blur-sm sm:px-4 sm:py-8"
+            >
               <FeatureIcon
                 name={s.icon}
                 tone="dark"
@@ -41,7 +44,7 @@ export function JourneyStats({ tripCount, counts }: JourneyStatsProps) {
                 round
                 className="transition-colors duration-300 group-hover:bg-secondary group-hover:text-dark"
               />
-              <CountUp value={s.value} className="display mt-4 text-[44px] sm:text-[52px]" />
+              <CountUp value={s.value} className="display mt-3 text-[34px] sm:mt-4 sm:text-[52px]" />
               <p className="mt-1 text-[15px] text-light/75">{s.label}</p>
             </li>
           ))}

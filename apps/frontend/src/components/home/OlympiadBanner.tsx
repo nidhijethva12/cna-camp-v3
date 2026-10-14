@@ -11,7 +11,7 @@ const facts = [
 
 export function OlympiadBanner() {
   return (
-    <section className="wrap mt-24" aria-labelledby="olympiad-title">
+    <section className="wrap mt-16 sm:mt-24" aria-labelledby="olympiad-title">
       <div className="reveal relative overflow-hidden rounded-card bg-dark text-light">
         <div className="absolute inset-0 opacity-40">
           <Image src="/img/cna/real/land-10-wide.webp" alt="" fill sizes="(min-width: 1240px) 1176px, 100vw" className="object-cover" />
