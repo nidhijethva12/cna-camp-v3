@@ -32,8 +32,8 @@ export function GroupFinder() {
   return (
     <div id="finder" className="mt-8 grid scroll-mt-32 gap-6 rounded-card bg-dark p-6 text-light sm:p-8 lg:grid-cols-[1fr_1.1fr]">
       <div>
-        <p className="font-mono text-[11.5px] tracking-[.12em] text-secondary uppercase">Not sure?</p>
-        <h2 className="display h-sub mt-2 [zoom:1]">Which group am I?</h2>
+        <p className="text-[13.5px] font-medium text-secondary">Not sure?</p>
+        <h2 className="display h-sub mt-2">Which group am I?</h2>
         <p className="mt-2 text-light/70">Answer 3 quick questions. We show your group, fee and scholarship.</p>
         <form className="mt-6 grid gap-4 sm:grid-cols-2" onSubmit={(e) => e.preventDefault()}>
           <label className="block sm:col-span-2">
@@ -85,7 +85,7 @@ export function GroupFinder() {
       <div className="rounded-card bg-light/5 p-6" aria-live="polite">
         {teacher ? (
           <>
-            <p className="font-mono text-[11.5px] tracking-[.1em] text-secondary uppercase">Your group</p>
+            <p className="text-[13.5px] font-medium text-secondary">Your group</p>
             <p className="display mt-1 text-[56px] leading-none">D</p>
             <p className="mt-3 font-bold">Teachers &amp; sports persons (25+)</p>
             <p className="mt-1 text-light/70">Join as a volunteer. No quiz needed.</p>
@@ -93,7 +93,7 @@ export function GroupFinder() {
           </>
         ) : group ? (
           <>
-            <p className="font-mono text-[11.5px] tracking-[.1em] text-secondary uppercase">Your group</p>
+            <p className="text-[13.5px] font-medium text-secondary">Your group</p>
             <p className="display mt-1 text-[56px] leading-none">{group}</p>
             <p className="mt-3 font-bold">Age {ages[group]}</p>
             <p className="mt-3 text-light/80">

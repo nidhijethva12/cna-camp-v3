@@ -35,7 +35,7 @@ export function Reviews({ reviews }: { reviews: Review[] }) {
                 </span>
                 <figcaption>
                   <p className="font-bold">{r.name}</p>
-                  <p className="font-mono text-[11.5px] tracking-[.08em] text-muted uppercase">{r.role}</p>
+                  <p className="text-[13.5px] font-medium text-muted">{r.role}</p>
                 </figcaption>
               </div>
               <p className="mt-5 flex gap-0.5 text-[19px]" role="img" aria-label={`${r.rating} out of 5 stars`}>
@@ -45,7 +45,7 @@ export function Reviews({ reviews }: { reviews: Review[] }) {
               </p>
               <blockquote className="mt-3 flex-1 text-[17px] leading-relaxed">“{r.quote}”</blockquote>
               <div className="trail-line mt-5" />
-              {r.tripName && <p className="mt-4 font-mono text-[11.5px] tracking-[.08em] text-primary uppercase">Trip · {r.tripName}</p>}
+              {r.tripName && <p className="mt-4 text-[13.5px] font-medium text-primary">Trip · {r.tripName}</p>}
             </figure>
           </li>
         ))}

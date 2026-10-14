@@ -27,7 +27,7 @@ export default async function PhotoCreditsPage() {
       <section className="wrap mt-12">
         <div className="overflow-x-auto rounded-card border border-line">
           <table className="w-full min-w-[640px] text-left text-[14px]">
-            <thead className="bg-soft font-mono text-[11px] tracking-[.08em] text-muted uppercase">
+            <thead className="bg-soft text-[13.5px] font-medium text-muted">
               <tr>
                 <th className="p-3">Used on</th>
                 <th className="p-3">Photo</th>

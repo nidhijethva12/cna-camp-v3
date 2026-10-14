@@ -96,7 +96,7 @@ export function TripFilters({ trips, regionOptions, typeOptions, monthOptions, l
           Clear
         </button>
       </form>
-      <p className="mt-6 font-mono text-[12.5px] tracking-[.08em] text-muted uppercase" aria-live="polite">
+      <p className="mt-6 text-[13.5px] font-medium text-muted" aria-live="polite">
         {count} {count === 1 ? "trip" : "trips"}
         {filters.short && " · 3 days or less"}
       </p>

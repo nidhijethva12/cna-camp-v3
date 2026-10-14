@@ -62,7 +62,7 @@ export default async function GalleryPage() {
                   sizes="(min-width: 1024px) 300px, (min-width: 640px) 33vw, 50vw"
                   className="h-auto w-full transition duration-500 group-hover:scale-[1.04]"
                 />
-                <span className="absolute inset-x-0 bottom-0 bg-linear-to-b from-transparent to-dark/75 p-3 pt-8 text-left font-mono text-[11px] tracking-[.08em] text-light uppercase opacity-0 transition group-hover:opacity-100">
+                <span className="absolute inset-x-0 bottom-0 bg-linear-to-b from-transparent to-dark/75 p-3 pt-8 text-left text-[13.5px] font-medium text-light opacity-0 transition group-hover:opacity-100">
                   {m.caption}
                 </span>
               </button>

@@ -76,9 +76,7 @@ export default async function AboutPage() {
               sizes="(min-width: 1024px) 590px, 100vw"
             />
           </div>
-          <figcaption className="mt-3 font-mono text-[11.5px] tracking-[.08em] text-muted uppercase">
-            A CNA group crossing a river, Manali
-          </figcaption>
+          <figcaption className="mt-3 text-[13.5px] font-medium text-muted">A CNA group crossing a river, Manali</figcaption>
         </figure>
       </section>
 
@@ -86,7 +84,7 @@ export default async function AboutPage() {
         <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-card border border-line bg-line lg:grid-cols-4">
           {stats.map(([n, label]) => (
             <div key={label} className="bg-light p-6 sm:p-8">
-              <dt className="font-mono text-[11.5px] tracking-[.08em] text-muted uppercase">{label}</dt>
+              <dt className="text-[13.5px] font-medium text-muted">{label}</dt>
               <dd>
                 <CountUp value={n} className="display mt-2 text-[40px] sm:text-[52px]" />
               </dd>
@@ -171,7 +169,7 @@ export default async function AboutPage() {
               />
             </div>
             <figcaption className="mt-5 border-l-4 border-secondary pl-4">
-              <p className="font-mono text-[11.5px] tracking-[.08em] text-light/70 uppercase">In loving memory</p>
+              <p className="text-[13.5px] font-medium text-light/70">In loving memory</p>
               <p className="display mt-1 text-[30px]">{founder.name}</p>
               <p className="font-mono text-[12px] text-secondary">{founder.years}</p>
             </figcaption>
@@ -186,7 +184,7 @@ export default async function AboutPage() {
             <dl className="mt-10 divide-y divide-light/10 border-y border-light/10">
               {founder.facts.map(([k, v]) => (
                 <div key={k} className="grid gap-1 py-5 sm:grid-cols-[150px_1fr] sm:gap-6">
-                  <dt className="font-mono text-[11.5px] tracking-[.08em] text-secondary uppercase">{k}</dt>
+                  <dt className="text-[13.5px] font-medium text-secondary">{k}</dt>
                   <dd className="text-light/85">{v}</dd>
                 </div>
               ))}
@@ -260,7 +258,7 @@ export default async function AboutPage() {
             <div key={i} className="rounded-card border border-line p-5">
               <div className="aspect-square rounded-tag bg-soft" />
               <p className="mt-4 font-bold">Name to add</p>
-              <p className="font-mono text-[11.5px] tracking-[.08em] text-muted uppercase">{role}</p>
+              <p className="text-[13.5px] font-medium text-muted">{role}</p>
             </div>
           ))}
         </div>

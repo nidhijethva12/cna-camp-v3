@@ -17,7 +17,7 @@ export function PostCard({ post }: { post: PostSummary }) {
         />
       </Link>
       <div className="flex flex-1 flex-col p-5">
-        <time dateTime={post.publishedAt} className="font-mono text-[11.5px] tracking-[.08em] text-muted uppercase">
+        <time dateTime={post.publishedAt} className="text-[13.5px] font-medium text-muted">
           {formatDate(post.publishedAt)}
         </time>
         <h3 className="h-card mt-2">

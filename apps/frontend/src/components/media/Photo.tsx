@@ -52,7 +52,7 @@ export function PhotoPlaceholder({ label, kind = "photo", dark = false, classNam
       >
         {kind === "video" ? <Play className="ml-0.5 text-[22px]" /> : <Camera className="text-[26px]" />}
       </span>
-      <span className="font-mono text-[11.5px] uppercase tracking-[.1em]">{need}</span>
+      <span className="font-medium text-[13.5px]">{need}</span>
       {label && <span className="max-w-[260px] text-[14px] leading-snug">{label}</span>}
     </div>
   );

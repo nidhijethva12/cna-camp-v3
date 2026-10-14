@@ -31,7 +31,7 @@ export function LegalPage({ sections, note, updated = "2 October 2026" }: LegalP
             </li>
           ))}
         </ol>
-        <p className="mt-6 font-mono text-[11.5px] tracking-[.08em] text-muted uppercase">Last updated: {updated}</p>
+        <p className="mt-6 text-[13.5px] font-medium text-muted">Last updated: {updated}</p>
       </nav>
       <div className="max-w-3xl">
         {note && <p className="mb-8 rounded-card border border-primary bg-primary-soft p-4 text-[15px]">{note}</p>}
@@ -61,7 +61,7 @@ export function LegalPage({ sections, note, updated = "2 October 2026" }: LegalP
                   <thead className="bg-dark text-light">
                     <tr>
                       {s.table[0].map((h) => (
-                        <th key={h} className="p-3 font-mono text-[11.5px] tracking-[.08em] uppercase">
+                        <th key={h} className="p-3 text-[13.5px] font-medium">
                           {h}
                         </th>
                       ))}

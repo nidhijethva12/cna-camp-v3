@@ -141,7 +141,7 @@ export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
               : "wrap flex min-h-[560px] flex-col items-center justify-center py-24 text-center"
           }
         >
-          <nav className="font-mono text-[11.5px] tracking-[.08em] text-light/70 uppercase" aria-label="Breadcrumb">
+          <nav className="text-[13.5px] font-medium text-light/70" aria-label="Breadcrumb">
             <Link href="/" className="hover:text-light">
               Home
             </Link>{" "}
@@ -157,7 +157,7 @@ export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
           <h1 className="h-page mt-4 max-w-4xl">{trip.name}</h1>
           <p className="mt-4 max-w-2xl text-[18px] text-light/85">{trip.summary}</p>
           <ul className={`mt-7 flex flex-wrap items-center gap-2.5 ${sharpHero ? "" : "justify-center"}`} aria-label="Trip facts">
-            <li className="rounded-full bg-secondary px-4 py-2 text-[13px] font-bold tracking-[.06em] text-dark uppercase">{trip.type}</li>
+            <li className="rounded-full bg-secondary px-4 py-2 text-[13px] font-bold text-dark">{trip.type}</li>
             {heroFacts.map(({ Icon, label, value }) => (
               <li
                 key={label}
@@ -189,7 +189,7 @@ export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
             <dl className="mt-4 grid grid-cols-2 gap-px overflow-hidden rounded-card border border-line bg-line md:grid-cols-3">
               {tripFacts(trip).map(([k, v]) => (
                 <div key={k} className="bg-light p-4">
-                  <dt className="font-mono text-[11px] tracking-[.08em] text-muted uppercase">{k}</dt>
+                  <dt className="text-[13.5px] font-medium text-muted">{k}</dt>
                   <dd className="mt-1 font-bold">{v}</dd>
                 </div>
               ))}
@@ -240,7 +240,7 @@ export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
                 <div className="p-6">
                   <p className="eyebrow">Where you stay</p>
                   <h2 className="h-sub mt-2">{campus.name}</h2>
-                  <p className="font-mono text-[11.5px] tracking-[.08em] text-muted uppercase">
+                  <p className="text-[13.5px] font-medium text-muted">
                     {campus.place} · {campus.own}
                   </p>
                   <dl className="mt-4 grid gap-3 text-[15px] sm:grid-cols-2">
@@ -269,7 +269,7 @@ export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
             <div className="flex gap-4">
               <FeatureIcon name="graduationCap" tone="dark" size="lg" />
               <div>
-                <p className="font-mono text-[11.5px] tracking-[.12em] text-secondary uppercase">For schools</p>
+                <p className="text-[13.5px] font-medium text-secondary">For schools</p>
                 <p className="mt-1 text-[19px] font-bold">Bring your school on this trip</p>
                 <p className="mt-1 text-light/70">
                   Minimum 50 students. <strong className="text-light">1 teacher or escort travels free with every 25 students.</strong>
@@ -285,7 +285,7 @@ export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
             <section id="photos" className="mt-14 scroll-mt-32">
               <div className="flex flex-wrap items-end justify-between gap-3">
                 <h2 className="h-sub">Photos</h2>
-                <span className="font-mono text-[11.5px] tracking-[.08em] text-muted uppercase">{gallery.length} photos · tap to open</span>
+                <span className="text-[13.5px] font-medium text-muted">{gallery.length} photos · tap to open</span>
               </div>
               <Lightbox>
                 <div className="gal mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3">
@@ -315,7 +315,7 @@ export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
             <section id="videos" className="mt-14 scroll-mt-32">
               <div className="flex flex-wrap items-end justify-between gap-3">
                 <h2 className="h-sub">Videos</h2>
-                <span className="font-mono text-[11.5px] tracking-[.08em] text-muted uppercase">Filmed on CNA trips</span>
+                <span className="text-[13.5px] font-medium text-muted">Filmed on CNA trips</span>
               </div>
               <VideoGrid
                 videos={videos}
@@ -338,7 +338,7 @@ export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
                   <span className="absolute top-0 -left-[37px] flex h-6 w-6 items-center justify-center rounded-full bg-dark font-mono text-[11px] text-light">
                     {i + 1}
                   </span>
-                  <p className="font-mono text-[11.5px] tracking-[.08em] text-primary uppercase">Day {i + 1}</p>
+                  <p className="text-[13.5px] font-medium text-primary">Day {i + 1}</p>
                   <p className="mt-1 text-[19px] font-bold">{d.title}</p>
                   <p className="mt-1 text-muted">{d.text}</p>
                 </li>
@@ -369,9 +369,7 @@ export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
                 ))}
               </ul>
             </div>
-            <p className="font-mono text-[11.5px] tracking-[.08em] text-muted uppercase md:col-span-2">
-              Typical list · final inclusions confirmed at booking
-            </p>
+            <p className="text-[13.5px] font-medium text-muted md:col-span-2">Typical list · final inclusions confirmed at booking</p>
           </section>
 
           <section id="carry" className="mt-14 scroll-mt-32">
@@ -425,7 +423,7 @@ export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
 
         <aside className="lg:sticky lg:top-36 lg:self-start">
           <div className="rounded-card border border-dark p-6">
-            <p className="font-mono text-[11px] tracking-[.08em] text-muted uppercase">{trip.price ? "Starts from" : "Price"}</p>
+            <p className="text-[13.5px] font-medium text-muted">{trip.price ? "Starts from" : "Price"}</p>
             <p className="display mt-1 text-[36px]">{tripPrice(trip)}</p>
             <p className="text-[14px] text-muted">{trip.price ? "per person" : "Depends on group size and dates"}</p>
             <div className="trail-line my-5" />

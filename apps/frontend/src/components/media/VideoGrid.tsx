@@ -28,7 +28,7 @@ const cardClass = "group relative block aspect-[3/4] w-full overflow-hidden roun
 function Caption({ title, label }: { title: string; label: string }) {
   return (
     <span className="absolute inset-x-0 bottom-0 bg-linear-to-b from-transparent to-dark/85 p-4 pt-12">
-      <span className="block font-mono text-[11px] uppercase tracking-[.1em] text-light/75">{label}</span>
+      <span className="block font-medium text-[13.5px] text-light/75">{label}</span>
       <span className="mt-1 block text-[15px] font-semibold leading-snug">{title}</span>
     </span>
   );

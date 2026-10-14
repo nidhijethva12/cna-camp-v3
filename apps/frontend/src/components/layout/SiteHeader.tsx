@@ -10,7 +10,7 @@ export async function SiteHeader() {
   return (
     <>
       <div className="bg-dark text-light/85">
-        <div className="wrap flex items-center justify-between gap-4 py-2 font-mono text-[11.5px] tracking-[.08em] uppercase">
+        <div className="wrap flex items-center justify-between gap-4 py-2 text-[13.5px] font-medium">
           <span>Rajkot, Gujarat · 20+ years of treks and camps</span>
           <span className="hidden sm:inline">Backed by {site.trust.name}</span>
         </div>
@@ -22,7 +22,7 @@ export async function SiteHeader() {
             <Image src="/img/logo.png" alt="" width={48} height={48} className="h-12 w-12" />
             <span className="leading-none">
               <span className="display block text-[19px]">{site.name}</span>
-              <span className="font-mono text-[10.5px] tracking-[.1em] text-muted uppercase">Climber Nature Adventure Club</span>
+              <span className="text-[10.5px] font-medium text-muted">Climber Nature Adventure Club</span>
             </span>
           </Link>
 

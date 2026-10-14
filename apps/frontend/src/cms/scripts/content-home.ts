@@ -18,9 +18,12 @@ const payload = await getPayload({ config });
 const changes: string[] = [];
 const show = (v: unknown) => (typeof v === "string" ? `“${v.length > 70 ? `${v.slice(0, 67)}…` : v}”` : JSON.stringify(v));
 
+/** JSON for comparing, minus the row ids the CMS adds to array items. */
+const comparable = (v: unknown) => JSON.stringify(v ?? null, (k, val) => (k === "id" ? undefined : val));
+
 /** Sets `obj[key]` to `value`, noting it when it changes. */
 function set<T extends object>(obj: T, key: keyof T & string, value: unknown, where: string) {
-  if (JSON.stringify(obj[key] ?? null) === JSON.stringify(value ?? null)) return;
+  if (comparable(obj[key]) === comparable(value)) return;
   changes.push(`  ${where}: ${show(obj[key])} → ${show(value)}`);
   (obj as Record<string, unknown>)[key] = value;
 }

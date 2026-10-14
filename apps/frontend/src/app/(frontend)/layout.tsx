@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Bebas_Neue, DM_Sans } from "next/font/google";
+import { DM_Sans, Plus_Jakarta_Sans } from "next/font/google";
 import { ContactShortcuts } from "@/components/layout/ContactShortcuts";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
@@ -10,7 +10,7 @@ import { absoluteUrl, isIndexable, siteUrl } from "@/lib/seo";
 import { themeColors } from "@/lib/theme";
 import "./globals.css";
 
-const heading = Bebas_Neue({ weight: "400", subsets: ["latin"], variable: "--font-heading", display: "swap" });
+const heading = Plus_Jakarta_Sans({ weight: ["500", "700", "800"], subsets: ["latin"], variable: "--font-heading", display: "swap" });
 const body = DM_Sans({ subsets: ["latin"], variable: "--font-body", display: "swap" });
 
 export const metadata: Metadata = {

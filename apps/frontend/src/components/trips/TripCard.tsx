@@ -25,7 +25,7 @@ export function TripCard({ trip, badge }: { trip: Trip; badge?: string }) {
       </Link>
       <div className="flex flex-1 flex-col p-5">
         {/* Fixed line counts keep every row aligned across a grid of cards. */}
-        <p className="truncate font-mono text-[11.5px] tracking-[.08em] text-muted uppercase">
+        <p className="truncate text-[13.5px] font-medium text-muted">
           {region}
           {trip.state !== region && ` · ${trip.state}`}
         </p>
@@ -41,7 +41,7 @@ export function TripCard({ trip, badge }: { trip: Trip; badge?: string }) {
         </div>
         <div className="mt-4 flex items-end justify-between gap-3">
           <div>
-            <p className="font-mono text-[11px] tracking-[.08em] text-muted uppercase">{trip.price ? "From" : "Price"}</p>
+            <p className="text-[13.5px] font-medium text-muted">{trip.price ? "From" : "Price"}</p>
             <p className="display text-[22px]">{tripPrice(trip)}</p>
           </div>
           <Link

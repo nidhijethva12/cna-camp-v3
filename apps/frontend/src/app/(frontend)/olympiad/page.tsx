@@ -71,14 +71,12 @@ export default async function OlympiadPage() {
         </div>
         <div className="absolute inset-0 -z-10 bg-linear-to-r from-dark/92 via-dark/55 via-60% to-dark/30" />
         <div className="wrap py-20 sm:py-28">
-          <p className="inline-flex items-center gap-2 rounded-tag bg-secondary px-3 py-1.5 font-mono text-[11.5px] font-medium tracking-[.1em] text-dark uppercase">
+          <p className="inline-flex items-center gap-2 rounded-tag bg-secondary px-3 py-1.5 text-[13.5px] font-medium text-dark">
             <Star className="text-[13px]" />
             {o.tagline}
           </p>
           <h1 className="h-page mt-5 max-w-4xl">{o.name}</h1>
-          <p className="mt-2 font-mono text-[12.5px] tracking-[.14em] text-secondary uppercase">
-            Eco-STEM online quiz · Mountain · Desert · Marine
-          </p>
+          <p className="mt-2 text-[13.5px] font-medium text-secondary">Eco-STEM online quiz · Mountain · Desert · Marine</p>
           <p className="mt-6 max-w-2xl text-[18px] leading-relaxed text-light/85">
             Take the Eco-STEM quiz. Score high and win up to <strong className="text-light">100% scholarship</strong> for the Astro
             Adventure Trekking Camp in Manali. Open for students aged 14–25 and teachers from{" "}
@@ -121,14 +119,14 @@ export default async function OlympiadPage() {
               />
               <div>
                 <p className="leading-tight font-bold">{site.trust.name}</p>
-                <p className="font-mono text-[11px] tracking-[.08em] text-muted uppercase">Rajkot · Reg. {site.trust.registration}</p>
+                <p className="text-[13.5px] font-medium text-muted">Rajkot · Reg. {site.trust.registration}</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
               <Image src="/img/logo.png" alt="Climber Nature Adventure Club logo" width={56} height={56} className="h-14 w-14" />
               <div>
                 <p className="leading-tight font-bold">{site.legalName}</p>
-                <p className="font-mono text-[11px] tracking-[.08em] text-muted uppercase">Rajkot · since 1997</p>
+                <p className="text-[13.5px] font-medium text-muted">Rajkot · since 1997</p>
               </div>
             </div>
           </div>
@@ -146,10 +144,10 @@ export default async function OlympiadPage() {
       </nav>
 
       <section className="wrap mt-12">
-        <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-card border border-line bg-line sm:grid-cols-3 lg:grid-cols-5">
+        <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-card border border-line bg-line lg:grid-cols-5 [&>div:last-child]:col-span-2 lg:[&>div:last-child]:col-span-1">
           {o.stats.map(([n, label]) => (
             <div key={label} className="bg-light p-5 sm:p-6">
-              <dt className="font-mono text-[11px] tracking-[.08em] text-muted uppercase">{label}</dt>
+              <dt className="text-[13.5px] font-medium text-muted">{label}</dt>
               <dd>
                 <CountUp value={n} className="display mt-1 text-[38px] sm:text-[46px]" />
               </dd>
@@ -164,7 +162,7 @@ export default async function OlympiadPage() {
           {o.dates.map((d, i) => (
             <li key={d.label} className="relative rounded-card border border-line p-5">
               <FeatureIcon name={d.icon} tone={i === o.dates.length - 1 ? "accent" : "light"} />
-              <p className="mt-4 font-mono text-[11px] tracking-[.08em] text-muted uppercase">{d.label}</p>
+              <p className="mt-4 text-[13.5px] font-medium text-muted">{d.label}</p>
               <p className="mt-1 text-[18px] font-bold">{d.value}</p>
               {i < 3 && (
                 <span
@@ -181,14 +179,12 @@ export default async function OlympiadPage() {
               <p className="display text-[40px] text-secondary">₹{f.fee}</p>
               <div>
                 <p className="font-bold">{f.who}</p>
-                <p className="font-mono text-[11px] tracking-[.08em] text-light/60 uppercase">{f.group}</p>
+                <p className="text-[13.5px] font-medium text-light/60">{f.group}</p>
               </div>
             </div>
           ))}
         </div>
-        <p className="mt-3 font-mono text-[11.5px] tracking-[.08em] text-muted uppercase">
-          Non-refundable registration fee · online payment only
-        </p>
+        <p className="mt-3 text-[13.5px] font-medium text-muted">Non-refundable registration fee · online payment only</p>
       </section>
 
       <section className="mt-24 bg-soft py-20">
@@ -210,7 +206,7 @@ export default async function OlympiadPage() {
               </div>
             ))}
             <div className="relative overflow-hidden rounded-card bg-dark p-5 text-light sm:col-span-2">
-              <p className="font-mono text-[11px] tracking-[.1em] text-secondary uppercase">The prize</p>
+              <p className="text-[13.5px] font-medium text-secondary">The prize</p>
               <p className="display mt-1 text-[30px]">Astro Adventure Trekking Camp 2026-27</p>
               <p className="mt-1 text-light/70">Manali · Himachal Pradesh · ₹18,000 camp fee</p>
               <Link href="/trips/astro-adventure-manali" className="mt-4 inline-block font-semibold text-secondary underline">
@@ -289,14 +285,14 @@ export default async function OlympiadPage() {
                 ].map(([n, label]) => (
                   <div key={label} className="bg-dark p-5 text-center">
                     <p className="display text-[44px] text-secondary">{n}</p>
-                    <p className="font-mono text-[11px] tracking-[.08em] text-light/60 uppercase">{label}</p>
+                    <p className="text-[13.5px] font-medium text-light/60">{label}</p>
                   </div>
                 ))}
               </div>
               <dl className="mt-6 divide-y divide-light/10 border-y border-light/10">
                 {o.quiz.map(([k, v]) => (
                   <div key={k} className="grid grid-cols-[110px_1fr] gap-4 py-3">
-                    <dt className="font-mono text-[11.5px] tracking-[.08em] text-secondary uppercase">{k}</dt>
+                    <dt className="text-[13.5px] font-medium text-secondary">{k}</dt>
                     <dd className="text-light/85">{v}</dd>
                   </div>
                 ))}
@@ -311,7 +307,7 @@ export default async function OlympiadPage() {
                 {o.rounds.map(([round, title, mode]) => (
                   <li key={round} className="relative pb-6">
                     <span className="absolute top-1.5 -left-[31px] h-3 w-3 rounded-full bg-primary" />
-                    <p className="font-mono text-[11.5px] tracking-[.1em] text-secondary uppercase">
+                    <p className="text-[13.5px] font-medium text-secondary">
                       {round} · {mode}
                     </p>
                     <p className="mt-1 text-[17px] font-semibold">{title}</p>
@@ -400,7 +396,7 @@ export default async function OlympiadPage() {
                   className="transition duration-700 group-hover:scale-[1.04]"
                 />
                 <div className="absolute inset-x-0 bottom-0 bg-linear-to-b from-transparent to-dark/80 p-3 pt-10">
-                  <p className="font-mono text-[11px] tracking-[.1em] text-light uppercase">{p.caption}</p>
+                  <p className="text-[13.5px] font-medium text-light">{p.caption}</p>
                 </div>
               </li>
             ))}
@@ -433,7 +429,7 @@ export default async function OlympiadPage() {
         <div className="flex flex-col gap-6 rounded-card border border-dark p-6 sm:p-8 lg:flex-row lg:items-center lg:justify-between">
           <div>
             <p className="eyebrow">Open for</p>
-            <h2 className="display h-section mt-2 [zoom:1]">Every district of Gujarat</h2>
+            <h2 className="display h-section mt-2">Every district of Gujarat</h2>
             <p className="mt-2 max-w-xl text-muted">Any eligible student or teacher from anywhere in Gujarat can register.</p>
           </div>
           <ul className="flex flex-wrap gap-2">
@@ -506,7 +502,7 @@ export default async function OlympiadPage() {
             <Photo img="valley" wide sizes="(min-width: 1240px) 1176px, 100vw" />
           </div>
           <div className="relative">
-            <p className="flex items-center gap-2 font-mono text-[12px] tracking-[.14em] text-secondary uppercase">
+            <p className="flex items-center gap-2 text-[13.5px] font-medium text-secondary">
               <Clock className="text-[15px]" />
               {statusText[status]}
             </p>

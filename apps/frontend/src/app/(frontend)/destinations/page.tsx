@@ -46,7 +46,7 @@ export default async function DestinationsPage() {
                       <Link href={`/trips/${t.slug}`} className="flex items-center justify-between gap-3 p-4 hover:bg-soft">
                         <span>
                           <span className="block font-bold">{t.name}</span>
-                          <span className="font-mono text-[11.5px] tracking-[.08em] text-muted uppercase">
+                          <span className="text-[13.5px] font-medium text-muted">
                             {t.type} · {durationShort(t)} · {t.months.slice(0, 3).join(" ")}
                           </span>
                         </span>

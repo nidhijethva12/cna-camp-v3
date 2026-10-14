@@ -30,7 +30,7 @@ export function Filmstrip({ content }: { content: HomeContent["gallery"] }) {
                   <div className="film-photo">
                     <Image src={p.image.src} alt={copy ? "" : p.caption} fill sizes="280px" className="object-cover" />
                   </div>
-                  <figcaption className="mt-3 flex items-center gap-2 font-mono text-[11px] tracking-[.1em] text-light/60 uppercase">
+                  <figcaption className="mt-3 flex items-center gap-2 text-[13.5px] font-medium text-light/60">
                     <span className="text-secondary">{String(n).padStart(2, "0")}</span>
                     {p.caption}
                   </figcaption>

@@ -32,10 +32,7 @@ export async function ContactShortcuts() {
         >
           <WhatsApp className="text-[22px]" /> WhatsApp
         </a>
-        <Link
-          href={enquireHref()}
-          className="flex h-16 items-center justify-center bg-primary font-bold tracking-[.04em] text-light uppercase"
-        >
+        <Link href={enquireHref()} className="flex h-16 items-center justify-center bg-primary font-bold text-light">
           Enquire
         </Link>
       </nav>

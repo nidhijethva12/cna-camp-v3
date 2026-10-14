@@ -50,7 +50,7 @@ export function UpcomingBatches({ batches }: { batches: UpcomingBatch[] }) {
                   </time>
                   <div>
                     <p className="text-[18px] font-bold group-hover:text-primary">{b.trip.name}</p>
-                    <p className="font-mono text-[11.5px] tracking-[.08em] text-muted uppercase">{meta.join(" · ")}</p>
+                    <p className="text-[13.5px] font-medium text-muted">{meta.join(" · ")}</p>
                     <p className="mt-1 font-mono text-[12px] sm:hidden">
                       <span className={b.seatsLeft <= LOW_SEATS ? "text-primary" : "text-dark"}>{b.seatsLeft} seats left</span>
                       <span className="text-muted"> · {price}</span>

@@ -56,7 +56,7 @@ export default async function GroupTripsPage() {
               <div className="flex flex-1 flex-col p-6">
                 <h3 className="h-card">{k.title}</h3>
                 <p className="mt-2 flex-1 text-muted">{k.text}</p>
-                <p className="mt-5 font-mono text-[11.5px] tracking-[.08em] text-muted uppercase">
+                <p className="mt-5 text-[13.5px] font-medium text-muted">
                   Popular: <span className="text-dark">{k.popular}</span>
                 </p>
               </div>
@@ -69,8 +69,8 @@ export default async function GroupTripsPage() {
         <div className="relative overflow-hidden rounded-card bg-primary p-6 text-light sm:p-10">
           <div className="grid gap-6 lg:grid-cols-[1.4fr_1fr] lg:items-center">
             <div>
-              <p className="font-mono text-[12px] tracking-[.14em] text-light/80 uppercase">For teachers &amp; principals</p>
-              <h2 className="h-section mt-2 [zoom:1]">Every 25 students, one teacher travels free.</h2>
+              <p className="text-[13.5px] font-medium text-light/80">For teachers &amp; principals</p>
+              <h2 className="h-section mt-2">Every 25 students, one teacher travels free.</h2>
               <p className="mt-3 max-w-xl text-light/85">
                 School trips with CNA start at 50 students. For every 25 students, one teacher or escort joins at no cost. Nature learning,
                 safety and the full plan handled by us.

@@ -69,7 +69,7 @@ export async function SiteFooter() {
       </div>
 
       <div className="border-t border-light/10">
-        <div className="wrap flex flex-col gap-3 py-6 font-mono text-[11.5px] tracking-[.08em] text-light/50 uppercase md:flex-row md:items-center md:justify-between">
+        <div className="wrap flex flex-col gap-3 py-6 text-[13.5px] font-medium text-light/50 md:flex-row md:items-center md:justify-between">
           <span>
             © {new Date().getFullYear()} {site.legalName}
           </span>

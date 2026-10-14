@@ -28,7 +28,7 @@ export default async function BatchesPage() {
       />
       <section className="wrap mt-12">
         <div className="overflow-hidden rounded-card border border-line">
-          <div className="hidden grid-cols-[120px_1.5fr_1fr_1fr_1fr_auto] gap-4 bg-dark px-5 py-3 font-mono text-[11.5px] tracking-[.08em] text-light/70 uppercase md:grid">
+          <div className="hidden grid-cols-[120px_1.5fr_1fr_1fr_1fr_auto] gap-4 bg-dark px-5 py-3 text-[13.5px] font-medium text-light/70 md:grid">
             <span>Date</span>
             <span>Trip</span>
             <span>Region</span>
