@@ -4,7 +4,7 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 import { enquireHref, regions } from "@/content/site";
 import type { UpcomingBatch } from "@/lib/content";
 import { splitDate } from "@/lib/format";
-import { durationShort, tripPrice } from "@/lib/trips";
+import { durationShort, tripPriceShort } from "@/lib/trips";
 
 const LOW_SEATS = 8;
 
@@ -37,7 +37,7 @@ export function UpcomingBatches({ batches }: { batches: UpcomingBatch[] }) {
           {batches.map((b, i) => {
             const { day, month } = splitDate(b.startDate);
             const meta = [regions[b.trip.region].label, durationShort(b.trip), b.note].filter(Boolean);
-            const price = tripPrice(b.trip);
+            const price = tripPriceShort(b.trip);
             return (
               <li key={`${b.tripSlug}-${b.startDate}`} className={i > 0 ? "border-t border-line" : undefined}>
                 <Link

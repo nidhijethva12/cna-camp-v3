@@ -15,7 +15,7 @@ export const groupKinds: GroupKind[] = [
     id: "schools",
     title: "School groups",
     who: "Std 9 and above",
-    text: "Outdoor learning camps planned with teachers: nature sessions (EVS), adventure activities and a clear daily plan. Minimum 50 students; 1 teacher travels free with every 25 students.",
+    text: "Outdoor learning camps planned with your teachers: nature sessions (EVS), adventure activities and a clear plan for every hour. Minimum 50 students. One teacher travels free with every 25 students.",
     img: "cna/real/group-10",
     alt: "A boys’ batch with their bags outside a wooden hut in Himachal",
     popular: "Marine Camp · Hingolgadh · Sasan Gir",
@@ -24,7 +24,7 @@ export const groupKinds: GroupKind[] = [
     id: "colleges",
     title: "College & university",
     who: "All years",
-    text: "Treks and adventure camps for clubs, NSS/NCC units and class trips. Fun first, fully organised.",
+    text: "Treks and adventure camps for clubs, NSS and NCC units and class trips. Plenty of fun, and every detail sorted before you board.",
     img: "cna/real/group-11",
     alt: "A group of campers cheering together in a deodar forest",
     popular: "Manali · Grand Uttaranchal · Sikkim",
@@ -33,7 +33,7 @@ export const groupKinds: GroupKind[] = [
     id: "families",
     title: "Families",
     who: "All ages welcome",
-    text: "Easy camps and nature trails where kids and grandparents both have a good time.",
+    text: "Easy camps and nature trails where the kids and the grandparents both come home happy.",
     img: "cna/real/food-04",
     alt: "Campers being served lunch with snow peaks behind, Manali",
     popular: "Kerala · Nainital · Gir & Diu",
@@ -42,7 +42,7 @@ export const groupKinds: GroupKind[] = [
     id: "friends",
     title: "Friends & youth groups",
     who: "Join as a group",
-    text: "Pick your dates and your kind of adventure. We handle travel, stay, food, leaders and activities.",
+    text: "You pick the dates and the kind of adventure. We take care of travel, stay, food, leaders and activities.",
     img: "cna/real/river-02",
     alt: "A group of campers crossing a mountain river together",
     popular: "Ladakh · Manali Snow Camp · Goa",
@@ -51,7 +51,7 @@ export const groupKinds: GroupKind[] = [
     id: "corporate",
     title: "Corporate teams",
     who: "Custom dates",
-    text: "Team outings with real challenge: treks, rock climbing, rafting and camp nights away from screens.",
+    text: "Team outings with a real challenge: treks, rock climbing, rafting and camp nights away from laptops.",
     img: "cna/real/climb-03",
     alt: "A camper rappelling down a rock face on a rope",
     popular: "Osam Hill · Mount Abu · Manali",
@@ -69,26 +69,29 @@ export const groupKinds: GroupKind[] = [
 
 export const groupInclusions = [
   "Travel from your city and back",
-  "Stay: hotel rooms or 2-10 person tents",
-  "All meals at camp",
-  "Trained trip leaders & instructors",
-  "Activity gear",
+  "Stay in hotel rooms or tents for 2 to 10 people",
+  "All meals at camp, planned with your group leader",
+  "Trained trip leaders and instructors",
+  "Activity and safety gear (ISI-marked)",
   "Nature sessions (EVS)",
-  "Medical kit, doctor nearby, ambulance access",
-  "Mediclaim cover on camps over 5 days",
+  "Medical kit at camp, a doctor nearby and ambulance access",
+  "Mediclaim cover on camps longer than 5 days",
 ];
 
 /** CNA's booking process from the old cnacamp.com booking page. */
 export const groupBookingSteps = [
-  "Choose a camp and contact us. We send the written programme.",
-  "Fix the dates and number of days with us.",
-  "Form your group: 50 members or more (smaller groups pay for 50). Big groups of 100 to 1,000 go in batches.",
-  "Register: group list, a form and risk certificate per member, travel choice and 25% advance, ideally 2-3 months ahead.",
-  "Group meeting: we explain activities, travel, food and camp rules and answer every question.",
-  "Pay the balance within a month, everything 3 days before departure. Then pack your bag!",
+  "Choose a camp and contact us. We send the full programme in writing.",
+  "Fix the dates and the number of days with us.",
+  "Form your group: 50 members or more (smaller groups pay for 50). Big groups of 100 to 1,000 travel in batches.",
+  "Register: send the group list, a form and risk certificate for each member, your travel choice (train, bus, car or air) and the 25% advance. Two to three months ahead is ideal.",
+  "Group meeting: we walk you through activities, travel, food and camp rules, and answer every question.",
+  "Pay the balance within a month of registering, and everything at least 3 days before departure. Then pack your bag.",
 ];
 
 export const groupFavourites = ["bet-dwarka-marine-camp", "hingolgadh-nature-camp", "astro-adventure-manali"];
+
+/** Easy first trips named in the copy for the Girls-only & solo page. */
+export const easyStarts = ["manali-snow-camp", "sikkim-trek", "bet-dwarka-marine-camp"];
 
 export const travellerKinds = [
   {
@@ -110,7 +113,12 @@ export const travellerKinds = [
     tag: "18 years and above",
     img: "cna/real/trek-03",
     alt: "Walking through a tall deodar forest near Manali",
-    points: ["Join any open batch alone", "We pair you with tent-mates", "Group activities from day one", "Leave with new trail friends"],
+    points: [
+      "Join any open batch on your own",
+      "We set you up with tent-mates of your gender",
+      "Group activities from the first day",
+      "Go home with new trail friends",
+    ],
   },
   {
     id: "first",
@@ -118,6 +126,11 @@ export const travellerKinds = [
     tag: "Never trekked before?",
     img: "cna/real/campus-02",
     alt: "Blue tents on a green meadow, Manali",
-    points: ["Pick an Easy trip", "We teach camp basics on day one", "Trained leaders set the pace", "Gear list shared before you go"],
+    points: [
+      "Pick a trip marked Easy",
+      "We teach camp basics on day one",
+      "Trained leaders set a pace that suits the group",
+      "Packing list shared before you go",
+    ],
   },
 ];

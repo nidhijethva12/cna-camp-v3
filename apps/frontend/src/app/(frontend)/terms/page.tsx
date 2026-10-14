@@ -5,8 +5,13 @@ import { termsSections } from "@/content/legal";
 import { getSiteSettings } from "@/lib/content";
 
 export const metadata: Metadata = {
-  title: "Terms & conditions",
-  description: "Booking, payment, safety and travel terms for CNA camps and treks.",
+  title: { absolute: "Terms & Conditions for CNA Treks and Camps | CNA Camp" },
+  description:
+    "How booking, payment, safety and itinerary changes work on CNA treks and camps. 25% advance, balance 3 days before, mediclaim on camps over 5 days.",
+  openGraph: {
+    title: "Terms & conditions | CNA Camp",
+    description: "Booking, payments, safety and changes on CNA trips, in plain words.",
+  },
   alternates: { canonical: "/terms" },
 };
 
@@ -17,11 +22,11 @@ export default async function TermsPage() {
       <PageHead
         eyebrow="Policies"
         title={<>Terms &amp; conditions</>}
-        text="How booking, payments, safety and changes work on a CNA camp, in plain words."
+        text="How booking, payment, safety and changes work on a CNA trip, in plain words."
       />
       <LegalPage
         sections={termsSections(contact)}
-        note="Draft for the preview, written from CNA’s existing terms. To be reviewed by CNA and a legal adviser before launch."
+        note="Draft, legal review before launch. Written from CNA’s existing terms, to be checked by CNA and a legal adviser before the site goes live."
       />
     </>
   );

@@ -2,16 +2,21 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { PostCard } from "@/components/blog/PostCard";
 import { PageHead } from "@/components/layout/PageHead";
-import { getPosts } from "@/lib/content";
+import { getPosts, getSiteSettings } from "@/lib/content";
 
 export const metadata: Metadata = {
-  title: "Blog",
-  description: "Trip stories, packing tips and nature notes from the CNA Camp team in Rajkot.",
+  title: { absolute: "Trekking Tips, Packing Lists & Camp Guides | CNA Camp" },
+  description:
+    "Beginner trek guides, Himalayan packing lists, Gujarat weekend nature spots and school camp safety tips, from a Rajkot club with 1,000+ camps behind it.",
+  openGraph: {
+    title: "Stories and tips from the trail | CNA Camp",
+    description: "Practical guides on first treks, packing and safe camps, from people who lead them.",
+  },
   alternates: { canonical: "/blog" },
 };
 
 export default async function BlogPage() {
-  const posts = await getPosts();
+  const [posts, contact] = await Promise.all([getPosts(), getSiteSettings()]);
 
   return (
     <>
@@ -20,7 +25,7 @@ export default async function BlogPage() {
         imgAlt="A line of trekkers walking up a green Himalayan hillside"
         eyebrow="Blog"
         title="Stories from the trail"
-        text="Trip stories, packing tips and nature notes from the CNA team."
+        text="What 20+ years of camps have taught us about packing, preparing and picking the right place. Written by people who still lead the walks."
       />
       <section className="wrap mt-12">
         {posts.length ? (
@@ -40,6 +45,13 @@ export default async function BlogPage() {
             .
           </p>
         )}
+        <p className="mt-12 rounded-card bg-soft p-5 text-muted">
+          Got a question you want us to write about?{" "}
+          <a href={contact.whatsappHref} target="_blank" rel="noopener" className="font-semibold text-primary underline">
+            WhatsApp us
+          </a>
+          , and we may answer it in the next post.
+        </p>
       </section>
     </>
   );

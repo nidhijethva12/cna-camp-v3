@@ -309,6 +309,24 @@
     color: var(--color-dark);
   }
 
+  /* FAQ rows open and close smoothly where the browser can animate <details>; elsewhere they simply toggle. */
+  .faq {
+    interpolate-size: allow-keywords;
+  }
+  .faq::details-content {
+    height: 0;
+    opacity: 0;
+    overflow: clip;
+    transition:
+      height 0.35s ease,
+      opacity 0.35s ease,
+      content-visibility 0.35s allow-discrete;
+  }
+  .faq[open]::details-content {
+    height: auto;
+    opacity: 1;
+  }
+
   .icon {
     display: inline-block;
     flex-shrink: 0;

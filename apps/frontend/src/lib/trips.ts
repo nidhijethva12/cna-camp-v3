@@ -11,6 +11,9 @@ export const durationLong = (t: Trip) =>
 
 export const tripPrice = (t: Trip) => formatPrice(t.price);
 
+/** One-line price for tables: "From ₹18,000" or "Price on request". */
+export const tripPriceShort = (t: Trip) => (t.price == null ? "Price on request" : `From ${formatPrice(t.price)}`);
+
 export const tripCampus = (t: Trip) => campuses.find((c) => c.slug === t.campus) ?? null;
 
 const isHard = (t: Trip) => t.difficulty === "Challenging";
@@ -128,3 +131,23 @@ export const tripFaqs = (t: Trip): Faq[] => t.faqs ?? defaultFaqs(t);
 
 export const tripDescription = (t: Trip) =>
   t.seo.description ?? `${t.summary} ${durationShort(t)} ${t.type.toLowerCase()} in ${t.state} with CNA, Rajkot.`;
+
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+/** Best months as ranges: ["Oct","Nov","Dec","Jan"] → "Oct to Jan"; gaps give "May, Aug to Sep"; all twelve → "All year". */
+export function monthRange(months: string[]) {
+  const set = new Set(months.map((m) => MONTHS.indexOf(m)).filter((i) => i >= 0));
+  if (set.size === 12) return "All year";
+  if (!set.size) return "";
+  // Start each run just after a gap, so a run wrapping past December stays in one piece.
+  const start = [...set].sort((a, b) => a - b).find((i) => !set.has((i + 11) % 12)) ?? 0;
+  const runs: [number, number][] = [];
+  for (let k = 0; k < 12; k++) {
+    const i = (start + k) % 12;
+    if (!set.has(i)) continue;
+    const last = runs.at(-1);
+    if (last && (last[1] + 1) % 12 === i) last[1] = i;
+    else runs.push([i, i]);
+  }
+  return runs.map(([a, b]) => (a === b ? MONTHS[a] : `${MONTHS[a]} to ${MONTHS[b]}`)).join(", ");
+}

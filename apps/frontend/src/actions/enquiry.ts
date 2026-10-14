@@ -108,7 +108,7 @@ export async function submitEnquiry(_prev: EnquiryState, fd: FormData): Promise<
   const fieldErrors: EnquiryState["fieldErrors"] = {};
   if (values.name.length < 2) fieldErrors.name = "Please enter your name.";
   else if (!PERSON_NAME.test(values.name)) fieldErrors.name = "Please use letters only in your name.";
-  if (!mobile) fieldErrors.phone = "Please enter a valid 10-digit mobile number.";
+  if (!mobile) fieldErrors.phone = "Please enter a 10-digit mobile number.";
   if (!EMAIL.test(values.email)) fieldErrors.email = "Please enter a valid email address.";
   if (values.trip && !trip) fieldErrors.trip = "Please pick a trip from the list.";
   if (!oneOf(values.month, enquiryMonths)) fieldErrors.month = "Please pick a month from the list.";

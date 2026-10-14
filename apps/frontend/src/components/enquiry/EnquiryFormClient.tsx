@@ -16,6 +16,7 @@ export interface EnquiryFormProps {
   variant?: EnquiryVariant;
   defaultTrip?: string;
   title?: string;
+  intro?: string;
 }
 
 const initialState: EnquiryState = { status: "idle" };
@@ -28,7 +29,7 @@ const headings: Record<EnquiryVariant, string> = {
 
 const options = (list: readonly string[]) => list.map((x) => ({ value: x, label: x }));
 
-export function EnquiryFormClient({ trips, phone, variant = "quick", defaultTrip = "", title }: EnquiryFormProps) {
+export function EnquiryFormClient({ trips, phone, variant = "quick", defaultTrip = "", title, intro }: EnquiryFormProps) {
   const [state, formAction, pending] = useActionState(submitEnquiry, initialState);
   const pathname = usePathname();
   const isGroup = variant === "group";
@@ -44,14 +45,18 @@ export function EnquiryFormClient({ trips, phone, variant = "quick", defaultTrip
     <form action={formAction} className="relative rounded-card border border-dark bg-light p-6 sm:p-8" noValidate>
       <p className="display h-sub">{title ?? headings[variant]}</p>
       <p className="mt-2 text-[15px] text-muted">
-        {isGroup
-          ? "Tell us about your group. We suggest 2-3 options within a day, usually on WhatsApp."
-          : "Tell us where you want to go. We reply within a day, usually on WhatsApp."}
+        {intro ??
+          (isGroup
+            ? "Tell us about your group. We send 2 or 3 options, usually on WhatsApp within a day."
+            : "Tell us where you want to go. We reply within a day, usually on WhatsApp.")}
       </p>
 
       <input type="hidden" name="variant" value={variant} />
       <input type="hidden" name="sourcePath" value={pathname} />
-      <div aria-hidden="true" className="absolute left-[-9999px] h-px w-px overflow-hidden">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute h-px w-px overflow-hidden whitespace-nowrap opacity-0 [clip-path:inset(50%)]"
+      >
         <label>
           Website <input type="text" name="website" tabIndex={-1} autoComplete="off" />
         </label>
@@ -158,7 +163,7 @@ export function EnquiryFormClient({ trips, phone, variant = "quick", defaultTrip
             <Field label="Trip" field="trip" error={err("trip")}>
               <Select
                 name="trip"
-                emptyLabel="Not sure yet"
+                emptyLabel="Not sure yet, suggest one"
                 options={trips.map((t) => ({ value: t.slug, label: t.name }))}
                 defaultValue={v.trip ?? defaultTrip}
                 className="mt-2"
@@ -200,7 +205,7 @@ export function EnquiryFormClient({ trips, phone, variant = "quick", defaultTrip
           <textarea
             name="message"
             maxLength={1000}
-            placeholder={isGroup ? "Budget, special needs, ideas..." : "Any questions?"}
+            placeholder={isGroup ? "Budget, special needs, ideas..." : "Month, number of people, anything we should know"}
             defaultValue={v.message}
             className="field mt-2 min-h-24"
           />
@@ -224,10 +229,10 @@ export function EnquiryFormClient({ trips, phone, variant = "quick", defaultTrip
         <div role="status" className="mt-5 rounded-card border border-success bg-light px-4 py-3 text-[15px]">
           <p className="flex items-center gap-2 font-bold text-success">
             <CheckCircle className="text-[20px]" />
-            Your {isGroup ? "trip request" : "enquiry"} has been sent successfully.
+            Thanks! Your {isGroup ? "trip request" : "enquiry"} is with us.
           </p>
           <p className="mt-1 text-muted">
-            Our team will reply within a day, usually on WhatsApp. For anything urgent, call{" "}
+            We will reply within a day, usually on WhatsApp. For anything urgent, call{" "}
             <a href={phone.href} className="font-semibold text-dark underline">
               {phone.label}
             </a>

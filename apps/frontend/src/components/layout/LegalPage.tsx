@@ -7,6 +7,7 @@ export interface LegalSection {
   list?: ReactNode[];
   /** First row is the header. */
   table?: string[][];
+  after?: ReactNode[];
 }
 
 interface LegalPageProps {
@@ -81,6 +82,11 @@ export function LegalPage({ sections, note, updated = "2 October 2026" }: LegalP
                 </table>
               </div>
             )}
+            {s.after?.map((p, j) => (
+              <p key={j} className="mt-4 leading-relaxed text-muted">
+                {p}
+              </p>
+            ))}
           </section>
         ))}
       </div>

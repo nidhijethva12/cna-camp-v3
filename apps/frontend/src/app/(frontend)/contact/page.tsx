@@ -1,21 +1,35 @@
 import type { Metadata } from "next";
 import { EnquiryForm } from "@/components/enquiry/EnquiryForm";
 import { PageHead } from "@/components/layout/PageHead";
+import { FaqList } from "@/components/ui/FaqList";
 import { ArrowRight } from "@/components/ui/icons";
 import { site } from "@/content/site";
 import { getSiteSettings, type SiteSettings } from "@/lib/content";
 
 export const metadata: Metadata = {
-  title: "Contact us",
+  title: { absolute: "Contact Us in Rajkot: Call, WhatsApp, Email | CNA Camp" },
   description:
-    "Call, WhatsApp or email Climber Nature Adventure Club, Rajkot. Office near 80 ft Road, Rajkot. Plan a camp, trek or school trip.",
+    "Call or WhatsApp +91 70463 61009, email us or visit our Rajkot office by appointment. Ask about treks, camps and school groups. We reply within a day.",
+  openGraph: {
+    title: "Talk to CNA: call, WhatsApp or email",
+    description: "Questions about a trip or a group? Reach a real person in Rajkot, usually within a day.",
+  },
   alternates: { canonical: "/contact" },
 };
 
+const faqs = [
+  { question: "What is the fastest way to reach you?", answer: "WhatsApp. We usually reply the same day." },
+  { question: "Can I visit the office?", answer: "Yes, by appointment. Call first so the right person is there to meet you." },
+  {
+    question: "I am a teacher planning a school camp. Who do I talk to?",
+    answer: "Call or WhatsApp the same number and say it is a school trip. We will guide you through dates, group size and permissions.",
+  },
+];
+
 const contactWays = (contact: SiteSettings) => [
-  { label: "Call", value: contact.phone, href: contact.phoneHref, note: "Mon–Sat, office hours (to confirm)" },
+  { label: "Call", value: contact.phone, href: contact.phoneHref, note: "Mon to Sat, office hours" },
   { label: "WhatsApp", value: "Chat with us", href: contact.whatsappHref, note: "Fastest reply, usually the same day" },
-  { label: "Email", value: contact.email, href: `mailto:${contact.email}`, note: "Trips, camps and groups" },
+  { label: "Email", value: contact.email, href: `mailto:${contact.email}`, note: "Trips, camps and group bookings" },
   ...(contact.trustEmail
     ? [{ label: "Trust email", value: contact.trustEmail, href: `mailto:${contact.trustEmail}`, note: site.trust.name }]
     : []),
@@ -32,8 +46,10 @@ export default async function ContactPage() {
         imgAlt="CNA trip leaders talking with a group of campers at camp"
         eyebrow="Contact"
         title="Talk to a real person"
-        text="Fill the form or reach us directly. Our team usually replies within a day, most often on WhatsApp."
-      />
+        text="Questions about a trip, a school group or a date? Send a message. The person who replies has been on these trips."
+      >
+        <p className="mt-3 text-[15px] font-medium text-light/75">Usually within a day, most often on WhatsApp.</p>
+      </PageHead>
       <section className="wrap mt-12 grid gap-12 lg:grid-cols-[1fr_1.2fr]">
         <div className="space-y-4">
           {ways.map((w) => (
@@ -73,14 +89,20 @@ export default async function ContactPage() {
           <div id="payments" className="scroll-mt-28 rounded-card bg-soft p-5">
             <p className="eyebrow">Payments</p>
             <p className="mt-2">
-              Book with a 25% advance once your batch is confirmed; the balance is due 3 days before departure. Payment details are shared
-              directly by our team, never on public pages.
+              Book with a 25% advance once your batch is confirmed. The balance is due 3 days before departure. Our team shares payment
+              details with you directly. We never post bank or UPI details on public pages, and we will never ask for your card PIN or OTP.
             </p>
           </div>
         </div>
         <div id="enquire" className="scroll-mt-28">
-          <EnquiryForm title="Send us an enquiry" />
+          <EnquiryForm title="Send us an enquiry" intro="Tell us a little. We reply within a day, usually on WhatsApp." />
         </div>
+      </section>
+
+      <section className="wrap mt-20 max-w-3xl">
+        <p className="eyebrow">FAQs</p>
+        <h2 className="h-section mt-3">Quick answers</h2>
+        <FaqList faqs={faqs} className="mt-6" />
       </section>
     </>
   );

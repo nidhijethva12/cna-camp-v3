@@ -29,9 +29,13 @@ import { registrationStatus } from "@/lib/olympiad";
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: "Adventure Olympiad 1.0 · Eco-STEM quiz & Manali camp scholarship",
+  title: { absolute: "Adventure Olympiad: Eco-STEM Quiz & Manali Camp | CNA Camp" },
   description:
-    "India’s 1st Adventure Olympiad: an Eco-STEM online quiz for ages 14-25 in Gujarat. Win up to 100% scholarship for the ₹18,000 Astro Adventure Trekking Camp in Manali.",
+    "Eco-STEM online quiz for ages 14 to 25 across Gujarat. 100 MCQs, 5 rounds, scholarships up to 100% on the ₹18,000 Manali camp. Fees from ₹90.",
+  openGraph: {
+    title: "Take the quiz. Win a camp in the Himalaya.",
+    description: "An Eco-STEM quiz for Gujarat students aged 14 to 25. Top scorers go to Manali on up to 100% scholarship.",
+  },
   alternates: { canonical: "/olympiad" },
 };
 
@@ -48,7 +52,7 @@ const jumpLinks = [
 ];
 
 const statusText = {
-  soon: "Registration opens 02 April 2026",
+  soon: "Registration opens 2 April 2026",
   open: "Registration open · closes 20 June 2026",
   closed: "Registration closed on 20 June 2026 · quiz rounds in progress",
 };
@@ -76,11 +80,12 @@ export default async function OlympiadPage() {
             {o.tagline}
           </p>
           <h1 className="h-page mt-5 max-w-4xl">{o.name}</h1>
-          <p className="mt-2 text-[13.5px] font-medium text-secondary">Eco-STEM online quiz · Mountain · Desert · Marine</p>
+          <p className="mt-2 text-[13.5px] font-medium text-secondary">An Eco-STEM online quiz · Mountain · Desert · Marine</p>
           <p className="mt-6 max-w-2xl text-[18px] leading-relaxed text-light/85">
-            Take the Eco-STEM quiz. Score high and win up to <strong className="text-light">100% scholarship</strong> for the Astro
-            Adventure Trekking Camp in Manali. Open for students aged 14–25 and teachers from{" "}
-            <strong className="text-light">every district of Gujarat</strong>. Camp fee ₹18,000: your scholarship covers it.
+            Answer 100 questions. Clear five rounds. The top scorers go to the Himalaya on a scholarship of up to{" "}
+            <strong className="text-light">100%</strong> for our Astro Adventure Trekking Camp in Manali (camp fee ₹18,000). Open to
+            students aged 14 to 25, and to teachers and sports persons, from{" "}
+            <strong className="text-light">every district of Gujarat</strong>.
           </p>
           <p
             className={`mt-6 inline-flex items-center gap-2 text-[15px] font-semibold ${status === "open" ? "text-live-light" : "text-light/85"}`}
@@ -99,9 +104,7 @@ export default async function OlympiadPage() {
               How it works <ArrowDown />
             </a>
           </div>
-          <p className="mt-5 text-[13px] text-light/60">
-            Follows the State Government of Gujarat guidelines for environment education trips.
-          </p>
+          <p className="mt-5 text-[13px] text-light/60">Follows the Government of Gujarat guidelines for environment education trips.</p>
         </div>
       </section>
 
@@ -184,13 +187,13 @@ export default async function OlympiadPage() {
             </div>
           ))}
         </div>
-        <p className="mt-3 text-[13.5px] font-medium text-muted">Non-refundable registration fee · online payment only</p>
+        <p className="mt-3 text-[13.5px] font-medium text-muted">Registration fee is non-refundable. Online payment only.</p>
       </section>
 
       <section className="mt-24 bg-soft py-20">
         <div className="wrap grid gap-12 lg:grid-cols-[1.1fr_1fr] lg:items-center">
           <div>
-            <SectionHeader eyebrow="About the Olympiad" title="India’s first adventure scholarship program" />
+            <SectionHeader eyebrow="About the Olympiad" title="A quiz that ends on a mountain" />
             <div className="-mt-4 space-y-4 text-[17px] leading-relaxed text-muted">
               {o.about.map((p) => (
                 <p key={p}>{p}</p>
@@ -221,7 +224,7 @@ export default async function OlympiadPage() {
         <SectionHeader
           eyebrow="Age groups & fees"
           title="Choose your group"
-          intro="Pick the group that matches your age and current standard. A wrong choice means automatic disqualification, with no refund."
+          intro="Pick the group that matches your age and the class you study in. Choose carefully: a wrong group means automatic disqualification, and the fee is not refunded."
         />
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           {o.groups.map((g) => (
@@ -248,11 +251,7 @@ export default async function OlympiadPage() {
       </section>
 
       <section id="how" className="wrap mt-24 scroll-mt-28">
-        <SectionHeader
-          eyebrow="How it works"
-          title="Your journey to Manali"
-          intro="From registration to the adventure camp in four clear steps."
-        />
+        <SectionHeader eyebrow="How it works" title="From your phone to the Himalaya, in four steps" />
         <ol className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {o.steps.map(([icon, title, text], i) => (
             <li key={title} className="rounded-card border border-line p-6">
@@ -333,10 +332,10 @@ export default async function OlympiadPage() {
           eyebrow="Scholarships"
           title={
             <>
-              Dedicated to two Lamps of Nature <Leaf className="text-success" />
+              Named after two lamps of nature <Leaf className="text-success" />
             </>
           }
-          intro={`Your scholarship percentage applies to the ₹${o.campFee.toLocaleString("en-IN")} camp fee.`}
+          intro={`Your scholarship is a percentage of the ₹${o.campFee.toLocaleString("en-IN")} camp fee. You can apply for only one.`}
         />
         <div className="grid gap-6 lg:grid-cols-2">
           {o.scholarships.map((s) => (
@@ -382,8 +381,8 @@ export default async function OlympiadPage() {
         <div className="wrap">
           <SectionHeader
             eyebrow="What’s included"
-            title="The Manali camp experience"
-            intro="Astro Adventure Trekking Camp: everything organised by qualified instructors."
+            title="Ten days in Manali, all planned"
+            intro="The Astro Adventure Trekking Camp runs from our own campus at Vashisht, Manali. Qualified instructors run every activity."
             action={{ label: "Camp page", href: "/trips/astro-adventure-manali" }}
           />
           <ul className="mb-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
@@ -416,10 +415,7 @@ export default async function OlympiadPage() {
             <FeatureIcon name="noPhone" tone="accent" size="lg" />
             <div>
               <p className="display text-[28px]">Unplug. Explore. Discover.</p>
-              <p className="mt-1 text-light/70">
-                A digital detox camp: disconnect from screens and reconnect with nature, your friends and yourself. Think original, feel
-                original.
-              </p>
+              <p className="mt-1 text-light/70">Ten days with fewer screens and more sky, friends and fresh air.</p>
             </div>
           </div>
         </div>
@@ -430,7 +426,9 @@ export default async function OlympiadPage() {
           <div>
             <p className="eyebrow">Open for</p>
             <h2 className="display h-section mt-2">Every district of Gujarat</h2>
-            <p className="mt-2 max-w-xl text-muted">Any eligible student or teacher from anywhere in Gujarat can register.</p>
+            <p className="mt-2 max-w-xl text-muted">
+              Any eligible student or teacher in Gujarat can register, from a village school in Kutch to a college in Surat.
+            </p>
           </div>
           <ul className="flex flex-wrap gap-2">
             {o.regions.map((d) => (
@@ -453,7 +451,7 @@ export default async function OlympiadPage() {
           <div className="rounded-card border border-line p-6">
             <h3 className="flex items-center gap-2 text-[22px] leading-normal">
               <SealCheck className="text-success" />
-              Eligibility
+              Who can apply
             </h3>
             <ul className="mt-4 space-y-3">
               {o.eligibility.map((x) => (
@@ -467,7 +465,7 @@ export default async function OlympiadPage() {
           <div className="rounded-card border border-primary p-6">
             <h3 className="flex items-center gap-2 text-[22px] leading-normal">
               <Warning className="text-primary" />
-              Important rules
+              Please read carefully
             </h3>
             <ul className="mt-4 space-y-3">
               {o.rules.map((x) => (
@@ -490,7 +488,7 @@ export default async function OlympiadPage() {
             ...o.faqs.map((f) => ({ question: f.q, answer: f.a })),
             {
               question: "How do I contact the organisers?",
-              answer: `Phone / WhatsApp ${contact.phone} · Email ${contact.email} · Office: ${contact.address.full}. Visits by appointment only, so please call first.`,
+              answer: `Call or WhatsApp ${contact.phone}, or email ${contact.email}. Office: ${contact.address.full}. Visits by appointment only, so please call first.`,
             },
           ]}
         />
@@ -499,15 +497,15 @@ export default async function OlympiadPage() {
       <section className="wrap mt-24">
         <div className="relative overflow-hidden rounded-card bg-dark p-8 text-light sm:p-12">
           <div className="absolute inset-0 opacity-25">
-            <Photo img="valley" wide sizes="(min-width: 1240px) 1176px, 100vw" />
+            <Photo img="cna/real/land-10" wide sizes="(min-width: 1240px) 1176px, 100vw" />
           </div>
           <div className="relative">
             <p className="flex items-center gap-2 text-[13.5px] font-medium text-secondary">
               <Clock className="text-[15px]" />
               {statusText[status]}
             </p>
-            <h2 className="h-section mt-3 max-w-2xl">Ready for the adventure of a lifetime?</h2>
-            <p className="mt-3 max-w-xl text-light/75">Score high on the Eco-STEM quiz and earn your scholarship to Manali.</p>
+            <h2 className="h-section mt-3 max-w-2xl">Your seat in the Himalaya starts with one quiz</h2>
+            <p className="mt-3 max-w-xl text-light/75">Score well, pick the right scholarship and we will see you at camp in Manali.</p>
             <div className="mt-6 flex flex-wrap gap-x-8 gap-y-3">
               {o.fees.map((f) => (
                 <span key={f.who}>
@@ -519,7 +517,7 @@ export default async function OlympiadPage() {
             <a href={cta.href} target="_blank" rel="noopener" className="btn btn-primary mt-8">
               {cta.label} <ArrowRight />
             </a>
-            <p className="mt-4 text-[13px] text-light/55">All disputes subject to Rajkot jurisdiction.</p>
+            <p className="mt-4 text-[13px] text-light/55">All disputes are subject to Rajkot jurisdiction.</p>
           </div>
         </div>
       </section>

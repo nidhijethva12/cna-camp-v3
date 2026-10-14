@@ -46,7 +46,7 @@ export async function generateMetadata({ params }: PageProps<"/trips/[slug]">): 
   const path = `/trips/${trip.slug}`;
   const image = trip.seo.image ?? trip.img;
   return {
-    title: trip.seo.title ?? trip.name,
+    title: trip.seo.title ? { absolute: trip.seo.title } : trip.name,
     description: tripDescription(trip),
     alternates: { canonical: path },
     openGraph: {
@@ -198,13 +198,23 @@ export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
 
           <section id="overview" className="mt-14 scroll-mt-32">
             <h2 className="h-sub">Overview</h2>
-            <p className="lead mt-4">
-              {trip.overview ?? trip.summary} {tripTypeLine[trip.type]}
-            </p>
-            <p className="lead mt-3">
-              Like every CNA trip, it is run by a nature club backed by {site.trust.name}, on a no-profit-no-loss model. Small groups,
-              trained leaders, leave-no-trace.
-            </p>
+            {trip.overview ? (
+              trip.overview.split(/\n\s*\n/).map((p, i) => (
+                <p key={i} className={`lead ${i ? "mt-3" : "mt-4"}`}>
+                  {p}
+                </p>
+              ))
+            ) : (
+              <>
+                <p className="lead mt-4">
+                  {trip.summary} {tripTypeLine[trip.type]}
+                </p>
+                <p className="lead mt-3">
+                  Like every CNA trip, it is run by a nature club backed by {site.trust.name}, on a no-profit-no-loss model. Small groups,
+                  trained leaders, leave-no-trace.
+                </p>
+              </>
+            )}
             <div className="mt-8 grid gap-6 md:grid-cols-2">
               <div className="rounded-card bg-soft p-6">
                 <p className="eyebrow">Highlights</p>
@@ -329,7 +339,7 @@ export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
             <div className="flex flex-wrap items-end justify-between gap-3">
               <h2 className="h-sub">Day by day</h2>
               <p className="text-[14px] text-muted">
-                {trip.planIsReal ? "Final plan shared on booking" : "Sample itinerary · final plan on enquiry"}
+                {trip.planIsReal ? "Final plan shared on booking" : "Sample plan · final plan shared on booking"}
               </p>
             </div>
             <ol className="mt-6 border-l-2 border-dashed border-line pl-6">

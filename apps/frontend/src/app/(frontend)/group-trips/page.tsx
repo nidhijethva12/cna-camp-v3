@@ -11,9 +11,13 @@ import { yearsActive } from "@/content/site";
 import { getSiteSettings, getTrips } from "@/lib/content";
 
 export const metadata: Metadata = {
-  title: "Group trips & custom trips",
+  title: { absolute: "Group Trips for Schools, Colleges & Teams | CNA Camp" },
   description:
-    "Custom treks, camps and nature trails for schools, colleges, families, friends, corporate teams, teachers, NGOs and clubs. CNA, Rajkot, since 1997.",
+    "Custom treks, camps and nature trails for schools, colleges, families, friends and teams. 1 teacher free per 25 students. Tell us your dates, we plan it.",
+  openGraph: {
+    title: "Group trips, planned around your group",
+    description: "Schools, colleges, families and teams: pick the dates, we handle travel, stay, food and safety.",
+  },
   alternates: { canonical: "/group-trips" },
 };
 
@@ -28,7 +32,7 @@ export default async function GroupTripsPage() {
         imgAlt="A large group of CNA campers sitting together in a Himalayan forest"
         eyebrow="Group trips"
         title="Your group. Your dates. We plan the rest."
-        text="Custom treks, camps and nature trails for schools, colleges, families, friends, companies and clubs. From Gujarat to the Himalaya."
+        text="Treks, camps and nature trails built around your group: a school class, a college club, three families, a team from work. Anywhere from the Gujarat coast to the Himalaya."
       >
         <div className="mt-8 flex flex-wrap gap-3">
           <a href="#custom" className="btn btn-primary">
@@ -44,7 +48,7 @@ export default async function GroupTripsPage() {
         <SectionHeader
           eyebrow="Who we plan for"
           title="Every kind of group"
-          intro="Tell us who is coming. We shape the trip around them."
+          intro="Tell us who is coming. The trip, the pace and the food follow from that."
         />
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {groupKinds.map((k) => (
@@ -72,8 +76,8 @@ export default async function GroupTripsPage() {
               <p className="text-[13.5px] font-medium text-light/80">For teachers &amp; principals</p>
               <h2 className="h-section mt-2">Every 25 students, one teacher travels free.</h2>
               <p className="mt-3 max-w-xl text-light/85">
-                School trips with CNA start at 50 students. For every 25 students, one teacher or escort joins at no cost. Nature learning,
-                safety and the full plan handled by us.
+                School trips with CNA start at 50 students. For every 25 students, one teacher or escort joins at no cost. We plan the
+                nature sessions, run the safety checks and keep parents informed, so your staff can focus on the children.
               </p>
             </div>
             <div className="flex flex-wrap gap-3 lg:justify-end">
@@ -143,8 +147,8 @@ export default async function GroupTripsPage() {
           <p className="eyebrow">Custom trip</p>
           <h2 className="h-section mt-3">Don&apos;t see your trip? We build it.</h2>
           <p className="mt-4 text-[17px] leading-relaxed text-muted">
-            Any destination from our list, your dates, your group size. Fill the form or call us. Booking is simple: 25% advance to block
-            dates, balance 3 days before you leave.
+            Pick any place from our list, your dates and your group size. Fill the form or call us. To block your dates, pay 25% in advance.
+            The balance is due 3 days before you leave.
           </p>
           <div className="mt-8 space-y-3">
             <a href={contact.phoneHref} className="flex items-center justify-between rounded-card border border-line p-4 hover:border-dark">

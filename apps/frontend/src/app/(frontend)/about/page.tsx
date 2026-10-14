@@ -86,7 +86,7 @@ export default async function AboutPage() {
             <div key={label} className="bg-light p-6 sm:p-8">
               <dt className="text-[13.5px] font-medium text-muted">{label}</dt>
               <dd>
-                <CountUp value={n} className="display mt-2 text-[40px] sm:text-[52px]" />
+                <CountUp value={n} className="display mt-2 text-[30px] sm:text-[44px] lg:text-[52px]" />
               </dd>
             </div>
           ))}

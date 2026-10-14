@@ -5,8 +5,13 @@ import { privacySections } from "@/content/legal";
 import { getSiteSettings } from "@/lib/content";
 
 export const metadata: Metadata = {
-  title: "Privacy policy",
-  description: "How Climber Nature Adventure Club collects, uses and protects your personal data.",
+  title: { absolute: "Privacy Policy (DPDP Act 2023) | CNA Camp" },
+  description:
+    "What personal data CNA collects on forms, camps and the Olympiad, why we use it, how long we keep it and your rights under India’s DPDP Act 2023.",
+  openGraph: {
+    title: "Privacy policy | CNA Camp",
+    description: "What we collect, why, and how you stay in control of your data.",
+  },
   alternates: { canonical: "/privacy" },
 };
 
@@ -14,10 +19,14 @@ export default async function PrivacyPage() {
   const contact = await getSiteSettings();
   return (
     <>
-      <PageHead eyebrow="Policies" title={<>Privacy policy</>} text="What we collect, why, and how you stay in control of your data." />
+      <PageHead
+        eyebrow="Policies"
+        title={<>Privacy policy</>}
+        text="What we collect, why we need it, and how you stay in control. Written for India’s Digital Personal Data Protection Act, 2023 (DPDP Act)."
+      />
       <LegalPage
         sections={privacySections(contact)}
-        note="Draft for the preview, written for India’s DPDP Act 2023. To be reviewed by CNA and a legal adviser before launch."
+        note="Draft, legal review before launch. Written for India’s DPDP Act 2023, to be reviewed by CNA and a legal adviser before the site goes live."
       />
     </>
   );

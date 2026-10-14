@@ -4,6 +4,7 @@ import Link from "next/link";
 import { PageHead } from "@/components/layout/PageHead";
 import { Lightbox } from "@/components/media/Lightbox";
 import { Photo } from "@/components/media/Photo";
+import { RegionChips } from "@/components/media/RegionChips";
 import { VideoGrid } from "@/components/media/VideoGrid";
 import { ArrowRight } from "@/components/ui/icons";
 import { regionOrder, regions } from "@/content/site";
@@ -11,8 +12,13 @@ import { getHome, getTrips, getVideos } from "@/lib/content";
 import { photoSrc } from "@/lib/photos";
 
 export const metadata: Metadata = {
-  title: "Gallery",
-  description: "Photos from CNA camps and treks: campfires, rafting, climbing, beaches, forests and the Himalaya. Since 1997.",
+  title: { absolute: "Photos & Videos from Our Treks and Camps | CNA Camp" },
+  description:
+    "Real photos from CNA camps: river crossings, rappelling, snow days, Manali campus life and group trips. See what a CNA trip looks like before you book one.",
+  openGraph: {
+    title: "Moments from the trail | CNA Camp",
+    description: "River crossings, rope days and campfire nights from real CNA camps.",
+  },
   alternates: { canonical: "/gallery" },
 };
 
@@ -32,7 +38,7 @@ export default async function GalleryPage() {
         imgAlt="CNA campers crossing a river on a wooden bridge near Manali"
         eyebrow="Gallery"
         title="Moments from the trail"
-        text="Campfires, river crossings, reef walks and summit mornings. Tap any photo to see it big."
+        text="No models, no stock smiles. These are our campers on a wooden bridge over a cold river, in a lunch queue with a mountain behind them, halfway down a rock on a rope. Tap any photo to see it big."
       />
 
       <Lightbox>
@@ -40,9 +46,12 @@ export default async function GalleryPage() {
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
               <p className="eyebrow">Our people</p>
-              <h2 className="h-section mt-2">CNA moments</h2>
+              <h2 className="h-section mt-2">Real groups, real camps</h2>
             </div>
-            <p className="max-w-md text-muted">Real groups on real CNA camps. Send us yours and we add them here.</p>
+            <p className="max-w-md text-muted">
+              Shot by our leaders and campers. Were you on a CNA trip? Send us your best photo on WhatsApp and we may add it here, with your
+              name.
+            </p>
           </div>
           <div className="gal mt-8 columns-2 gap-3 sm:columns-3 lg:columns-4">
             {moments.map((m) => (
@@ -90,15 +99,9 @@ export default async function GalleryPage() {
         <section className="wrap mt-20">
           <div>
             <p className="eyebrow">Albums</p>
-            <h2 className="h-section mt-2">By trip</h2>
+            <h2 className="h-section mt-2">Photos by trip</h2>
           </div>
-          <nav className="mt-6 flex flex-wrap gap-x-6 gap-y-2" aria-label="Albums by region">
-            {albumRegions.map((r) => (
-              <a key={r} href={`#${r}`} className="font-semibold underline-offset-4 hover:text-primary hover:underline">
-                {regions[r].label}
-              </a>
-            ))}
-          </nav>
+          <RegionChips label="Albums by region" regions={albumRegions.map((r) => ({ id: r, label: regions[r].label }))} />
           {albumRegions.map((r) => (
             <div key={r} id={r} className="mt-12 scroll-mt-28">
               <p className="display text-[30px]">{regions[r].label}</p>
@@ -125,7 +128,7 @@ export default async function GalleryPage() {
                           >
                             <Photo
                               img={p}
-                              alt={`${trip.name}, photo ${i + 1}`}
+                              alt={p.alt || `${trip.name}, photo ${i + 1}`}
                               sizes={i === 0 ? "(min-width: 1024px) 290px, 50vw" : "(min-width: 1024px) 145px, 25vw"}
                               className="transition duration-500 group-hover:scale-[1.06]"
                             />
@@ -138,7 +141,7 @@ export default async function GalleryPage() {
             </div>
           ))}
           <p className="mt-12 rounded-card bg-soft p-5 text-[14px] text-muted">
-            Some destination photos are placeholders from our old website and will be replaced with CNA’s own trip photos.
+            Some trip photos are place photos for now. We are replacing them with photos from our own camps.
           </p>
         </section>
       </Lightbox>
