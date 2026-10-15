@@ -6,9 +6,8 @@ const baseCsp = [
   "base-uri 'self'",
   "form-action 'self'",
   "object-src 'none'",
-  ...(process.env.NODE_ENV === "production" && !process.env.NEXT_PUBLIC_SITE_URL?.startsWith("http://")
-    ? ["upgrade-insecure-requests"]
-    : []),
+  // Vercel always serves https; a local `next start` is plain http.
+  ...(process.env.VERCEL ? ["upgrade-insecure-requests"] : []),
 ];
 
 const blobStorage = "https://*.public.blob.vercel-storage.com";

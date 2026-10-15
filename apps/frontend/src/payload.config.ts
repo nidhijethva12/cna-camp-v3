@@ -59,8 +59,6 @@ function emailAdapter() {
   });
 }
 
-requireEnv("NEXT_PUBLIC_SITE_URL");
-
 export default buildConfig({
   serverURL: siteUrl,
   secret: requireEnv("PAYLOAD_SECRET"),
