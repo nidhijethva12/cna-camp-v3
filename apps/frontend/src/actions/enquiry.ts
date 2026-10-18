@@ -99,7 +99,7 @@ export async function submitEnquiry(_prev: EnquiryState, fd: FormData): Promise<
       if (recent.totalDocs >= LIMITS.perVisitor) {
         return {
           status: "error",
-          message: "You have sent several enquiries in the last few minutes. Please wait a little, or reach us on WhatsApp.",
+          message: "You have sent several enquiries in the last few minutes. Please wait a little, or call us.",
           values,
         };
       }
@@ -149,7 +149,7 @@ export async function submitEnquiry(_prev: EnquiryState, fd: FormData): Promise<
     console.error("[enquiry] save failed", err);
     return {
       status: "error",
-      message: "We couldn't send your enquiry just now. Please try again, or reach us on WhatsApp.",
+      message: "We couldn't send your enquiry just now. Please try again, or call us.",
       values,
     };
   }

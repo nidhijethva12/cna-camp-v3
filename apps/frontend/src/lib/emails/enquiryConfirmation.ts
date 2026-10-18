@@ -18,9 +18,9 @@ export function enquiryConfirmationEmail({ name, tripName, contact }: Confirmati
   const text = [
     `Hi ${firstName},`,
     "",
-    `Thank you for contacting ${site.name}. We have received ${about}, and our team will get in touch with you soon, usually within a day on WhatsApp or phone.`,
+    `Thank you for contacting ${site.name}. We have received ${about}, and our team will reply to this email within a day.`,
     "",
-    `For anything urgent, call or WhatsApp us on ${contact.phone}.`,
+    `For anything urgent, call us on ${contact.phone}.`,
     "",
     `Team ${site.name}`,
     site.legalName,
@@ -31,8 +31,8 @@ export function enquiryConfirmationEmail({ name, tripName, contact }: Confirmati
   <body style="margin:0;padding:24px;background:#f6f4ef;font-family:Arial,Helvetica,sans-serif;color:#1f1f1f;font-size:16px;line-height:1.6">
     <div style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:12px;padding:32px">
       <p style="margin:0 0 16px">Hi ${escapeHtml(firstName)},</p>
-      <p style="margin:0 0 16px">Thank you for contacting ${site.name}. We have received ${escapeHtml(about)}, and our team will get in touch with you soon, usually within a day on WhatsApp or phone.</p>
-      <p style="margin:0 0 24px">For anything urgent, call or WhatsApp us on <a href="${escapeHtml(contact.phoneHref)}" style="color:#1f1f1f;font-weight:bold">${escapeHtml(contact.phone)}</a>.</p>
+      <p style="margin:0 0 16px">Thank you for contacting ${site.name}. We have received ${escapeHtml(about)}, and our team will reply to this email within a day.</p>
+      <p style="margin:0 0 24px">For anything urgent, call us on <a href="${escapeHtml(contact.phoneHref)}" style="color:#1f1f1f;font-weight:bold">${escapeHtml(contact.phone)}</a>.</p>
       <p style="margin:0">Team ${site.name}<br><span style="color:#6b6b6b">${site.legalName}</span></p>
     </div>
   </body>
