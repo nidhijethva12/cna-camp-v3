@@ -14,12 +14,7 @@ export function UpcomingBatches({ batches }: { batches: UpcomingBatch[] }) {
       <SectionHeader
         id="batches-title"
         eyebrow="Upcoming batches"
-        title={
-          <>
-            Pick a date. <br className="hidden sm:block" />
-            Pack your bag.
-          </>
-        }
+        title="Pick a date. Pack your bag."
         intro="Fixed departures you can join alone or with your gang. Seats are limited, and they do go."
         action={{ label: "See all batches", href: "/batches" }}
       />

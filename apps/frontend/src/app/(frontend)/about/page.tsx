@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { PageHead } from "@/components/layout/PageHead";
 import { Photo } from "@/components/media/Photo";
@@ -221,10 +222,19 @@ export default async function AboutPage() {
 
       <section className="wrap mt-20">
         <div className="flex flex-col gap-6 rounded-card border border-dark p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
-          <div>
-            <p className="eyebrow">Backed by</p>
-            <p className="mt-2 text-[24px] font-bold">{site.trust.name}</p>
-            <p className="mt-1 text-muted">Registered charitable trust · Reg. {site.trust.registration} · Rajkot</p>
+          <div className="flex items-center gap-5">
+            <Image
+              src={site.trust.logo}
+              alt={`${site.trust.name} logo`}
+              width={88}
+              height={88}
+              className="h-20 w-20 shrink-0 sm:h-22 sm:w-22"
+            />
+            <div>
+              <p className="eyebrow">Backed by</p>
+              <p className="mt-2 text-[22px] leading-tight font-bold sm:text-[24px]">{site.trust.name}</p>
+              <p className="mt-1 text-muted">Registered charitable trust · Reg. {site.trust.registration} · Rajkot</p>
+            </div>
           </div>
           <Link href="/contact" className="btn btn-outline shrink-0">
             Contact us <ArrowRight />

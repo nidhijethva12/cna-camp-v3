@@ -31,7 +31,7 @@ export function JourneyStats({ tripCount, counts }: JourneyStatsProps) {
         <p className="mx-auto mt-4 max-w-2xl text-[17px] text-light/75">
           It started with one marine camp. Today it is {counts.camps} camps across India and Nepal, and a lot of happy, tired campers.
         </p>
-        <ul className="mt-8 grid grid-cols-2 gap-3 sm:mt-12 sm:gap-4 lg:grid-cols-4">
+        <ul className="rail rail-stats mt-8 grid grid-cols-2 gap-3 sm:mt-12 sm:gap-4 lg:grid-cols-4">
           {stats.map((s) => (
             <li
               key={s.label}

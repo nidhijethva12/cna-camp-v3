@@ -13,7 +13,7 @@ interface SectionHeaderProps {
 
 export function SectionHeader({ eyebrow, title, intro, action, dark, id }: SectionHeaderProps) {
   return (
-    <div className="mb-10 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+    <div className="mb-7 flex flex-col gap-4 sm:mb-10 sm:gap-5 md:flex-row md:items-end md:justify-between">
       <div className="max-w-3xl">
         <p className={`eyebrow ${dark ? "text-light/60!" : ""}`}>{eyebrow}</p>
         <h2 id={id} className="h-section mt-3">

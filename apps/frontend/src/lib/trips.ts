@@ -132,7 +132,7 @@ export const tripFaqs = (t: Trip): Faq[] => t.faqs ?? defaultFaqs(t);
 export const tripDescription = (t: Trip) =>
   t.seo.description ?? `${t.summary} ${durationShort(t)} ${t.type.toLowerCase()} in ${t.state} with CNA, Rajkot.`;
 
-const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+export const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 /** Best months as ranges: ["Oct","Nov","Dec","Jan"] → "Oct to Jan"; gaps give "May, Aug to Sep"; all twelve → "All year". */
 export function monthRange(months: string[]) {

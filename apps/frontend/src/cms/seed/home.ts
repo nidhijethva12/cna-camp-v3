@@ -16,7 +16,6 @@ export const home = {
   },
   hero: {
     headingLines: ["Real trails.", "Real people.", "Real campfires."],
-    heading: "Treks, camps and nature trails from Gujarat to the Himalaya",
     intro:
       "Small groups, trained leaders and a plan built around nature. For schools, colleges, families, friends, girls-only groups and solo travellers.",
     image: photo("/img/stock/home-banner-1-wide.webp", "A forested Himalayan valley with a river below snow peaks"),
@@ -27,7 +26,7 @@ export const home = {
       photo("/img/stock/home-banner-4-wide.webp", "A green meadow camp with mountains behind"),
       photo("/img/stock/home-banner-6-wide.webp", "Mist rolling over green tea-covered hills"),
     ],
-    highlights: ["1,00,000+ campers", "1,000+ camps", "Backed by a registered trust"],
+    highlights: ["1,00,000+ campers", "1,000+ camps", "Backed by Saurashtra Education & Charitable Trust"],
   },
   holidays: {
     eyebrow: "Plan by holiday",

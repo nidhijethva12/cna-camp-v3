@@ -138,3 +138,27 @@ export const safetyPoints = [
 
 /** Placeholder roles until CNA shares team names and photos. */
 export const teamRoles = ["Trip leader", "Trip leader", "Instructor", "Camp coordinator"];
+
+/** Home page "Who we are" block, from the client's final home page copy. */
+export const homeStory = {
+  image: "cna/manali/03" as PhotoKey,
+  imageAlt: "A CNA group around a campfire on a Himalayan hillside",
+  badge: ["20+", "years"],
+  video: { tag: "Video coming soon", caption: "CNA in 60 seconds: 20+ years of camps" },
+  eyebrow: "Who we are",
+  title: "A nature club, not a tour company",
+  body: [
+    "CNA (Climber Nature Adventure Club) is a Rajkot club that takes people outdoors and teaches them to look after it. Our very first trip was a marine camp at Bet Dwarka, walking a coral reef at low tide. More than 1,000 camps later, the idea has not changed.",
+    "We do not sell sightseeing. We plan days around a reef, a forest, a river or a night sky, and we bring you back with stories and better habits.",
+  ],
+  points: [
+    ["Eco-tourism first", "Every camp has a nature goal: reefs, birds, forests or stars. And nobody leaves litter behind."],
+    [
+      "10 outdoor activities",
+      "Trekking, mountaineering, rock climbing, rappelling, rafting, river crossing, paragliding, bird watching, star gazing and marine life.",
+    ],
+    ["Our own Manali campus", "Swiss tents and rooms for 200 people in Vashisht, plus a partner campus at Bet Dwarka."],
+    ["Backed by a trust", "Saurashtra Education & Charitable Trust (Reg. E-5718/2000). We run on a no-profit-no-loss model."],
+  ],
+  link: { label: "Read our story", href: "/about" },
+};

@@ -3,29 +3,14 @@
 import { createHmac } from "node:crypto";
 import { headers } from "next/headers";
 import { after } from "next/server";
-import { regionOrder, regions, travellerTypes } from "@/content/site";
-import { enquiryDays, enquiryInterests, enquiryMonths, type EnquiryVariant } from "@/lib/enquiry";
+import { travellerTypes } from "@/content/site";
 import { enquiryConfirmationEmail } from "@/lib/emails/enquiryConfirmation";
 import { getSiteSettings, getTrips } from "@/lib/content";
 import { getCms } from "@/lib/payload";
-import type { Enquiry } from "@/payload-types";
 
-export type EnquiryField =
-  | "name"
-  | "phone"
-  | "email"
-  | "organisation"
-  | "trip"
-  | "travellerType"
-  | "groupSize"
-  | "region"
-  | "month"
-  | "days"
-  | "fromCity"
-  | "message"
-  | "consent";
+export type EnquiryField = "name" | "phone" | "email" | "trip" | "travellerType" | "message" | "consent";
 
-type EnquiryValues = Partial<Record<Exclude<EnquiryField, "consent">, string>> & { interests?: string[] };
+type EnquiryValues = Partial<Record<Exclude<EnquiryField, "consent">, string>>;
 
 export interface EnquiryState {
   status: "idle" | "success" | "error";
@@ -37,8 +22,6 @@ export interface EnquiryState {
 
 const INDIAN_MOBILE = /^(?:\+?91|0)?([6-9]\d{9})$/;
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const regionLabels = regionOrder.map((r) => regions[r].label);
-const groupTypes = travellerTypes.slice(1) as readonly string[];
 
 /** Letters in any script (incl. Gujarati/Hindi marks), spaces, dots, apostrophes and hyphens; no links. */
 const PERSON_NAME = /^[\p{L}\p{M}][\p{L}\p{M} .'-]*$/u;
@@ -74,36 +57,23 @@ const text = (fd: FormData, key: string, max = 200) =>
     .trim()
     .replace(/\s+/g, " ")
     .slice(0, max);
-const oneOf = (value: string, allowed: readonly string[]) => !value || allowed.includes(value);
 
 export async function submitEnquiry(_prev: EnquiryState, fd: FormData): Promise<EnquiryState> {
   if (text(fd, "website")) return { status: "success" };
 
-  const variant: EnquiryVariant = (["quick", "trip", "group"] as const).find((v) => v === fd.get("variant")) ?? "quick";
   const values = {
     name: text(fd, "name", 80),
     phone: text(fd, "phone", 20),
     email: text(fd, "email", 120).toLowerCase(),
-    organisation: text(fd, "organisation", 120),
     trip: text(fd, "trip"),
     travellerType: text(fd, "travellerType"),
-    groupSize: text(fd, "groupSize", 6),
-    region: text(fd, "region"),
-    month: text(fd, "month"),
-    days: text(fd, "days"),
-    fromCity: text(fd, "fromCity", 80),
     message: String(fd.get("message") ?? "")
       .trim()
       .slice(0, 1000),
-    interests: fd
-      .getAll("interests")
-      .map(String)
-      .filter((i) => enquiryInterests.includes(i)),
   } satisfies EnquiryValues;
 
   const mobile = values.phone.replace(/[\s()-]/g, "").match(INDIAN_MOBILE)?.[1];
   const trip = values.trip ? (await getTrips()).find((t) => t.slug === values.trip) : undefined;
-  const size = values.groupSize ? Number(values.groupSize) : undefined;
 
   const fieldErrors: EnquiryState["fieldErrors"] = {};
   if (values.name.length < 2) fieldErrors.name = "Please enter your name.";
@@ -111,18 +81,7 @@ export async function submitEnquiry(_prev: EnquiryState, fd: FormData): Promise<
   if (!mobile) fieldErrors.phone = "Please enter a 10-digit mobile number.";
   if (!EMAIL.test(values.email)) fieldErrors.email = "Please enter a valid email address.";
   if (values.trip && !trip) fieldErrors.trip = "Please pick a trip from the list.";
-  if (!oneOf(values.month, enquiryMonths)) fieldErrors.month = "Please pick a month from the list.";
-  if (variant === "group") {
-    if (!groupTypes.includes(values.travellerType)) fieldErrors.travellerType = "Please choose your group type.";
-    if (!size || !Number.isInteger(size) || size < 2 || size > 5000) fieldErrors.groupSize = "Please enter your group size (2 or more).";
-    if (!oneOf(values.region, regionLabels)) fieldErrors.region = "Please pick a region from the list.";
-    if (!oneOf(values.days, enquiryDays)) fieldErrors.days = "Please pick a trip length from the list.";
-  } else {
-    if (!(travellerTypes as readonly string[]).includes(values.travellerType))
-      fieldErrors.travellerType = "Please choose who is travelling.";
-    if (size !== undefined && (!Number.isInteger(size) || size < 1 || size > 5000))
-      fieldErrors.groupSize = "Please enter a number of people.";
-  }
+  if (!(travellerTypes as readonly string[]).includes(values.travellerType)) fieldErrors.travellerType = "Please choose who is travelling.";
   if (fd.get("consent") !== "on") fieldErrors.consent = "Please agree so we can contact you.";
 
   if (Object.keys(fieldErrors).length) {
@@ -158,26 +117,13 @@ export async function submitEnquiry(_prev: EnquiryState, fd: FormData): Promise<
       collection: "enquiries",
       overrideAccess: true,
       data: {
-        kind: variant,
         status: "new",
         name: values.name,
         phone: `+91${mobile}`,
         email: values.email,
         trip: tripDoc?.id,
         tripName: trip?.name,
-        travellerType: values.travellerType || undefined,
-        groupSize: size,
-        month: values.month ? (values.month.toLowerCase() as NonNullable<Enquiry["month"]>) : undefined,
-        group:
-          variant === "group"
-            ? {
-                organisation: values.organisation || undefined,
-                region: values.region || undefined,
-                days: values.days || undefined,
-                fromCity: values.fromCity || undefined,
-                interests: values.interests,
-              }
-            : undefined,
+        travellerType: values.travellerType,
         message: values.message || undefined,
         meta: { sourcePath: text(fd, "sourcePath") || "/", consentAt: new Date().toISOString(), ipHash },
       },

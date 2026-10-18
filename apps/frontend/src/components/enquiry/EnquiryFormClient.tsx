@@ -6,33 +6,24 @@ import { useActionState, type ReactNode } from "react";
 import { submitEnquiry, type EnquiryField, type EnquiryState } from "@/actions/enquiry";
 import { ArrowRight, CheckCircle } from "@/components/ui/icons";
 import { Select } from "@/components/ui/Select";
-import { regionOrder, regions, travellerTypes } from "@/content/site";
-import { enquiryDays, enquiryInterests, enquiryMonths, type EnquiryVariant } from "@/lib/enquiry";
+import { travellerTypes } from "@/content/site";
 
 export interface EnquiryFormProps {
   trips: { slug: string; name: string }[];
   /** For the "anything urgent, call" line after sending. */
   phone: { label: string; href: string };
-  variant?: EnquiryVariant;
+  /** Trip pages pre-select their own trip. */
   defaultTrip?: string;
-  title?: string;
-  intro?: string;
 }
 
 const initialState: EnquiryState = { status: "idle" };
 
-const headings: Record<EnquiryVariant, string> = {
-  quick: "Plan your next trip",
-  trip: "Ask about this trip",
-  group: "Plan a custom trip",
-};
-
 const options = (list: readonly string[]) => list.map((x) => ({ value: x, label: x }));
 
-export function EnquiryFormClient({ trips, phone, variant = "quick", defaultTrip = "", title, intro }: EnquiryFormProps) {
+/** The site's one enquiry form: every "Enquire" leads here, so every lead has the same fields. */
+export function EnquiryFormClient({ trips, phone, defaultTrip = "" }: EnquiryFormProps) {
   const [state, formAction, pending] = useActionState(submitEnquiry, initialState);
   const pathname = usePathname();
-  const isGroup = variant === "group";
 
   const err = (f: EnquiryField) => state.fieldErrors?.[f];
   const v = state.values ?? {};
@@ -43,15 +34,9 @@ export function EnquiryFormClient({ trips, phone, variant = "quick", defaultTrip
 
   return (
     <form action={formAction} className="relative rounded-card border border-dark bg-light p-6 sm:p-8" noValidate>
-      <p className="display h-sub">{title ?? headings[variant]}</p>
-      <p className="mt-2 text-[15px] text-muted">
-        {intro ??
-          (isGroup
-            ? "Tell us about your group. We send 2 or 3 options, usually on WhatsApp within a day."
-            : "Tell us where you want to go. We reply within a day, usually on WhatsApp.")}
-      </p>
+      <p className="display h-sub">Send us an enquiry</p>
+      <p className="mt-2 text-[15px] text-muted">Tell us a little. We reply within a day, usually on WhatsApp.</p>
 
-      <input type="hidden" name="variant" value={variant} />
       <input type="hidden" name="sourcePath" value={pathname} />
       <div
         aria-hidden="true"
@@ -80,7 +65,7 @@ export function EnquiryFormClient({ trips, phone, variant = "quick", defaultTrip
           />
         </Field>
 
-        <Field label="Email" field="email" error={err("email")} className={isGroup ? "" : "sm:col-span-2"}>
+        <Field label="Email" field="email" error={err("email")} className="sm:col-span-2">
           <input
             required
             name="email"
@@ -94,118 +79,31 @@ export function EnquiryFormClient({ trips, phone, variant = "quick", defaultTrip
           />
         </Field>
 
-        {isGroup ? (
-          <>
-            <Field label="School / college / company (optional)" field="organisation" error={err("organisation")}>
-              <input name="organisation" defaultValue={v.organisation} autoComplete="organization" className="field mt-2" />
-            </Field>
-            <Field label="Group type" field="travellerType" error={err("travellerType")}>
-              <Select
-                name="travellerType"
-                emptyLabel="Choose"
-                options={options(travellerTypes.slice(1))}
-                defaultValue={v.travellerType}
-                className="mt-2"
-                {...aria("travellerType")}
-              />
-            </Field>
-            <Field label="Group size" field="groupSize" error={err("groupSize")}>
-              <input
-                required
-                name="groupSize"
-                type="number"
-                min={2}
-                inputMode="numeric"
-                placeholder="e.g. 40"
-                defaultValue={v.groupSize}
-                className="field mt-2"
-                {...aria("groupSize")}
-              />
-            </Field>
-            <Field label="Where to" field="region" error={err("region")}>
-              <Select
-                name="region"
-                emptyLabel="Suggest for us"
-                options={options(regionOrder.map((r) => regions[r].label))}
-                defaultValue={v.region}
-                className="mt-2"
-              />
-            </Field>
-            <Field label="Month" field="month" error={err("month")}>
-              <Select name="month" emptyLabel="Flexible" options={options(enquiryMonths)} defaultValue={v.month} className="mt-2" />
-            </Field>
-            <Field label="Days" field="days" error={err("days")}>
-              <Select name="days" emptyLabel="Not sure" options={options(enquiryDays)} defaultValue={v.days} className="mt-2" />
-            </Field>
-            <Field label="Starting from (city)" field="fromCity" error={err("fromCity")}>
-              <input name="fromCity" placeholder="e.g. Rajkot" defaultValue={v.fromCity} className="field mt-2" />
-            </Field>
-            <fieldset className="sm:col-span-2">
-              <legend className="eyebrow">Interests (pick any)</legend>
-              <div className="mt-3 grid gap-x-4 gap-y-2 sm:grid-cols-2">
-                {enquiryInterests.map((x) => (
-                  <label key={x} className="flex cursor-pointer items-center gap-3 text-[15px]">
-                    <input
-                      type="checkbox"
-                      name="interests"
-                      value={x}
-                      defaultChecked={v.interests?.includes(x)}
-                      className="h-5 w-5 shrink-0 accent-primary"
-                    />
-                    {x}
-                  </label>
-                ))}
-              </div>
-            </fieldset>
-          </>
-        ) : (
-          <>
-            <Field label="Trip" field="trip" error={err("trip")}>
-              <Select
-                name="trip"
-                emptyLabel="Not sure yet, suggest one"
-                options={trips.map((t) => ({ value: t.slug, label: t.name }))}
-                defaultValue={v.trip ?? defaultTrip}
-                className="mt-2"
-                {...aria("trip")}
-              />
-            </Field>
-            <Field label="Who’s travelling" field="travellerType" error={err("travellerType")}>
-              <Select
-                name="travellerType"
-                options={options(travellerTypes)}
-                defaultValue={v.travellerType}
-                className="mt-2"
-                {...aria("travellerType")}
-              />
-            </Field>
-            {variant === "trip" && (
-              <>
-                <Field label="How many people" field="groupSize" error={err("groupSize")}>
-                  <input
-                    name="groupSize"
-                    type="number"
-                    min={1}
-                    inputMode="numeric"
-                    placeholder="e.g. 4"
-                    defaultValue={v.groupSize}
-                    className="field mt-2"
-                    {...aria("groupSize")}
-                  />
-                </Field>
-                <Field label="Preferred month" field="month" error={err("month")}>
-                  <Select name="month" emptyLabel="Flexible" options={options(enquiryMonths)} defaultValue={v.month} className="mt-2" />
-                </Field>
-              </>
-            )}
-          </>
-        )}
+        <Field label="Trip" field="trip" error={err("trip")}>
+          <Select
+            name="trip"
+            emptyLabel="Not sure yet, suggest one"
+            options={trips.map((t) => ({ value: t.slug, label: t.name }))}
+            defaultValue={v.trip ?? defaultTrip}
+            className="mt-2"
+            {...aria("trip")}
+          />
+        </Field>
+        <Field label="Who’s travelling" field="travellerType" error={err("travellerType")}>
+          <Select
+            name="travellerType"
+            options={options(travellerTypes)}
+            defaultValue={v.travellerType}
+            className="mt-2"
+            {...aria("travellerType")}
+          />
+        </Field>
 
         <Field label="Message (optional)" field="message" error={err("message")} className="sm:col-span-2">
           <textarea
             name="message"
             maxLength={1000}
-            placeholder={isGroup ? "Budget, special needs, ideas..." : "Month, number of people, anything we should know"}
+            placeholder="Month, number of people, anything we should know"
             defaultValue={v.message}
             className="field mt-2 min-h-24"
           />
@@ -214,7 +112,7 @@ export function EnquiryFormClient({ trips, phone, variant = "quick", defaultTrip
           <label className="flex items-start gap-3 text-[14px]">
             <input type="checkbox" name="consent" required className="mt-1 h-5 w-5 shrink-0 accent-primary" {...aria("consent")} />
             <span className="text-muted">
-              I agree that CNA can contact me about this {isGroup ? "request" : "enquiry"}, as per the{" "}
+              I agree that CNA can contact me about this enquiry, as per the{" "}
               <Link href="/privacy" className="underline">
                 privacy policy
               </Link>
@@ -229,7 +127,7 @@ export function EnquiryFormClient({ trips, phone, variant = "quick", defaultTrip
         <div role="status" className="mt-5 rounded-card border border-success bg-light px-4 py-3 text-[15px]">
           <p className="flex items-center gap-2 font-bold text-success">
             <CheckCircle className="text-[20px]" />
-            Thanks! Your {isGroup ? "trip request" : "enquiry"} is with us.
+            Thanks! Your enquiry is with us.
           </p>
           <p className="mt-1 text-muted">
             We will reply within a day, usually on WhatsApp. For anything urgent, call{" "}
@@ -248,7 +146,7 @@ export function EnquiryFormClient({ trips, phone, variant = "quick", defaultTrip
       )}
 
       <button type="submit" disabled={pending} className="btn btn-primary mt-6 w-full sm:w-auto">
-        {pending ? "Sending…" : isGroup ? "Send trip request" : "Send enquiry"}
+        {pending ? "Sending…" : "Send enquiry"}
         {!pending && <ArrowRight />}
       </button>
     </form>

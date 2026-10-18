@@ -19,7 +19,7 @@ export function Destinations({ content, counts }: DestinationsProps) {
           eyebrow={content.eyebrow}
           title={content.title}
           intro={content.intro ?? undefined}
-          action={{ label: "All destinations", href: "/destinations" }}
+          action={{ label: "All trips", href: "/trips" }}
         />
         <ul className="rail grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {regionOrder.map((r) => (

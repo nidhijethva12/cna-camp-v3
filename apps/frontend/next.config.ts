@@ -53,6 +53,10 @@ const nextConfig: NextConfig = {
     // breaks every CMS photo in local development. Production keeps the private-IP protection.
     dangerouslyAllowLocalIP: process.env.NODE_ENV === "development",
   },
+  // The destinations page was folded into the trips list; keep old and indexed links working.
+  async redirects() {
+    return [{ source: "/destinations", destination: "/trips", permanent: true }];
+  },
   async headers() {
     return [
       { source: "/:path*", headers: securityHeaders },

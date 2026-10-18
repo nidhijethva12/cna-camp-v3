@@ -284,7 +284,6 @@ function toHome(doc: Partial<HomeDoc>) {
   return {
     hero: {
       headingLines: hero?.headingLines ?? [],
-      heading: hero?.heading || null,
       intro: hero?.intro ?? "",
       // The same photo added twice would break the slideshow's keys, so repeats are dropped.
       images: [hero?.image, ...(hero?.slides ?? [])]

@@ -95,7 +95,7 @@ export default async function ContactPage() {
           </div>
         </div>
         <div id="enquire" className="scroll-mt-28">
-          <EnquiryForm title="Send us an enquiry" intro="Tell us a little. We reply within a day, usually on WhatsApp." />
+          <EnquiryForm />
         </div>
       </section>
 

@@ -55,14 +55,6 @@ export const HomePage: GlobalConfig = {
               required: true,
               admin: { description: "Each entry is one line; the last line is highlighted in yellow." },
             },
-            {
-              name: "heading",
-              type: "text",
-              admin: {
-                description:
-                  "The page's main heading for Google (H1), shown under the big lines, e.g. “Treks, camps and nature trails from Gujarat to the Himalaya”.",
-              },
-            },
             { name: "intro", type: "textarea", required: true },
             photo("image", "Wide landscape photo behind the heading; the first slide and the one shown when motion is reduced."),
             {

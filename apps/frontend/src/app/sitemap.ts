@@ -19,7 +19,6 @@ const pages: Entry[] = [
   { path: "/olympiad", priority: 0.8, changeFrequency: "weekly" },
   { path: "/group-trips", priority: 0.8, changeFrequency: "monthly" },
   { path: "/travellers", priority: 0.7, changeFrequency: "monthly" },
-  { path: "/destinations", priority: 0.7, changeFrequency: "monthly" },
   { path: "/about", priority: 0.7, changeFrequency: "monthly" },
   { path: "/gallery", priority: 0.6, changeFrequency: "monthly" },
   { path: "/blog", priority: 0.6, changeFrequency: "weekly" },

@@ -467,7 +467,7 @@ export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
       </div>
 
       <section id="enquire" className="wrap mt-20 scroll-mt-28">
-        <EnquiryForm variant="trip" defaultTrip={trip.slug} title={`Ask about ${trip.name}`} />
+        <EnquiryForm defaultTrip={trip.slug} />
       </section>
 
       <JsonLd data={tripLd} />

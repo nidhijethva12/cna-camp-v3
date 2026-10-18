@@ -32,7 +32,6 @@ const doc = (await payload.findGlobal({ slug: "home-page", depth: 0, draft: fals
 const next = structuredClone(doc);
 
 set(next.hero, "headingLines", home.hero.headingLines, "hero lines");
-set(next.hero, "heading", home.hero.heading, "hero H1");
 set(next.hero, "intro", home.hero.intro, "hero intro");
 set(next.hero, "highlights", home.hero.highlights, "hero highlights");
 

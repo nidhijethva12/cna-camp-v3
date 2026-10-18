@@ -12,6 +12,7 @@ export const site = {
   trust: {
     name: "Saurashtra Education & Charitable Trust",
     registration: "E-5718/2000",
+    logo: "/img/sect-logo.webp",
   },
   coordinates: "N 22.30° · E 70.80°",
 } as const;
@@ -26,7 +27,8 @@ export const regions: Record<RegionSlug, { label: string; blurb: string }> = {
   "outside-india": { label: "Outside India", blurb: "Everest Base Camp, Nepal" },
 };
 
-export const regionOrder: RegionSlug[] = ["gujarat", "across-india", "north-east", "outside-india"];
+/** Regions offered across the site (menus, filters, forms), in this order. */
+export const regionOrder: RegionSlug[] = ["gujarat", "north-east", "across-india"];
 
 export const tripsByRegionHref = (region: RegionSlug) => `/trips?region=${region}`;
 
@@ -44,11 +46,8 @@ export const mainNav: NavItem[] = [
     label: "Treks & Camps",
     href: "/trips",
     children: [
-      { label: "All trips", href: "/trips" },
       ...regionOrder.map((r) => ({ label: regions[r].label, href: tripsByRegionHref(r) })),
       { label: "Girls-only & solo", href: "/travellers" },
-      { label: "Destinations", href: "/destinations" },
-      { label: "Gallery", href: "/gallery" },
     ],
   },
   { label: "Upcoming Batches", href: "/batches" },
@@ -70,10 +69,11 @@ export const mainNav: NavItem[] = [
     href: "/about",
     children: [
       { label: "About us", href: "/about" },
-      { label: "Blog", href: "/blog" },
+      { label: "Gallery", href: "/gallery" },
       { label: "Contact us", href: "/contact" },
     ],
   },
+  { label: "Blog", href: "/blog" },
 ];
 
 export const footerNav = {

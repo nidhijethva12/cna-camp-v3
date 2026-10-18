@@ -182,7 +182,7 @@ export default async function GroupTripsPage() {
             </a>
           </div>
         </div>
-        <EnquiryForm variant="group" />
+        <EnquiryForm />
       </section>
     </>
   );

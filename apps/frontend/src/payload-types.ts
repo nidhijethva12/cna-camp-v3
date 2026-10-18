@@ -508,7 +508,6 @@ export interface Faq {
  */
 export interface Enquiry {
   id: string;
-  kind: 'quick' | 'trip' | 'group';
   status: 'new' | 'contacted' | 'booked' | 'closed';
   name: string;
   phone: string;
@@ -519,24 +518,15 @@ export interface Enquiry {
    */
   tripName?: string | null;
   travellerType?: string | null;
-  groupSize?: number | null;
-  month?: ('jan' | 'feb' | 'mar' | 'apr' | 'may' | 'jun' | 'jul' | 'aug' | 'sep' | 'oct' | 'nov' | 'dec') | null;
-  group?: {
-    organisation?: string | null;
-    /**
-     * Where to (empty = suggest for us).
-     */
-    region?: string | null;
-    days?: string | null;
-    fromCity?: string | null;
-    interests?: string[] | null;
-  };
   message?: string | null;
   /**
    * Visible to the CNA team only.
    */
   internalNotes?: string | null;
   meta?: {
+    /**
+     * The page the form was sent from.
+     */
     sourcePath?: string | null;
     consentAt?: string | null;
     ipHash?: string | null;
@@ -860,7 +850,6 @@ export interface VideosSelect<T extends boolean = true> {
  * via the `definition` "enquiries_select".
  */
 export interface EnquiriesSelect<T extends boolean = true> {
-  kind?: T;
   status?: T;
   name?: T;
   phone?: T;
@@ -868,17 +857,6 @@ export interface EnquiriesSelect<T extends boolean = true> {
   trip?: T;
   tripName?: T;
   travellerType?: T;
-  groupSize?: T;
-  month?: T;
-  group?:
-    | T
-    | {
-        organisation?: T;
-        region?: T;
-        days?: T;
-        fromCity?: T;
-        interests?: T;
-      };
   message?: T;
   internalNotes?: T;
   meta?:
@@ -966,10 +944,6 @@ export interface HomePage {
      * Each entry is one line; the last line is highlighted in yellow.
      */
     headingLines: string[];
-    /**
-     * The page's main heading for Google (H1), shown under the big lines, e.g. “Treks, camps and nature trails from Gujarat to the Himalaya”.
-     */
-    heading?: string | null;
     intro: string;
     /**
      * Wide landscape photo behind the heading; the first slide and the one shown when motion is reduced.
@@ -1155,7 +1129,6 @@ export interface HomePageSelect<T extends boolean = true> {
     | T
     | {
         headingLines?: T;
-        heading?: T;
         intro?: T;
         image?: T;
         slides?: T;

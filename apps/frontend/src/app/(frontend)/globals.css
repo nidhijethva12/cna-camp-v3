@@ -75,6 +75,13 @@
     line-height: 1.12;
     text-wrap: balance;
   }
+  /* No single word left alone on the last line of body text, on any screen size. */
+  p,
+  li,
+  dd,
+  figcaption {
+    text-wrap: pretty;
+  }
   h3 {
     font-family: var(--font-sans);
     font-weight: 700;
@@ -546,5 +553,19 @@
   .rail > * {
     flex: 0 0 82%;
     scroll-snap-align: start;
+  }
+  .rail-stats > * {
+    flex-basis: 44%;
+  }
+  .rail-md > * {
+    flex-basis: 66%;
+  }
+  .rail-inset {
+    gap: 12px;
+    margin-inline: -24px;
+    padding-inline: 24px;
+    scroll-padding-inline: 24px;
+    border-radius: 0;
+    background: none;
   }
 }

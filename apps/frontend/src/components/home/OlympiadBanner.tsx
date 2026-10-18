@@ -39,9 +39,9 @@ export function OlympiadBanner() {
               </Link>
             </div>
           </div>
-          <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-card bg-light/10">
+          <dl className="rail rail-stats rail-inset grid grid-cols-2 gap-px overflow-hidden rounded-card bg-light/10">
             {facts.map((f) => (
-              <div key={f.label} className="bg-dark/80 p-5">
+              <div key={f.label} className="bg-dark/80 p-5 max-sm:rounded-card max-sm:border max-sm:border-light/15">
                 <dt className="text-[13.5px] font-medium text-light/60">{f.label}</dt>
                 <dd className="display mt-1 text-[40px] text-secondary">{f.value}</dd>
               </div>

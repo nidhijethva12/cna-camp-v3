@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import { PageHead } from "@/components/layout/PageHead";
 import { TripCard } from "@/components/trips/TripCard";
 import { TripFilters } from "@/components/trips/TripFilters";
+import { MONTHS } from "@/lib/trips";
 import { regionOrder, regions } from "@/content/site";
 import Link from "next/link";
 import { getSiteSettings, getTrips, whatsappLink } from "@/lib/content";
-import { enquiryMonths } from "@/lib/enquiry";
 
 export const metadata: Metadata = {
   title: { absolute: "Treks, Camps & Nature Trails in India | CNA Camp" },
@@ -36,7 +36,7 @@ export default async function TripsPage() {
         <TripFilters
           regionOptions={regionOrder.map((r) => ({ value: r, label: regions[r].label }))}
           typeOptions={["Trek", "Camp", "Nature Trail"].map((t) => ({ value: slug(t), label: t }))}
-          monthOptions={enquiryMonths.map((m) => ({ value: m.toLowerCase(), label: m }))}
+          monthOptions={MONTHS.map((m) => ({ value: m.toLowerCase(), label: m }))}
           levelOptions={["Easy", "Moderate", "Challenging"].map((l) => ({ value: l.toLowerCase(), label: l }))}
           trips={trips.map((t) => ({
             slug: t.slug,
