@@ -165,10 +165,10 @@ export default async function OlympiadPage() {
       <section id="dates" className="wrap mt-12 scroll-mt-32 sm:mt-16">
         <SectionHeader eyebrow="Key dates & notices" title="Mark your calendar" />
         <div className="grid gap-6 lg:grid-cols-[1fr_1.3fr]">
-          <ol className="grid gap-3">
+          <ol className="grid content-start gap-2.5">
             {o.dates.map((d, i) => (
-              <li key={d.label} className="flex items-center gap-4 rounded-card border border-line bg-light p-4">
-                <FeatureIcon name={d.icon} tone={i === o.dates.length - 1 ? "accent" : "light"} />
+              <li key={d.label} className="flex items-center gap-3.5 rounded-card border border-line bg-light px-4 py-3">
+                <FeatureIcon name={d.icon} tone={i === o.dates.length - 1 ? "accent" : "light"} className="h-10! w-10! text-[22px]!" />
                 <div>
                   <p className="text-[14px] font-medium text-muted">{d.label}</p>
                   <p className="text-[17px] leading-snug font-bold">{d.value}</p>
@@ -176,7 +176,10 @@ export default async function OlympiadPage() {
               </li>
             ))}
           </ol>
-          <NoticeBoard notices={notices} />
+          {/* On desktop the board fills this box, so its height always follows the dates column. */}
+          <div className="relative">
+            <NoticeBoard notices={notices} />
+          </div>
         </div>
       </section>
 

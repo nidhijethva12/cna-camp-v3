@@ -505,30 +505,22 @@ export interface Faq {
   createdAt: string;
 }
 /**
- * Shown on the Olympiad page notice board, newest first.
+ * Each notice is one line on the Olympiad page notice board. Lower order numbers show first.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "notices".
  */
 export interface Notice {
   id: string;
-  title: string;
-  date: string;
-  category: 'exam' | 'result' | 'registration' | 'general';
-  details?: string | null;
+  text: string;
   /**
-   * Optional, e.g. a PDF or the quiz link (https://…).
+   * Optional: a PDF or page to open (https://…).
    */
   link?: string | null;
   /**
-   * Button text, e.g. “Download PDF”. Default: “Open link”.
+   * Lower numbers show first.
    */
-  linkLabel?: string | null;
-  important?: boolean | null;
-  /**
-   * Optional. The notice disappears after this day.
-   */
-  hideAfter?: string | null;
+  order?: number | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -825,14 +817,9 @@ export interface FaqsSelect<T extends boolean = true> {
  * via the `definition` "notices_select".
  */
 export interface NoticesSelect<T extends boolean = true> {
-  title?: T;
-  date?: T;
-  category?: T;
-  details?: T;
+  text?: T;
   link?: T;
-  linkLabel?: T;
-  important?: T;
-  hideAfter?: T;
+  order?: T;
   updatedAt?: T;
   createdAt?: T;
 }

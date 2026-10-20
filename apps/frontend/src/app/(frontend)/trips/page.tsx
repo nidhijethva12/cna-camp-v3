@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { PageHead } from "@/components/layout/PageHead";
 import { TripCard } from "@/components/trips/TripCard";
 import { TripFilters } from "@/components/trips/TripFilters";
@@ -33,21 +34,23 @@ export default async function TripsPage() {
         text={`${trips.length} ways to get outdoors, from a one-day hill walk near Rajkot to 18 days on the Everest trail. Pick a region, a month or a level, and the list does the rest.`}
       />
       <section className="wrap mt-8">
-        <TripFilters
-          regionOptions={regionOrder.map((r) => ({ value: r, label: regions[r].label }))}
-          typeOptions={["Trek", "Camp", "Nature Trail"].map((t) => ({ value: slug(t), label: t }))}
-          monthOptions={MONTHS.map((m) => ({ value: m.toLowerCase(), label: m }))}
-          levelOptions={["Easy", "Moderate", "Challenging"].map((l) => ({ value: l.toLowerCase(), label: l }))}
-          trips={trips.map((t) => ({
-            slug: t.slug,
-            region: t.region,
-            type: slug(t.type),
-            level: t.difficulty.toLowerCase(),
-            months: t.months.map((m) => m.toLowerCase()),
-            days: t.days,
-            card: <TripCard trip={t} />,
-          }))}
-        />
+        <Suspense>
+          <TripFilters
+            regionOptions={regionOrder.map((r) => ({ value: r, label: regions[r].label }))}
+            typeOptions={["Trek", "Camp", "Nature Trail"].map((t) => ({ value: slug(t), label: t }))}
+            monthOptions={MONTHS.map((m) => ({ value: m.toLowerCase(), label: m }))}
+            levelOptions={["Easy", "Moderate", "Challenging"].map((l) => ({ value: l.toLowerCase(), label: l }))}
+            trips={trips.map((t) => ({
+              slug: t.slug,
+              region: t.region,
+              type: slug(t.type),
+              level: t.difficulty.toLowerCase(),
+              months: t.months.map((m) => m.toLowerCase()),
+              days: t.days,
+              card: <TripCard trip={t} />,
+            }))}
+          />
+        </Suspense>
       </section>
 
       <section className="wrap mt-16">

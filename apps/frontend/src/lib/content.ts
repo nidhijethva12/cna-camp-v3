@@ -189,29 +189,11 @@ export const getFaqs = cache(async (): Promise<(Faq & { showOnHome: boolean })[]
   return docs.map((f) => ({ question: f.question, answer: f.answer, showOnHome: Boolean(f.showOnHome) }));
 });
 
-/** Notices still in date, newest first; important ones stay on top. */
+/** Olympiad notice lines, in the order set in the admin. */
 export const getNotices = cache(async (): Promise<Notice[]> => {
   const payload = await getCms();
-  const today = todayInIndia();
-  const { docs } = await payload.find({
-    collection: "notices",
-    where: { or: [{ hideAfter: { exists: false } }, { hideAfter: { equals: null } }, { hideAfter: { greater_than_equal: today } }] },
-    sort: "-date",
-    depth: 0,
-    limit: 30,
-  });
-  return docs
-    .map((n) => ({
-      id: n.id,
-      title: n.title,
-      date: n.date.slice(0, 10),
-      category: n.category,
-      details: n.details || null,
-      link: n.link || null,
-      linkLabel: n.linkLabel || null,
-      important: Boolean(n.important),
-    }))
-    .sort((a, b) => Number(b.important) - Number(a.important));
+  const { docs } = await payload.find({ collection: "notices", sort: ["order", "createdAt"], depth: 0, limit: 50 });
+  return docs.map((n) => ({ id: n.id, text: n.text, link: n.link || null }));
 });
 
 export async function getHomeFaqs(): Promise<Faq[]> {

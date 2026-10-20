@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useState, type ReactNode } from "react";
 import { InfoTip } from "@/components/ui/InfoTip";
 import { Select } from "@/components/ui/Select";
@@ -38,18 +39,21 @@ export function TripFilters({ trips, regionOptions, typeOptions, monthOptions, l
   const [filters, setFilters] = useState<Filters>(EMPTY);
   const [loadedFromUrl, setLoadedFromUrl] = useState(false);
 
+  // Follows the address, so menu links like "Gujarat" re-filter even when the trips page is already open.
+  const search = useSearchParams().toString();
   useEffect(() => {
-    const q = new URLSearchParams(window.location.search);
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- the URL is only readable after hydration
-    setFilters({
+    const q = new URLSearchParams(search);
+    const next: Filters = {
       region: q.get("region") ?? "",
       type: q.get("type") ?? "",
       month: q.get("month") ?? "",
       level: q.get("level") ?? "",
       short: q.get("short") === "1",
-    });
+    };
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- the URL is the source of truth for the filters
+    setFilters((prev) => (KEYS.every((k) => prev[k] === next[k]) && prev.short === next.short ? prev : next));
     setLoadedFromUrl(true);
-  }, []);
+  }, [search]);
 
   useEffect(() => {
     if (!loadedFromUrl) return;
