@@ -14,12 +14,12 @@ interface SectionHeaderProps {
 export function SectionHeader({ eyebrow, title, intro, action, dark, id }: SectionHeaderProps) {
   return (
     <div className="mb-7 flex flex-col gap-4 sm:mb-10 sm:gap-5 md:flex-row md:items-end md:justify-between">
-      <div className="max-w-3xl">
-        <p className={`eyebrow ${dark ? "text-light/60!" : ""}`}>{eyebrow}</p>
+      <div className="max-w-4xl">
+        <p className={`eyebrow ${dark ? "text-secondary!" : ""}`}>{eyebrow}</p>
         <h2 id={id} className="h-section mt-3">
           {title}
         </h2>
-        {intro && <p className={`mt-4 max-w-2xl text-[17px] leading-relaxed ${dark ? "text-light/70" : "text-muted"}`}>{intro}</p>}
+        {intro && <p className={`mt-4 max-w-3xl text-[17px] leading-relaxed ${dark ? "text-light/70" : "text-muted"}`}>{intro}</p>}
       </div>
       {action && (
         <Link href={action.href} className={`btn shrink-0 self-start md:self-auto ${dark ? "btn-outline-light" : "btn-outline"}`}>

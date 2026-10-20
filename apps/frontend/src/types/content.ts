@@ -104,6 +104,18 @@ export interface Faq {
   answer: string;
 }
 
+export interface Notice {
+  id: string;
+  title: string;
+  /** ISO date (YYYY-MM-DD). */
+  date: string;
+  category: "exam" | "result" | "registration" | "general";
+  details: string | null;
+  link: string | null;
+  linkLabel: string | null;
+  important: boolean;
+}
+
 export interface Review {
   name: string;
   role: string;

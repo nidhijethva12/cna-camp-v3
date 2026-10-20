@@ -602,4 +602,32 @@ export const photoCredits = [
     license: "Unsplash License",
     source: "https://unsplash.com/photos/a-hill-with-a-bench-on-top-of-it-wOPb2sX0__c",
   },
+  {
+    slot: "olympiad-popup",
+    title: "Two school students writing at a classroom desk",
+    creator: "Swastik Arora",
+    license: "Unsplash License",
+    source: "https://unsplash.com/photos/two-young-boys-sitting-at-a-table-with-books-YcW3A8QHcQQ",
+  },
+  {
+    slot: "olympiad-hero",
+    title: "Schoolgirls in uniform listening in a classroom",
+    creator: "Yogendra Singh",
+    license: "Unsplash License",
+    source: "https://unsplash.com/photos/girl-sitting-on-chair-yR0QwMbMjT8",
+  },
+  {
+    slot: "olympiad-hero",
+    title: "Students writing a test in a large exam hall",
+    creator: "Herlambang Tinasih Gusti",
+    license: "Unsplash License",
+    source: "https://unsplash.com/photos/a-group-of-people-sitting-in-chairs-55ZG9zZXipI",
+  },
+  {
+    slot: "olympiad-hero",
+    title: "Two boys working through a book at their desk",
+    creator: "Swastik Arora",
+    license: "Unsplash License",
+    source: "https://unsplash.com/photos/two-young-boys-sitting-at-a-desk-with-a-book-xMYq46yAetM",
+  },
 ];

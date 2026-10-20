@@ -10,6 +10,7 @@ import { Batches } from "./cms/collections/Batches";
 import { Enquiries } from "./cms/collections/Enquiries";
 import { Faqs } from "./cms/collections/Faqs";
 import { Media } from "./cms/collections/Media";
+import { Notices } from "./cms/collections/Notices";
 import { Posts } from "./cms/collections/Posts";
 import { Reviews } from "./cms/collections/Reviews";
 import { Trips } from "./cms/collections/Trips";
@@ -76,7 +77,7 @@ export default buildConfig({
       },
     },
   },
-  collections: [Trips, Batches, Posts, Reviews, Faqs, Media, Videos, Enquiries, Users],
+  collections: [Trips, Batches, Posts, Reviews, Faqs, Notices, Media, Videos, Enquiries, Users],
   globals: [HomePage, SiteSettings],
   editor: lexicalEditor(),
   email: emailAdapter(),

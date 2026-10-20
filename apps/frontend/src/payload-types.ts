@@ -72,6 +72,7 @@ export interface Config {
     posts: Post;
     reviews: Review;
     faqs: Faq;
+    notices: Notice;
     media: Media;
     videos: Video;
     enquiries: Enquiry;
@@ -88,6 +89,7 @@ export interface Config {
     posts: PostsSelect<false> | PostsSelect<true>;
     reviews: ReviewsSelect<false> | ReviewsSelect<true>;
     faqs: FaqsSelect<false> | FaqsSelect<true>;
+    notices: NoticesSelect<false> | NoticesSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     videos: VideosSelect<false> | VideosSelect<true>;
     enquiries: EnquiriesSelect<false> | EnquiriesSelect<true>;
@@ -503,6 +505,34 @@ export interface Faq {
   createdAt: string;
 }
 /**
+ * Shown on the Olympiad page notice board, newest first.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "notices".
+ */
+export interface Notice {
+  id: string;
+  title: string;
+  date: string;
+  category: 'exam' | 'result' | 'registration' | 'general';
+  details?: string | null;
+  /**
+   * Optional, e.g. a PDF or the quiz link (https://…).
+   */
+  link?: string | null;
+  /**
+   * Button text, e.g. “Download PDF”. Default: “Open link”.
+   */
+  linkLabel?: string | null;
+  important?: boolean | null;
+  /**
+   * Optional. The notice disappears after this day.
+   */
+  hideAfter?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "enquiries".
  */
@@ -577,6 +607,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'faqs';
         value: string | Faq;
+      } | null)
+    | ({
+        relationTo: 'notices';
+        value: string | Notice;
       } | null)
     | ({
         relationTo: 'media';
@@ -783,6 +817,22 @@ export interface FaqsSelect<T extends boolean = true> {
   answer?: T;
   order?: T;
   showOnHome?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "notices_select".
+ */
+export interface NoticesSelect<T extends boolean = true> {
+  title?: T;
+  date?: T;
+  category?: T;
+  details?: T;
+  link?: T;
+  linkLabel?: T;
+  important?: T;
+  hideAfter?: T;
   updatedAt?: T;
   createdAt?: T;
 }

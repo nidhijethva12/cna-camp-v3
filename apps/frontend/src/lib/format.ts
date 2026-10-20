@@ -18,3 +18,13 @@ export function splitDate(iso: string) {
   const [, m, d] = iso.split("-");
   return { day: d, month: MONTHS[Number(m) - 1] };
 }
+
+/** "17 to 18 Oct", or "29 Oct to 2 Nov" across months; no dashes, per the site style. */
+export function dateRange(start: string, end: string) {
+  const a = splitDate(start);
+  const b = splitDate(end);
+  const day = (d: string) => String(Number(d));
+  const mon = (m: string) => m.charAt(0) + m.slice(1).toLowerCase();
+  [a.month, b.month] = [mon(a.month), mon(b.month)];
+  return a.month === b.month ? `${day(a.day)} to ${day(b.day)} ${b.month}` : `${day(a.day)} ${a.month} to ${day(b.day)} ${b.month}`;
+}

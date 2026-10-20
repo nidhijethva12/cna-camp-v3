@@ -18,7 +18,7 @@ export function FooterGroup({ title, children }: { title: string; children: Reac
           aria-controls={panelId}
           className="flex w-full items-center justify-between py-4 text-left md:pointer-events-none md:py-0"
         >
-          <span className="eyebrow text-light/60!">{title}</span>
+          <span className="eyebrow text-secondary!">{title}</span>
           <CaretDown className={`text-[14px] text-light/60 transition-transform duration-300 md:hidden ${open ? "rotate-180" : ""}`} />
         </button>
       </h2>

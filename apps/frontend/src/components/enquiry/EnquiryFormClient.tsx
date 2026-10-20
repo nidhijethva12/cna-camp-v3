@@ -21,7 +21,7 @@ const CONSENT_HINT = "Please accept the consent above to send your enquiry.";
 
 const options = (list: readonly string[]) => list.map((x) => ({ value: x, label: x }));
 
-/** The site's one enquiry form: every "Enquire" leads here, so every lead has the same fields. */
+/** The site's one enquiry form: every "Contact us" button leads here, so every lead has the same fields. */
 export function EnquiryFormClient({ trips, phone, defaultTrip = "" }: EnquiryFormProps) {
   const [state, formAction, pending] = useActionState(submitEnquiry, initialState);
   const [consent, setConsent] = useState(false);
@@ -58,10 +58,10 @@ export function EnquiryFormClient({ trips, phone, defaultTrip = "" }: EnquiryFor
       </div>
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2">
-        <Field label="Your name" field="name" error={err("name")}>
+        <Field label="Your name" field="name" required error={err("name")}>
           <input required name="name" defaultValue={v.name} autoComplete="name" maxLength={80} className="field mt-2" {...aria("name")} />
         </Field>
-        <Field label="Phone / WhatsApp" field="phone" error={err("phone")}>
+        <Field label="Phone / WhatsApp" field="phone" required error={err("phone")}>
           <input
             required
             name="phone"
@@ -75,7 +75,7 @@ export function EnquiryFormClient({ trips, phone, defaultTrip = "" }: EnquiryFor
           />
         </Field>
 
-        <Field label="Email" field="email" error={err("email")} className="sm:col-span-2">
+        <Field label="Email" field="email" required error={err("email")} className="sm:col-span-2">
           <input
             required
             name="email"
@@ -195,18 +195,28 @@ function Field({
   label,
   field,
   error,
+  required,
   className = "",
   children,
 }: {
   label: string;
   field: EnquiryField;
+  /** Shows the red asterisk; the input itself carries `required` for assistive tech. */
+  required?: boolean;
   error?: string;
   className?: string;
   children: ReactNode;
 }) {
   return (
     <label className={`block ${className}`}>
-      <span className="eyebrow">{label}</span>
+      <span className="eyebrow">
+        {label}
+        {required && (
+          <span aria-hidden="true" className="ml-0.5 text-danger">
+            *
+          </span>
+        )}
+      </span>
       {children}
       <FieldError field={field} message={error} />
     </label>

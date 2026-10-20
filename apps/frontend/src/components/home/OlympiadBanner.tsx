@@ -27,7 +27,7 @@ export function OlympiadBanner() {
               Take the quiz. Win the Himalaya.
             </h2>
             <p className="mt-3 max-w-xl text-light/80">
-              An Eco-STEM online quiz for ages 14 to 25 and teachers from every district of Gujarat. Top scorers win up to a 100%
+              An Eco-STEM online quiz for students from Std 4 to college, from every district of Gujarat. Top scorers win up to a 100%
               scholarship on the ₹18,000 Astro Adventure Trekking Camp in Manali.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">

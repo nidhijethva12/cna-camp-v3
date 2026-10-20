@@ -45,7 +45,7 @@ export default async function HomePage() {
   const [home, popular, batches, allTrips, regionCounts, faqs, reviews, settings] = await Promise.all([
     getHome(),
     getFeaturedTrips(),
-    getUpcomingBatches(5),
+    getUpcomingBatches(4),
     getTrips(),
     getRegionTripCounts(),
     getHomeFaqs(),

@@ -20,6 +20,8 @@ export default async function PrivacyPage() {
   return (
     <>
       <PageHead
+        img="cna/real/land-07"
+        imgAlt="Tall deodar trees seen from the forest floor"
         eyebrow="Policies"
         title={<>Privacy policy</>}
         text="What we collect, why we need it, and how you stay in control. Written for India’s Digital Personal Data Protection Act, 2023 (DPDP Act)."

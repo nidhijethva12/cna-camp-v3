@@ -5,10 +5,9 @@ import { PageHead } from "@/components/layout/PageHead";
 import { Photo } from "@/components/media/Photo";
 import { CountUp } from "@/components/ui/CountUp";
 import { FaqList } from "@/components/ui/FaqList";
-import { FeatureIcon } from "@/components/ui/FeatureIcon";
 import { ArrowRight, CheckCircle } from "@/components/ui/icons";
 import { SectionHeader } from "@/components/ui/SectionHeader";
-import { campLife, different, ecoPrinciples, founder, mission, safetyPoints, storyParagraphs, teamRoles } from "@/content/about";
+import { different, ecoPrinciples, founder, mission, safetyPoints, storyParagraphs, teamRoles } from "@/content/about";
 import { site, yearsActive } from "@/content/site";
 import { getFaqs, getTrips } from "@/lib/content";
 
@@ -48,7 +47,60 @@ export default async function AboutPage() {
         eyebrow="About CNA"
         title="We take people outdoors. Then we teach them to look after it."
         text={`Climber Nature Adventure Club (CNA) is an eco-tourism and adventure club from Rajkot, backed by ${site.trust.name}.`}
-      />
+      >
+        <dl className="mt-9 grid grid-cols-2 gap-x-8 gap-y-6 sm:flex sm:flex-wrap sm:gap-x-12">
+          {stats.map(([n, label]) => (
+            <div key={label} className="flex flex-col-reverse">
+              <dt className="mt-1 text-[14px] font-medium text-light/75">{label}</dt>
+              <dd>
+                <CountUp value={n} className="display text-[30px] leading-none whitespace-nowrap text-secondary sm:text-[38px]" />
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </PageHead>
+
+      <section id="founder" className="scroll-mt-20 border-t border-light/10 bg-dark py-14 text-light sm:py-20">
+        <div className="wrap grid gap-12 lg:grid-cols-[5fr_7fr] lg:items-start">
+          <figure className="lg:sticky lg:top-28">
+            {/* Landscape frame: the only photo of him is 720px wide, so it is shown near its real size. */}
+            <div className="relative aspect-[4/3] overflow-hidden rounded-card">
+              <Photo
+                img="cna/real/founder-01"
+                alt="Dr. Ketankumar P. Trivedi at a frozen lake in the Himalaya"
+                sizes="(min-width: 1024px) 480px, 100vw"
+              />
+            </div>
+            <figcaption className="mt-5 border-l-4 border-secondary pl-4">
+              <p className="text-[13.5px] font-medium text-light/70">In loving memory</p>
+              <p className="display mt-1 text-[30px]">{founder.name}</p>
+              <p className="font-mono text-[12px] text-secondary">{founder.years}</p>
+            </figcaption>
+          </figure>
+          <div>
+            <p className="eyebrow text-secondary!">Our founder</p>
+            <h2 className="h-section mt-3">Late {founder.name}</h2>
+            <blockquote className="mt-6 border-l-4 border-secondary pl-5 text-[22px] leading-snug text-light/90 italic">
+              “{founder.quote}”
+            </blockquote>
+            <p className="mt-6 text-[17px] leading-relaxed text-light/75">{founder.intro}</p>
+            <dl className="mt-10 divide-y divide-light/10 border-y border-light/10">
+              {founder.facts.map(([k, v]) => (
+                <div key={k} className="grid gap-1 py-5 sm:grid-cols-[150px_1fr] sm:gap-6">
+                  <dt className="text-[13.5px] font-medium text-secondary">{k}</dt>
+                  <dd className="text-light/85">{v}</dd>
+                </div>
+              ))}
+            </dl>
+            <p className="mt-8 rounded-card bg-light/5 p-5 text-light/80">
+              <span className="font-bold text-light">His legacy.</span> {founder.legacy}{" "}
+              <Link href="/olympiad" className="font-bold text-secondary underline">
+                About the Olympiad <ArrowRight />
+              </Link>
+            </p>
+          </div>
+        </div>
+      </section>
 
       <section className="wrap mt-20 grid gap-12 lg:grid-cols-2 lg:items-start">
         <div>
@@ -81,19 +133,6 @@ export default async function AboutPage() {
         </figure>
       </section>
 
-      <section className="wrap mt-20">
-        <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-card border border-line bg-line lg:grid-cols-4">
-          {stats.map(([n, label]) => (
-            <div key={label} className="bg-light p-6 sm:p-8">
-              <dt className="text-[13.5px] font-medium text-muted">{label}</dt>
-              <dd>
-                <CountUp value={n} className="display mt-2 text-[30px] sm:text-[44px] lg:text-[52px]" />
-              </dd>
-            </div>
-          ))}
-        </dl>
-      </section>
-
       <section id="mission" className="mt-24 scroll-mt-28 bg-soft py-20">
         <div className="wrap">
           <SectionHeader eyebrow="Our mission · Eco-tourism" title={mission.line} intro={mission.text} />
@@ -124,78 +163,6 @@ export default async function AboutPage() {
                 </li>
               ))}
             </ul>
-          </div>
-        </div>
-      </section>
-
-      <section id="camp-life" className="wrap mt-24 scroll-mt-28">
-        <SectionHeader
-          eyebrow="Life at camp"
-          title="What a CNA day actually looks like"
-          intro="Simple, and it works. Adventure by day, good food, a little rest, and the outdoors all around you."
-        />
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-          {campLife.map((c) => (
-            <article
-              key={c.title}
-              className="group flex flex-col overflow-hidden rounded-card border border-line transition-colors hover:border-primary"
-            >
-              <div className="relative aspect-[4/3] overflow-hidden bg-soft">
-                <Photo
-                  img={c.img}
-                  alt={c.alt}
-                  sizes="(min-width: 1280px) 290px, (min-width: 768px) 50vw, 100vw"
-                  className="transition duration-700 group-hover:scale-[1.04]"
-                />
-              </div>
-              <div className="relative flex-1 px-6 pb-6">
-                <FeatureIcon name={c.icon} tone="soft" className="-mt-6 transition-colors group-hover:bg-primary group-hover:text-light" />
-                <h3 className="h-card mt-4">{c.title}</h3>
-                <p className="mt-2 text-[15px] text-muted">{c.text}</p>
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section id="founder" className="mt-24 scroll-mt-20 bg-dark py-20 text-light sm:py-24">
-        <div className="wrap grid gap-12 lg:grid-cols-[5fr_7fr] lg:items-start">
-          <figure className="lg:sticky lg:top-28">
-            {/* Landscape frame: the only photo of him is 720px wide, so it is shown near its real size. */}
-            <div className="relative aspect-[4/3] overflow-hidden rounded-card">
-              <Photo
-                img="cna/real/founder-01"
-                alt="Dr. Ketankumar P. Trivedi at a frozen lake in the Himalaya"
-                sizes="(min-width: 1024px) 480px, 100vw"
-              />
-            </div>
-            <figcaption className="mt-5 border-l-4 border-secondary pl-4">
-              <p className="text-[13.5px] font-medium text-light/70">In loving memory</p>
-              <p className="display mt-1 text-[30px]">{founder.name}</p>
-              <p className="font-mono text-[12px] text-secondary">{founder.years}</p>
-            </figcaption>
-          </figure>
-          <div>
-            <p className="eyebrow text-light/60!">Our founder</p>
-            <h2 className="h-section mt-3">Late {founder.name}</h2>
-            <blockquote className="mt-6 border-l-4 border-secondary pl-5 text-[22px] leading-snug text-light/90 italic">
-              “{founder.quote}”
-            </blockquote>
-            <p className="mt-6 text-[17px] leading-relaxed text-light/75">{founder.intro}</p>
-            <dl className="mt-10 divide-y divide-light/10 border-y border-light/10">
-              {founder.facts.map(([k, v]) => (
-                <div key={k} className="grid gap-1 py-5 sm:grid-cols-[150px_1fr] sm:gap-6">
-                  <dt className="text-[13.5px] font-medium text-secondary">{k}</dt>
-                  <dd className="text-light/85">{v}</dd>
-                </div>
-              ))}
-            </dl>
-            <p className="mt-8 rounded-card bg-light/5 p-5 text-light/80">
-              <span className="font-bold text-light">His legacy.</span> {founder.legacy}{" "}
-              <Link href="/olympiad" className="font-bold text-secondary underline">
-                About the Olympiad <ArrowRight />
-              </Link>
-            </p>
           </div>
         </div>
       </section>
@@ -244,7 +211,7 @@ export default async function AboutPage() {
 
       <section id="safety" className="mt-24 scroll-mt-20 bg-dark py-20 text-light">
         <div className="wrap">
-          <p className="eyebrow text-light/60!">Safety</p>
+          <p className="eyebrow text-secondary!">Safety</p>
           <h2 className="h-section mt-3">How we keep trips safe</h2>
           <p className="mt-4 max-w-2xl text-[17px] leading-relaxed text-light/70">
             The question every parent asks first. Here is our honest answer.

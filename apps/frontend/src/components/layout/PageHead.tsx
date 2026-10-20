@@ -21,9 +21,9 @@ export function PageHead({ eyebrow, title, text, img, imgAlt, children }: PageHe
         </div>
         <div className="absolute inset-0 -z-10 bg-linear-to-r from-dark/85 to-dark/35" />
         <div className="wrap py-20 sm:py-28">
-          <p className="eyebrow text-light/70!">{eyebrow}</p>
+          <p className="eyebrow text-secondary!">{eyebrow}</p>
           <h1 className="h-page mt-3 max-w-3xl">{title}</h1>
-          {text && <p className="mt-5 max-w-2xl text-[18px] text-light/85">{text}</p>}
+          {text && <p className="mt-5 max-w-3xl text-[18px] text-light/85">{text}</p>}
           {children}
         </div>
       </section>
@@ -34,7 +34,7 @@ export function PageHead({ eyebrow, title, text, img, imgAlt, children }: PageHe
       <div className="wrap py-14 sm:py-20">
         <p className="eyebrow">{eyebrow}</p>
         <h1 className="h-page mt-3 max-w-3xl">{title}</h1>
-        {text && <p className="mt-5 max-w-2xl text-[17px] text-muted">{text}</p>}
+        {text && <p className="mt-5 max-w-3xl text-[17px] text-muted">{text}</p>}
         {children}
       </div>
     </section>

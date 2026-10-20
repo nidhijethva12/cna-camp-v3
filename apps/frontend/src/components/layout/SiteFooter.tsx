@@ -1,17 +1,30 @@
 import Image from "next/image";
 import Link from "next/link";
 import { footerNav, site } from "@/content/site";
-import { Fire } from "@/components/ui/icons";
+import { FacebookBrand, Fire, InstagramBrand, YoutubeLogo } from "@/components/ui/icons";
 import { getPosts, getSiteSettings } from "@/lib/content";
 import { FooterGroup } from "./FooterGroup";
 
+const SOCIAL_ICONS: Record<string, (props: { className?: string }) => React.ReactNode> = {
+  Instagram: InstagramBrand,
+  Facebook: FacebookBrand,
+  YouTube: YoutubeLogo,
+};
+
 export async function SiteFooter() {
   const [contact, posts] = await Promise.all([getSiteSettings(), getPosts()]);
-  const social = contact.social.flatMap((s) => (s.href ? [{ label: s.label, href: s.href }] : []));
-  const companyLinks = posts.length ? [...footerNav.company, { label: "Blog", href: "/blog" }] : footerNav.company;
+  // Instagram and Facebook always show; Facebook links out once its URL is added in Site settings.
+  // Other platforms appear only when they have a link.
+  const links = new Map(contact.social.map((s) => [s.label, s.href]));
+  const social = [
+    { label: "Instagram", href: links.get("Instagram") ?? null },
+    { label: "Facebook", href: links.get("Facebook") ?? null },
+    ...contact.social.filter((s) => s.href && !["Instagram", "Facebook"].includes(s.label)),
+  ];
+  const resources = posts.length ? footerNav.resources : footerNav.resources.filter((l) => l.href !== "/blog");
   return (
     <footer className="mt-24 bg-dark text-light">
-      <div className="wrap grid gap-0 py-12 md:grid-cols-2 md:gap-10 md:py-16 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr]">
+      <div className="wrap grid gap-0 py-12 md:grid-cols-2 md:gap-10 md:py-16 lg:grid-cols-[1.5fr_1fr_0.8fr_0.8fr_1.3fr]">
         <div className="pb-6 md:pb-0">
           <div className="flex items-center gap-3">
             <Image src="/img/logo.png" alt="" width={56} height={56} className="h-14 w-14" />
@@ -24,26 +37,40 @@ export async function SiteFooter() {
           <p className="mt-5 max-w-sm text-light/70">
             Treks, camps and outdoor learning from Rajkot since 1997. Backed by {site.trust.name}.
           </p>
-          {/* Only platforms with a link in Site settings; adding one there makes it appear. */}
-          {social.length > 0 && (
-            <div className="mt-6 flex gap-5">
-              {social.map((s) => (
+          <div className="mt-6 flex gap-4">
+            {social.map((s) => {
+              const Icon = SOCIAL_ICONS[s.label] ?? InstagramBrand;
+              const className = "flex items-center justify-center text-[36px] transition";
+              return s.href ? (
                 <a
                   key={s.label}
                   href={s.href}
-                  className="py-2 font-semibold text-light/85 hover:text-secondary lg:py-0"
+                  aria-label={s.label}
+                  title={s.label}
+                  className={`${className} hover:scale-110`}
                   rel="noopener"
                   target="_blank"
                 >
-                  {s.label}
+                  <Icon />
                 </a>
-              ))}
-            </div>
-          )}
+              ) : (
+                <span
+                  key={s.label}
+                  role="img"
+                  aria-label={`${s.label} (coming soon)`}
+                  title={`${s.label}: coming soon`}
+                  className={`${className} opacity-50`}
+                >
+                  <Icon />
+                </span>
+              );
+            })}
+          </div>
         </div>
 
         <FooterLinks title="Trips by region" links={footerNav.regions} />
-        <FooterLinks title="Company" links={companyLinks} />
+        <FooterLinks title="Company" links={footerNav.company} />
+        <FooterLinks title="Resources" links={resources} />
 
         <FooterGroup title="Talk to us">
           <address className="space-y-3 text-light/85 not-italic">

@@ -12,7 +12,7 @@ export function WhyCna({ content }: { content: HomeContent["why"] }) {
           {content.imageLabel && <span className="tag tag-solid absolute bottom-4 left-4 border-light/30">{content.imageLabel}</span>}
         </div>
         <div className="reveal">
-          <p className="eyebrow text-light/60!">{content.eyebrow}</p>
+          <p className="eyebrow text-secondary!">{content.eyebrow}</p>
           <h2 id="why-title" className="h-section mt-3">
             {content.title}
           </h2>

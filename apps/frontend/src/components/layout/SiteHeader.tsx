@@ -9,13 +9,6 @@ export async function SiteHeader() {
   const contact = await getSiteSettings();
   return (
     <>
-      <div className="bg-dark text-light/85">
-        <div className="wrap flex items-center justify-between gap-4 py-2 text-[13.5px] font-medium">
-          <span>Rajkot, Gujarat · 20+ years of treks and camps</span>
-          <span className="hidden sm:inline">Backed by {site.trust.name}</span>
-        </div>
-      </div>
-
       <header className="sticky top-0 z-40 border-b border-line bg-light/95 backdrop-blur">
         <div className="wrap flex h-[72px] items-center justify-between gap-6">
           <Link href="/" className="flex shrink-0 items-center gap-3" aria-label={`${site.legalName} home`}>
@@ -34,7 +27,7 @@ export async function SiteHeader() {
               {contact.phone}
             </a>
             <Link href={enquireHref()} className="btn btn-primary hidden py-3! sm:inline-flex">
-              Enquire
+              Contact us
             </Link>
             <MobileNav
               items={mainNav}

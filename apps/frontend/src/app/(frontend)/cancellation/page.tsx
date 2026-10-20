@@ -20,6 +20,8 @@ export default async function CancellationPage() {
   return (
     <>
       <PageHead
+        img="cna/real/land-06"
+        imgAlt="A green Himalayan valley seen through pine trees"
         eyebrow="Policies"
         title={<>Cancellation &amp; refund</>}
         text="Plans change. Exams move, someone falls ill. Here is exactly what happens if you need to cancel."

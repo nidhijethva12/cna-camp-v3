@@ -3,6 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { GroupFinder } from "@/components/olympiad/GroupFinder";
 import { Photo } from "@/components/media/Photo";
+import { HeroCarousel } from "@/components/olympiad/HeroCarousel";
+import { NoticeBoard } from "@/components/olympiad/NoticeBoard";
 import { CountUp } from "@/components/ui/CountUp";
 import { FaqList } from "@/components/ui/FaqList";
 import { FeatureIcon } from "@/components/ui/FeatureIcon";
@@ -20,9 +22,10 @@ import {
   WarningCircle,
 } from "@/components/ui/icons";
 import { SectionHeader } from "@/components/ui/SectionHeader";
+import { SectionNav } from "@/components/ui/SectionNav";
 import { olympiad as o } from "@/content/olympiad";
 import { site } from "@/content/site";
-import { getSiteSettings, whatsappLink } from "@/lib/content";
+import { getNotices, getSiteSettings } from "@/lib/content";
 import { registrationStatus } from "@/lib/olympiad";
 
 // Registration status depends on today's date.
@@ -31,16 +34,16 @@ export const revalidate = 3600;
 export const metadata: Metadata = {
   title: { absolute: "Adventure Olympiad: Eco-STEM Quiz & Manali Camp | CNA Camp" },
   description:
-    "Eco-STEM online quiz for ages 14 to 25 across Gujarat. 100 MCQs, 5 rounds, scholarships up to 100% on the ₹18,000 Manali camp. Fees from ₹90.",
+    "Eco-STEM online quiz for students from Std 4 to college across Gujarat. 100 MCQs, 5 rounds, scholarships up to 100% on the ₹18,000 Manali camp. Fees from ₹90.",
   openGraph: {
     title: "Take the quiz. Win a camp in the Himalaya.",
-    description: "An Eco-STEM quiz for Gujarat students aged 14 to 25. Top scorers go to Manali on up to 100% scholarship.",
+    description: "An Eco-STEM quiz for Gujarat students from Std 4 to college. Top scorers go to Manali on up to 100% scholarship.",
   },
   alternates: { canonical: "/olympiad" },
 };
 
 const jumpLinks = [
-  ["dates", "Dates & fees"],
+  ["dates", "Dates & notices"],
   ["groups", "Groups"],
   ["finder", "Which group am I?"],
   ["how", "How it works"],
@@ -49,7 +52,7 @@ const jumpLinks = [
   ["included", "Manali camp"],
   ["rules", "Rules"],
   ["faq", "FAQs"],
-];
+] as const;
 
 const statusText = {
   soon: "Registration opens 2 April 2026",
@@ -57,131 +60,124 @@ const statusText = {
   closed: "Registration closed on 20 June 2026 · quiz rounds in progress",
 };
 
+const EXAM_FORM_LABEL = "Click here to fill the form";
+
+/** Opens the exam form once its link is set in content/olympiad.ts (examFormUrl). */
+function ExamFormButton({ className = "" }: { className?: string }) {
+  if (o.examFormUrl) {
+    return (
+      <a href={o.examFormUrl} target="_blank" rel="noopener" className={`btn btn-primary ${className}`}>
+        {EXAM_FORM_LABEL} <ArrowRight />
+      </a>
+    );
+  }
+  return (
+    <button type="button" className={`btn btn-primary cursor-default ${className}`}>
+      {EXAM_FORM_LABEL} <ArrowRight />
+    </button>
+  );
+}
+
 export default async function OlympiadPage() {
-  const contact = await getSiteSettings();
-  const whatsappUpdates = whatsappLink(contact.whatsappNumber, "Hi CNA, please send me Adventure Olympiad updates.");
+  const [contact, notices] = await Promise.all([getSiteSettings(), getNotices()]);
   const status = registrationStatus();
-  const cta =
-    status === "open"
-      ? { href: o.formUrl, label: "Register now · from ₹90" }
-      : { href: whatsappUpdates, label: "Get Olympiad updates on WhatsApp" };
   const pdfs = { lavkumarPdf: o.lavkumarPdf, ketankumarPdf: o.ketankumarPdf } as const;
 
   return (
     <>
       <section className="relative isolate overflow-hidden bg-dark text-light">
-        <div className="kenburns absolute inset-0 -z-10 overflow-hidden opacity-80">
-          <Photo img="cna/real/land-02" wide preload sizes="100vw" alt="Sunrise on snow peaks above the Manali valley, Himachal Pradesh" />
-        </div>
-        <div className="absolute inset-0 -z-10 bg-linear-to-r from-dark/92 via-dark/55 via-60% to-dark/30" />
-        <div className="wrap py-12 sm:py-20 lg:py-28">
-          <p className="inline-flex items-center gap-2 rounded-tag bg-secondary px-3 py-1.5 text-[13.5px] font-medium text-dark">
-            <Star className="text-[13px]" />
-            {o.tagline}
-          </p>
-          <h1 className="h-page mt-4 max-w-4xl sm:mt-5">{o.name}</h1>
-          <p className="mt-2 text-[13.5px] font-medium text-secondary">An Eco-STEM online quiz · Mountain · Desert · Marine</p>
-          <p className="mt-4 max-w-2xl text-[16px] leading-relaxed text-light/85 sm:mt-6 sm:text-[18px]">
-            Answer 100 questions. Clear five rounds. The top scorers go to the Himalaya on a scholarship of up to{" "}
-            <strong className="text-light">100%</strong> for our Astro Adventure Trekking Camp in Manali (camp fee ₹18,000). Open to
-            students aged 14 to 25, and to teachers and sports persons, from{" "}
-            <strong className="text-light">every district of Gujarat</strong>.
-          </p>
-          <p
-            className={`mt-4 inline-flex items-center gap-2 text-[15px] font-semibold sm:mt-6 ${status === "open" ? "text-live-light" : "text-light/85"}`}
-          >
-            <span className={`h-2 w-2 rounded-full ${status === "open" ? "bg-live" : "bg-secondary"}`} />
-            {statusText[status]}
-          </p>
-          <div className="mt-6 flex flex-wrap gap-3 sm:mt-8">
-            <a href={cta.href} target="_blank" rel="noopener" className="btn btn-primary">
-              {cta.label} <ArrowRight />
-            </a>
-            <a href={o.rulesPdf} target="_blank" rel="noopener" className="btn btn-outline-light">
-              Rules &amp; regulations (PDF)
-            </a>
-            <a href="#how" className="btn border-transparent text-light/80 hover:bg-light/10">
+        <div className="absolute inset-0 -z-10 bg-linear-to-br from-dark via-dark to-dark-soft" />
+        <div className="wrap grid gap-8 py-10 sm:py-14 lg:grid-cols-[1.15fr_1fr] lg:gap-12 lg:py-14">
+          <HeroCarousel slides={o.heroSlides} />
+
+          <div className="flex flex-col justify-center">
+            <p className="inline-flex items-center gap-2 self-start rounded-tag bg-secondary px-3 py-1.5 text-[13.5px] font-semibold text-dark">
+              <Star className="text-[13px]" />
+              {o.tagline}
+            </p>
+            <h1 className="h-page mt-4">{o.name}</h1>
+            <p className="mt-2 text-[15px] font-semibold text-secondary">An Eco-STEM online quiz · Mountain · Desert · Marine</p>
+            <p className="mt-4 text-[16px] leading-relaxed text-light/85 sm:text-[17px]">
+              A quiz for students from Std 4 to college across Gujarat. Top scorers win up to{" "}
+              <strong className="text-light">100% scholarship</strong> for our Manali camp.
+            </p>
+            <p
+              className={`mt-5 inline-flex items-center gap-2 self-start rounded-full bg-light/10 px-3.5 py-1.5 text-[14px] font-semibold ${status === "open" ? "text-live-light" : "text-light/90"}`}
+            >
+              <span className={`h-2 w-2 rounded-full ${status === "open" ? "bg-live" : "bg-secondary"}`} />
+              {statusText[status]}
+            </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <ExamFormButton />
+              <a href={o.rulesPdf} target="_blank" rel="noopener" className="btn btn-outline-light">
+                Rules &amp; regulations (PDF)
+              </a>
+            </div>
+            <a
+              href="#how"
+              className="mt-4 inline-flex items-center gap-1.5 self-start text-[15px] font-semibold text-light/80 hover:text-light"
+            >
               How it works <ArrowDown />
             </a>
-          </div>
-          <p className="mt-5 text-[13px] text-light/60">Follows the Government of Gujarat guidelines for environment education trips.</p>
-        </div>
-      </section>
-
-      <section className="border-b border-line">
-        <div className="wrap flex flex-col items-start gap-5 py-6 sm:flex-row sm:items-center sm:justify-between">
-          <p className="eyebrow">A joint initiative of</p>
-          <div className="flex flex-wrap items-center gap-6">
-            <div className="flex items-center gap-3">
-              <Image src={site.trust.logo} alt={`${site.trust.name} logo`} width={56} height={56} className="h-14 w-14" />
-              <div>
-                <p className="leading-tight font-bold">{site.trust.name}</p>
-                <p className="text-[13.5px] font-medium text-muted">Rajkot · Reg. {site.trust.registration}</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <Image src="/img/logo.png" alt="Climber Nature Adventure Club logo" width={56} height={56} className="h-14 w-14" />
-              <div>
-                <p className="leading-tight font-bold">{site.legalName}</p>
-                <p className="text-[13.5px] font-medium text-muted">Rajkot · since 1997</p>
-              </div>
-            </div>
+            <p className="mt-5 text-[13.5px] text-light/60">
+              Follows the Government of Gujarat guidelines for environment education trips.
+            </p>
           </div>
         </div>
-      </section>
 
-      <nav className="sticky top-[72px] z-20 border-b border-line bg-light/95 backdrop-blur" aria-label="On this page">
-        <div className="wrap flex [scrollbar-width:none] gap-7 overflow-x-auto py-3.5 text-[15px] font-semibold text-muted">
-          {jumpLinks.map(([id, label]) => (
-            <a key={id} href={`#${id}`} className="shrink-0 hover:text-primary">
-              {label}
-            </a>
-          ))}
-        </div>
-      </nav>
-
-      <section className="wrap mt-12">
-        <dl className="rail rail-stats grid grid-cols-2 gap-px overflow-hidden rounded-card border border-line bg-line max-sm:border-0 max-sm:bg-transparent lg:grid-cols-5 sm:[&>div:last-child]:col-span-2 lg:[&>div:last-child]:col-span-1">
-          {o.stats.map(([n, label]) => (
-            <div key={label} className="bg-light p-5 max-sm:rounded-card max-sm:border max-sm:border-line sm:p-6">
-              <dt className="text-[13.5px] font-medium text-muted">{label}</dt>
-              <dd>
-                <CountUp value={n} className="display mt-1 text-[30px] whitespace-nowrap sm:text-[46px]" />
-              </dd>
-            </div>
-          ))}
-        </dl>
-      </section>
-
-      <section id="dates" className="wrap mt-14 scroll-mt-28 sm:mt-20">
-        <SectionHeader eyebrow="Key dates & fees" title="Mark your calendar" />
-        <ol className="rail rail-md grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {o.dates.map((d, i) => (
-            <li key={d.label} className="relative rounded-card border border-line p-5">
-              <FeatureIcon name={d.icon} tone={i === o.dates.length - 1 ? "accent" : "light"} />
-              <p className="mt-4 text-[13.5px] font-medium text-muted">{d.label}</p>
-              <p className="mt-1 text-[18px] font-bold">{d.value}</p>
-              {i < 3 && (
-                <span
-                  className="absolute top-1/2 -right-3 hidden h-px w-6 border-t-2 border-dashed border-line lg:block"
-                  aria-hidden="true"
+        <div className="wrap pb-8 sm:pb-10">
+          <dl className="rail rail-stats grid gap-3 sm:grid-cols-3 lg:grid-cols-5">
+            {o.stats.map(([n, label]) => (
+              <div key={label} className="rounded-card border border-light/10 bg-light/5 p-4 sm:p-5">
+                <dt className="text-[14px] font-medium text-light/70">{label}</dt>
+                <dd>
+                  <CountUp value={n} className="display mt-1 text-[30px] whitespace-nowrap text-secondary sm:text-[38px]" />
+                </dd>
+              </div>
+            ))}
+          </dl>
+          <div className="mt-8 flex flex-col gap-4 border-t border-light/10 pt-6 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-8">
+            <p className="text-[14px] font-semibold tracking-wide text-light/70 uppercase">A joint initiative of</p>
+            {[
+              { logo: site.trust.logo, name: site.trust.name, line: `Rajkot · Reg. ${site.trust.registration}` },
+              { logo: "/img/logo.png", name: site.legalName, line: "Rajkot · since 1997" },
+            ].map((org) => (
+              <div key={org.name} className="flex items-center gap-3">
+                <Image
+                  src={org.logo}
+                  alt={`${org.name} logo`}
+                  width={52}
+                  height={52}
+                  className="h-13 w-13 shrink-0 rounded-full bg-light"
                 />
-              )}
-            </li>
-          ))}
-        </ol>
-        <div className="rail mt-6 grid gap-4 md:grid-cols-3">
-          {o.fees.map((f) => (
-            <div key={f.who} className="flex items-center gap-4 rounded-card bg-dark p-5 text-light">
-              <p className="display text-[40px] text-secondary">₹{f.fee}</p>
-              <div>
-                <p className="font-bold">{f.who}</p>
-                <p className="text-[13.5px] font-medium text-light/60">{f.group}</p>
+                <div>
+                  <p className="leading-tight font-bold text-light">{org.name}</p>
+                  <p className="text-[14px] text-light/65">{org.line}</p>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-        <p className="mt-3 text-[13.5px] font-medium text-muted">Registration fee is non-refundable. Online payment only.</p>
+      </section>
+
+      <SectionNav links={jumpLinks} />
+
+      <section id="dates" className="wrap mt-12 scroll-mt-32 sm:mt-16">
+        <SectionHeader eyebrow="Key dates & notices" title="Mark your calendar" />
+        <div className="grid gap-6 lg:grid-cols-[1fr_1.3fr]">
+          <ol className="grid gap-3">
+            {o.dates.map((d, i) => (
+              <li key={d.label} className="flex items-center gap-4 rounded-card border border-line bg-light p-4">
+                <FeatureIcon name={d.icon} tone={i === o.dates.length - 1 ? "accent" : "light"} />
+                <div>
+                  <p className="text-[14px] font-medium text-muted">{d.label}</p>
+                  <p className="text-[17px] leading-snug font-bold">{d.value}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+          <NoticeBoard notices={notices} />
+        </div>
       </section>
 
       <section className="mt-16 bg-soft py-14 sm:mt-24 sm:py-20">
@@ -222,22 +218,32 @@ export default async function OlympiadPage() {
         />
         <div className="rail grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           {o.groups.map((g) => (
-            <article key={g.g} className="flex flex-col rounded-card border border-line p-5 sm:p-6">
-              <div className="flex items-center justify-between">
-                <span className="display flex h-14 w-14 items-center justify-center rounded-card bg-dark text-[34px] text-secondary">
+            <article
+              key={g.g}
+              className="flex flex-col gap-4 rounded-card border border-line bg-light p-5 transition hover:border-dark sm:row-span-4 sm:grid sm:grid-rows-subgrid sm:gap-4 sm:p-6"
+            >
+              <div className="flex items-center gap-3.5">
+                <span className="display flex h-14 w-14 shrink-0 items-center justify-center rounded-card bg-dark text-[32px] text-secondary">
                   {g.g}
                 </span>
-                <span className="text-[14px] font-medium text-muted">{g.age}</span>
+                <div>
+                  <p className="text-[13px] font-semibold tracking-wide text-muted uppercase">Group {g.g}</p>
+                  <p className="text-[17px] font-bold">{g.age}</p>
+                </div>
               </div>
-              <h3 className="mt-5 text-[18px] leading-normal">{g.std}</h3>
-              <p className="mt-2 text-[15px] text-muted">
-                Quiz syllabus: {g.syllabus}
-                {g.g !== "D" && " — maths, science, social studies, GK, logical & intellectual questions"}
+              <h3 className="border-t border-line pt-4 text-[17px] leading-snug">{g.std}</h3>
+              <p className="text-[15px] text-muted">
+                <span className="font-semibold text-dark">Quiz: </span>
+                {g.g === "D" ? g.syllabus : `${g.syllabus}. Maths, science, social studies, GK and reasoning.`}
               </p>
-              <div className="mt-auto pt-5">
-                <div className="trail-line" />
-              </div>
-              <p className="mt-4 font-semibold">{g.fee}</p>
+              <dl className="grid content-start gap-2.5 self-stretch rounded-card bg-soft p-4">
+                {g.fees.map((fee) => (
+                  <div key={fee.amount} className="flex items-baseline gap-2.5">
+                    <dt className="display shrink-0 text-[22px] leading-none text-primary">{fee.amount}</dt>
+                    <dd className="text-[13.5px] leading-snug text-muted">{fee.note}</dd>
+                  </div>
+                ))}
+              </dl>
             </article>
           ))}
         </div>
@@ -246,14 +252,25 @@ export default async function OlympiadPage() {
 
       <section id="how" className="wrap mt-16 scroll-mt-28 sm:mt-24">
         <SectionHeader eyebrow="How it works" title="From your phone to the Himalaya, in four steps" />
-        <ol className="rail grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <ol className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 lg:gap-6">
           {o.steps.map(([icon, title, text], i) => (
-            <li key={title} className="rounded-card border border-line p-5 sm:p-6">
+            <li key={title} className="relative flex flex-col rounded-card border border-line bg-light p-5 sm:p-6">
+              {i < o.steps.length - 1 && (
+                <span
+                  aria-hidden="true"
+                  className="absolute top-1/2 -right-[17px] z-10 hidden h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-line bg-light text-[15px] text-primary lg:flex"
+                >
+                  <ArrowRight />
+                </span>
+              )}
               <div className="flex items-center justify-between">
-                <span className="display text-[44px] leading-none text-primary">0{i + 1}</span>
+                <span className="display flex h-12 w-12 items-center justify-center rounded-full bg-primary text-[20px] text-light">
+                  {i + 1}
+                </span>
                 <FeatureIcon name={icon} />
               </div>
-              <h3 className="mt-4 text-[20px] leading-normal">{title}</h3>
+              <p className="mt-4 text-[13px] font-semibold tracking-wide text-muted uppercase">Step {i + 1}</p>
+              <h3 className="mt-1 text-[19px] leading-snug">{title}</h3>
               <p className="mt-2 text-[15px] text-muted">{text}</p>
             </li>
           ))}
@@ -292,7 +309,7 @@ export default async function OlympiadPage() {
               </dl>
             </div>
             <div>
-              <p className="eyebrow flex items-center gap-2 text-light/60!">
+              <p className="eyebrow flex items-center gap-2 text-secondary!">
                 <Trophy className="text-[16px] text-secondary" />
                 Five rounds of selection
               </p>
@@ -333,33 +350,33 @@ export default async function OlympiadPage() {
         />
         <div className="rail grid gap-6 lg:grid-cols-2">
           {o.scholarships.map((s) => (
-            <article
-              key={s.n}
-              className="flex flex-col items-center rounded-card border border-line bg-light p-5 text-center shadow-panel sm:p-8"
-            >
-              <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-full border-4 border-light bg-soft ring-2 ring-primary sm:h-32 sm:w-32">
-                <Image
-                  src={s.img}
-                  alt={s.name.replace(" Adventure Scholarship", "")}
-                  fill
-                  sizes="128px"
-                  className="object-cover object-top"
-                />
+            <article key={s.n} className="flex flex-col overflow-hidden rounded-card border border-line bg-light shadow-panel">
+              <div className="h-28 bg-linear-to-r from-dark to-dark-soft sm:h-36" aria-hidden="true" />
+              <div className="-mt-24 flex flex-1 flex-col items-center px-5 pb-6 text-center sm:-mt-32 sm:px-8 sm:pb-8">
+                <div className="relative h-44 w-44 shrink-0 overflow-hidden rounded-full border-[6px] border-light bg-soft shadow-float sm:h-60 sm:w-60">
+                  <Image
+                    src={s.img}
+                    alt={s.name.replace(" Adventure Scholarship", "")}
+                    fill
+                    sizes="240px"
+                    className="object-cover object-top"
+                  />
+                </div>
+                <span className="mt-4 rounded-full bg-primary-soft px-3 py-1 text-[13px] font-bold text-primary">Scholarship {s.n}</span>
+                <h3 className="h-card mt-2 max-w-sm">{s.name}</h3>
+                <p className="mt-2 max-w-md text-[15px] text-muted">{s.text}</p>
+                <ul className="mt-5 w-full space-y-2 rounded-card bg-soft p-4 text-left text-[15px]">
+                  {s.points.map((p) => (
+                    <li key={p} className="flex gap-2">
+                      <CheckCircle className="mt-[3px] shrink-0 text-[18px] text-success" />
+                      {p}
+                    </li>
+                  ))}
+                </ul>
+                <a href={pdfs[s.pdf]} target="_blank" rel="noopener" className="btn btn-outline mt-auto self-center pt-3!">
+                  {s.pdfLabel} (PDF) <ArrowRight />
+                </a>
               </div>
-              <p className="display mt-4 text-[34px] leading-none text-primary sm:mt-5 sm:text-[40px]">{s.pct}</p>
-              <h3 className="h-card mt-3 max-w-sm">{s.name}</h3>
-              <p className="mt-2 max-w-md text-[15px] text-muted">{s.text}</p>
-              <ul className="mt-5 w-full max-w-md space-y-2 border-t border-line pt-5 text-left text-[15px]">
-                {s.points.map((p) => (
-                  <li key={p} className="flex gap-2">
-                    <CheckCircle className="mt-[3px] shrink-0 text-[18px] text-success" />
-                    {p}
-                  </li>
-                ))}
-              </ul>
-              <a href={pdfs[s.pdf]} target="_blank" rel="noopener" className="mt-auto pt-6 font-semibold text-primary underline">
-                {s.pdfLabel} (PDF) <ArrowRight />
-              </a>
             </article>
           ))}
         </div>
@@ -405,33 +422,6 @@ export default async function OlympiadPage() {
               </div>
             ))}
           </div>
-          <div className="mt-6 flex flex-col gap-4 rounded-card bg-dark p-6 text-light sm:flex-row sm:items-center">
-            <FeatureIcon name="noPhone" tone="accent" size="lg" />
-            <div>
-              <p className="display text-[28px]">Unplug. Explore. Discover.</p>
-              <p className="mt-1 text-light/70">Ten days with fewer screens and more sky, friends and fresh air.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="districts" className="wrap mt-16 scroll-mt-28 sm:mt-24">
-        <div className="flex flex-col gap-6 rounded-card border border-dark p-6 sm:p-8 lg:flex-row lg:items-center lg:justify-between">
-          <div>
-            <p className="eyebrow">Open for</p>
-            <h2 className="display h-section mt-2">Every district of Gujarat</h2>
-            <p className="mt-2 max-w-xl text-muted">
-              Any eligible student or teacher in Gujarat can register, from a village school in Kutch to a college in Surat.
-            </p>
-          </div>
-          <ul className="flex flex-wrap gap-2">
-            {o.regions.map((d) => (
-              <li key={d} className="flex items-center gap-2 rounded-card bg-soft px-4 py-2.5 font-semibold">
-                <MapPin className="text-primary" />
-                {d}
-              </li>
-            ))}
-          </ul>
         </div>
       </section>
 
@@ -473,46 +463,64 @@ export default async function OlympiadPage() {
         </div>
       </section>
 
-      <section id="faq" className="wrap mt-16 max-w-3xl scroll-mt-28 sm:mt-24">
-        <p className="eyebrow">Questions?</p>
-        <h2 className="h-section mt-3">Olympiad FAQs</h2>
-        <FaqList
-          className="mt-6"
-          faqs={[
-            ...o.faqs.map((f) => ({ question: f.q, answer: f.a })),
-            {
-              question: "How do I contact the organisers?",
-              answer: `Call or WhatsApp ${contact.phone}, or email ${contact.email}. Office: ${contact.address.full}. Visits by appointment only, so please call first.`,
-            },
-          ]}
-        />
-      </section>
+      <section id="faq" className="wrap mt-16 scroll-mt-28 sm:mt-24">
+        <div className="grid gap-8 lg:grid-cols-[1.35fr_1fr] lg:items-start lg:gap-12">
+          <div>
+            <p className="eyebrow">Questions?</p>
+            <h2 className="h-section mt-3">Olympiad FAQs</h2>
+            <FaqList
+              className="mt-6"
+              faqs={[
+                ...o.faqs.map((f) => ({ question: f.q, answer: f.a })),
+                {
+                  question: "How do I contact the organisers?",
+                  answer: `Call or WhatsApp ${contact.phone}, or email ${contact.email}. Office: ${contact.address.full}. Visits by appointment only, so please call first.`,
+                },
+              ]}
+            />
+          </div>
 
-      <section className="wrap mt-16 sm:mt-24">
-        <div className="relative overflow-hidden rounded-card bg-dark p-8 text-light sm:p-12">
-          <div className="absolute inset-0 opacity-25">
-            <Photo img="cna/real/land-10" wide sizes="(min-width: 1240px) 1176px, 100vw" />
-          </div>
-          <div className="relative">
-            <p className="flex items-center gap-2 text-[13.5px] font-medium text-secondary">
-              <Clock className="text-[15px]" />
-              {statusText[status]}
-            </p>
-            <h2 className="h-section mt-3 max-w-2xl">Your seat in the Himalaya starts with one quiz</h2>
-            <p className="mt-3 max-w-xl text-light/75">Score well, pick the right scholarship and we will see you at camp in Manali.</p>
-            <div className="mt-6 flex flex-wrap gap-x-8 gap-y-3">
-              {o.fees.map((f) => (
-                <span key={f.who}>
-                  <span className="display text-[22px] text-secondary">₹{f.fee}</span>{" "}
-                  <span className="text-[14px] text-light/75">{f.who}</span>
-                </span>
-              ))}
+          <aside className="grid gap-5 lg:sticky lg:top-36">
+            <div className="relative overflow-hidden rounded-card bg-dark p-6 text-light sm:p-8">
+              <div className="absolute inset-0 opacity-25">
+                <Photo img="cna/real/land-10" sizes="(min-width: 1024px) 480px, 100vw" />
+              </div>
+              <div className="relative">
+                <p className="flex items-center gap-2 text-[14px] font-semibold text-secondary">
+                  <Clock className="text-[15px]" />
+                  {statusText[status]}
+                </p>
+                <h2 className="h-sub mt-3">Your seat in the Himalaya starts with one quiz</h2>
+                <p className="mt-2 text-light/75">Score well, pick the right scholarship and we will see you at camp in Manali.</p>
+                <dl className="mt-5 grid grid-cols-2 gap-2">
+                  {o.fees.map((f) => (
+                    <div key={f.who} className="rounded-card bg-light/10 p-3">
+                      <dt className="display text-[22px] leading-none text-secondary">₹{f.fee}</dt>
+                      <dd className="mt-1 text-[13px] leading-snug text-light/75">{f.who}</dd>
+                    </div>
+                  ))}
+                </dl>
+                <ExamFormButton className="mt-6 w-full" />
+                <p className="mt-3 text-[13px] text-light/55">All disputes are subject to Rajkot jurisdiction.</p>
+              </div>
             </div>
-            <a href={cta.href} target="_blank" rel="noopener" className="btn btn-primary mt-8">
-              {cta.label} <ArrowRight />
-            </a>
-            <p className="mt-4 text-[13px] text-light/55">All disputes are subject to Rajkot jurisdiction.</p>
-          </div>
+
+            <div id="districts" className="rounded-card border border-line p-6">
+              <p className="eyebrow">Open for</p>
+              <h2 className="h-sub mt-2">Every district of Gujarat</h2>
+              <p className="mt-2 text-[15px] text-muted">
+                Any eligible student or teacher in Gujarat can register, from a village school in Kutch to a college in Surat.
+              </p>
+              <ul className="mt-4 flex flex-wrap gap-2">
+                {o.regions.map((d) => (
+                  <li key={d} className="flex items-center gap-1.5 rounded-full bg-soft px-3 py-1.5 text-[14px] font-semibold">
+                    <MapPin className="text-primary" />
+                    {d}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </aside>
         </div>
       </section>
     </>

@@ -28,7 +28,6 @@ const faqs = [
 
 const contactWays = (contact: SiteSettings) => [
   { label: "Call", value: contact.phone, href: contact.phoneHref, note: "Mon to Sat, office hours" },
-  { label: "WhatsApp", value: "Chat with us", href: contact.whatsappHref, note: "Fastest reply, usually the same day" },
   { label: "Email", value: contact.email, href: `mailto:${contact.email}`, note: "Trips, camps and group bookings" },
   ...(contact.trustEmail
     ? [{ label: "Trust email", value: contact.trustEmail, href: `mailto:${contact.trustEmail}`, note: site.trust.name }]
@@ -85,13 +84,6 @@ export default async function ContactPage() {
                 </a>
               )}
             </div>
-          </div>
-          <div id="payments" className="scroll-mt-28 rounded-card bg-soft p-5">
-            <p className="eyebrow">Payments</p>
-            <p className="mt-2">
-              Book with a 25% advance once your batch is confirmed. The balance is due 3 days before departure. Our team shares payment
-              details with you directly. We never post bank or UPI details on public pages, and we will never ask for your card PIN or OTP.
-            </p>
           </div>
         </div>
         <div id="enquire" className="scroll-mt-28">

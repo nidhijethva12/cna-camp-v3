@@ -48,21 +48,10 @@ export const mainNav: NavItem[] = [
     children: [
       ...regionOrder.map((r) => ({ label: regions[r].label, href: tripsByRegionHref(r) })),
       { label: "Girls-only & solo", href: "/travellers" },
+      { label: "Group trips", href: "/group-trips" },
     ],
   },
   { label: "Upcoming Batches", href: "/batches" },
-  {
-    label: "Group Trips",
-    href: "/group-trips",
-    children: [
-      { label: "All group trips", href: "/group-trips" },
-      { label: "Schools & colleges", href: "/group-trips#schools" },
-      { label: "Families & friends", href: "/group-trips#families" },
-      { label: "Corporate teams", href: "/group-trips#corporate" },
-      { label: "Teachers, NGOs & clubs", href: "/group-trips#ngo" },
-      { label: "Plan a custom trip", href: "/group-trips#custom" },
-    ],
-  },
   { label: "Olympiad", href: "/olympiad", hot: true },
   {
     label: "About",
@@ -83,16 +72,17 @@ export const footerNav = {
   ],
   company: [
     { label: "About us", href: "/about" },
-    { label: "Group trips", href: "/group-trips" },
-    { label: "Adventure Olympiad", href: "/olympiad", hot: true },
+    { label: "Contact us", href: "/contact" },
+  ],
+  resources: [
     { label: "Gallery", href: "/gallery" },
-    { label: "Contact & payments", href: "/contact" },
+    { label: "Group trips", href: "/group-trips" },
+    { label: "Blog", href: "/blog" },
   ],
   legal: [
-    { label: "Terms", href: "/terms" },
+    { label: "Terms and conditions", href: "/terms" },
     { label: "Cancellation & refund", href: "/cancellation" },
-    { label: "Privacy", href: "/privacy" },
-    { label: "Photo credits", href: "/photo-credits" },
+    { label: "Privacy policy", href: "/privacy" },
   ],
 };
 

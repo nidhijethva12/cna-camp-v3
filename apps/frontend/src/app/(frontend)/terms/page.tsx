@@ -20,6 +20,8 @@ export default async function TermsPage() {
   return (
     <>
       <PageHead
+        img="cna/real/land-03"
+        imgAlt="Snow peaks above a green Himalayan valley"
         eyebrow="Policies"
         title={<>Terms &amp; conditions</>}
         text="How booking, payment, safety and changes work on a CNA trip, in plain words."

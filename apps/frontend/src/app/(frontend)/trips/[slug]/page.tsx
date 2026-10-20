@@ -9,6 +9,7 @@ import { BreadcrumbLd } from "@/components/seo/Breadcrumbs";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { TripCard } from "@/components/trips/TripCard";
 import { FaqList } from "@/components/ui/FaqList";
+import { SectionNav } from "@/components/ui/SectionNav";
 import { FeatureIcon } from "@/components/ui/FeatureIcon";
 import { ArrowRight, CheckCircle, Clock, Gauge, MapPin, Mountains, XCircle } from "@/components/ui/icons";
 import { regions, site, tripsByRegionHref } from "@/content/site";
@@ -84,16 +85,16 @@ export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
   ]);
   const days = tripItinerary(trip);
 
-  const jumpLinks = [
+  const jumpLinks: [string, string][] = [
     ["overview", "Overview"],
-    ...(showPhotos ? [["photos", "Photos"]] : []),
-    ...(videos.length ? [["videos", "Videos"]] : []),
+    ...(showPhotos ? [["photos", "Photos"] as [string, string]] : []),
+    ...(videos.length ? [["videos", "Videos"] as [string, string]] : []),
     ["itinerary", "Day by day"],
     ["inclusions", "Inclusions"],
     ["carry", "What to carry"],
     ["reach", "How to reach"],
     ["faq", "FAQs"],
-    ["enquire", "Enquire"],
+    ["enquire", "Contact us"],
   ];
 
   const tripLd = {
@@ -172,15 +173,7 @@ export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
         </div>
       </section>
 
-      <nav className="sticky top-[72px] z-20 border-b border-line bg-light/95 backdrop-blur" aria-label="On this page">
-        <div className="wrap flex [scrollbar-width:none] gap-7 overflow-x-auto py-3.5 text-[15px] font-semibold text-muted">
-          {jumpLinks.map(([id, label]) => (
-            <a key={id} href={`#${id}`} className="shrink-0 hover:text-primary">
-              {label}
-            </a>
-          ))}
-        </div>
-      </nav>
+      <SectionNav links={jumpLinks} />
 
       <div className="wrap mt-12 grid gap-12 lg:grid-cols-[1fr_380px]">
         <div className="min-w-0">
@@ -451,7 +444,7 @@ export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
               <p className="mt-3 text-[15px] text-muted">Dates on request. Groups can choose their own dates.</p>
             )}
             <a href="#enquire" className="btn btn-primary mt-6 w-full">
-              Enquire / book <ArrowRight />
+              Contact us <ArrowRight />
             </a>
             <a href={contact.whatsappHref} target="_blank" rel="noopener" className="btn btn-outline mt-3 w-full">
               WhatsApp us

@@ -7,7 +7,43 @@ type DateItem = { icon: FeatureIconName; label: string; value: string };
 export const olympiad = {
   name: "Adventure Olympiad 1.0",
   tagline: "India’s first Adventure Olympiad",
-  formUrl: "https://docs.google.com/forms/d/e/1FAIpQLScmRxjPKSZCuYZX5RQz1Dwh2RzibDaG4xgqlgHrFkRd1_kfwg/viewform",
+  /** Hero slideshow: the quiz first, then the Manali camp it leads to. */
+  heroSlides: [
+    {
+      img: { src: "/img/olympiad/students-exam.webp", alt: "Two school students writing at a classroom desk", width: 1200, height: 675 },
+      alt: "Two school students writing at a classroom desk",
+      caption: "Round 1: the Eco-STEM quiz",
+    },
+    {
+      img: {
+        src: "/img/olympiad/students-classroom.webp",
+        alt: "Schoolgirls in uniform listening in a classroom",
+        width: 1200,
+        height: 800,
+      },
+      alt: "Schoolgirls in uniform listening in a classroom",
+      caption: "Open to every district of Gujarat",
+    },
+    {
+      img: { src: "/img/olympiad/students-exam-hall.webp", alt: "Students writing a test in a large exam hall", width: 1200, height: 675 },
+      alt: "Students writing a test in a large exam hall",
+      caption: "100 MCQs in 60 minutes",
+    },
+    {
+      img: { src: "/img/olympiad/students-writing.webp", alt: "Two boys working through a book at their desk", width: 1200, height: 725 },
+      alt: "Two boys working through a book at their desk",
+      caption: "Maths, science, GK and reasoning",
+    },
+    { img: "cna/real/campus-03", alt: "CNA’s Manali campus buildings with snow peaks behind", caption: "The prize: our Manali campus" },
+    {
+      img: "cna/real/river-01",
+      alt: "Campers crossing a river on a wooden bridge near Manali",
+      caption: "Ten days of adventure in Manali",
+    },
+    { img: "cna/real/snow-02", alt: "Campers walking up a snowy mountain road in warm layers", caption: "Snow, stars and new friends" },
+  ],
+  /** The new exam form. Empty = the "fill the form" button shows but does not open anything yet. */
+  examFormUrl: "",
   rulesPdf: "https://www.cnacamp.com/rules-of-camp.pdf",
   lavkumarPdf: "https://www.cnacamp.com/Lavkumar.pdf",
   ketankumarPdf: "https://www.cnacamp.com/Dr-ketankumar-new.pdf",
@@ -21,12 +57,13 @@ export const olympiad = {
     { icon: "mountains", label: "Astro Adventure Camp, Manali", value: "Dates announced after the final merit list" },
   ] satisfies DateItem[],
   fees: [
-    { fee: 90, who: "Government school students", group: "Group A or B · Scholarship 1" },
-    { fee: 108, who: "All students", group: "Group A, B or C · Scholarship 2" },
-    { fee: 504, who: "Teachers and sports persons", group: "Group D · Volunteers" },
+    { fee: 90, who: "Group A, government school" },
+    { fee: 230, who: "Group A others · Group B government school" },
+    { fee: 320, who: "Group B others · Group C" },
+    { fee: 923, who: "Group D volunteers and escorts" },
   ],
   stats: [
-    ["14 to 25", "Ages"],
+    ["8 to 30", "Student ages"],
     ["100%", "Scholarship, up to"],
     ["₹18K", "Camp fee covered"],
     ["100", "MCQs"],
@@ -46,31 +83,37 @@ export const olympiad = {
   groups: [
     {
       g: "A",
-      age: "14+ to 16 years",
-      std: "Std 8 to 9 (academic year 2025-26)",
-      syllabus: "Std 8 level",
-      fee: "₹90 (government school, Scholarship 1) or ₹108 (all students, Scholarship 2)",
+      age: "8+ to 16 years",
+      std: "Std 4 to 9",
+      syllabus: "Set at your class level",
+      fees: [
+        { amount: "₹90", note: "Government school students" },
+        { amount: "₹230", note: "All other students" },
+      ],
     },
     {
       g: "B",
       age: "16+ to 18 years",
-      std: "Std 10 to 11 (academic year 2025-26)",
-      syllabus: "Std 10 level",
-      fee: "₹90 (government school, Scholarship 1) or ₹108 (all students, Scholarship 2)",
+      std: "Std 10 to 12",
+      syllabus: "Set at your class level",
+      fees: [
+        { amount: "₹230", note: "Government school students" },
+        { amount: "₹320", note: "All other students" },
+      ],
     },
     {
       g: "C",
-      age: "18 to 25 years",
-      std: "Std 12 and above, college or university",
-      syllabus: "Std 12 level",
-      fee: "₹108 · Up to 70% with a government school background, up to 60% for others",
+      age: "18+ to 30 years",
+      std: "College and university students only",
+      syllabus: "Set at college level",
+      fees: [{ amount: "₹320", note: "All students" }],
     },
     {
       g: "D",
-      age: "25+ years",
-      std: "Teachers and sports persons only",
-      syllabus: "No quiz: you join the camp as a volunteer",
-      fee: "₹504",
+      age: "18+, no upper age limit",
+      std: "Nature, adventure and sports persons",
+      syllabus: "No exam: direct selection as a volunteer or escort",
+      fees: [{ amount: "₹923", note: "Volunteers and escorts" }],
     },
   ],
   steps: [
@@ -99,7 +142,7 @@ export const olympiad = {
     ["Type", "Multiple choice questions (MCQ)"],
     ["Language", "Gujarati or English"],
     ["Subjects", "Maths, science, social studies, GK and logical reasoning"],
-    ["Level", "Based on your group (Std 8, 10 or 12)"],
+    ["Level", "Based on your group and class"],
     ["Format", "Online. The quiz link comes to your WhatsApp number."],
   ],
   rounds: [
@@ -121,7 +164,11 @@ export const olympiad = {
       pdf: "lavkumarPdf",
       pdfLabel: "About Sir Lavkumar Khachar",
       text: "A full scholarship for students who passed Std 8 from a government primary school (or RTE students in private schools).",
-      points: ["100% scholarship for Group A and Group B", "You must be in Std 8 to 12 now", "Registration fee: ₹90"],
+      points: [
+        "100% scholarship for Group A and Group B",
+        "You must be in Std 8 to 12 now",
+        "Registration fee: ₹90 (Group A) or ₹230 (Group B)",
+      ],
     },
     {
       n: 2,
@@ -136,7 +183,7 @@ export const olympiad = {
         "Up to 60% of the camp fee",
         "70% for Group C students who passed Std 8 from a government school and now study in a government or grant-aided college or university",
         "Choose the right age group when you register",
-        "Registration fee: ₹108",
+        "Registration fee: ₹230 (Group A) or ₹320 (Group B or C)",
       ],
     },
   ],
@@ -165,8 +212,8 @@ export const olympiad = {
   ] satisfies Feature[],
   regions: ["Saurashtra", "Kutch", "North Gujarat", "Central Gujarat", "South Gujarat"],
   eligibility: [
-    "Age 14+ to 25 years (as on 31 May 2026)",
-    "Students (Std 8 and above), teachers or sports persons",
+    "Students aged 8+ to 30 (Std 4 to college); nature, adventure and sports persons aged 18+",
+    "Students from Std 4 to college, or nature, adventure and sports persons",
     "From any district of Gujarat",
     "Registered in the correct age group and class",
     "Physically and mentally fit for camp activities",
@@ -187,11 +234,11 @@ export const olympiad = {
     },
     {
       q: "Is registration free?",
-      a: "No. The fee is ₹90 (Scholarship 1, government school students in Group A or B), ₹108 (Scholarship 2, all students in Group A, B or C) or ₹504 (Group D, teachers and sports persons). It is paid online and is non-refundable.",
+      a: "No. Group A: ₹90 for government school students, ₹230 for others. Group B: ₹230 for government school students, ₹320 for others. Group C: ₹320. Group D (volunteers and escorts): ₹923. It is paid online and is non-refundable.",
     },
     {
       q: "What is the difference between the two scholarships?",
-      a: "Scholarship 1 (K.S. Sir Lavkumar Khachar) gives 100% to government school students in Group A or B, fee ₹90. Scholarship 2 (Sir Dr. Ketankumar Trivedi) gives up to 60% to all students in Group A, B or C, and 70% to Group C students with a government school background, fee ₹108. You can apply for only one.",
+      a: "Scholarship 1 (K.S. Sir Lavkumar Khachar) gives 100% to government school students in Group A or B. Scholarship 2 (Sir Dr. Ketankumar Trivedi) gives up to 60% to all students in Group A, B or C, and 70% to Group C students with a government school background. You can apply for only one.",
     },
     {
       q: "What does the scholarship cover?",
@@ -203,7 +250,7 @@ export const olympiad = {
     },
     {
       q: "Who can apply?",
-      a: "Any eligible student aged 14+ to 25, or a teacher or sports person, from any district of Gujarat: Saurashtra, Kutch, North, Central and South Gujarat.",
+      a: "Any eligible student from Std 4 to college (ages 8+ to 30), or a nature, adventure or sports person aged 18+, from any district of Gujarat: Saurashtra, Kutch, North, Central and South Gujarat.",
     },
     {
       q: "What documents do I need after selection?",

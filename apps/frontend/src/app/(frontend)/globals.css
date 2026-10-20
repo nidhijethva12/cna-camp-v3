@@ -14,13 +14,18 @@
   --color-dark: #141414;
   --color-dark-soft: #2a2a28;
   --color-black: #000;
-  --color-muted: #66625b;
+  --color-muted: #45423d;
   --color-line: #e3dfd7;
   --color-soft: #f4f2ee;
   --color-light: #fff;
   --color-whatsapp: #1fa855;
   --color-whatsapp-dark: #168a45;
+  --color-facebook: #1877f2;
+  --color-instagram-yellow: #fdc468;
+  --color-instagram-pink: #df4996;
+  --color-instagram-purple: #6a3ddb;
   --color-success: #168a45;
+  --color-danger: #d11a1a;
   --color-live: #3fb36b;
   --color-live-light: #7ee2a4;
 
@@ -257,9 +262,15 @@
 
   .eyebrow {
     font-family: var(--font-display);
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 700;
+    letter-spacing: 0.01em;
     color: var(--color-primary);
+  }
+  @media (min-width: 640px) {
+    .eyebrow {
+      font-size: 17px;
+    }
   }
 
   .btn {
@@ -567,5 +578,40 @@
     scroll-padding-inline: 24px;
     border-radius: 0;
     background: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .olympiad-popup[open] {
+    animation: popup-in 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .olympiad-popup[open]::backdrop {
+    animation: popup-fade 0.35s ease-out;
+  }
+}
+@keyframes popup-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.97);
+  }
+}
+@keyframes popup-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .notice-marquee {
+    animation: notice-up var(--notice-duration, 30s) linear infinite;
+  }
+  .notice-window:hover .notice-marquee,
+  .notice-window:focus-within .notice-marquee {
+    animation-play-state: paused;
+  }
+}
+@keyframes notice-up {
+  to {
+    transform: translateY(-50%);
   }
 }

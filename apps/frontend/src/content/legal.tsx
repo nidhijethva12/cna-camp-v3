@@ -179,7 +179,7 @@ export const cancellationSections = (contact: SiteSettings): LegalSection[] => [
     id: "olympiad",
     title: "Adventure Olympiad",
     body: [
-      "Olympiad registration fees (₹90, ₹108 or ₹504) are non-refundable in all cases, including a wrong group choice or not clearing a round.",
+      "Olympiad registration fees (₹90, ₹230, ₹320 or ₹923) are non-refundable in all cases, including a wrong group choice or not clearing a round.",
     ],
   },
 ];

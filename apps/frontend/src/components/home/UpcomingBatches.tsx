@@ -1,75 +1,40 @@
 import Link from "next/link";
-import { ArrowRight } from "@/components/ui/icons";
+import { BatchCard } from "@/components/trips/BatchCard";
 import { SectionHeader } from "@/components/ui/SectionHeader";
-import { enquireHref, regions } from "@/content/site";
+import { enquireHref } from "@/content/site";
 import type { UpcomingBatch } from "@/lib/content";
-import { splitDate } from "@/lib/format";
-import { durationShort, tripPriceShort } from "@/lib/trips";
-
-const LOW_SEATS = 8;
 
 export function UpcomingBatches({ batches }: { batches: UpcomingBatch[] }) {
   return (
-    <section className="wrap mt-16 sm:mt-24" aria-labelledby="batches-title">
-      <SectionHeader
-        id="batches-title"
-        eyebrow="Upcoming batches"
-        title="Pick a date. Pack your bag."
-        intro="Fixed departures you can join alone or with your gang. Seats are limited, and they do go."
-        action={{ label: "See all batches", href: "/batches" }}
-      />
+    <section className="mt-16 bg-dark py-14 text-light sm:mt-24 sm:py-20" aria-labelledby="batches-title">
+      <div className="wrap">
+        <SectionHeader
+          dark
+          id="batches-title"
+          eyebrow="Upcoming batches"
+          title="Pick a date. Pack your bag."
+          intro="Fixed departures you can join alone or with your gang. Seats are limited, and they do go."
+          action={{ label: "See all batches", href: "/batches" }}
+        />
 
-      {batches.length === 0 ? (
-        <p className="rounded-card border border-line p-6 text-muted">
-          New dates are being planned.{" "}
-          <Link href={enquireHref()} className="font-semibold text-primary underline">
-            Ask us
-          </Link>{" "}
-          about the next batch.
-        </p>
-      ) : (
-        <ul className="reveal overflow-hidden rounded-card border border-line">
-          {batches.map((b, i) => {
-            const { day, month } = splitDate(b.startDate);
-            const meta = [regions[b.trip.region].label, durationShort(b.trip), b.note].filter(Boolean);
-            const price = tripPriceShort(b.trip);
-            return (
-              <li
-                key={`${b.tripSlug}-${b.startDate}`}
-                className={[i > 0 && "border-t border-line", i > 2 && "max-sm:hidden"].filter(Boolean).join(" ") || undefined}
-              >
-                <Link
-                  href={`/trips/${b.trip.slug}`}
-                  className="group grid grid-cols-[64px_1fr_auto] items-center gap-4 p-4 transition hover:bg-soft sm:grid-cols-[84px_1.4fr_1fr_1fr_auto] sm:p-5"
-                >
-                  <time dateTime={b.startDate} className="block rounded-tag bg-dark py-2 text-center text-light">
-                    <span className="display block text-[24px] leading-none">{day}</span>
-                    <span className="mt-1 block font-mono text-[11px] tracking-[.1em] text-secondary">{month}</span>
-                  </time>
-                  <div>
-                    <p className="text-[18px] font-bold group-hover:text-primary">{b.trip.name}</p>
-                    <p className="text-[13.5px] font-medium text-muted">{meta.join(" · ")}</p>
-                    <p className="mt-1 font-mono text-[12px] sm:hidden">
-                      <span className={b.seatsLeft <= LOW_SEATS ? "text-primary" : "text-dark"}>{b.seatsLeft} seats left</span>
-                      <span className="text-muted"> · {price}</span>
-                    </p>
-                  </div>
-                  <p className="hidden font-mono text-[13px] sm:block">
-                    <span className={b.seatsLeft <= LOW_SEATS ? "text-primary" : "text-dark"}>{b.seatsLeft} seats left</span>
-                  </p>
-                  <p className="display hidden text-[19px] sm:block">{price}</p>
-                  <span
-                    className="flex h-11 w-11 items-center justify-center rounded-card border border-line transition group-hover:border-primary group-hover:bg-primary group-hover:text-light"
-                    aria-hidden="true"
-                  >
-                    <ArrowRight className="text-[18px]" />
-                  </span>
-                </Link>
+        {batches.length === 0 ? (
+          <p className="rounded-card border border-light/15 p-6 text-light/75">
+            New dates are being planned.{" "}
+            <Link href={enquireHref()} className="font-semibold text-secondary underline">
+              Ask us
+            </Link>{" "}
+            about the next batch.
+          </p>
+        ) : (
+          <ul className="rail grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {batches.map((b) => (
+              <li key={`${b.tripSlug}-${b.startDate}`}>
+                <BatchCard batch={b} sizes="(min-width: 1024px) 290px, (min-width: 640px) 50vw, 82vw" />
               </li>
-            );
-          })}
-        </ul>
-      )}
+            ))}
+          </ul>
+        )}
+      </div>
     </section>
   );
 }

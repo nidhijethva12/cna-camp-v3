@@ -17,6 +17,8 @@ export const metadata: Metadata = {
 const otherSlots: Record<string, string> = {
   "campus-dwarka": "Bet Dwarka campus",
   "campus-hingolgadh": "Hingolgadh camp",
+  "olympiad-popup": "Olympiad pop-up",
+  "olympiad-hero": "Olympiad page",
 };
 
 export default async function PhotoCreditsPage() {
@@ -25,6 +27,8 @@ export default async function PhotoCreditsPage() {
   return (
     <>
       <PageHead
+        img="cna/real/land-05"
+        imgAlt="A misty deodar forest in Himachal"
         eyebrow="Photo credits"
         title="Photo credits"
         text="Some photos on this site come from photographers who share their work under Creative Commons and Unsplash licences. Thank you to each of them. We are replacing them with photos from our own trips, one place at a time."

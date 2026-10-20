@@ -151,7 +151,7 @@ export function MobileNav({ items, contact }: { items: NavItem[]; contact: Conta
 
         <div className="shrink-0 space-y-3 border-t border-line p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))]">
           <Link href={enquireHref()} className="btn btn-primary w-full">
-            Enquire now
+            Contact us
           </Link>
           <div className="grid grid-cols-2 gap-3">
             <a href={contact.whatsappHref} rel="noopener" target="_blank" className="btn btn-outline w-full text-whatsapp-dark">
