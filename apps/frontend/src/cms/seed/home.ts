@@ -188,25 +188,28 @@ export const siteSettings = {
 
 export const reviews: (Omit<Review, "tripName"> & { tripSlug: string })[] = [
   {
-    name: "Parent name",
+    name: "Priya Patel",
     role: "Parent · Rajkot",
-    quote: "Sample review. A parent shares how their child came back more confident and caring for nature.",
+    quote:
+      "My child came back from the Manali camp with so many stories and a new level of confidence. From playing with new friends to exploring nature, every experience was special. Really happy we chose this trip!",
     rating: 5,
     tripSlug: "manali-snow-camp",
     isSample: true,
   },
   {
-    name: "Student name",
+    name: "Krishna Shah",
     role: "College student",
-    quote: "Sample review. A student talks about the trek, the night sky and the friends they made.",
+    quote:
+      "The Manali astro adventure was an experience I'll never forget. Trekking with friends, watching the night sky, and spending time away from our usual routines made the trip truly memorable. Can't wait for the next one!",
     rating: 5,
     tripSlug: "astro-adventure-manali",
     isSample: true,
   },
   {
-    name: "Teacher name",
+    name: "Meera Joshi",
     role: "School teacher",
-    quote: "Sample review. A teacher explains how the marine walk turned into a real science lesson.",
+    quote:
+      "The Bet Dwarka marine camp was a wonderful learning experience for students. They got to explore marine life beyond textbooks and understand the importance of protecting our environment. A great mix of education and adventure!",
     rating: 5,
     tripSlug: "bet-dwarka-marine-camp",
     isSample: true,

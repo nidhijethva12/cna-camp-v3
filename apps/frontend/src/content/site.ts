@@ -38,6 +38,7 @@ export interface NavItem {
   label: string;
   href: string;
   hot?: boolean;
+  disabled?: boolean;
   children?: { label: string; href: string }[];
 }
 
@@ -52,7 +53,7 @@ export const mainNav: NavItem[] = [
     ],
   },
   { label: "Upcoming Batches", href: "/batches" },
-  { label: "Olympiad", href: "/olympiad", hot: true },
+  { label: "Olympiad", href: "/olympiad", disabled: true },
   {
     label: "About",
     href: "/about",

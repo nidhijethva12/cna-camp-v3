@@ -112,6 +112,11 @@ export function MobileNav({ items, contact }: { items: NavItem[]; contact: Conta
                       {item.label}
                       <CaretRight className="text-[18px] text-muted" />
                     </button>
+                  ) : item.disabled ? (
+                    <button type="button" aria-disabled="true" className={`${row} cursor-not-allowed text-muted`}>
+                      <span>{item.label}</span>
+                      <span className="text-[13px] font-semibold">Coming soon</span>
+                    </button>
                   ) : (
                     <Link href={item.href} className={`${row} ${active}`}>
                       <span className="flex items-center gap-2">

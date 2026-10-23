@@ -47,7 +47,7 @@ export const olympiad = {
   rulesPdf: "https://www.cnacamp.com/rules-of-camp.pdf",
   lavkumarPdf: "https://www.cnacamp.com/Lavkumar.pdf",
   ketankumarPdf: "https://www.cnacamp.com/Dr-ketankumar-new.pdf",
-  campFee: 18000,
+  campFee: "On request",
   opens: "2026-04-02T12:59:00+05:30",
   closes: "2026-06-20T23:59:00+05:30",
   dates: [

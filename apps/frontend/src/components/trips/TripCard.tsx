@@ -9,6 +9,7 @@ import type { Trip } from "@/types/content";
 export function TripCard({ trip, badge }: { trip: Trip; badge?: string }) {
   const href = `/trips/${trip.slug}`;
   const region = regions[trip.region].label;
+  const priceOnRequest = trip.price === 18000;
 
   return (
     <article className="group flex h-full flex-col overflow-hidden rounded-card border border-line bg-light transition hover:-translate-y-1 hover:shadow-card">
@@ -41,8 +42,8 @@ export function TripCard({ trip, badge }: { trip: Trip; badge?: string }) {
         </div>
         <div className="mt-4 flex items-end justify-between gap-3">
           <div>
-            <p className="text-[13.5px] font-medium text-muted">{trip.price ? "From" : "Price"}</p>
-            <p className="display text-[22px]">{tripPrice(trip)}</p>
+            <p className="text-[13.5px] font-medium text-muted">{trip.price && !priceOnRequest ? "From" : "Price"}</p>
+            <p className="display text-[22px]">{priceOnRequest ? "On request" : tripPrice(trip)}</p>
           </div>
           <Link
             href={href}

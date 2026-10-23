@@ -349,7 +349,7 @@ export default async function OlympiadPage() {
               Named after two lamps of nature <Leaf className="text-success" />
             </>
           }
-          intro={`Your scholarship is a percentage of the ₹${o.campFee.toLocaleString("en-IN")} camp fee. You can apply for only one.`}
+          intro={`Your scholarship is a percentage of the camp fee (${o.campFee}). You can apply for only one.`}
         />
         <div className="rail grid gap-6 lg:grid-cols-2">
           {o.scholarships.map((s) => (

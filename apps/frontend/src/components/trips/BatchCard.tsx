@@ -15,6 +15,7 @@ const seatsLabel = (left: number) => (left <= 0 ? "Full" : left <= LOW_SEATS ? `
 /** One fixed-date departure: photo with the start date, then the trip, price and level. */
 export function BatchCard({ batch, sizes }: { batch: UpcomingBatch; sizes: string }) {
   const { trip } = batch;
+  const priceOnRequest = trip.price === 18000;
   const href = `/trips/${trip.slug}`;
   const { day, month } = splitDate(batch.startDate);
   const low = batch.seatsLeft <= LOW_SEATS;
@@ -57,9 +58,9 @@ export function BatchCard({ batch, sizes }: { batch: UpcomingBatch; sizes: strin
 
         <div className="mt-auto flex items-end justify-between gap-4 pt-5">
           <div>
-            <p className="text-[13px] font-semibold text-muted">Starting from</p>
+            <p className="text-[13px] font-semibold text-muted">{priceOnRequest ? "Price" : "Starting from"}</p>
             <p className="display text-[22px] leading-tight text-primary">
-              {trip.price ? `₹${trip.price.toLocaleString("en-IN")}` : "On request"}
+              {trip.price && !priceOnRequest ? `₹${trip.price.toLocaleString("en-IN")}` : "On request"}
             </p>
           </div>
           <div className="text-right">

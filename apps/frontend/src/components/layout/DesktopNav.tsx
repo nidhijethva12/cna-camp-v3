@@ -40,15 +40,35 @@ export function DesktopNav({ items }: { items: NavItem[] }) {
             </NavigationMenu.Item>
           ) : (
             <NavigationMenu.Item key={item.href}>
-              <NavigationMenu.Link asChild>
-                <Link
-                  href={item.href}
-                  aria-current={isNavActive(item, pathname) ? "page" : undefined}
-                  className={`${itemClass} ${isNavActive(item, pathname) ? "text-primary" : ""}`}
-                >
-                  {item.label}
-                </Link>
-              </NavigationMenu.Link>
+              {item.disabled ? (
+                <span className="group relative block">
+                  <button
+                    type="button"
+                    aria-disabled="true"
+                    aria-describedby="olympiad-coming-soon"
+                    className={`${itemClass} cursor-not-allowed text-muted`}
+                  >
+                    {item.label}
+                  </button>
+                  <span
+                    id="olympiad-coming-soon"
+                    role="tooltip"
+                    className="pointer-events-none absolute top-full left-1/2 z-50 mt-2 -translate-x-1/2 whitespace-nowrap rounded-tag bg-dark px-3 py-2 text-[13px] font-semibold text-light opacity-0 shadow-menu transition-opacity group-hover:opacity-100 group-focus-within:opacity-100"
+                  >
+                    Coming soon
+                  </span>
+                </span>
+              ) : (
+                <NavigationMenu.Link asChild>
+                  <Link
+                    href={item.href}
+                    aria-current={isNavActive(item, pathname) ? "page" : undefined}
+                    className={`${itemClass} ${isNavActive(item, pathname) ? "text-primary" : ""}`}
+                  >
+                    {item.label}
+                  </Link>
+                </NavigationMenu.Link>
+              )}
             </NavigationMenu.Item>
           ),
         )}
