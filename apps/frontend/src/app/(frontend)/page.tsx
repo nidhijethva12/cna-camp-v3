@@ -6,7 +6,6 @@ import { Filmstrip } from "@/components/home/Filmstrip";
 import { Hero } from "@/components/home/Hero";
 import { HolidayGrid } from "@/components/home/HolidayGrid";
 import { JourneyStats } from "@/components/home/JourneyStats";
-import { OlympiadBanner } from "@/components/home/OlympiadBanner";
 import { PopularTrips } from "@/components/home/PopularTrips";
 import { Reviews } from "@/components/home/Reviews";
 import { StorySection } from "@/components/home/StorySection";
@@ -83,7 +82,6 @@ export default async function HomePage() {
       <HolidayGrid content={home.holidays} />
       <JourneyStats tripCount={allTrips.length} counts={settings.stats} />
       <Destinations content={home.destinations} counts={regionCounts} />
-      <OlympiadBanner />
       <Audiences content={home.audiences} />
       <WhyCna content={home.why} />
       <Reviews reviews={reviews} />

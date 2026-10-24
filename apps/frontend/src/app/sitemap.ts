@@ -16,7 +16,6 @@ const pages: Entry[] = [
   { path: "/", priority: 1, changeFrequency: "weekly" },
   { path: "/trips", priority: 0.9, changeFrequency: "weekly" },
   { path: "/batches", priority: 0.9, changeFrequency: "daily" },
-  { path: "/olympiad", priority: 0.8, changeFrequency: "weekly" },
   { path: "/group-trips", priority: 0.8, changeFrequency: "monthly" },
   { path: "/travellers", priority: 0.7, changeFrequency: "monthly" },
   { path: "/about", priority: 0.7, changeFrequency: "monthly" },

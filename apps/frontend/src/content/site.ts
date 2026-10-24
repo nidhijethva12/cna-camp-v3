@@ -53,7 +53,6 @@ export const mainNav: NavItem[] = [
     ],
   },
   { label: "Upcoming Batches", href: "/batches" },
-  { label: "Olympiad", href: "/olympiad", disabled: true },
   {
     label: "About",
     href: "/about",

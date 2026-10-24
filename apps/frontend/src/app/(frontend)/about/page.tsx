@@ -93,10 +93,7 @@ export default async function AboutPage() {
               ))}
             </dl>
             <p className="mt-8 rounded-card bg-light/5 p-5 text-light/80">
-              <span className="font-bold text-light">His legacy.</span> {founder.legacy}{" "}
-              <Link href="/olympiad" className="font-bold text-secondary underline">
-                About the Olympiad <ArrowRight />
-              </Link>
+              <span className="font-bold text-light">His legacy.</span> {founder.legacy}
             </p>
           </div>
         </div>

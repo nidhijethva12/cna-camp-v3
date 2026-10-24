@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { GroupFinder } from "@/components/olympiad/GroupFinder";
 import { Photo } from "@/components/media/Photo";
 import { HeroCarousel } from "@/components/olympiad/HeroCarousel";
@@ -79,6 +80,8 @@ function ExamFormButton({ className = "" }: { className?: string }) {
 }
 
 export default async function OlympiadPage() {
+  notFound();
+
   const [contact, notices] = await Promise.all([getSiteSettings(), getNotices()]);
   const status = registrationStatus();
   const pdfs = { lavkumarPdf: o.lavkumarPdf, ketankumarPdf: o.ketankumarPdf } as const;

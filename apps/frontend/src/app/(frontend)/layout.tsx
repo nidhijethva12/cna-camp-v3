@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from "next";
 import { DM_Sans, Plus_Jakarta_Sans } from "next/font/google";
 import { ContactShortcuts } from "@/components/layout/ContactShortcuts";
 import { UpdatesNudge } from "@/components/layout/UpdatesNudge";
-import { OlympiadPopup } from "@/components/olympiad/OlympiadPopup";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { JsonLd } from "@/components/seo/JsonLd";
@@ -77,7 +76,6 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         <main id="main">{children}</main>
         <SiteFooter />
         <ContactShortcuts />
-        <OlympiadPopup />
         <UpdatesNudge />
         <JsonLd data={organizationLd(contact)} />
       </body>
