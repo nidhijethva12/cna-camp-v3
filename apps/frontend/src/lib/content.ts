@@ -349,6 +349,7 @@ export interface PostSummary {
   excerpt: string;
   cover: ImageRef | null;
   publishedAt: string;
+  updatedAt: string;
 }
 
 const toPostSummary = (p: PostDoc): PostSummary => ({
@@ -357,6 +358,7 @@ const toPostSummary = (p: PostDoc): PostSummary => ({
   excerpt: p.excerpt,
   cover: toImage(p.coverImage),
   publishedAt: p.publishedAt ?? p.createdAt,
+  updatedAt: p.updatedAt,
 });
 
 export const getPosts = cache(async (): Promise<PostSummary[]> => {

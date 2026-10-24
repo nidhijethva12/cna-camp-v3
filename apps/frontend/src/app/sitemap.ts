@@ -1,38 +1,32 @@
 import type { MetadataRoute } from "next";
 import { getPosts, getTrips } from "@/lib/content";
-import { absoluteUrl } from "@/lib/seo";
-
-type Entry = {
-  path: string;
-  priority: number;
-  changeFrequency: MetadataRoute.Sitemap[number]["changeFrequency"];
-  /** Only real dates: a fake "now" on every page teaches search engines to ignore the field. */
-  lastModified?: string;
-};
+import { absoluteUrl, isIndexable } from "@/lib/seo";
 
 // Rebuilt hourly so new trips and posts appear without a deploy.
 export const revalidate = 3600;
-const pages: Entry[] = [
-  { path: "/", priority: 1, changeFrequency: "weekly" },
-  { path: "/trips", priority: 0.9, changeFrequency: "weekly" },
-  { path: "/batches", priority: 0.9, changeFrequency: "daily" },
-  { path: "/group-trips", priority: 0.8, changeFrequency: "monthly" },
-  { path: "/travellers", priority: 0.7, changeFrequency: "monthly" },
-  { path: "/about", priority: 0.7, changeFrequency: "monthly" },
-  { path: "/gallery", priority: 0.6, changeFrequency: "monthly" },
-  { path: "/blog", priority: 0.6, changeFrequency: "weekly" },
-  { path: "/contact", priority: 0.7, changeFrequency: "yearly" },
-  { path: "/terms", priority: 0.3, changeFrequency: "yearly" },
-  { path: "/cancellation", priority: 0.3, changeFrequency: "yearly" },
-  { path: "/privacy", priority: 0.3, changeFrequency: "yearly" },
-  { path: "/photo-credits", priority: 0.2, changeFrequency: "yearly" },
+const publicPages = [
+  "/",
+  "/trips",
+  "/batches",
+  "/group-trips",
+  "/travellers",
+  "/about",
+  "/gallery",
+  "/blog",
+  "/contact",
+  "/terms",
+  "/cancellation",
+  "/privacy",
+  "/photo-credits",
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  if (!isIndexable) return [];
+
   const [trips, posts] = await Promise.all([getTrips(), getPosts()]);
   return [
-    ...pages,
-    ...trips.map((t): Entry => ({ path: `/trips/${t.slug}`, priority: 0.8, changeFrequency: "monthly", lastModified: t.updatedAt })),
-    ...posts.map((p): Entry => ({ path: `/blog/${p.slug}`, priority: 0.6, changeFrequency: "yearly", lastModified: p.publishedAt })),
-  ].map((e) => ({ url: absoluteUrl(e.path), lastModified: e.lastModified, changeFrequency: e.changeFrequency, priority: e.priority }));
+    ...publicPages.map((path) => ({ url: absoluteUrl(path) })),
+    ...trips.map((trip) => ({ url: absoluteUrl(`/trips/${trip.slug}`), lastModified: trip.updatedAt })),
+    ...posts.map((post) => ({ url: absoluteUrl(`/blog/${post.slug}`), lastModified: post.updatedAt })),
+  ];
 }

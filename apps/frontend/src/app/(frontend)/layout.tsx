@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { DM_Sans, Plus_Jakarta_Sans } from "next/font/google";
+import Script from "next/script";
 import { ContactShortcuts } from "@/components/layout/ContactShortcuts";
 import { UpdatesNudge } from "@/components/layout/UpdatesNudge";
 import { SiteFooter } from "@/components/layout/SiteFooter";
@@ -69,6 +70,15 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en-IN" className={`${heading.variable} ${body.variable}`}>
       <body className="min-h-screen pb-16 lg:pb-0">
+        <Script src="https://www.googletagmanager.com/gtag/js?id=G-6XTWLH62LN" strategy="afterInteractive" />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){window.dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-6XTWLH62LN');
+          `}
+        </Script>
         <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:bg-light focus:p-3">
           Skip to content
         </a>
