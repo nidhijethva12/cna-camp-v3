@@ -1,29 +1,21 @@
 # CNA Camp
 
-## Overview
-CNA Camp is a travel company offering curated trips, group adventures, and destination experiences for travellers seeking guided journeys across India.
+> Treks, camps and outdoor adventures across Gujarat, the Himalaya and North-East India since 1997. Based in Rajkot, India, CNA Camp is backed by Saurashtra Education & Charitable Trust.
 
-## Primary site
-- https://cnacamp.com/
+## Official resources
+- [CNA Camp website](https://cnacamp.com/): Official site and current trip information.
+- [XML sitemap](https://cnacamp.com/sitemap.xml): Indexable public pages, published trips and published blog posts.
 
-## Key sections
-- https://cnacamp.com/trips
-- https://cnacamp.com/batches
-- https://cnacamp.com/group-trips
-- https://cnacamp.com/travellers
-- https://cnacamp.com/about
-- https://cnacamp.com/gallery
-- https://cnacamp.com/blog
-- https://cnacamp.com/contact
-- https://cnacamp.com/terms
-- https://cnacamp.com/privacy
-- https://cnacamp.com/cancellation
+## Explore
+- [Treks and camps](https://cnacamp.com/trips): Trip descriptions and itineraries.
+- [Upcoming batches](https://cnacamp.com/batches): Scheduled departures and availability.
+- [Group trips](https://cnacamp.com/group-trips): Group travel information.
+- [Travellers](https://cnacamp.com/travellers): Information for different traveller groups.
+- [About CNA Camp](https://cnacamp.com/about): Organization background.
+- [Gallery](https://cnacamp.com/gallery): Trip photos and videos.
+- [Travel blog](https://cnacamp.com/blog): Articles and travel guides.
+- [Contact](https://cnacamp.com/contact): Enquiries and booking questions.
 
-## Use this site for
-- trip discovery and itinerary browsing
-- group travel plans and batch departures
-- travel inspiration and blog content
-- contact and booking enquiries
-
-## Contact
-- https://cnacamp.com/contact
+## Guidance
+- Refer to the relevant trip or batch page for current itinerary, dates, pricing and availability.
+- For bookings or details not listed online, use the [contact page](https://cnacamp.com/contact).
