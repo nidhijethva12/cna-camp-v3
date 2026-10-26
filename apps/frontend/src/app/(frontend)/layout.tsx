@@ -69,6 +69,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
   const contact = await getSiteSettings();
   return (
     <html lang="en-IN" className={`${heading.variable} ${body.variable}`}>
+    <meta name="google-site-verification" content="Yuga-8Zeij0uQ7_slO-mmxNaUCCzENcvX_B6k9qxbDU" />
       <body className="min-h-screen pb-16 lg:pb-0">
         <Script src="https://www.googletagmanager.com/gtag/js?id=G-6XTWLH62LN" strategy="afterInteractive" />
         <Script id="google-analytics" strategy="afterInteractive">
