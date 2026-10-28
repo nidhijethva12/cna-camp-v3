@@ -35,7 +35,7 @@ export function JourneyStats({ tripCount, counts }: JourneyStatsProps) {
           {stats.map((s) => (
             <li
               key={s.label}
-              className="reveal group rounded-card border border-light/15 bg-light/5 px-3 py-5 backdrop-blur-sm sm:px-4 sm:py-8"
+              className="reveal group rounded-card border border-light/15 bg-light/5 px-3 py-5 sm:px-4 sm:py-8"
             >
               <FeatureIcon
                 name={s.icon}

@@ -32,7 +32,7 @@ export function Photo({ img, alt, label, wide, preload, sizes = "(min-width: 102
       sizes={sizes}
       onLoad={() => setLoaded(true)}
       onError={() => setLoaded(true)}
-      className={`object-cover ${loaded ? "" : "skeleton"} ${className}`}
+      className={`object-cover ${loaded ? "" : "photo-loading"} ${className}`}
       style={typeof img !== "string" && img.focalX != null ? { objectPosition: `${img.focalX}% ${img.focalY ?? 50}%` } : undefined}
     />
   );

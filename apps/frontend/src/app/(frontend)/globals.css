@@ -257,6 +257,11 @@
     background-size: 200% 100%;
     animation: skeleton-shimmer 1.4s linear infinite;
   }
+  /* A still tint behind a loading photo. Unlike .skeleton it never animates, so dozens of photos waiting
+     further down a page cost a phone nothing. */
+  .photo-loading {
+    background-color: color-mix(in srgb, currentColor 8%, transparent);
+  }
   .kenburns img {
     animation: var(--animate-kenburns);
   }

@@ -12,7 +12,7 @@ export async function SiteHeader() {
   const contact = await getSiteSettings();
   return (
     <>
-      <header className="sticky top-0 z-40 border-b border-line bg-light/95 backdrop-blur">
+      <header className="sticky top-0 z-40 border-b border-line bg-light">
         <div className="wrap flex h-[72px] items-center justify-between gap-6">
           <Link href="/" className="flex shrink-0 items-center gap-3" aria-label={`${site.legalName} home`}>
             <Image src="/img/logo.png" alt="" width={56} height={56} className="h-14 w-14" />

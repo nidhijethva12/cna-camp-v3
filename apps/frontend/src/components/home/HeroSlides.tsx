@@ -13,6 +13,11 @@ function subscribeMotion(onChange: () => void) {
   return () => query.removeEventListener("change", onChange);
 }
 
+function subscribeLoad(onChange: () => void) {
+  window.addEventListener("load", onChange);
+  return () => window.removeEventListener("load", onChange);
+}
+
 function subscribeVisibility(onChange: () => void) {
   document.addEventListener("visibilitychange", onChange);
   return () => document.removeEventListener("visibilitychange", onChange);
@@ -20,7 +25,8 @@ function subscribeVisibility(onChange: () => void) {
 
 /**
  * Crossfading photos behind the hero text, changing on their own. Each photo is fetched just before
- * its turn; the show holds still for reduced-motion visitors and while the tab is hidden.
+ * its turn (the second only after the page has loaded); the show holds still for reduced-motion
+ * visitors and while the tab is hidden.
  */
 export function HeroSlides({ images, children }: { images: ImageRef[]; children: ReactNode }) {
   // `seen` is the furthest slide shown so far (photos up to the one after it stay mounted);
@@ -36,9 +42,16 @@ export function HeroSlides({ images, children }: { images: ImageRef[]; children:
     () => document.hidden,
     () => false,
   );
+  // The next photo is fetched only once the page has finished loading, so on a slow phone connection
+  // it never competes with the first photo, which is what the visitor waits to see.
+  const pageLoaded = useSyncExternalStore(
+    subscribeLoad,
+    () => document.readyState === "complete",
+    () => false,
+  );
   const count = images.length;
   const { index } = slide;
-  const mounted = Math.min(count, slide.seen + 2);
+  const mounted = Math.min(count, slide.seen + (pageLoaded ? 2 : 1));
 
   const go = (i: number) =>
     setSlide((s) => {
