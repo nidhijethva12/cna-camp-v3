@@ -30,6 +30,9 @@ export const regions: Record<RegionSlug, { label: string; blurb: string }> = {
 /** Regions offered across the site (menus, filters, forms), in this order. */
 export const regionOrder: RegionSlug[] = ["gujarat", "north-east", "across-india"];
 
+/** Trips whose next batch leads the batch lists (homepage and Upcoming Batches), in this order; the rest follow by date. */
+export const pinnedBatchTrips = ["white-rann-of-kutch", "astro-adventure-manali", "bet-dwarka-marine-camp", "manali-snow-camp"];
+
 export const tripsByRegionHref = (region: RegionSlug) => `/trips?region=${region}`;
 
 export const enquireHref = (tripSlug?: string) => (tripSlug ? `/trips/${tripSlug}#enquire` : "/contact#enquire");

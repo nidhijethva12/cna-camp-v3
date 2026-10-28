@@ -33,7 +33,7 @@ export function UpdatesNudge() {
 
   return (
     <aside
-      aria-label="Need more updates"
+      aria-label="More about the Olympiad"
       aria-hidden={!open}
       inert={!open}
       className={`fixed bottom-20 left-4 z-40 w-[min(340px,calc(100vw-2rem))] transition duration-500 ease-out lg:bottom-6 lg:left-6 ${
@@ -55,9 +55,9 @@ export function UpdatesNudge() {
             <Megaphone />
           </span>
           <div>
-            <p className="font-display text-[18px] leading-tight font-bold">Need more updates?</p>
+            <p className="font-display text-[18px] leading-tight font-bold">Need more info on the Olympiad?</p>
             <p className="mt-1 text-[14.5px] leading-snug text-muted">
-              Questions about a trip, a batch or the Olympiad? Our team replies within a day.
+              Questions about groups, fees, the quiz or the scholarships? Our team replies within a day.
             </p>
           </div>
         </div>

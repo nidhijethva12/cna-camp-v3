@@ -1,6 +1,6 @@
 import "server-only";
 import { cache } from "react";
-import { regionOrder } from "@/content/site";
+import { pinnedBatchTrips, regionOrder } from "@/content/site";
 import { todayInIndia } from "@/lib/format";
 import { getCms } from "@/lib/payload";
 import type { HomePage as HomeDoc, Media, Post as PostDoc, SiteSetting, Trip as TripDoc, Video as VideoDoc } from "@/payload-types";
@@ -166,9 +166,12 @@ const getBatches = cache(async (): Promise<UpcomingBatch[]> => {
   });
 });
 
+/** Upcoming batches by date, except that the next batch of each pinned trip comes first, in pinned order. */
 export async function getUpcomingBatches(limit?: number) {
   const batches = await getBatches();
-  return limit ? batches.slice(0, limit) : batches;
+  const pinned = pinnedBatchTrips.flatMap((slug) => batches.find((b) => b.tripSlug === slug) ?? []);
+  const ordered = [...pinned, ...batches.filter((b) => !pinned.includes(b))];
+  return limit ? ordered.slice(0, limit) : ordered;
 }
 
 export async function getTripBatches(slug: string) {

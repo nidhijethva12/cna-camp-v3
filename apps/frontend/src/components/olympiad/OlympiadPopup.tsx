@@ -73,13 +73,13 @@ export function OlympiadPopup() {
       aria-labelledby="olympiad-popup-title"
       onClose={snooze}
       onClick={(e) => e.target === e.currentTarget && close()}
-      className="olympiad-popup m-auto w-[min(100%-32px,470px)] max-w-none overflow-hidden rounded-[10px] bg-primary p-0 text-center text-light shadow-float backdrop:bg-dark/60 max-[559px]:mb-0 max-[559px]:w-full max-[559px]:rounded-b-none max-[559px]:pb-[env(safe-area-inset-bottom)]"
+      className="olympiad-popup m-auto max-h-[100dvh] w-[min(100%-32px,470px)] max-w-none overflow-y-auto rounded-[10px] bg-transparent p-0 text-center text-light shadow-float backdrop:bg-dark/60 max-[559px]:mb-0 max-[559px]:w-full max-[559px]:rounded-b-none max-[559px]:pb-[env(safe-area-inset-bottom)]"
     >
-      <div className="relative isolate overflow-hidden px-6.5 pt-[150px] pb-4.5">
+      <div className="relative isolate overflow-hidden bg-primary px-6.5 pt-[150px] pb-4.5 max-[559px]:pt-[108px]">
         <Image src="/img/olympiad/manali-peaks.webp" alt="" fill sizes="470px" className="-z-20 object-cover object-top" />
         <div className="absolute inset-0 -z-10 bg-linear-to-b from-primary/0 via-primary/35 via-30% to-primary to-62%" />
         <span aria-hidden="true" className="topo inset-0 -z-10 bg-light/16 [mask-size:700px_auto] [mask-position:center]" />
-        <p className="display absolute top-[70px] left-1/2 -translate-x-1/2 rounded-full bg-dark/50 px-5 py-2 text-[clamp(20px,5.4vw,26px)] leading-tight whitespace-nowrap backdrop-blur-[3px]">
+        <p className="display absolute top-[70px] left-1/2 -translate-x-1/2 rounded-full bg-dark/50 px-5 py-2 text-[clamp(20px,5.4vw,26px)] leading-tight whitespace-nowrap backdrop-blur-[3px] max-[559px]:top-11">
           Adventure Olympiad <span className="text-secondary">2.0</span>
         </p>
         <p className="display mt-3.5 text-[18px] text-secondary-light">Win up to</p>
@@ -95,7 +95,7 @@ export function OlympiadPopup() {
         </p>
       </div>
       <div aria-hidden="true" className="ticket-tear" />
-      <div className="grid gap-2.5 bg-light px-6 pt-3 pb-6 text-dark">
+      <div className="grid gap-2.5 bg-light px-6 pt-3 pb-6 text-dark max-[559px]:pb-5">
         <dl className="grid grid-cols-3 gap-1.5">
           {facts.map(([value, label]) => (
             <div key={label} className="flex flex-col-reverse rounded-card bg-soft px-1 py-2">

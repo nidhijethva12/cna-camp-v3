@@ -94,7 +94,10 @@ export function GroupPicker({ groups }: { groups: OlympiadGroup[] }) {
             onKeyDown={(e) => onKey(e, i)}
             className={`group flex min-h-12.5 flex-col items-center justify-center rounded-card border border-t-4 border-line bg-light p-1.5 text-center sm:min-h-15.5 sm:items-start sm:px-3.5 sm:py-2 sm:text-left ${tone[g.id].tab} ${tone[g.id].selected}`}
           >
-            <b className="display text-[16px]">{g.name}</b>
+            <b className="display text-[16px]">
+              <span className="max-[380px]:sr-only">Group </span>
+              {g.id}
+            </b>
             <span className="hidden text-[13px] text-muted group-aria-selected:text-inherit group-aria-selected:opacity-75 sm:block">
               {g.short}
             </span>

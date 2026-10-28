@@ -660,8 +660,15 @@
   position: relative;
   height: 22px;
   background:
-    radial-gradient(circle at 0 50%, transparent 11px, var(--color-light) 11.5px) left / 50% 100% no-repeat,
-    radial-gradient(circle at 100% 50%, transparent 11px, var(--color-light) 11.5px) right / 50% 100% no-repeat;
+    /* Each half is a touch wider than 50% so the two overlap and no seam shows down the middle. */
+    radial-gradient(circle at 0 50%, transparent 11px, var(--color-light) 11.5px) left / 51% 100% no-repeat,
+    radial-gradient(circle at 100% 50%, transparent 11px, var(--color-light) 11.5px) right / 51% 100% no-repeat;
+}
+/* On phones the popup is an edge-to-edge sheet, so the side notches would sit on the screen edge: keep only the dashed tear. */
+@media (max-width: 559px) {
+  .ticket-tear {
+    background: var(--color-light);
+  }
 }
 .ticket-tear::after {
   content: "";

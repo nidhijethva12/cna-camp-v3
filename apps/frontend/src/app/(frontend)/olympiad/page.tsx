@@ -91,10 +91,11 @@ export default async function OlympiadPage() {
 
   return (
     <>
-      <div className="bg-primary text-[14.5px] text-light" role="status">
-        <div className="wrap flex flex-wrap items-center justify-center gap-x-3.5 gap-y-1 py-2.25 text-center">
+      <div className="bg-primary text-[13px] text-light sm:text-[14.5px]" role="status">
+        <div className="wrap flex items-center justify-center gap-x-2.5 gap-y-1 py-2.25 text-center whitespace-nowrap sm:flex-wrap sm:gap-x-3.5 sm:whitespace-normal">
           <span>
-            <b>Registration opens {OPENS_ON}.</b> All details are below.
+            <b>Registration opens {OPENS_ON}.</b>
+            <span className="max-sm:hidden"> All details are below.</span>
           </span>
           <ContactCta className="cursor-pointer font-bold underline underline-offset-3" />
         </div>
@@ -126,11 +127,11 @@ export default async function OlympiadPage() {
                 See the groups
               </Link>
             </div>
-            <p className="mt-5.5 flex flex-wrap gap-x-5.5 gap-y-1.5 text-[15px] text-muted">
+            <p className="mt-5.5 flex gap-x-2.5 text-[13.5px] whitespace-nowrap text-muted max-[380px]:text-[12.5px] sm:flex-wrap sm:gap-x-5.5 sm:gap-y-1.5 sm:text-[15px]">
               {o.facts.map(([value, label], i) => (
-                <span key={label} className="flex gap-5.5">
+                <span key={label} className="flex gap-2.5 sm:gap-5.5">
                   {i > 0 && (
-                    <span aria-hidden="true" className="text-line">
+                    <span aria-hidden="true" className="text-line max-[380px]:hidden">
                       ·
                     </span>
                   )}
@@ -188,7 +189,7 @@ export default async function OlympiadPage() {
       <SectionNav links={jumpLinks} />
 
       <section id="notices" aria-labelledby="h-notices" className={`relative ${sectionY}`}>
-        <span aria-hidden="true" className="dot-field top-0 left-0 h-75 w-95" />
+        <span aria-hidden="true" className="dot-field top-0 left-0 h-75 w-95 max-w-full" />
         <div className="wrap relative">
           <SectionHead
             id="h-notices"
@@ -213,9 +214,9 @@ export default async function OlympiadPage() {
                   Live
                 </span>
               </div>
-              <div className="flex items-center gap-3.5 px-5.5 py-5">
+              <div className="flex items-center gap-3.5 px-5.5 py-5 max-sm:flex-wrap max-sm:gap-y-2">
                 <FileText className="text-[26px] text-primary" />
-                <div className="min-w-0">
+                <div className="min-w-0 max-sm:flex-1 max-sm:basis-[calc(100%-2.5rem)]">
                   <span className="tag tag-solid mb-1.5 font-display font-bold">Official</span>
                   <p className="font-display text-[17px] leading-snug font-bold">{o.notice.title}</p>
                   <p className="text-[13.5px] text-muted">{o.notice.meta}</p>
@@ -224,7 +225,7 @@ export default async function OlympiadPage() {
                   href={o.notice.href}
                   target="_blank"
                   rel="noopener"
-                  className="ml-auto text-[14.5px] font-bold whitespace-nowrap text-primary hover:underline"
+                  className="ml-auto text-[14.5px] font-bold whitespace-nowrap text-primary hover:underline max-sm:ml-10"
                 >
                   View PDF<span className="sr-only"> (opens in a new tab)</span>
                 </a>
@@ -289,7 +290,7 @@ export default async function OlympiadPage() {
               return (
                 <li
                   key={g.label}
-                  className="flex min-w-0 items-center gap-3 border-r border-b border-light/12 px-5 py-4.5 last:col-span-2 lg:border-b-0 lg:last:col-span-1 lg:last:border-r-0"
+                  className="flex min-w-0 items-center gap-3 border-r border-b border-light/12 px-5 py-4.5 last:col-span-2 max-sm:flex-col max-sm:items-start max-sm:gap-2 max-sm:px-4 lg:border-b-0 lg:last:col-span-1 lg:last:border-r-0"
                 >
                   <Icon className="text-[30px] text-secondary" />
                   <span className="min-w-0">
@@ -316,7 +317,11 @@ export default async function OlympiadPage() {
       </section>
 
       <section id="partners" aria-labelledby="h-partners" className={`relative overflow-hidden bg-secondary/12 ${sectionY}`}>
-        <svg aria-hidden="true" viewBox="0 0 200 200" className="pointer-events-none absolute top-7.5 -right-15 h-85 w-85 opacity-50">
+        <svg
+          aria-hidden="true"
+          viewBox="0 0 200 200"
+          className="pointer-events-none absolute top-7.5 -right-15 h-85 w-85 opacity-50 max-lg:hidden"
+        >
           <g fill="none" strokeWidth="2" className="stroke-secondary">
             <circle cx="100" cy="100" r="90" />
             <circle cx="100" cy="100" r="64" strokeDasharray="4 6" />
@@ -425,7 +430,7 @@ export default async function OlympiadPage() {
         <div className="wrap">
           <SectionHead id="h-prizes" eyebrow="The prizes" title="Where the winners go" />
           <div className="relative isolate mt-9 grid gap-5 lg:grid-cols-2">
-            <span aria-hidden="true" className="absolute -inset-x-6 top-[22%] -bottom-6 -z-10 rounded-card bg-primary-soft" />
+            <span aria-hidden="true" className="absolute -inset-x-5 top-[22%] -bottom-6 -z-10 rounded-card bg-primary-soft md:-inset-x-6" />
             {o.prizes.map((p) => (
               <article key={p.title} className="flex flex-col overflow-hidden rounded-card border border-line bg-light shadow-card">
                 <div className="relative aspect-video bg-soft">
@@ -484,7 +489,7 @@ export default async function OlympiadPage() {
               aria-hidden="true"
               className="topo top-1/2 -right-20 -z-10 h-[434px] w-[620px] -translate-y-1/2 bg-light/14 [mask-size:620px_auto]"
             />
-            <span aria-hidden="true" className="absolute -right-10 -bottom-10 -z-10 h-55 w-55 rounded-full bg-secondary/35" />
+            <span aria-hidden="true" className="absolute -right-10 -bottom-10 -z-10 h-55 w-55 rounded-full bg-secondary/35 max-sm:hidden" />
             <div>
               <p className="font-display text-[15px] font-bold text-secondary-light">Registration</p>
               <h2 id="h-register" className="mt-1.5 text-[26px] md:text-[34px]">
