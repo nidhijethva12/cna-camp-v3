@@ -102,6 +102,7 @@ export interface Campus {
 export interface Faq {
   question: string;
   answer: string;
+  link?: { label: string; href: string };
 }
 
 export interface Notice {

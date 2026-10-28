@@ -179,7 +179,7 @@ export const siteSettings = {
   mapUrl: "https://www.google.com/maps/search/?api=1&query=Vaniyawadi%20Main%20Road%2C%20Bolbala%20Road%2C%20Rajkot%20360002",
   social: [
     { platform: "Instagram", url: "https://www.instagram.com/cnacamp.india/" },
-    { platform: "Facebook", url: null },
+    { platform: "Facebook", url: "https://www.facebook.com/p/Climber-Nature-Advanture-Club-61594974749699/" },
     { platform: "YouTube", url: null },
   ] as const,
   campersCount: "1,00,000+",

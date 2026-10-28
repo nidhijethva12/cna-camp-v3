@@ -24,6 +24,9 @@ import type {
 
 /* Every loader is wrapped in React `cache`, so a page and its layout share one query per request. */
 
+/** Set to true to show the prices saved in the admin again. */
+const SHOW_TRIP_PRICES = false;
+
 /** Payload prefixes uploads with the server URL; files on this site are served by path instead. */
 const mediaPath = (url: string) => url.replace(/^https?:\/\/[^/]+(?=\/api\/(media|videos)\/)/, "");
 
@@ -62,7 +65,8 @@ function toTrip(doc: TripDoc): Trip {
     nights: doc.nights,
     altitude: doc.altitudeM ? `${doc.altitudeM.toLocaleString("en-IN")} m` : null,
     difficulty: capitalise<Difficulty>(doc.difficulty),
-    price: doc.priceFrom ?? null,
+    // Prices stay saved in the admin but are hidden for now: every trip shows "On request".
+    price: SHOW_TRIP_PRICES ? (doc.priceFrom ?? null) : null,
     img: toImage(doc.heroImage),
     gallery: images(doc.gallery),
     updatedAt: doc.updatedAt,
@@ -351,6 +355,8 @@ export interface PostSummary {
   title: string;
   excerpt: string;
   cover: ImageRef | null;
+  /** The name shown on the post; "Team CNA" until the team sets one in the admin. */
+  author: string;
   publishedAt: string;
   updatedAt: string;
 }
@@ -360,6 +366,7 @@ const toPostSummary = (p: PostDoc): PostSummary => ({
   title: p.title,
   excerpt: p.excerpt,
   cover: toImage(p.coverImage),
+  author: p.authorName?.trim() || "Team CNA",
   publishedAt: p.publishedAt ?? p.createdAt,
   updatedAt: p.updatedAt,
 });

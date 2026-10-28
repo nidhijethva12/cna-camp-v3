@@ -65,7 +65,13 @@ const defaultNotIncluded = [
   "Extra cost from weather or road closures",
 ];
 
-export const tripNotIncluded = (t: Trip) => t.notIncluded ?? defaultNotIncluded;
+/** Meals on the way are never covered, so every trip lists them even when the admin list leaves them out. */
+const JOURNEY_FOOD = "Journey food";
+
+export function tripNotIncluded(t: Trip) {
+  const list = t.notIncluded ?? defaultNotIncluded;
+  return list.some((x) => x.toLowerCase() === JOURNEY_FOOD.toLowerCase()) ? list : [JOURNEY_FOOD, ...list];
+}
 
 export function tripPackingList(t: Trip) {
   if (t.bring) return t.bring;
@@ -127,7 +133,15 @@ const defaultFaqs = (t: Trip): Faq[] => [
   },
 ];
 
-export const tripFaqs = (t: Trip): Faq[] => t.faqs ?? defaultFaqs(t);
+const bookingFaq: Faq = {
+  question: "How do booking and cancellation work?",
+  answer:
+    "Pay a 25% advance to book your seat and the balance 3 days before departure. Cancellation charges depend on how early you cancel.",
+  link: { label: "Read the cancellation policy", href: "/cancellation" },
+};
+
+/** The trip's own FAQs, always ending with how booking and cancellation work. */
+export const tripFaqs = (t: Trip): Faq[] => [...(t.faqs ?? defaultFaqs(t)), bookingFaq];
 
 export const tripDescription = (t: Trip) =>
   t.seo.description ?? `${t.summary} ${durationShort(t)} ${t.type.toLowerCase()} in ${t.state} with CNA, Rajkot.`;
