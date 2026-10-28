@@ -5,6 +5,9 @@ import { getSiteSettings } from "@/lib/content";
 import { DesktopNav } from "./DesktopNav";
 import { MobileNav } from "./MobileNav";
 
+const afterBatches = mainNav.findIndex((item) => item.href === "/batches") + 1;
+const nav = [...mainNav.slice(0, afterBatches), { label: "Olympiad", href: "/olympiad" }, ...mainNav.slice(afterBatches)];
+
 export async function SiteHeader() {
   const contact = await getSiteSettings();
   return (
@@ -20,7 +23,7 @@ export async function SiteHeader() {
             </span>
           </Link>
 
-          <DesktopNav items={mainNav} />
+          <DesktopNav items={nav} />
 
           <div className="flex items-center gap-2">
             <a href={contact.phoneHref} className="hidden font-mono text-[13px] whitespace-nowrap 2xl:block">
@@ -29,10 +32,7 @@ export async function SiteHeader() {
             <Link href={enquireHref()} className="btn btn-primary hidden py-3! sm:inline-flex">
               Contact us
             </Link>
-            <MobileNav
-              items={mainNav}
-              contact={{ phone: contact.phone, phoneHref: contact.phoneHref, whatsappHref: contact.whatsappHref }}
-            />
+            <MobileNav items={nav} contact={{ phone: contact.phone, phoneHref: contact.phoneHref, whatsappHref: contact.whatsappHref }} />
           </div>
         </div>
       </header>

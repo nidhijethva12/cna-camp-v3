@@ -1,534 +1,545 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { notFound } from "next/navigation";
-import { GroupFinder } from "@/components/olympiad/GroupFinder";
-import { Photo } from "@/components/media/Photo";
-import { HeroCarousel } from "@/components/olympiad/HeroCarousel";
-import { NoticeBoard } from "@/components/olympiad/NoticeBoard";
-import { CountUp } from "@/components/ui/CountUp";
+import type { ReactNode } from "react";
+import { UpdatesNudge } from "@/components/layout/UpdatesNudge";
+import { GroupPicker } from "@/components/olympiad/GroupPicker";
 import { FaqList } from "@/components/ui/FaqList";
-import { FeatureIcon } from "@/components/ui/FeatureIcon";
 import {
-  ArrowDown,
   ArrowRight,
-  CheckCircle,
-  Clock,
-  Leaf,
+  BookOpen,
+  CalendarBlank,
+  Check,
+  FileText,
+  GraduationCap,
+  ListChecks,
   MapPin,
-  SealCheck,
+  Megaphone,
   Star,
-  Trophy,
-  Warning,
-  WarningCircle,
+  Timer,
+  Translate,
+  UserCircleCheck,
+  WhatsApp,
 } from "@/components/ui/icons";
-import { SectionHeader } from "@/components/ui/SectionHeader";
 import { SectionNav } from "@/components/ui/SectionNav";
 import { olympiad as o } from "@/content/olympiad";
-import { site } from "@/content/site";
-import { getNotices, getSiteSettings } from "@/lib/content";
-import { registrationStatus } from "@/lib/olympiad";
-
-// Registration status depends on today's date.
-export const revalidate = 3600;
+import { enquireHref, site } from "@/content/site";
+import { getSiteSettings, whatsappLink } from "@/lib/content";
 
 export const metadata: Metadata = {
-  title: { absolute: "Adventure Olympiad: Eco-STEM Quiz & Manali Camp | CNA Camp" },
+  title: { absolute: "Adventure Olympiad 2.0: Eco-STEM Quiz & Himalaya Scholarship | CNA Camp" },
   description:
-    "Eco-STEM online quiz for students from Std 4 to college across Gujarat. 100 MCQs, 5 rounds, scholarships up to 100% on the ₹18,000 Manali camp. Fees from ₹90.",
+    "An Eco-STEM quiz for Std 8 to 11, students above 18 and adults above 25. 4 groups, 5 rounds and a 60 to 100% scholarship on the ₹18,000 Manali camp. Registration opens 15 Nov 2026.",
   openGraph: {
-    title: "Take the quiz. Win a camp in the Himalaya.",
-    description: "An Eco-STEM quiz for Gujarat students from Std 4 to college. Top scorers go to Manali on up to 100% scholarship.",
+    title: "Adventure Olympiad 2.0: a quiz that can take you to the Himalaya",
+    description: "4 groups, 5 rounds and a 60 to 100% scholarship on the Manali camp. Registration opens 15 Nov 2026.",
   },
   alternates: { canonical: "/olympiad" },
 };
 
 const jumpLinks = [
-  ["dates", "Dates & notices"],
-  ["groups", "Groups"],
-  ["finder", "Which group am I?"],
+  ["notices", "Notice board"],
   ["how", "How it works"],
-  ["quiz", "Quiz"],
+  ["groups", "Groups"],
+  ["partners", "Schools and teachers"],
   ["scholarships", "Scholarships"],
-  ["included", "Manali camp"],
+  ["prizes", "Prizes"],
   ["rules", "Rules"],
   ["faq", "FAQs"],
 ] as const;
 
-const statusText = {
-  soon: "Registration opens 2 April 2026",
-  open: "Registration open · closes 20 June 2026",
-  closed: "Registration closed on 20 June 2026 · quiz rounds in progress",
-};
+const glanceIcons = { questions: ListChecks, timer: Timer, star: Star, language: Translate, book: BookOpen } as const;
+const partnerIcons = { school: GraduationCap, ambassador: UserCircleCheck } as const;
 
-const EXAM_FORM_LABEL = "Click here to fill the form";
+const sectionY = "py-[clamp(56px,7vw,80px)]";
 
-/** Opens the exam form once its link is set in content/olympiad.ts (examFormUrl). */
-function ExamFormButton({ className = "" }: { className?: string }) {
-  if (o.examFormUrl) {
-    return (
-      <a href={o.examFormUrl} target="_blank" rel="noopener" className={`btn btn-primary ${className}`}>
-        {EXAM_FORM_LABEL} <ArrowRight />
-      </a>
-    );
-  }
+function SectionHead({ id, eyebrow, title, lead, dark }: { id: string; eyebrow: string; title: string; lead?: string; dark?: boolean }) {
   return (
-    <button type="button" className={`btn btn-primary cursor-default ${className}`}>
-      {EXAM_FORM_LABEL} <ArrowRight />
-    </button>
+    <>
+      <p className={`eyebrow ${dark ? "text-secondary" : ""}`}>{eyebrow}</p>
+      <h2 id={id} className="h-section mt-1.5">
+        {title}
+      </h2>
+      {lead && <p className={`lead mt-3 max-w-[60ch] ${dark ? "text-light/75" : ""}`}>{lead}</p>}
+    </>
+  );
+}
+
+function Tick({ children }: { children: ReactNode }) {
+  return (
+    <li className="flex gap-2.5 text-[15px]">
+      <Check className="mt-1 text-[16px] text-success" />
+      <span>{children}</span>
+    </li>
+  );
+}
+
+const OPENS_ON = "15 Nov 2026";
+
+/** Until the Olympiad API is live, every sign-up button leads to the contact form. */
+function ContactCta({ className, children = "Contact us" }: { className: string; children?: ReactNode }) {
+  return (
+    <Link href={enquireHref()} className={className}>
+      {children}
+    </Link>
   );
 }
 
 export default async function OlympiadPage() {
-  notFound();
-
-  const [contact, notices] = await Promise.all([getSiteSettings(), getNotices()]);
-  const status = registrationStatus();
-  const pdfs = { lavkumarPdf: o.lavkumarPdf, ketankumarPdf: o.ketankumarPdf } as const;
+  const contact = await getSiteSettings();
+  const helpHref = whatsappLink(contact.whatsappNumber, `Hi, I have a question about ${o.name}`);
 
   return (
     <>
-      <section className="relative isolate overflow-hidden bg-dark text-light">
-        <div className="absolute inset-0 -z-10 bg-linear-to-br from-dark via-dark to-dark-soft" />
-        <div className="wrap grid gap-8 py-10 sm:py-14 lg:grid-cols-[1.15fr_1fr] lg:gap-12 lg:py-14">
-          <HeroCarousel slides={o.heroSlides} />
+      <div className="bg-primary text-[14.5px] text-light" role="status">
+        <div className="wrap flex flex-wrap items-center justify-center gap-x-3.5 gap-y-1 py-2.25 text-center">
+          <span>
+            <b>Registration opens {OPENS_ON}.</b> All details are below.
+          </span>
+          <ContactCta className="cursor-pointer font-bold underline underline-offset-3" />
+        </div>
+      </div>
 
-          <div className="flex flex-col justify-center">
-            <p className="inline-flex items-center gap-2 self-start rounded-tag bg-secondary px-3 py-1.5 text-[13.5px] font-semibold text-dark">
-              <Star className="text-[13px]" />
-              {o.tagline}
+      <section aria-labelledby="olympiad-title" className="relative overflow-hidden border-b border-line bg-soft">
+        <span aria-hidden="true" className="topo top-2.5 -right-15 h-[490px] w-[700px] bg-primary/10 [mask-size:700px_auto]" />
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute -top-30 -right-30 h-130 w-130 rounded-full bg-radial from-secondary/28 to-secondary/0 to-65%"
+        />
+        <div className="wrap relative grid items-center gap-9 pt-12 pb-24 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-14 lg:pt-16 lg:pb-27">
+          <div className="min-w-0">
+            <p className="eyebrow inline-flex items-center gap-2 rounded-full border border-line bg-light px-3 py-1.25 text-[14px]!">
+              <span aria-hidden="true" className="h-2 w-2 rounded-full bg-primary" />
+              {o.eyebrow}
             </p>
-            <h1 className="h-page mt-4">{o.name}</h1>
-            <p className="mt-2 text-[15px] font-semibold text-secondary">An Eco-STEM online quiz · Mountain · Desert · Marine</p>
-            <p className="mt-4 text-[16px] leading-relaxed text-light/85 sm:text-[17px]">
-              A quiz for students from Std 4 to college across Gujarat. Top scorers win up to{" "}
-              <strong className="text-light">100% scholarship</strong> for our Manali camp.
+            <h1 id="olympiad-title" className="mt-2.5 text-[34px] leading-[1.1] md:text-[54px]">
+              {o.name}
+            </h1>
+            <p className="lead mt-3 max-w-[44ch]">{o.intro}</p>
+            <p className="mt-5.5 inline-flex items-center gap-2.25 rounded-full border border-line bg-light px-3.5 py-1.75 text-[14px] font-semibold">
+              <span aria-hidden="true" className="h-2 w-2 rounded-full bg-secondary" />
+              Registration opens {OPENS_ON}
             </p>
-            <p
-              className={`mt-5 inline-flex items-center gap-2 self-start rounded-full bg-light/10 px-3.5 py-1.5 text-[14px] font-semibold ${status === "open" ? "text-live-light" : "text-light/90"}`}
-            >
-              <span className={`h-2 w-2 rounded-full ${status === "open" ? "bg-live" : "bg-secondary"}`} />
-              {statusText[status]}
-            </p>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <ExamFormButton />
-              <a href={o.rulesPdf} target="_blank" rel="noopener" className="btn btn-outline-light">
-                Rules &amp; regulations (PDF)
-              </a>
+            <div className="mt-5.5 flex flex-wrap gap-3">
+              <ContactCta className="btn btn-primary" />
+              <Link href="#groups" className="btn btn-outline">
+                See the groups
+              </Link>
             </div>
-            <a
-              href="#how"
-              className="mt-4 inline-flex items-center gap-1.5 self-start text-[15px] font-semibold text-light/80 hover:text-light"
-            >
-              How it works <ArrowDown />
-            </a>
-            <p className="mt-5 text-[13.5px] text-light/60">
-              Follows the Government of Gujarat guidelines for environment education trips.
+            <p className="mt-5.5 flex flex-wrap gap-x-5.5 gap-y-1.5 text-[15px] text-muted">
+              {o.facts.map(([value, label], i) => (
+                <span key={label} className="flex gap-5.5">
+                  {i > 0 && (
+                    <span aria-hidden="true" className="text-line">
+                      ·
+                    </span>
+                  )}
+                  <span>
+                    <b className="font-display text-dark tabular-nums">{value}</b> {label}
+                  </span>
+                </span>
+              ))}
+            </p>
+          </div>
+
+          <div aria-hidden="true" className="relative grid aspect-[5/4] grid-cols-[1.25fr_1fr] grid-rows-2 gap-3">
+            {[
+              { src: "/img/olympiad/group-deodar.webp", className: "row-span-2", sizes: "(min-width: 1024px) 340px, 55vw" },
+              { src: "/img/olympiad/rock-climb.webp", className: "rotate-[1.5deg]", sizes: "(min-width: 1024px) 270px, 45vw" },
+              { src: "/img/olympiad/river-bridge.webp", className: "-rotate-[1.5deg]", sizes: "(min-width: 1024px) 270px, 45vw" },
+            ].map((img, i) => (
+              <div
+                key={img.src}
+                className={`relative min-h-0 overflow-hidden rounded-card border-[5px] border-light shadow-card ${img.className}`}
+              >
+                <Image src={img.src} alt="" fill preload={i === 0} sizes={img.sizes} className="object-cover" />
+              </div>
+            ))}
+            <p className="absolute -bottom-4.5 -left-3 rounded-card bg-secondary px-4 py-2.5 text-[13.5px] leading-snug text-dark shadow-card max-sm:left-2">
+              <b className="block font-display text-[18px]">Manali</b>
+              Astro Adventure Trekking Camp
             </p>
           </div>
         </div>
-
-        <div className="wrap pb-8 sm:pb-10">
-          <dl className="rail rail-stats grid gap-3 sm:grid-cols-3 lg:grid-cols-5">
-            {o.stats.map(([n, label]) => (
-              <div key={label} className="rounded-card border border-light/10 bg-light/5 p-4 sm:p-5">
-                <dt className="text-[14px] font-medium text-light/70">{label}</dt>
-                <dd>
-                  <CountUp value={n} className="display mt-1 text-[30px] whitespace-nowrap text-secondary sm:text-[38px]" />
-                </dd>
-              </div>
-            ))}
-          </dl>
-          <div className="mt-8 flex flex-col gap-4 border-t border-light/10 pt-6 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-8">
-            <p className="text-[14px] font-semibold tracking-wide text-light/70 uppercase">A joint initiative of</p>
-            {[
-              { logo: site.trust.logo, name: site.trust.name, line: `Rajkot · Reg. ${site.trust.registration}` },
-              { logo: "/img/logo.png", name: site.legalName, line: "Rajkot · since 1997" },
-            ].map((org) => (
-              <div key={org.name} className="flex items-center gap-3">
-                <Image
-                  src={org.logo}
-                  alt={`${org.name} logo`}
-                  width={52}
-                  height={52}
-                  className="h-13 w-13 shrink-0 rounded-full bg-light"
-                />
-                <div>
-                  <p className="leading-tight font-bold text-light">{org.name}</p>
-                  <p className="text-[14px] text-light/65">{org.line}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+        <span aria-hidden="true" className="ridge -bottom-px bg-light" />
       </section>
+
+      <div className="wrap mb-8">
+        <div className="relative z-10 -mt-10 grid items-center gap-4 rounded-card border border-t-4 border-line border-t-secondary bg-light px-6 py-5 shadow-card lg:grid-cols-[auto_1fr_1fr_auto] lg:gap-7">
+          <p className="font-display text-[15px] font-bold text-primary">A joint initiative of</p>
+          {[
+            { logo: site.trust.logo, name: site.trust.name, line: `Rajkot · Reg. ${site.trust.registration}` },
+            { logo: "/img/logo.png", name: site.legalName, line: "Rajkot · camps and treks for 28+ years" },
+          ].map((org) => (
+            <div key={org.name} className="flex min-w-0 items-center gap-3.5">
+              <Image src={org.logo} alt={`${org.name} logo`} width={56} height={56} className="h-14 w-14 shrink-0 rounded-full" />
+              <div>
+                <p className="font-display leading-tight font-bold">{org.name}</p>
+                <p className="text-[14px] text-muted">{org.line}</p>
+              </div>
+            </div>
+          ))}
+          <p className="font-display text-[16px] font-extrabold whitespace-nowrap text-primary" lang="sa">
+            {o.motto}
+          </p>
+        </div>
+      </div>
 
       <SectionNav links={jumpLinks} />
 
-      <section id="dates" className="wrap mt-12 scroll-mt-32 sm:mt-16">
-        <SectionHeader eyebrow="Key dates & notices" title="Mark your calendar" />
-        <div className="grid gap-6 lg:grid-cols-[1fr_1.3fr]">
-          <ol className="grid content-start gap-2.5">
-            {o.dates.map((d, i) => (
-              <li key={d.label} className="flex items-center gap-3.5 rounded-card border border-line bg-light px-4 py-3">
-                <FeatureIcon name={d.icon} tone={i === o.dates.length - 1 ? "accent" : "light"} className="h-10! w-10! text-[22px]!" />
-                <div>
-                  <p className="text-[14px] font-medium text-muted">{d.label}</p>
-                  <p className="text-[17px] leading-snug font-bold">{d.value}</p>
+      <section id="notices" aria-labelledby="h-notices" className={`relative ${sectionY}`}>
+        <span aria-hidden="true" className="dot-field top-0 left-0 h-75 w-95" />
+        <div className="wrap relative">
+          <SectionHead
+            id="h-notices"
+            eyebrow="Notice board"
+            title="Latest news and key dates"
+            lead="Official notices, PDFs, quiz dates and results are posted here first. Please check before every round."
+          />
+          <div className="mt-9 grid gap-7 lg:grid-cols-[1.15fr_0.85fr] lg:items-start lg:gap-11">
+            <div className="overflow-hidden rounded-card border border-t-4 border-line border-t-primary bg-light shadow-card">
+              <div className="flex items-center justify-between gap-3 border-b border-line px-5.5 py-4.5">
+                <h3 className="flex items-center gap-3">
+                  <span className="flex h-10.5 w-10.5 shrink-0 items-center justify-center rounded-full bg-primary-soft text-[20px] text-primary">
+                    <Megaphone />
+                  </span>
+                  <span className="font-display text-[21px] font-extrabold">
+                    Notice board
+                    <small className="block font-sans text-[13.5px] font-normal text-muted">From the CNA team</small>
+                  </span>
+                </h3>
+                <span className="inline-flex items-center gap-1.75 font-display text-[13px] font-bold text-success">
+                  <span aria-hidden="true" className="live-dot h-2 w-2 rounded-full bg-success" />
+                  Live
+                </span>
+              </div>
+              <div className="flex items-center gap-3.5 px-5.5 py-5">
+                <FileText className="text-[26px] text-primary" />
+                <div className="min-w-0">
+                  <span className="tag tag-solid mb-1.5 font-display font-bold">Official</span>
+                  <p className="font-display text-[17px] leading-snug font-bold">{o.notice.title}</p>
+                  <p className="text-[13.5px] text-muted">{o.notice.meta}</p>
                 </div>
+                <a
+                  href={o.notice.href}
+                  target="_blank"
+                  rel="noopener"
+                  className="ml-auto text-[14.5px] font-bold whitespace-nowrap text-primary hover:underline"
+                >
+                  View PDF<span className="sr-only"> (opens in a new tab)</span>
+                </a>
+              </div>
+            </div>
+
+            <div className="rounded-card border border-primary/20 bg-primary-soft p-6">
+              <h3 className="mb-4 font-display text-[21px] font-extrabold">Key dates</h3>
+              <ol>
+                {o.dates.map((d) => (
+                  <li
+                    key={d.title}
+                    className="relative grid grid-cols-[20px_1fr] gap-3.5 pb-5 before:absolute before:top-5.5 before:bottom-0 before:left-2.25 before:border-l-2 before:border-dashed before:border-primary/30 last:pb-0 last:before:hidden"
+                  >
+                    <span
+                      aria-hidden="true"
+                      className={`mt-0.5 h-5 w-5 rounded-full border-[3px] border-primary ${d.key ? "bg-primary" : "bg-primary-soft"}`}
+                    />
+                    <span>
+                      <span className="font-display text-[14px] font-bold text-primary tabular-nums">{d.when}</span>
+                      <b className="block font-display">{d.title}</b>
+                      {d.note && <span className="text-[14.5px] text-muted">{d.note}</span>}
+                    </span>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="how" aria-labelledby="h-how" className={`relative overflow-hidden bg-soft ${sectionY}`}>
+        <span aria-hidden="true" className="topo -bottom-10 -left-20 h-[532px] w-[760px] bg-primary/10 [mask-size:760px_auto]" />
+        <div className="wrap relative">
+          <SectionHead
+            id="h-how"
+            eyebrow="How it works"
+            title="Five rounds, from quiz to camp"
+            lead="Part of the Mountain, Desert and Marine project. It mixes science, nature and adventure."
+          />
+          <ol className="mt-9 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            {o.steps.map((s, i) => (
+              <li
+                key={s.title}
+                className="flex flex-col gap-2.5 rounded-card border border-t-4 border-line border-t-primary bg-light p-6 shadow-menu"
+              >
+                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-primary font-display text-[17px] font-extrabold text-light">
+                  {i + 1}
+                </span>
+                <h3 className="font-display text-[19px]">{s.title}</h3>
+                <p className="text-[15.5px] text-muted">{s.text}</p>
+                <span className="mt-auto border-t border-dashed border-line pt-2 font-display text-[14px] font-bold">{s.when}</span>
               </li>
             ))}
           </ol>
-          {/* On desktop the board fills this box, so its height always follows the dates column. */}
-          <div className="relative">
-            <NoticeBoard notices={notices} />
-          </div>
-        </div>
-      </section>
-
-      <section className="mt-16 bg-soft py-14 sm:mt-24 sm:py-20">
-        <div className="wrap grid gap-12 lg:grid-cols-[1.1fr_1fr] lg:items-center">
-          <div>
-            <SectionHeader eyebrow="About the Olympiad" title="A quiz that ends on a mountain" />
-            <div className="-mt-4 space-y-4 text-[17px] leading-relaxed text-muted">
-              {o.about.map((p) => (
-                <p key={p}>{p}</p>
-              ))}
-            </div>
-          </div>
-          <div className="rail grid gap-4 sm:grid-cols-2">
-            {o.pillars.map(([icon, title, text]) => (
-              <div key={title} className="rounded-card border border-line bg-light p-5">
-                <FeatureIcon name={icon} />
-                <h3 className="mt-4 text-[19px] leading-normal">{title}</h3>
-                <p className="mt-1 text-[15px] text-muted">{text}</p>
-              </div>
-            ))}
-            <div className="relative overflow-hidden rounded-card bg-dark p-5 text-light sm:col-span-2">
-              <p className="text-[13.5px] font-medium text-secondary">The prize</p>
-              <p className="display mt-1 text-[30px]">Astro Adventure Trekking Camp 2026-27</p>
-              <p className="mt-1 text-light/70">Manali · Himachal Pradesh · ₹18,000 camp fee</p>
-              <Link href="/trips/astro-adventure-manali" className="mt-4 inline-block font-semibold text-secondary underline">
-                See the camp <ArrowRight />
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="groups" className="wrap mt-16 scroll-mt-28 sm:mt-24">
-        <SectionHeader
-          eyebrow="Age groups & fees"
-          title="Choose your group"
-          intro="Pick the group that matches your age and the class you study in. Choose carefully: a wrong group means automatic disqualification, and the fee is not refunded."
-        />
-        <div className="rail grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-          {o.groups.map((g) => (
-            <article
-              key={g.g}
-              className="flex flex-col gap-4 rounded-card border border-line bg-light p-5 transition hover:border-dark sm:row-span-4 sm:grid sm:grid-rows-subgrid sm:gap-4 sm:p-6"
-            >
-              <div className="flex items-center gap-3.5">
-                <span className="display flex h-14 w-14 shrink-0 items-center justify-center rounded-card bg-dark text-[32px] text-secondary">
-                  {g.g}
-                </span>
-                <div>
-                  <p className="text-[13px] font-semibold tracking-wide text-muted uppercase">Group {g.g}</p>
-                  <p className="text-[17px] font-bold">{g.age}</p>
-                </div>
-              </div>
-              <h3 className="border-t border-line pt-4 text-[17px] leading-snug">{g.std}</h3>
-              <p className="text-[15px] text-muted">
-                <span className="font-semibold text-dark">Quiz: </span>
-                {g.g === "D" ? g.syllabus : `${g.syllabus}. Maths, science, social studies, GK and reasoning.`}
-              </p>
-              <dl className="grid content-start gap-2.5 self-stretch rounded-card bg-soft p-4">
-                {g.fees.map((fee) => (
-                  <div key={fee.amount} className="flex items-baseline gap-2.5">
-                    <dt className="display shrink-0 text-[22px] leading-none text-primary">{fee.amount}</dt>
-                    <dd className="text-[13.5px] leading-snug text-muted">{fee.note}</dd>
-                  </div>
-                ))}
-              </dl>
-            </article>
-          ))}
-        </div>
-        <GroupFinder />
-      </section>
-
-      <section id="how" className="wrap mt-16 scroll-mt-28 sm:mt-24">
-        <SectionHeader eyebrow="How it works" title="From your phone to the Himalaya, in four steps" />
-        <ol className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 lg:gap-6">
-          {o.steps.map(([icon, title, text], i) => (
-            <li key={title} className="relative flex flex-col rounded-card border border-line bg-light p-5 sm:p-6">
-              {i < o.steps.length - 1 && (
-                <span
-                  aria-hidden="true"
-                  className="absolute top-1/2 -right-[17px] z-10 hidden h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-line bg-light text-[15px] text-primary lg:flex"
+          <ul
+            aria-label="The quiz at a glance"
+            className="mt-4 grid grid-cols-2 overflow-hidden rounded-card bg-dark text-light lg:grid-cols-5"
+          >
+            {o.glance.map((g) => {
+              const Icon = glanceIcons[g.icon];
+              return (
+                <li
+                  key={g.label}
+                  className="flex min-w-0 items-center gap-3 border-r border-b border-light/12 px-5 py-4.5 last:col-span-2 lg:border-b-0 lg:last:col-span-1 lg:last:border-r-0"
                 >
-                  <ArrowRight />
-                </span>
-              )}
-              <div className="flex items-center justify-between">
-                <span className="display flex h-12 w-12 items-center justify-center rounded-full bg-primary text-[20px] text-light">
-                  {i + 1}
-                </span>
-                <FeatureIcon name={icon} />
-              </div>
-              <p className="mt-4 text-[13px] font-semibold tracking-wide text-muted uppercase">Step {i + 1}</p>
-              <h3 className="mt-1 text-[19px] leading-snug">{title}</h3>
-              <p className="mt-2 text-[15px] text-muted">{text}</p>
-            </li>
-          ))}
-        </ol>
-      </section>
-
-      <section id="quiz" className="mt-16 scroll-mt-28 bg-dark py-14 text-light sm:mt-24 sm:py-20">
-        <div className="wrap">
-          <SectionHeader
-            dark
-            eyebrow="Quiz details"
-            title="The Eco-STEM online quiz"
-            intro="Multiple choice questions in Gujarati or English, set at your group’s level."
-          />
-          <div className="grid gap-8 lg:grid-cols-2 lg:gap-10">
-            <div>
-              <div className="grid grid-cols-3 gap-px overflow-hidden rounded-card bg-light/10">
-                {[
-                  ["100", "Questions"],
-                  ["100", "Total marks"],
-                  ["60", "Minutes"],
-                ].map(([n, label]) => (
-                  <div key={label} className="bg-dark p-3 text-center sm:p-5">
-                    <p className="display text-[34px] text-secondary sm:text-[44px]">{n}</p>
-                    <p className="text-[13.5px] font-medium text-light/60">{label}</p>
-                  </div>
-                ))}
-              </div>
-              <dl className="mt-6 divide-y divide-light/10 border-y border-light/10">
-                {o.quiz.map(([k, v]) => (
-                  <div key={k} className="grid grid-cols-[88px_1fr] gap-3 py-2.5 sm:grid-cols-[110px_1fr] sm:gap-4 sm:py-3">
-                    <dt className="text-[13.5px] font-medium text-secondary">{k}</dt>
-                    <dd className="text-light/85">{v}</dd>
-                  </div>
-                ))}
-              </dl>
-            </div>
-            <div>
-              <p className="eyebrow flex items-center gap-2 text-secondary!">
-                <Trophy className="text-[16px] text-secondary" />
-                Five rounds of selection
-              </p>
-              <ol className="mt-5 border-l-2 border-dashed border-light/20 pl-6">
-                {o.rounds.map(([round, title, mode]) => (
-                  <li key={round} className="relative pb-4 sm:pb-6">
-                    <span className="absolute top-1.5 -left-[31px] h-3 w-3 rounded-full bg-primary" />
-                    <p className="text-[13.5px] font-medium text-secondary">
-                      {round} · {mode}
-                    </p>
-                    <p className="mt-1 text-[17px] font-semibold">{title}</p>
-                  </li>
-                ))}
-                <li className="relative">
-                  <span className="absolute top-0 -left-[35px] flex h-5 w-5 items-center justify-center rounded-full bg-secondary text-[11px] text-dark">
-                    <Star />
+                  <Icon className="text-[30px] text-secondary" />
+                  <span className="min-w-0">
+                    <strong className="block font-display text-[18px] leading-tight font-extrabold">{g.value}</strong>
+                    <span className="text-[13.5px] text-light/70">{g.label}</span>
                   </span>
-                  <p className="text-[17px] font-bold text-secondary">{o.roundsResult}</p>
                 </li>
-              </ol>
-              <p className="mt-6 rounded-card bg-light/5 p-4 text-[15px] text-light/75">
-                <strong className="text-light">Note:</strong> {o.selectionNote}
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="scholarships" className="wrap mt-16 scroll-mt-28 sm:mt-24">
-        <SectionHeader
-          eyebrow="Scholarships"
-          title={
-            <>
-              Named after two lamps of nature <Leaf className="text-success" />
-            </>
-          }
-          intro={`Your scholarship is a percentage of the camp fee (${o.campFee}). You can apply for only one.`}
-        />
-        <div className="rail grid gap-6 lg:grid-cols-2">
-          {o.scholarships.map((s) => (
-            <article key={s.n} className="flex flex-col overflow-hidden rounded-card border border-line bg-light shadow-panel">
-              <div className="h-28 bg-linear-to-r from-dark to-dark-soft sm:h-36" aria-hidden="true" />
-              <div className="-mt-24 flex flex-1 flex-col items-center px-5 pb-6 text-center sm:-mt-32 sm:px-8 sm:pb-8">
-                <div className="relative h-44 w-44 shrink-0 overflow-hidden rounded-full border-[6px] border-light bg-soft shadow-float sm:h-60 sm:w-60">
-                  <Image
-                    src={s.img}
-                    alt={s.name.replace(" Adventure Scholarship", "")}
-                    fill
-                    sizes="240px"
-                    className="object-cover object-top"
-                  />
-                </div>
-                <span className="mt-4 rounded-full bg-primary-soft px-3 py-1 text-[13px] font-bold text-primary">Scholarship {s.n}</span>
-                <h3 className="h-card mt-2 max-w-sm">{s.name}</h3>
-                <p className="mt-2 max-w-md text-[15px] text-muted">{s.text}</p>
-                <ul className="mt-5 w-full space-y-2 rounded-card bg-soft p-4 text-left text-[15px]">
-                  {s.points.map((p) => (
-                    <li key={p} className="flex gap-2">
-                      <CheckCircle className="mt-[3px] shrink-0 text-[18px] text-success" />
-                      {p}
-                    </li>
-                  ))}
-                </ul>
-                <a href={pdfs[s.pdf]} target="_blank" rel="noopener" className="btn btn-outline mt-auto self-center pt-3!">
-                  {s.pdfLabel} (PDF) <ArrowRight />
-                </a>
-              </div>
-            </article>
-          ))}
-        </div>
-        <p className="mt-6 flex gap-3 rounded-card border border-primary bg-primary-soft p-5 text-[15px]">
-          <Warning className="mt-0.5 text-[20px] text-primary" />
-          <span>
-            <strong>Important:</strong> {o.scholarshipRule}
-          </span>
-        </p>
-      </section>
-
-      <section id="included" className="mt-16 scroll-mt-28 bg-soft py-14 sm:mt-24 sm:py-20">
-        <div className="wrap">
-          <SectionHeader
-            eyebrow="What’s included"
-            title="Ten days in Manali, all planned"
-            intro="The Astro Adventure Trekking Camp runs from our own campus at Vashisht, Manali. Qualified instructors run every activity."
-            action={{ label: "Camp page", href: "/trips/astro-adventure-manali" }}
-          />
-          <ul className="mb-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
-            {o.campPhotos.map((p) => (
-              <li key={p.img} className="group relative aspect-[4/3] overflow-hidden rounded-card bg-dark">
-                <Photo
-                  img={p.img}
-                  alt={p.alt}
-                  sizes="(min-width: 1024px) 290px, 50vw"
-                  className="transition duration-700 group-hover:scale-[1.04]"
-                />
-                <div className="absolute inset-x-0 bottom-0 bg-linear-to-b from-transparent to-dark/80 p-3 pt-10">
-                  <p className="text-[13.5px] font-medium text-light">{p.caption}</p>
-                </div>
-              </li>
-            ))}
+              );
+            })}
           </ul>
-          <div className="rail grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {o.included.map(([icon, title, text]) => (
-              <div key={title} className="flex gap-4 rounded-card bg-light p-5">
-                <FeatureIcon name={icon} />
-                <div>
-                  <h3 className="text-[18px] leading-normal">{title}</h3>
-                  <p className="mt-1 text-[15px] text-muted">{text}</p>
+        </div>
+      </section>
+
+      <section id="groups" aria-labelledby="h-groups" className={sectionY}>
+        <div className="wrap">
+          <SectionHead
+            id="h-groups"
+            eyebrow="Groups and fees"
+            title="Find the right group"
+            lead="There are four groups. Each one has its own fee, journey and prize. Pick the class or age to see the right one."
+          />
+          <GroupPicker groups={o.groups} />
+        </div>
+      </section>
+
+      <section id="partners" aria-labelledby="h-partners" className={`relative overflow-hidden bg-secondary/12 ${sectionY}`}>
+        <svg aria-hidden="true" viewBox="0 0 200 200" className="pointer-events-none absolute top-7.5 -right-15 h-85 w-85 opacity-50">
+          <g fill="none" strokeWidth="2" className="stroke-secondary">
+            <circle cx="100" cy="100" r="90" />
+            <circle cx="100" cy="100" r="64" strokeDasharray="4 6" />
+            <path d="M100 6v188M6 100h188" />
+          </g>
+          <path d="M100 20l12 80-12 80-12-80z" opacity=".8" className="fill-secondary" />
+          <path d="M100 20l12 80H88z" className="fill-primary" />
+        </svg>
+        <div className="wrap relative">
+          <SectionHead
+            id="h-partners"
+            eyebrow="For schools and teachers"
+            title="Bring your whole class, or spread the word"
+            lead="Schools can register many students from one place. Teachers and other people can share a personal code and get recognised for every student who joins."
+          />
+          <div className="mt-8 grid gap-5 lg:grid-cols-2">
+            {o.partners.map((p, i) => {
+              const Icon = partnerIcons[p.icon];
+              return (
+                <article
+                  key={p.title}
+                  className={`flex flex-col gap-3.5 rounded-card border border-t-4 border-secondary/30 bg-light p-7 shadow-card ${i === 0 ? "border-t-primary" : "border-t-dark"}`}
+                >
+                  <span className="flex h-13 w-13 items-center justify-center rounded-full bg-primary-soft text-[26px] text-primary">
+                    <Icon />
+                  </span>
+                  <h3 className="font-display text-[21px] font-extrabold">{p.title}</h3>
+                  <p className="text-[15.5px] text-muted">{p.who}</p>
+                  <ul className="grid gap-2">
+                    {p.points.map((point) => (
+                      <Tick key={point}>{point}</Tick>
+                    ))}
+                  </ul>
+                  <ContactCta className={`btn mt-auto self-start ${i === 0 ? "btn-primary" : "btn-dark"}`}>
+                    Contact us <ArrowRight />
+                  </ContactCta>
+                </article>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="scholarships"
+        aria-labelledby="h-scholarships"
+        className="night-sky relative pt-[clamp(56px,7vw,80px)] pb-[clamp(90px,10vw,120px)] text-light"
+      >
+        <span aria-hidden="true" className="ridge ridge-alt -top-[45px] bg-dark" />
+        <svg
+          aria-hidden="true"
+          viewBox="0 0 1200 110"
+          preserveAspectRatio="none"
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-27.5 w-full"
+        >
+          <path d="M0 110V70l120-40 90 30 140-55 110 50 80-20 150 45 120-60 110 40 90-15 190 45v20z" className="fill-dark-soft" />
+          <path d="M330 15l20 18-12-3-8 9-9-8-11 4z M770 20l18 17-11-2-8 8-8-7-10 3z" className="fill-light/85" />
+        </svg>
+        <div className="wrap relative">
+          <SectionHead
+            id="h-scholarships"
+            dark
+            eyebrow="Scholarships"
+            title="Named after two lamps of nature"
+            lead="Both scholarships are on the ₹18,000 camp fee. They carry the names of two men who spent their lives taking young people into nature."
+          />
+          <div className="mt-9 grid gap-5 lg:grid-cols-2">
+            {o.scholarships.map((s) => (
+              <article key={s.name} className="flex flex-col gap-4 rounded-card border border-light/8 bg-light/4 p-7 backdrop-blur-[2px]">
+                <div className="flex items-center gap-5 max-[520px]:flex-col max-[520px]:items-start">
+                  <div className="relative h-33 w-33 shrink-0 overflow-hidden rounded-full border-4 border-secondary bg-dark-soft max-[520px]:h-30 max-[520px]:w-30">
+                    <Image src={s.img} alt={s.alt} fill sizes="132px" className={`object-cover ${s.focus}`} />
+                  </div>
+                  <div>
+                    <p className="font-display text-[13px] font-bold text-secondary">{s.kicker}</p>
+                    <h3 className="mt-1 font-display text-[21px] leading-tight">{s.name}</h3>
+                    <p className="mt-1 text-[14px] text-light/65">{s.life}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section id="rules" className="wrap mt-16 scroll-mt-28 sm:mt-24">
-        <SectionHeader
-          eyebrow="Requirements"
-          title="Eligibility & important rules"
-          action={{ label: "Full rules (PDF)", href: o.rulesPdf }}
-        />
-        <div className="rail grid gap-6 lg:grid-cols-2">
-          <div className="rounded-card border border-line p-5 sm:p-6">
-            <h3 className="flex items-center gap-2 text-[22px] leading-normal">
-              <SealCheck className="text-success" />
-              Who can apply
-            </h3>
-            <ul className="mt-4 space-y-3">
-              {o.eligibility.map((x) => (
-                <li key={x} className="flex gap-3">
-                  <CheckCircle className="mt-[3px] text-[18px] text-success" />
-                  {x}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="rounded-card border border-primary p-5 sm:p-6">
-            <h3 className="flex items-center gap-2 text-[22px] leading-normal">
-              <Warning className="text-primary" />
-              Please read carefully
-            </h3>
-            <ul className="mt-4 space-y-3">
-              {o.rules.map((x) => (
-                <li key={x} className="flex gap-3">
-                  <WarningCircle className="mt-[3px] text-[18px] text-primary" />
-                  {x}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      <section id="faq" className="wrap mt-16 scroll-mt-28 sm:mt-24">
-        <div className="grid gap-8 lg:grid-cols-[1.35fr_1fr] lg:items-start lg:gap-12">
-          <div>
-            <p className="eyebrow">Questions?</p>
-            <h2 className="h-section mt-3">Olympiad FAQs</h2>
-            <FaqList
-              className="mt-6"
-              faqs={[
-                ...o.faqs.map((f) => ({ question: f.q, answer: f.a })),
-                {
-                  question: "How do I contact the organisers?",
-                  answer: `Call or WhatsApp ${contact.phone}, or email ${contact.email}. Office: ${contact.address.full}. Visits by appointment only, so please call first.`,
-                },
-              ]}
-            />
-          </div>
-
-          <aside className="grid gap-5 lg:sticky lg:top-36">
-            <div className="relative overflow-hidden rounded-card bg-dark p-6 text-light sm:p-8">
-              <div className="absolute inset-0 opacity-25">
-                <Photo img="cna/real/land-10" sizes="(min-width: 1024px) 480px, 100vw" />
-              </div>
-              <div className="relative">
-                <p className="flex items-center gap-2 text-[14px] font-semibold text-secondary">
-                  <Clock className="text-[15px]" />
-                  {statusText[status]}
+                <p className="border-l-[3px] border-secondary pl-3.5 text-light/88 italic">{s.quote}</p>
+                <p className="flex flex-wrap items-baseline gap-3.5 rounded-card bg-light/5 px-4 py-3.5">
+                  <strong className="font-display text-[30px] leading-none font-extrabold text-secondary">{s.award}</strong>
+                  <span className="text-[15px] text-light/80">{s.awardFor}</span>
                 </p>
-                <h2 className="h-sub mt-3">Your seat in the Himalaya starts with one quiz</h2>
-                <p className="mt-2 text-light/75">Score well, pick the right scholarship and we will see you at camp in Manali.</p>
-                <dl className="mt-5 grid grid-cols-2 gap-2">
-                  {o.fees.map((f) => (
-                    <div key={f.who} className="rounded-card bg-light/10 p-3">
-                      <dt className="display text-[22px] leading-none text-secondary">₹{f.fee}</dt>
-                      <dd className="mt-1 text-[13px] leading-snug text-light/75">{f.who}</dd>
+                <dl className="grid gap-2.5">
+                  {s.facts.map(([k, v]) => (
+                    <div
+                      key={k}
+                      className="grid grid-cols-[110px_1fr] gap-3 border-b border-light/8 pb-2.5 text-[14.5px] text-light/82 max-[520px]:grid-cols-1 max-[520px]:gap-0.5"
+                    >
+                      <dt className="font-display text-[13px] font-bold text-secondary">{k}</dt>
+                      <dd>{v}</dd>
                     </div>
                   ))}
                 </dl>
-                <ExamFormButton className="mt-6 w-full" />
-                <p className="mt-3 text-[13px] text-light/55">All disputes are subject to Rajkot jurisdiction.</p>
-              </div>
-            </div>
-
-            <div id="districts" className="rounded-card border border-line p-6">
-              <p className="eyebrow">Open for</p>
-              <h2 className="h-sub mt-2">Every district of Gujarat</h2>
-              <p className="mt-2 text-[15px] text-muted">
-                Any eligible student or teacher in Gujarat can register, from a village school in Kutch to a college in Surat.
-              </p>
-              <ul className="mt-4 flex flex-wrap gap-2">
-                {o.regions.map((d) => (
-                  <li key={d} className="flex items-center gap-1.5 rounded-full bg-soft px-3 py-1.5 text-[14px] font-semibold">
-                    <MapPin className="text-primary" />
-                    {d}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </aside>
+                <a href={s.pdf.href} target="_blank" rel="noopener" className="btn btn-outline-light mt-auto self-start">
+                  {s.pdf.label}
+                </a>
+              </article>
+            ))}
+          </div>
         </div>
       </section>
+
+      <section id="prizes" aria-labelledby="h-prizes" className={sectionY}>
+        <div className="wrap">
+          <SectionHead id="h-prizes" eyebrow="The prizes" title="Where the winners go" />
+          <div className="relative isolate mt-9 grid gap-5 lg:grid-cols-2">
+            <span aria-hidden="true" className="absolute -inset-x-6 top-[22%] -bottom-6 -z-10 rounded-card bg-primary-soft" />
+            {o.prizes.map((p) => (
+              <article key={p.title} className="flex flex-col overflow-hidden rounded-card border border-line bg-light shadow-card">
+                <div className="relative aspect-video bg-soft">
+                  <Image src={p.img} alt={p.alt} fill sizes="(min-width: 1024px) 590px, 100vw" className="object-cover" />
+                  <span className="absolute top-3.5 left-3.5 rounded-tag bg-secondary px-2.25 py-1 font-display text-[12.5px] font-bold text-dark">
+                    {p.groups}
+                  </span>
+                </div>
+                <div className="flex flex-1 flex-col gap-2 px-5.5 pt-5 pb-6">
+                  <h3 className="font-display text-[19px]">{p.title}</h3>
+                  <p className="text-[15.5px] text-muted">{p.text}</p>
+                  <p className="mt-1 flex flex-wrap gap-x-4.5 gap-y-2 text-[14px] text-muted">
+                    <span className="inline-flex items-center gap-1.5">
+                      <MapPin className="text-[17px] text-primary" />
+                      {p.place}
+                    </span>
+                    <span className="inline-flex items-center gap-1.5">
+                      <CalendarBlank className="text-[17px] text-primary" />
+                      {p.meta}
+                    </span>
+                  </p>
+                  {p.link && (
+                    <Link href={p.link.href} className="mt-auto pt-2 font-display font-bold text-primary hover:underline">
+                      {p.link.label}
+                    </Link>
+                  )}
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="rules" aria-labelledby="h-rules" className={`relative overflow-hidden bg-soft ${sectionY}`}>
+        <span aria-hidden="true" className="topo -top-15 -right-30 h-[448px] w-[640px] bg-primary/10 [mask-size:640px_auto]" />
+        <div className="wrap relative">
+          <SectionHead id="h-rules" eyebrow="Before you register" title="Rules in one place" />
+          <ul className="mt-7.5 grid gap-x-12 rounded-card border border-line bg-light px-7 py-2 shadow-menu md:grid-cols-2">
+            {o.rules.map(([lead, rest]) => (
+              <li key={lead} className="flex gap-3 border-b border-line py-3.5">
+                <Check className="mt-1 text-[18px] text-success" />
+                <span>
+                  <b className="font-display">{lead}</b>
+                  {rest}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <section id="register" aria-labelledby="h-register" className={sectionY}>
+        <div className="wrap">
+          <div className="relative isolate grid items-center gap-6.5 overflow-hidden rounded-card bg-primary p-[clamp(26px,4vw,44px)] text-light lg:grid-cols-[1.1fr_1fr]">
+            <span
+              aria-hidden="true"
+              className="topo top-1/2 -right-20 -z-10 h-[434px] w-[620px] -translate-y-1/2 bg-light/14 [mask-size:620px_auto]"
+            />
+            <span aria-hidden="true" className="absolute -right-10 -bottom-10 -z-10 h-55 w-55 rounded-full bg-secondary/35" />
+            <div>
+              <p className="font-display text-[15px] font-bold text-secondary-light">Registration</p>
+              <h2 id="h-register" className="mt-1.5 text-[26px] md:text-[34px]">
+                Registration opens on {OPENS_ON}
+              </h2>
+              <p className="mt-2.5 text-light/90">Questions before then? Leave your details and the CNA team will get back to you.</p>
+              <div className="mt-5 flex flex-wrap items-center gap-3">
+                <ContactCta className="btn bg-light text-primary hover:bg-primary-soft" />
+                <span className="text-[14.5px]">
+                  Help: <b className="select-all">{contact.phone}</b>
+                </span>
+              </div>
+            </div>
+            <ol aria-label="Keep these ready" className="grid gap-2.5">
+              {o.keepReady.map((item, i) => (
+                <li key={item} className="flex items-center gap-3 rounded-card bg-light/12 px-4 py-3 text-[15px]">
+                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-light font-display font-extrabold text-primary">
+                    {i + 1}
+                  </span>
+                  {item}
+                </li>
+              ))}
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      {/* Pulls the footer up against this section so the ridge meets it, cancelling the footer's top margin. */}
+      <section id="faq" aria-labelledby="h-faq" className="relative -mb-24 bg-soft pt-[clamp(56px,7vw,80px)] pb-[clamp(80px,9vw,110px)]">
+        <div className="wrap relative">
+          <SectionHead id="h-faq" eyebrow="FAQs" title="Questions parents and participants ask" />
+          <div className="mt-7.5 grid gap-9 lg:grid-cols-[1.1fr_0.9fr] lg:gap-14">
+            <FaqList faqs={o.faqs} />
+            <aside id="help" aria-labelledby="h-help" className="flex flex-col gap-3 self-start rounded-card bg-dark p-6.5 text-light">
+              <h3 id="h-help" className="font-display text-[21px] font-extrabold">
+                Need help?
+              </h3>
+              <p className="text-[15.5px] text-light/75">Questions about groups, fees or the quiz? Message or call the CNA team.</p>
+              <a href={helpHref} target="_blank" rel="noopener" className="btn self-start bg-whatsapp text-light hover:bg-whatsapp-dark">
+                <WhatsApp className="text-[20px]" /> WhatsApp us
+              </a>
+              <p className="text-[15.5px] text-light/75">
+                Call{" "}
+                <a href={contact.phoneHref} className="font-display text-[19px] font-extrabold text-light">
+                  {contact.phone}
+                </a>
+              </p>
+              {contact.trustEmail && <p className="text-[13.5px] text-light/60">Trust email: {contact.trustEmail}</p>}
+            </aside>
+          </div>
+        </div>
+        <span aria-hidden="true" className="ridge ridge-alt bottom-0 bg-dark" />
+      </section>
+
+      <UpdatesNudge />
     </>
   );
 }
