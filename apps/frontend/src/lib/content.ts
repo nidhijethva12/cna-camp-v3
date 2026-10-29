@@ -166,7 +166,17 @@ const getBatches = cache(async (): Promise<UpcomingBatch[]> => {
     const endDate = indiaDate(b.endDate);
     if (index === -1 || endDate < today) return [];
     const trip = trips[index];
-    return [{ tripSlug: trip.slug, startDate: indiaDate(b.startDate), endDate, seatsLeft: b.seatsLeft, note: b.note ?? undefined, trip }];
+    return [
+      {
+        tripSlug: trip.slug,
+        startDate: indiaDate(b.startDate),
+        endDate,
+        seatsLeft: b.seatsLeft,
+        note: b.note ?? undefined,
+        showDates: Boolean(b.showDates),
+        trip,
+      },
+    ];
   });
 });
 

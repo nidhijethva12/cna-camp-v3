@@ -3,13 +3,13 @@ import { Photo } from "@/components/media/Photo";
 import { Clock, MapPin } from "@/components/ui/icons";
 import { regions } from "@/content/site";
 import type { UpcomingBatch } from "@/lib/content";
-import { splitDate } from "@/lib/format";
+import { dateRange, splitDate } from "@/lib/format";
 import { durationShort } from "@/lib/trips";
 import type { Difficulty } from "@/types/content";
 
 const LEVEL: Record<Difficulty, number> = { Easy: 1, Moderate: 2, Challenging: 3 };
 
-/** One fixed-date departure: photo with the start date, then the trip, price and level. */
+/** One fixed-date departure: photo, then the trip, price and level. Its dates show once the team marks them final. */
 export function BatchCard({ batch, sizes }: { batch: UpcomingBatch; sizes: string }) {
   const { trip } = batch;
   const href = `/trips/${trip.slug}`;
@@ -20,10 +20,12 @@ export function BatchCard({ batch, sizes }: { batch: UpcomingBatch; sizes: strin
       <Link href={href} className="relative block aspect-[16/10] overflow-hidden bg-soft" tabIndex={-1} aria-hidden="true">
         <Photo img={trip.img} alt="" sizes={sizes} className="transition duration-700 group-hover:scale-[1.05]" />
         <div className="absolute inset-0 bg-linear-to-b from-dark/35 via-transparent to-dark/45" />
-        <time dateTime={batch.startDate} className="absolute top-3 left-3 rounded-tag bg-light px-3 py-1.5 text-center shadow-float">
-          <span className="display block text-[22px] leading-none">{day}</span>
-          <span className="mt-0.5 block text-[12px] font-bold tracking-[.08em] text-primary uppercase">{month}</span>
-        </time>
+        {batch.showDates && (
+          <time dateTime={batch.startDate} className="absolute top-3 left-3 rounded-tag bg-light px-3 py-1.5 text-center shadow-float">
+            <span className="display block text-[22px] leading-none">{day}</span>
+            <span className="mt-0.5 block text-[12px] font-bold tracking-[.08em] text-primary uppercase">{month}</span>
+          </time>
+        )}
         {batch.note && <span className="tag absolute bottom-3 left-3 border-secondary bg-secondary text-dark">{batch.note}</span>}
       </Link>
 
@@ -32,6 +34,7 @@ export function BatchCard({ batch, sizes }: { batch: UpcomingBatch; sizes: strin
           <span className="flex items-center gap-1.5">
             <Clock className="text-[16px] text-primary" />
             {durationShort(trip)}
+            {batch.showDates && ` · ${dateRange(batch.startDate, batch.endDate)}`}
           </span>
           <span className="flex shrink-0 items-center gap-1.5">
             <MapPin className="text-[16px] text-primary" />

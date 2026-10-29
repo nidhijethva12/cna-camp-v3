@@ -371,6 +371,10 @@ export interface Batch {
    * Short tag, e.g. “Diwali break”, “Girls-only batch”.
    */
   note?: string | null;
+  /**
+   * Show this batch’s dates on the batch cards. Leave off until the dates are final.
+   */
+  showDates?: boolean | null;
   label?: string | null;
   /**
    * Sample/placeholder content, labelled on the site until replaced.
@@ -750,6 +754,7 @@ export interface BatchesSelect<T extends boolean = true> {
   endDate?: T;
   seatsLeft?: T;
   note?: T;
+  showDates?: T;
   label?: T;
   isSample?: T;
   updatedAt?: T;

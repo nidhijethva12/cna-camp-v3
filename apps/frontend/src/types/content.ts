@@ -83,6 +83,8 @@ export interface Batch {
   endDate: string;
   seatsLeft: number;
   note?: string;
+  /** Dates show on the batch cards only once the team marks them final. */
+  showDates?: boolean;
 }
 
 export interface Campus {
