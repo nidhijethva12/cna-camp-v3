@@ -75,6 +75,7 @@ export const footerNav = {
   ],
   company: [
     { label: "About us", href: "/about" },
+    { label: "Olympiad", href: "/olympiad", hot: true },
     { label: "Contact us", href: "/contact" },
   ],
   resources: [

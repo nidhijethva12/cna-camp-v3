@@ -53,7 +53,7 @@ export function GroupPicker({ groups }: { groups: OlympiadGroup[] }) {
     <>
       <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3 rounded-card bg-dark px-5 py-4.5 text-light sm:px-6">
         <label className="contents">
-          <span className="display text-[16px] font-bold">The participant is</span>
+          <span className="font-display text-[16px] font-bold">The participant is</span>
           <Select
             name="participant"
             emptyLabel="Choose class or age"
@@ -94,7 +94,7 @@ export function GroupPicker({ groups }: { groups: OlympiadGroup[] }) {
             onKeyDown={(e) => onKey(e, i)}
             className={`group flex min-h-12.5 flex-col items-center justify-center rounded-card border border-t-4 border-line bg-light p-1.5 text-center sm:min-h-15.5 sm:items-start sm:px-3.5 sm:py-2 sm:text-left ${tone[g.id].tab} ${tone[g.id].selected}`}
           >
-            <b className="display text-[16px]">
+            <b className="font-display text-[16px] font-bold">
               <span className="max-[380px]:sr-only">Group </span>
               {g.id}
             </b>
@@ -115,7 +115,7 @@ export function GroupPicker({ groups }: { groups: OlympiadGroup[] }) {
           className={`mt-3.5 grid gap-7 rounded-card border border-t-[5px] border-line bg-light p-5 shadow-card sm:p-8 lg:grid-cols-2 lg:gap-12 ${tone[g.id].edge}`}
         >
           <div>
-            <h3 className="display text-[26px] font-extrabold">{g.title}</h3>
+            <h3 className="font-display text-[24px] font-bold sm:text-[26px]">{g.title}</h3>
             <p className="mt-1.5 text-muted">{g.who}</p>
             <dl className="mt-4.5 grid grid-cols-2 gap-2.5">
               {g.fees.map((f) => (
@@ -124,23 +124,23 @@ export function GroupPicker({ groups }: { groups: OlympiadGroup[] }) {
                   className={`min-w-0 rounded-card px-4 py-3.5 ${tone[g.id].tile} ${g.fees.length === 1 ? "col-span-2" : ""}`}
                 >
                   <dt className="text-[13px] font-semibold text-muted">{f.label}</dt>
-                  <dd className="display text-[24px]">{f.amount}</dd>
+                  <dd className="font-display text-[24px] font-bold">{f.amount}</dd>
                 </div>
               ))}
               <div className={`col-span-2 min-w-0 rounded-card px-4 py-3.5 ${tone[g.id].tile}`}>
                 <dt className="text-[13px] font-semibold text-muted">Quiz</dt>
-                <dd className="display text-[17px]">{g.quiz}</dd>
+                <dd className="text-[16px] font-semibold">{g.quiz}</dd>
               </div>
             </dl>
             <p className="mt-3 flex items-start gap-3 rounded-card bg-primary-soft px-4 py-3.5 text-[15px]">
               <Mountains className="mt-0.5 shrink-0 text-[20px] text-primary" />
               <span>
-                <b className="display">Prize:</b> {g.prize}
+                <b>Prize:</b> {g.prize}
               </span>
             </p>
           </div>
           <div>
-            <h4 className="display text-[14px] font-bold text-primary">The journey</h4>
+            <h4 className="text-[14px] font-bold text-primary">The journey</h4>
             <ol className="mt-3.5">
               {g.journey.map((s) => (
                 <li
@@ -151,8 +151,7 @@ export function GroupPicker({ groups }: { groups: OlympiadGroup[] }) {
                     aria-hidden="true"
                     className={`absolute top-1 left-0.5 h-3.5 w-3.5 rounded-full border-[3px] ${s.goal ? "border-secondary bg-secondary" : "border-dark bg-light"}`}
                   />
-                  {s.year && <span className="display block text-[13px] font-bold text-primary">{s.year}</span>}
-                  <b className="display block">{s.title}</b>
+                  <b className="block font-semibold">{s.title}</b>
                   {s.note && <span className="text-[14.5px] text-muted">{s.note}</span>}
                 </li>
               ))}

@@ -3,13 +3,13 @@ import { Photo } from "@/components/media/Photo";
 import { Clock, MapPin } from "@/components/ui/icons";
 import { regions } from "@/content/site";
 import type { UpcomingBatch } from "@/lib/content";
-import { dateRange, splitDate } from "@/lib/format";
+import { splitDate } from "@/lib/format";
 import { durationShort } from "@/lib/trips";
 import type { Difficulty } from "@/types/content";
 
 const LEVEL: Record<Difficulty, number> = { Easy: 1, Moderate: 2, Challenging: 3 };
 
-/** One fixed-date departure: photo with the start date, then the trip, starting price and level. */
+/** One fixed-date departure: photo with the start date, then the trip, price and level. */
 export function BatchCard({ batch, sizes }: { batch: UpcomingBatch; sizes: string }) {
   const { trip } = batch;
   const href = `/trips/${trip.slug}`;
@@ -31,7 +31,7 @@ export function BatchCard({ batch, sizes }: { batch: UpcomingBatch; sizes: strin
         <div className="flex items-center justify-between gap-3 border-b border-dashed border-line pb-3 text-[14px] font-medium text-muted">
           <span className="flex items-center gap-1.5">
             <Clock className="text-[16px] text-primary" />
-            {durationShort(trip)} · {dateRange(batch.startDate, batch.endDate)}
+            {durationShort(trip)}
           </span>
           <span className="flex shrink-0 items-center gap-1.5">
             <MapPin className="text-[16px] text-primary" />
@@ -44,11 +44,10 @@ export function BatchCard({ batch, sizes }: { batch: UpcomingBatch; sizes: strin
             {trip.name}
           </Link>
         </h3>
-        <p className="mt-1.5 line-clamp-2 text-[15px] text-muted">{trip.summary}</p>
 
         <div className="mt-auto flex items-end justify-between gap-4 pt-5">
           <div>
-            <p className="text-[13px] font-semibold text-muted">Starting from</p>
+            <p className="text-[13px] font-semibold text-muted">Price</p>
             <p className="display text-[22px] leading-tight text-primary">
               {trip.price ? `₹${trip.price.toLocaleString("en-IN")}` : "On request"}
             </p>

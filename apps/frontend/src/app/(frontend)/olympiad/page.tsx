@@ -117,6 +117,16 @@ export default async function OlympiadPage() {
               {o.name}
             </h1>
             <p className="lead mt-3 max-w-[44ch]">{o.intro}</p>
+            <p className="mt-4 flex flex-wrap items-baseline gap-x-2.5 font-display leading-none font-extrabold md:gap-x-3">
+              <span className="text-[19px] text-muted sm:text-[22px] md:text-[26px]">with</span>
+              <span className="marker count-up relative inline-block text-[46px] tracking-tight text-primary tabular-nums sm:text-[56px] md:text-[68px]">
+                <span aria-hidden="true" className="invisible">
+                  100%
+                </span>
+                <span className="sr-only">100%</span>
+              </span>
+              <span className="text-[19px] text-dark sm:text-[22px] md:text-[26px]">scholarship</span>
+            </p>
             <p className="mt-5.5 inline-flex items-center gap-2.25 rounded-full border border-line bg-light px-3.5 py-1.75 text-[14px] font-semibold">
               <span aria-hidden="true" className="h-2 w-2 rounded-full bg-secondary" />
               Registration opens {OPENS_ON}
@@ -127,20 +137,6 @@ export default async function OlympiadPage() {
                 See the groups
               </Link>
             </div>
-            <p className="mt-5.5 flex gap-x-2.5 text-[13.5px] whitespace-nowrap text-muted max-[380px]:text-[12.5px] sm:flex-wrap sm:gap-x-5.5 sm:gap-y-1.5 sm:text-[15px]">
-              {o.facts.map(([value, label], i) => (
-                <span key={label} className="flex gap-2.5 sm:gap-5.5">
-                  {i > 0 && (
-                    <span aria-hidden="true" className="text-line max-[380px]:hidden">
-                      ·
-                    </span>
-                  )}
-                  <span>
-                    <b className="font-display text-dark tabular-nums">{value}</b> {label}
-                  </span>
-                </span>
-              ))}
-            </p>
           </div>
 
           <div aria-hidden="true" className="relative grid aspect-[5/4] grid-cols-[1.25fr_1fr] grid-rows-2 gap-3">
@@ -197,8 +193,8 @@ export default async function OlympiadPage() {
             title="Latest news and key dates"
             lead="Official notices, PDFs, quiz dates and results are posted here first. Please check before every round."
           />
-          <div className="mt-9 grid gap-7 lg:grid-cols-[1.15fr_0.85fr] lg:items-start lg:gap-11">
-            <div className="overflow-hidden rounded-card border border-t-4 border-line border-t-primary bg-light shadow-card">
+          <div className="mt-9 grid gap-7 lg:grid-cols-[1.15fr_0.85fr] lg:gap-11">
+            <div className="flex flex-col overflow-hidden rounded-card border border-t-4 border-line border-t-primary bg-light shadow-card">
               <div className="flex items-center justify-between gap-3 border-b border-line px-5.5 py-4.5">
                 <h3 className="flex items-center gap-3">
                   <span className="flex h-10.5 w-10.5 shrink-0 items-center justify-center rounded-full bg-primary-soft text-[20px] text-primary">
@@ -229,6 +225,18 @@ export default async function OlympiadPage() {
                 >
                   View PDF<span className="sr-only"> (opens in a new tab)</span>
                 </a>
+              </div>
+              <div className="mt-auto hidden flex-1 flex-col items-center justify-center gap-3 border-t border-dashed border-line px-6 py-10 text-center lg:flex">
+                <span
+                  aria-hidden="true"
+                  className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-soft text-[26px] text-primary"
+                >
+                  <Megaphone />
+                </span>
+                <p className="font-display text-[17px] font-bold">More updates coming soon</p>
+                <p className="max-w-[36ch] text-[14.5px] text-muted">
+                  Quiz dates, links and results will be posted here as each round comes up.
+                </p>
               </div>
             </div>
 
@@ -270,14 +278,14 @@ export default async function OlympiadPage() {
             {o.steps.map((s, i) => (
               <li
                 key={s.title}
-                className="flex flex-col gap-2.5 rounded-card border border-t-4 border-line border-t-primary bg-light p-6 shadow-menu"
+                className="row-span-4 grid grid-rows-subgrid gap-2.5 rounded-card border border-t-4 border-line border-t-primary bg-light p-6 shadow-menu"
               >
                 <span className="flex h-10 w-10 items-center justify-center rounded-full bg-primary font-display text-[17px] font-extrabold text-light">
                   {i + 1}
                 </span>
                 <h3 className="font-display text-[19px]">{s.title}</h3>
                 <p className="text-[15.5px] text-muted">{s.text}</p>
-                <span className="mt-auto border-t border-dashed border-line pt-2 font-display text-[14px] font-bold">{s.when}</span>
+                <span className="self-end border-t border-dashed border-line pt-2 font-display text-[14px] font-bold">{s.when}</span>
               </li>
             ))}
           </ol>
@@ -487,9 +495,9 @@ export default async function OlympiadPage() {
           <div className="relative isolate grid items-center gap-6.5 overflow-hidden rounded-card bg-primary p-[clamp(26px,4vw,44px)] text-light lg:grid-cols-[1.1fr_1fr]">
             <span
               aria-hidden="true"
-              className="topo top-1/2 -right-20 -z-10 h-[434px] w-[620px] -translate-y-1/2 bg-light/14 [mask-size:620px_auto]"
+              className="topo top-1/2 -right-20 -z-10 h-[434px] w-[620px] -translate-y-1/2 bg-light/6 [mask-size:620px_auto]"
             />
-            <span aria-hidden="true" className="absolute -right-10 -bottom-10 -z-10 h-55 w-55 rounded-full bg-secondary/35 max-sm:hidden" />
+            <span aria-hidden="true" className="absolute -right-10 -bottom-10 -z-10 h-55 w-55 rounded-full bg-secondary/15 max-sm:hidden" />
             <div>
               <p className="font-display text-[15px] font-bold text-secondary-light">Registration</p>
               <h2 id="h-register" className="mt-1.5 text-[26px] md:text-[34px]">
@@ -505,8 +513,8 @@ export default async function OlympiadPage() {
             </div>
             <ol aria-label="Keep these ready" className="grid gap-2.5">
               {o.keepReady.map((item, i) => (
-                <li key={item} className="flex items-center gap-3 rounded-card bg-light/12 px-4 py-3 text-[15px]">
-                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-light font-display font-extrabold text-primary">
+                <li key={item} className="flex items-center gap-3 rounded-card bg-light/12 px-4 py-3 text-[16px] font-semibold">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-light font-display text-[16px] font-extrabold text-primary">
                     {i + 1}
                   </span>
                   {item}

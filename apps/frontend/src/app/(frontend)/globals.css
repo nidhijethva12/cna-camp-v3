@@ -696,3 +696,65 @@
     box-shadow: 0 0 0 9px transparent;
   }
 }
+
+/* Yellow underline below a word. */
+.marker {
+  position: relative;
+  isolation: isolate;
+}
+.marker::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset-inline: 0;
+  bottom: -0.04em;
+  height: 0.1em;
+  border-radius: 999px;
+  background: var(--color-secondary);
+  transform-origin: left;
+}
+
+/* A number that counts up from 0 to its final value every few seconds, its underline drawing in as it lands. The hidden
+   text inside keeps the final width so nothing around it shifts. */
+@property --count {
+  syntax: "<integer>";
+  inherits: false;
+  initial-value: 100;
+}
+.count-up {
+  counter-reset: count var(--count);
+}
+.count-up::before {
+  content: counter(count) "%";
+  position: absolute;
+  inset: 0;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .count-up {
+    animation: count-up 4s 0.2s infinite;
+  }
+  .count-up.marker::after {
+    animation: underline-in 4s 0.2s infinite;
+  }
+}
+@keyframes count-up {
+  0% {
+    --count: 0;
+    animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  45%,
+  100% {
+    --count: 100;
+  }
+}
+@keyframes underline-in {
+  0%,
+  35% {
+    transform: scaleX(0);
+    animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  55%,
+  100% {
+    transform: scaleX(1);
+  }
+}
