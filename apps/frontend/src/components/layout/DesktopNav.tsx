@@ -53,7 +53,7 @@ export function DesktopNav({ items }: { items: NavItem[] }) {
                   <span
                     id="olympiad-coming-soon"
                     role="tooltip"
-                    className="pointer-events-none absolute top-full left-1/2 z-50 mt-2 -translate-x-1/2 whitespace-nowrap rounded-tag bg-dark px-3 py-2 text-[13px] font-semibold text-light opacity-0 shadow-menu transition-opacity group-hover:opacity-100 group-focus-within:opacity-100"
+                    className="pointer-events-none absolute top-full left-1/2 z-50 mt-2 -translate-x-1/2 rounded-tag bg-dark px-3 py-2 text-[13px] font-semibold whitespace-nowrap text-light opacity-0 shadow-menu transition-opacity group-focus-within:opacity-100 group-hover:opacity-100"
                   >
                     Coming soon
                   </span>

@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { DM_Sans, Plus_Jakarta_Sans } from "next/font/google";
 import Script from "next/script";
 import { ContactShortcuts } from "@/components/layout/ContactShortcuts";
-import { UpdatesNudge } from "@/components/layout/UpdatesNudge";
+import { OlympiadPopup } from "@/components/olympiad/OlympiadPopup";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { JsonLd } from "@/components/seo/JsonLd";
@@ -69,7 +69,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
   const contact = await getSiteSettings();
   return (
     <html lang="en-IN" className={`${heading.variable} ${body.variable}`}>
-    <meta name="google-site-verification" content="Yuga-8Zeij0uQ7_slO-mmxNaUCCzENcvX_B6k9qxbDU" />
+      <meta name="google-site-verification" content="Yuga-8Zeij0uQ7_slO-mmxNaUCCzENcvX_B6k9qxbDU" />
       <body className="min-h-screen pb-16 lg:pb-0">
         <Script src="https://www.googletagmanager.com/gtag/js?id=G-6XTWLH62LN" strategy="afterInteractive" />
         <Script id="google-analytics" strategy="afterInteractive">
@@ -87,7 +87,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         <main id="main">{children}</main>
         <SiteFooter />
         <ContactShortcuts />
-        <UpdatesNudge />
+        <OlympiadPopup />
         <JsonLd data={organizationLd(contact)} />
       </body>
     </html>

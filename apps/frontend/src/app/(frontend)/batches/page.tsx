@@ -44,9 +44,7 @@ export default async function BatchesPage() {
         eyebrow="Upcoming batches"
         title="Fixed departures. Join alone or with friends."
         text="Every card below is a real group leaving on a real date. Come solo and you will not stay solo for long. Bring your friends and you get the same plan, the same leaders and the same campfire."
-      >
-        <p className="mt-4 text-[13.5px] font-medium text-light/70">Sample dates for the preview. Real dates come from the CNA team.</p>
-      </PageHead>
+      />
       <section className="wrap mt-12">
         {batches.length ? (
           <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -61,9 +59,6 @@ export default async function BatchesPage() {
             No fixed batch this month yet. Ask us, a group date may already be planned.
           </p>
         )}
-        <p className="mt-4 text-[14px] text-muted">
-          Seats are held once your 25% advance is received. Balance is due 3 days before departure.
-        </p>
       </section>
 
       <section className="wrap mt-16">

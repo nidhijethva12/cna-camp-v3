@@ -25,7 +25,7 @@ function Highlight({ text }: { text: string }) {
       {isTrust ? (
         <Image src={site.trust.logo} alt="" width={48} height={48} className="h-12 w-12 shrink-0 rounded-full ring-1 ring-light/30" />
       ) : (
-        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-light/10 text-secondary ring-1 ring-light/20 backdrop-blur-sm">
+        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-light/10 text-secondary ring-1 ring-light/20">
           <HighlightIcon text={text} />
         </span>
       )}

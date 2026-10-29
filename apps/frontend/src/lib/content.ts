@@ -1,6 +1,6 @@
 import "server-only";
 import { cache } from "react";
-import { regionOrder } from "@/content/site";
+import { pinnedBatchTrips, regionOrder } from "@/content/site";
 import { todayInIndia } from "@/lib/format";
 import { getCms } from "@/lib/payload";
 import type { HomePage as HomeDoc, Media, Post as PostDoc, SiteSetting, Trip as TripDoc, Video as VideoDoc } from "@/payload-types";
@@ -23,6 +23,9 @@ import type {
 } from "@/types/content";
 
 /* Every loader is wrapped in React `cache`, so a page and its layout share one query per request. */
+
+/** Set to true to show the prices saved in the admin again. */
+const SHOW_TRIP_PRICES = false;
 
 /** Payload prefixes uploads with the server URL; files on this site are served by path instead. */
 const mediaPath = (url: string) => url.replace(/^https?:\/\/[^/]+(?=\/api\/(media|videos)\/)/, "");
@@ -62,7 +65,8 @@ function toTrip(doc: TripDoc): Trip {
     nights: doc.nights,
     altitude: doc.altitudeM ? `${doc.altitudeM.toLocaleString("en-IN")} m` : null,
     difficulty: capitalise<Difficulty>(doc.difficulty),
-    price: doc.priceFrom ?? null,
+    // Prices stay saved in the admin but are hidden for now: every trip shows "On request".
+    price: SHOW_TRIP_PRICES ? (doc.priceFrom ?? null) : null,
     img: toImage(doc.heroImage),
     gallery: images(doc.gallery),
     updatedAt: doc.updatedAt,
@@ -166,9 +170,12 @@ const getBatches = cache(async (): Promise<UpcomingBatch[]> => {
   });
 });
 
+/** Upcoming batches by date, except that the next batch of each pinned trip comes first, in pinned order. */
 export async function getUpcomingBatches(limit?: number) {
   const batches = await getBatches();
-  return limit ? batches.slice(0, limit) : batches;
+  const pinned = pinnedBatchTrips.flatMap((slug) => batches.find((b) => b.tripSlug === slug) ?? []);
+  const ordered = [...pinned, ...batches.filter((b) => !pinned.includes(b))];
+  return limit ? ordered.slice(0, limit) : ordered;
 }
 
 export async function getTripBatches(slug: string) {
@@ -348,6 +355,8 @@ export interface PostSummary {
   title: string;
   excerpt: string;
   cover: ImageRef | null;
+  /** The name shown on the post; "Team CNA" until the team sets one in the admin. */
+  author: string;
   publishedAt: string;
   updatedAt: string;
 }
@@ -357,6 +366,7 @@ const toPostSummary = (p: PostDoc): PostSummary => ({
   title: p.title,
   excerpt: p.excerpt,
   cover: toImage(p.coverImage),
+  author: p.authorName?.trim() || "Team CNA",
   publishedAt: p.publishedAt ?? p.createdAt,
   updatedAt: p.updatedAt,
 });

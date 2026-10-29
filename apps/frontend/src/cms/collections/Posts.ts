@@ -45,5 +45,12 @@ export const Posts: CollectionConfig = {
       },
     },
     { name: "author", type: "relationship", relationTo: "users", admin: { position: "sidebar" } },
+    {
+      name: "authorName",
+      label: "Author name",
+      type: "text",
+      maxLength: 60,
+      admin: { position: "sidebar", description: "Shown on the post before the date. Empty shows “Team CNA”." },
+    },
   ],
 };

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Faq } from "@/types/content";
 
 /** Native disclosure rows (no JS, answers stay in the HTML for search); the open/close animation lives in globals.css. */
@@ -16,7 +17,17 @@ export function FaqList({ faqs, className = "" }: { faqs: Faq[]; className?: str
               <span className="absolute h-3 w-0.5 rounded-full bg-current" />
             </span>
           </summary>
-          <p className="pb-5 text-muted">{f.answer}</p>
+          <p className="pb-5 text-muted">
+            {f.answer}
+            {f.link && (
+              <>
+                {" "}
+                <Link href={f.link.href} className="font-semibold text-primary underline hover:text-primary-hover">
+                  {f.link.label}
+                </Link>
+              </>
+            )}
+          </p>
         </details>
       ))}
     </div>

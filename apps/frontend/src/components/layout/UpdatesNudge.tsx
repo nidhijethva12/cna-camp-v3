@@ -1,19 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ArrowRight, Close, Megaphone } from "@/components/ui/icons";
 
 const SEEN_KEY = "cna-updates-nudge-seen";
 
-/** Small card that slides in from the bottom-left once a visitor has read half of any page; once per visit. */
+/** Help card on the Olympiad page: slides in at the bottom left once a visitor has read half the page; once per visit. */
 export function UpdatesNudge() {
-  const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    if (pathname.startsWith("/contact") || pathname.startsWith("/admin")) return;
     try {
       if (sessionStorage.getItem(SEEN_KEY)) return;
     } catch {
@@ -22,7 +19,7 @@ export function UpdatesNudge() {
     const onScroll = () => {
       const max = document.documentElement.scrollHeight - window.innerHeight;
       if (max <= 0 || window.scrollY / max < 0.5) return;
-      // Waits while the Olympiad pop-up is open, so two cards never compete.
+      // Waits while a dialog (such as the reminder form) is open, so two cards never compete.
       if (document.querySelector("dialog[open]")) return;
       window.removeEventListener("scroll", onScroll);
       try {
@@ -32,11 +29,11 @@ export function UpdatesNudge() {
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, [pathname]);
+  }, []);
 
   return (
     <aside
-      aria-label="Need more updates"
+      aria-label="More about the Olympiad"
       aria-hidden={!open}
       inert={!open}
       className={`fixed bottom-20 left-4 z-40 w-[min(340px,calc(100vw-2rem))] transition duration-500 ease-out lg:bottom-6 lg:left-6 ${
@@ -58,9 +55,9 @@ export function UpdatesNudge() {
             <Megaphone />
           </span>
           <div>
-            <p className="font-display text-[18px] leading-tight font-bold">Need more updates?</p>
+            <p className="font-display text-[18px] leading-tight font-bold">Need more info on the Olympiad?</p>
             <p className="mt-1 text-[14.5px] leading-snug text-muted">
-              Questions about a trip, a batch or the Olympiad? Our team replies within a day.
+              Questions about groups, fees, the quiz or the scholarships? Our team replies within a day.
             </p>
           </div>
         </div>

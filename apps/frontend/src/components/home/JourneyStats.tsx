@@ -33,10 +33,7 @@ export function JourneyStats({ tripCount, counts }: JourneyStatsProps) {
         </p>
         <ul className="rail rail-stats mt-8 grid grid-cols-2 gap-3 sm:mt-12 sm:gap-4 lg:grid-cols-4">
           {stats.map((s) => (
-            <li
-              key={s.label}
-              className="reveal group rounded-card border border-light/15 bg-light/5 px-3 py-5 backdrop-blur-sm sm:px-4 sm:py-8"
-            >
+            <li key={s.label} className="reveal group rounded-card border border-light/15 bg-light/5 px-3 py-5 sm:px-4 sm:py-8">
               <FeatureIcon
                 name={s.icon}
                 tone="dark"

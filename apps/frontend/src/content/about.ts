@@ -109,10 +109,9 @@ export const teamRoles = ["Trip leader", "Trip leader", "Instructor", "Camp coor
 
 /** Home page "Who we are" block, from the client's final home page copy. */
 export const homeStory = {
-  image: "cna/manali/03" as PhotoKey,
-  imageAlt: "A CNA group around a campfire on a Himalayan hillside",
+  image: "cna/real/group-06" as PhotoKey,
+  imageAlt: "A large CNA group in front of a wooden Himachali temple in Manali",
   badge: ["20+", "years"],
-  video: { tag: "Video coming soon", caption: "CNA in 60 seconds: 20+ years of camps" },
   eyebrow: "Who we are",
   title: "A nature club, not a tour company",
   body: [

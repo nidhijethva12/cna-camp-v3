@@ -27,7 +27,8 @@ export function LegalPage({ sections, note, updated = "2 October 2026" }: LegalP
           {sections.map((s, i) => (
             <li key={s.id}>
               <a href={`#${s.id}`} className="text-muted hover:text-primary">
-                <span className="font-mono text-[12px] text-primary">{num(i)}</span> {s.title}
+                <span className="mr-1.5 font-mono text-[12px] text-primary">{num(i)}</span>
+                {s.title}
               </a>
             </li>
           ))}
@@ -39,7 +40,8 @@ export function LegalPage({ sections, note, updated = "2 October 2026" }: LegalP
         {sections.map((s, i) => (
           <section key={s.id} id={s.id} className="border-t border-line py-8 first:border-0 first:pt-0">
             <h2 className="h-sub">
-              <span className="font-mono text-[14px] text-primary">{num(i)}</span> {s.title}
+              <span className="mr-2 font-mono text-[14px] text-primary">{num(i)}</span>
+              {s.title}
             </h2>
             {s.body?.map((p, j) => (
               <p key={j} className="mt-3 leading-relaxed text-muted">

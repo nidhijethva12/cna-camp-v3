@@ -11,6 +11,7 @@
   --color-primary-ring: #e8541c;
   --color-primary-soft: #fff4ee;
   --color-secondary: #ffb627;
+  --color-secondary-light: #ffe2b0;
   --color-dark: #141414;
   --color-dark-soft: #2a2a28;
   --color-black: #000;
@@ -255,6 +256,11 @@
     background-image: linear-gradient(100deg, transparent 30%, color-mix(in srgb, currentColor 10%, transparent) 50%, transparent 70%);
     background-size: 200% 100%;
     animation: skeleton-shimmer 1.4s linear infinite;
+  }
+  /* A still tint behind a loading photo. Unlike .skeleton it never animates, so dozens of photos waiting
+     further down a page cost a phone nothing. */
+  .photo-loading {
+    background-color: color-mix(in srgb, currentColor 8%, transparent);
   }
   .kenburns img {
     animation: var(--animate-kenburns);
@@ -581,18 +587,29 @@
   }
 }
 
+/* Olympiad pop-up: centred card on larger screens, a sheet that slides up from the bottom on phones. */
 @media (prefers-reduced-motion: no-preference) {
   .olympiad-popup[open] {
     animation: popup-in 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
   }
   .olympiad-popup[open]::backdrop {
-    animation: popup-fade 0.35s ease-out;
+    animation: popup-fade 0.25s ease-out;
+  }
+  @media (max-width: 559px) {
+    .olympiad-popup[open] {
+      animation-name: sheet-in;
+    }
   }
 }
 @keyframes popup-in {
   from {
     opacity: 0;
-    transform: translateY(16px) scale(0.97);
+    transform: translateY(24px) scale(0.97);
+  }
+}
+@keyframes sheet-in {
+  from {
+    transform: translateY(100%);
   }
 }
 @keyframes popup-fade {
@@ -601,17 +618,143 @@
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .notice-marquee {
-    animation: notice-up var(--notice-duration, 30s) linear infinite;
-  }
-  .notice-window:hover .notice-marquee,
-  .notice-window:focus-within .notice-marquee {
-    animation-play-state: paused;
+/*
+ * Olympiad page art: a contour map, mountain ridges, a night sky and a torn ticket edge.
+ * The SVGs are used as masks, so each shape takes its colour from a bg-* token utility.
+ */
+.topo {
+  position: absolute;
+  pointer-events: none;
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='420' viewBox='0 0 600 420'%3E%3Cg fill='none' stroke='%23000' stroke-width='1.4'%3E%3Cpath d='M-20 300c80-60 160-90 240-60s150 90 250 40 130-40 160-20'/%3E%3Cpath d='M-20 330c90-50 170-70 250-40s150 80 240 40 140-30 170-10'/%3E%3Cpath d='M-20 360c100-40 180-55 260-25s150 60 230 30 150-20 170 0'/%3E%3Cpath d='M120 120c40-50 120-60 170-20s20 110-50 120-150-40-120-100z'/%3E%3Cpath d='M150 125c30-30 90-36 120-10s10 70-40 76-110-26-80-66z'/%3E%3Cpath d='M180 128c18-14 50-16 66-4s4 34-22 36-60-14-44-32z'/%3E%3Cpath d='M380 60c60-40 160-30 190 30s-40 120-120 110-130-90-70-140z'/%3E%3Cpath d='M410 74c40-24 110-16 130 22s-30 80-82 72-86-60-48-94z'/%3E%3Cpath d='M440 88c22-12 60-8 70 12s-16 42-44 38-46-32-26-50z'/%3E%3C/g%3E%3C/svg%3E");
+  mask-repeat: no-repeat;
+}
+.ridge {
+  position: absolute;
+  inset-inline: 0;
+  height: 46px;
+  pointer-events: none;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='900' height='46' viewBox='0 0 900 46'%3E%3Cpath d='M0 46V30l70-22 60 16 90-22 80 26 60-12 90 18 70-30 80 22 70-10 90 20 70-16 70 10v16z'/%3E%3C/svg%3E")
+    repeat-x 0 0 / 900px 46px;
+}
+.ridge-alt {
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='900' height='46' viewBox='0 0 900 46'%3E%3Cpath d='M0 46V28l60-14 50 10 80-24 70 20 60-8 80 18 90-28 70 22 60-8 90 20 80-18 60 8 50 2v18z'/%3E%3C/svg%3E");
+}
+.dot-field {
+  position: absolute;
+  pointer-events: none;
+  background-image: radial-gradient(color-mix(in srgb, var(--color-primary) 16%, transparent) 1.5px, transparent 1.6px);
+  background-size: 18px 18px;
+  mask-image: linear-gradient(135deg, var(--color-black), transparent 70%);
+}
+.night-sky {
+  background:
+    radial-gradient(1.2px 1.2px at 20px 30px, color-mix(in srgb, var(--color-light) 55%, transparent), transparent),
+    radial-gradient(1px 1px at 90px 80px, color-mix(in srgb, var(--color-light) 40%, transparent), transparent),
+    radial-gradient(1.4px 1.4px at 150px 20px, color-mix(in srgb, var(--color-light) 50%, transparent), transparent),
+    radial-gradient(1px 1px at 200px 110px, color-mix(in srgb, var(--color-light) 35%, transparent), transparent),
+    radial-gradient(1.2px 1.2px at 260px 60px, color-mix(in srgb, var(--color-secondary) 50%, transparent), transparent), var(--color-dark);
+  background-size:
+    300px 140px,
+    300px 140px,
+    300px 140px,
+    300px 140px,
+    300px 140px,
+    auto;
+}
+.ticket-tear {
+  position: relative;
+  height: 22px;
+  background:
+    /* Each half is a touch wider than 50% so the two overlap and no seam shows down the middle. */
+    radial-gradient(circle at 0 50%, transparent 11px, var(--color-light) 11.5px) left / 51% 100% no-repeat,
+    radial-gradient(circle at 100% 50%, transparent 11px, var(--color-light) 11.5px) right / 51% 100% no-repeat;
+}
+/* On phones the popup is an edge-to-edge sheet, so the side notches would sit on the screen edge: keep only the dashed tear. */
+@media (max-width: 559px) {
+  .ticket-tear {
+    background: var(--color-light);
   }
 }
-@keyframes notice-up {
+.ticket-tear::after {
+  content: "";
+  position: absolute;
+  inset-inline: 22px;
+  top: 50%;
+  border-top: 2px dashed var(--color-line);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .live-dot {
+    animation: live-pulse 1.8s infinite;
+  }
+}
+@keyframes live-pulse {
+  from {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-success) 50%, transparent);
+  }
   to {
-    transform: translateY(-50%);
+    box-shadow: 0 0 0 9px transparent;
+  }
+}
+
+/* Yellow underline below a word. */
+.marker {
+  position: relative;
+  isolation: isolate;
+}
+.marker::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset-inline: 0;
+  bottom: -0.04em;
+  height: 0.1em;
+  border-radius: 999px;
+  background: var(--color-secondary);
+  transform-origin: left;
+}
+
+/* A number that counts up from 0 to its final value every few seconds, its underline drawing in as it lands. The hidden
+   text inside keeps the final width so nothing around it shifts. */
+@property --count {
+  syntax: "<integer>";
+  inherits: false;
+  initial-value: 100;
+}
+.count-up {
+  counter-reset: count var(--count);
+}
+.count-up::before {
+  content: counter(count) "%";
+  position: absolute;
+  inset: 0;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .count-up {
+    animation: count-up 4s 0.2s infinite;
+  }
+  .count-up.marker::after {
+    animation: underline-in 4s 0.2s infinite;
+  }
+}
+@keyframes count-up {
+  0% {
+    --count: 0;
+    animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  45%,
+  100% {
+    --count: 100;
+  }
+}
+@keyframes underline-in {
+  0%,
+  35% {
+    transform: scaleX(0);
+    animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  55%,
+  100% {
+    transform: scaleX(1);
   }
 }

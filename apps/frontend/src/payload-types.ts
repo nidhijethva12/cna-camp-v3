@@ -428,6 +428,7 @@ export interface Post {
   slug: string;
   publishedAt?: string | null;
   author?: (string | null) | User;
+  authorName?: string | null;
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -781,6 +782,7 @@ export interface PostsSelect<T extends boolean = true> {
   slug?: T;
   publishedAt?: T;
   author?: T;
+  authorName?: T;
   updatedAt?: T;
   createdAt?: T;
   _status?: T;

@@ -2,17 +2,22 @@ import type { Icon as PhosphorIcon, IconProps } from "@phosphor-icons/react";
 import { ArrowDown as ArrowDownBase } from "@phosphor-icons/react/dist/ssr/ArrowDown";
 import { ArrowLeft as ArrowLeftBase } from "@phosphor-icons/react/dist/ssr/ArrowLeft";
 import { ArrowRight as ArrowRightBase } from "@phosphor-icons/react/dist/ssr/ArrowRight";
+import { BookOpen as BookOpenBase } from "@phosphor-icons/react/dist/ssr/BookOpen";
+import { CalendarBlank as CalendarBlankBase } from "@phosphor-icons/react/dist/ssr/CalendarBlank";
 import { Camera as CameraBase } from "@phosphor-icons/react/dist/ssr/Camera";
 import { CaretDown as CaretDownBase } from "@phosphor-icons/react/dist/ssr/CaretDown";
 import { CaretRight as CaretRightBase } from "@phosphor-icons/react/dist/ssr/CaretRight";
 import { Check as CheckBase } from "@phosphor-icons/react/dist/ssr/Check";
 import { CheckCircle as CheckCircleBase } from "@phosphor-icons/react/dist/ssr/CheckCircle";
 import { Clock as ClockBase } from "@phosphor-icons/react/dist/ssr/Clock";
+import { Envelope as EnvelopeBase } from "@phosphor-icons/react/dist/ssr/Envelope";
+import { FileText as FileTextBase } from "@phosphor-icons/react/dist/ssr/FileText";
 import { Fire as FireBase } from "@phosphor-icons/react/dist/ssr/Fire";
 import { Gauge as GaugeBase } from "@phosphor-icons/react/dist/ssr/Gauge";
 import { GraduationCap as GraduationCapBase } from "@phosphor-icons/react/dist/ssr/GraduationCap";
 import { Leaf as LeafBase } from "@phosphor-icons/react/dist/ssr/Leaf";
 import { List as ListBase } from "@phosphor-icons/react/dist/ssr/List";
+import { ListChecks as ListChecksBase } from "@phosphor-icons/react/dist/ssr/ListChecks";
 import { MapPin as MapPinBase } from "@phosphor-icons/react/dist/ssr/MapPin";
 import { Megaphone as MegaphoneBase } from "@phosphor-icons/react/dist/ssr/Megaphone";
 import { Mountains as MountainsBase } from "@phosphor-icons/react/dist/ssr/Mountains";
@@ -23,13 +28,16 @@ import { SealCheck as SealCheckBase } from "@phosphor-icons/react/dist/ssr/SealC
 import { ShieldCheck as ShieldCheckBase } from "@phosphor-icons/react/dist/ssr/ShieldCheck";
 import { Star as StarBase } from "@phosphor-icons/react/dist/ssr/Star";
 import { Tent as TentBase } from "@phosphor-icons/react/dist/ssr/Tent";
+import { Timer as TimerBase } from "@phosphor-icons/react/dist/ssr/Timer";
+import { Translate as TranslateBase } from "@phosphor-icons/react/dist/ssr/Translate";
 import { Trophy as TrophyBase } from "@phosphor-icons/react/dist/ssr/Trophy";
+import { UserCircleCheck as UserCircleCheckBase } from "@phosphor-icons/react/dist/ssr/UserCircleCheck";
 import { UsersThree as UsersThreeBase } from "@phosphor-icons/react/dist/ssr/UsersThree";
 import { Warning as WarningBase } from "@phosphor-icons/react/dist/ssr/Warning";
 import { WarningCircle as WarningCircleBase } from "@phosphor-icons/react/dist/ssr/WarningCircle";
 import { X as XBase } from "@phosphor-icons/react/dist/ssr/X";
-import { YoutubeLogo as YoutubeLogoBase } from "@phosphor-icons/react/dist/ssr/YoutubeLogo";
 import { XCircle as XCircleBase } from "@phosphor-icons/react/dist/ssr/XCircle";
+import { YoutubeLogo as YoutubeLogoBase } from "@phosphor-icons/react/dist/ssr/YoutubeLogo";
 
 export type { IconProps };
 
@@ -74,6 +82,14 @@ export const UsersThree = /* @__PURE__ */ decorative(UsersThreeBase, { weight: "
 export const Tent = /* @__PURE__ */ decorative(TentBase, { weight: "fill" });
 export const ShieldCheck = /* @__PURE__ */ decorative(ShieldCheckBase, { weight: "fill" });
 export const GraduationCap = /* @__PURE__ */ decorative(GraduationCapBase, { weight: "duotone" });
+export const BookOpen = /* @__PURE__ */ decorative(BookOpenBase, { weight: "bold" });
+export const CalendarBlank = /* @__PURE__ */ decorative(CalendarBlankBase, { weight: "bold" });
+export const Envelope = /* @__PURE__ */ decorative(EnvelopeBase, { weight: "bold" });
+export const FileText = /* @__PURE__ */ decorative(FileTextBase, { weight: "bold" });
+export const ListChecks = /* @__PURE__ */ decorative(ListChecksBase, { weight: "bold" });
+export const Timer = /* @__PURE__ */ decorative(TimerBase, { weight: "bold" });
+export const Translate = /* @__PURE__ */ decorative(TranslateBase, { weight: "bold" });
+export const UserCircleCheck = /* @__PURE__ */ decorative(UserCircleCheckBase, { weight: "bold" });
 
 /** The official WhatsApp glyph from the approved design; brand marks are drawn as the brand draws them, not from Phosphor. */
 export function WhatsApp({ className }: { className?: string }) {

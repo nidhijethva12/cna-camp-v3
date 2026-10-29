@@ -48,7 +48,7 @@ export default async function HomePage() {
     getTrips(),
     getRegionTripCounts(),
     getHomeFaqs(),
-    getReviews(),
+    getReviews(6),
     getSiteSettings(),
   ]);
 

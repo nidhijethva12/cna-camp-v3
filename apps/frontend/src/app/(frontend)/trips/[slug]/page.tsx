@@ -14,6 +14,7 @@ import { FeatureIcon } from "@/components/ui/FeatureIcon";
 import { ArrowRight, CheckCircle, Clock, Gauge, MapPin, Mountains, XCircle } from "@/components/ui/icons";
 import { regions, site, tripsByRegionHref } from "@/content/site";
 import { getSimilarTrips, getSiteSettings, getTrip, getTripBatches, getTrips, getTripVideos } from "@/lib/content";
+import { dateRange } from "@/lib/format";
 import { photoSrc } from "@/lib/photos";
 import { absoluteUrl } from "@/lib/seo";
 import {
@@ -57,9 +58,6 @@ export async function generateMetadata({ params }: PageProps<"/trips/[slug]">): 
     },
   };
 }
-
-const batchDate = (iso: string) =>
-  new Date(`${iso}T00:00:00`).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
 
 export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
   const trip = await getTrip((await params).slug);
@@ -329,12 +327,7 @@ export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
           )}
 
           <section id="itinerary" className="mt-14 scroll-mt-32">
-            <div className="flex flex-wrap items-end justify-between gap-3">
-              <h2 className="h-sub">Day by day</h2>
-              <p className="text-[14px] text-muted">
-                {trip.planIsReal ? "Final plan shared on booking" : "Sample plan · final plan shared on booking"}
-              </p>
-            </div>
+            <h2 className="h-sub">Day by day</h2>
             <ol className="mt-6 border-l-2 border-dashed border-line pl-6">
               {days.map((d, i) => (
                 <li key={i} className="relative pb-8 last:pb-0">
@@ -372,7 +365,6 @@ export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
                 ))}
               </ul>
             </div>
-            <p className="text-[13.5px] font-medium text-muted md:col-span-2">Typical list · final inclusions confirmed at booking</p>
           </section>
 
           <section id="carry" className="mt-14 scroll-mt-32">
@@ -390,21 +382,6 @@ export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
           <section id="reach" className="mt-14 scroll-mt-32">
             <h2 className="h-sub">How to reach</h2>
             <p className="mt-4 text-[17px] leading-relaxed text-muted">{tripReach(trip)}</p>
-          </section>
-
-          <section className="mt-14 rounded-card bg-soft p-6">
-            <h2 className="h-sub">Booking &amp; cancellation</h2>
-            <p className="mt-3 text-muted">
-              Pay 25% advance to book. Balance 3 days before departure. Cancellation charges: 10% (2 months before), 15% (1 month), 25% (1
-              week), 50% (2 days), 100% (same day).{" "}
-              <Link href="/cancellation" className="font-semibold text-dark underline">
-                Full policy
-              </Link>{" "}
-              ·{" "}
-              <Link href="/terms" className="font-semibold text-dark underline">
-                Terms
-              </Link>
-            </p>
           </section>
 
           <section id="faq" className="mt-14 scroll-mt-32">
@@ -434,14 +411,16 @@ export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
             {batches.length ? (
               <ul className="mt-3 space-y-2">
                 {batches.map((b) => (
-                  <li key={b.startDate} className="flex items-center justify-between rounded-tag bg-soft px-3 py-2">
-                    <span className="font-semibold">{batchDate(b.startDate)}</span>
-                    <span className="font-mono text-[12px] text-primary">{b.seatsLeft} seats</span>
+                  <li key={b.startDate} className="rounded-tag bg-soft px-3 py-2">
+                    <time dateTime={b.startDate} className="block font-semibold">
+                      {dateRange(b.startDate, b.endDate)} {b.endDate.slice(0, 4)}
+                    </time>
+                    <span className="text-[13px] text-muted">Seats to be announced soon</span>
                   </li>
                 ))}
               </ul>
             ) : (
-              <p className="mt-3 text-[15px] text-muted">Dates on request. Groups can choose their own dates.</p>
+              <p className="mt-3 text-[15px] text-muted">Dates to be announced soon.</p>
             )}
             <a href="#enquire" className="btn btn-primary mt-6 w-full">
               Contact us <ArrowRight />
@@ -449,12 +428,6 @@ export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
             <a href={contact.whatsappHref} target="_blank" rel="noopener" className="btn btn-outline mt-3 w-full">
               WhatsApp us
             </a>
-            <Link
-              href="/group-trips#custom"
-              className="mt-4 block text-center text-[14px] font-semibold text-muted underline hover:text-primary"
-            >
-              Plan this for your group
-            </Link>
           </div>
         </aside>
       </div>

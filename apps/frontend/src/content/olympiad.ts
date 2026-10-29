@@ -1,264 +1,298 @@
-import type { FeatureIconName } from "@/components/ui/FeatureIcon";
+export type GroupId = "A" | "B" | "C" | "D";
 
-type Feature = [icon: FeatureIconName, title: string, text: string];
-type DateItem = { icon: FeatureIconName; label: string; value: string };
+type JourneyStep = { year?: string; title: string; note?: string; goal?: boolean };
 
-// Adventure Olympiad 2026 details from the approved design. Editable in the CMS later.
+export interface OlympiadGroup {
+  id: GroupId;
+  name: string;
+  short: string;
+  title: string;
+  who: string;
+  /** What the finder dropdown says for this group. */
+  finder: string;
+  fees: { label: string; amount: string }[];
+  feeSummary: string;
+  quiz: string;
+  prize: string;
+  journey: JourneyStep[];
+}
+
+const groupsJourney: JourneyStep[] = [
+  { title: "Online quiz, Rounds 1 to 3" },
+  { year: "2026-27", title: "Round 4, pre basic nature education camp in Gujarat", note: "For students selected in Round 3" },
+  { year: "2027-28", title: "Round 5, marine camp in Gujarat" },
+  { year: "2028-29", title: "Desert camp in Gujarat" },
+  { year: "2029-30", title: "Astro Adventure Trekking Camp, Manali", note: "For students selected in Round 5", goal: true },
+];
+
+const schoolPrize = "Astro Adventure Trekking Camp, Manali, with the Dr. Ketankumar Trivedi scholarship of 60 to 100%";
+
+// Adventure Olympiad 2.0, before registration opens. Copy from the approved design B.
 export const olympiad = {
-  name: "Adventure Olympiad 1.0",
-  tagline: "India’s first Adventure Olympiad",
-  /** Hero slideshow: the quiz first, then the Manali camp it leads to. */
-  heroSlides: [
-    {
-      img: { src: "/img/olympiad/students-exam.webp", alt: "Two school students writing at a classroom desk", width: 1200, height: 675 },
-      alt: "Two school students writing at a classroom desk",
-      caption: "Round 1: the Eco-STEM quiz",
-    },
-    {
-      img: {
-        src: "/img/olympiad/students-classroom.webp",
-        alt: "Schoolgirls in uniform listening in a classroom",
-        width: 1200,
-        height: 800,
-      },
-      alt: "Schoolgirls in uniform listening in a classroom",
-      caption: "Open to every district of Gujarat",
-    },
-    {
-      img: { src: "/img/olympiad/students-exam-hall.webp", alt: "Students writing a test in a large exam hall", width: 1200, height: 675 },
-      alt: "Students writing a test in a large exam hall",
-      caption: "100 MCQs in 60 minutes",
-    },
-    {
-      img: { src: "/img/olympiad/students-writing.webp", alt: "Two boys working through a book at their desk", width: 1200, height: 725 },
-      alt: "Two boys working through a book at their desk",
-      caption: "Maths, science, GK and reasoning",
-    },
-    { img: "cna/real/campus-03", alt: "CNA’s Manali campus buildings with snow peaks behind", caption: "The prize: our Manali campus" },
-    {
-      img: "cna/real/river-01",
-      alt: "Campers crossing a river on a wooden bridge near Manali",
-      caption: "Ten days of adventure in Manali",
-    },
-    { img: "cna/real/snow-02", alt: "Campers walking up a snowy mountain road in warm layers", caption: "Snow, stars and new friends" },
+  name: "Adventure Olympiad 2.0",
+  eyebrow: "Eco-STEM quiz and scholarship",
+  intro: "A quiz that can take you to a camp in the Himalaya. For school students, college students and adults who love nature.",
+  facts: [
+    ["4", "groups"],
+    ["5", "rounds"],
+    ["60 to 100%", "scholarship"],
   ],
-  /** The new exam form. Empty = the "fill the form" button shows but does not open anything yet. */
-  examFormUrl: "",
-  rulesPdf: "https://www.cnacamp.com/rules-of-camp.pdf",
-  lavkumarPdf: "https://www.cnacamp.com/Lavkumar.pdf",
-  ketankumarPdf: "https://www.cnacamp.com/Dr-ketankumar-new.pdf",
-  campFee: "On request",
-  opens: "2026-04-02T12:59:00+05:30",
-  closes: "2026-06-20T23:59:00+05:30",
+  motto: "।। विद्यार्थी देवो भव ।।",
+  notice: {
+    title: "Olympiad 2.0 જાહેરનામું",
+    meta: "Official notice no. 02/2026 · 20 Oct 2026 · Gujarati PDF",
+    href: "/docs/olympiad-2-notice.pdf",
+  },
   dates: [
-    { icon: "notePencil", label: "Registration opens", value: "2 April 2026, 12:59 PM" },
-    { icon: "alarm", label: "Registration closes", value: "20 June 2026, 11:59 PM" },
-    { icon: "exam", label: "Round 1, Eco-STEM quiz", value: "Early July 2026" },
-    { icon: "mountains", label: "Astro Adventure Camp, Manali", value: "Dates announced after the final merit list" },
-  ] satisfies DateItem[],
-  fees: [
-    { fee: 90, who: "Group A, government school" },
-    { fee: 230, who: "Group A others · Group B government school" },
-    { fee: 320, who: "Group B others · Group C" },
-    { fee: 923, who: "Group D volunteers and escorts" },
+    { when: "15 Nov to 14 Dec 2026", title: "Registration", note: "Register and pay online on this page.", key: true },
+    { when: "27 Dec 2026", title: "Last buffer date" },
+    { when: "31 Dec 2026", title: "Last date to pay the fee" },
+    { when: "Around 22 Jan 2027", title: "Round 1, online quiz", note: "The quiz link comes on WhatsApp." },
+    { when: "Around 9 Feb 2027", title: "Round 2, online quiz" },
+    { when: "Around 21 Feb 2027", title: "Round 3, online quiz" },
+    { when: "After Round 3", title: "Rounds 4 and 5, offline camps in Gujarat", note: "Venue and dates on the notice board." },
+    { when: "Around 10 Mar 2027", title: "Final merit list", key: true },
+  ] as { when: string; title: string; note?: string; key?: boolean }[],
+  steps: [
+    {
+      title: "Register and pay",
+      text: "Choose your group, fill the form and pay online. Your registration number comes on WhatsApp.",
+      when: "15 Nov to 14 Dec 2026",
+    },
+    {
+      title: "Online quiz, Rounds 1 to 3",
+      text: "Take the quiz from home on a phone or computer. Questions match your class. For Groups A, B and C.",
+      when: "Jan and Feb 2027",
+    },
+    {
+      title: "Rounds 4 and 5",
+      text: "Selected participants join the offline rounds at camp in Gujarat. Group D starts directly at Round 4.",
+      when: "After Round 3",
+    },
+    {
+      title: "Merit list and scholarship",
+      text: "The Trust picks winners on the quiz score plus past activities, competitions, medical fitness and teachers' opinion.",
+      when: "Around 10 Mar 2027",
+    },
   ],
-  stats: [
-    ["8 to 30", "Student ages"],
-    ["100%", "Scholarship, up to"],
-    ["₹18K", "Camp fee covered"],
-    ["100", "MCQs"],
-    ["5", "Rounds"],
-  ],
-  about: [
-    "Most quizzes end with a certificate. This one ends with a train ticket to Manali.",
-    "The Adventure Olympiad is run jointly by Saurashtra Education & Charitable Trust and Climber Nature Adventure Club, both from Rajkot. The idea is simple: young people who are curious about science and nature should get a real chance to see the mountains, whatever their family can afford. It follows the learning-by-doing approach of the National Education Policy.",
-    "You take an Eco-STEM quiz in maths, science, social studies, general knowledge and logical reasoning. The best performers win scholarships for the Astro Adventure Trekking Camp in Manali: hikes, snow treks, river rafting, rock climbing, star gazing, STEM sessions, yoga and talks by experts.",
-  ],
-  pillars: [
-    ["tree", "Environment education", "Learn conservation outdoors, not from a slide."],
-    ["planet", "Astronomy & STEM", "Star gazing, space science and hands-on experiments."],
-    ["boot", "Adventure activities", "Trekking, rafting and rock climbing with trained instructors."],
-    ["flag", "Leadership & life skills", "Teamwork and confidence, the way NEP asks schools to teach them."],
-  ] satisfies Feature[],
+  glance: [
+    { icon: "questions", value: "100", label: "multiple choice questions" },
+    { icon: "timer", value: "60 minutes", label: "for each quiz" },
+    { icon: "star", value: "100 marks", label: "in every round" },
+    { icon: "language", value: "ગુજરાતી or English", label: "your choice" },
+    { icon: "book", value: "5 subjects", label: "Maths, science, social science, GK, reasoning" },
+  ] as const,
   groups: [
     {
-      g: "A",
-      age: "8+ to 16 years",
-      std: "Std 4 to 9",
-      syllabus: "Set at your class level",
+      id: "A",
+      name: "Group A",
+      short: "Std 8 and 9",
+      title: "Group A, school students",
+      who: "Age 14+ to 16, or Std 8 and 9",
+      finder: "In Std 8 or 9 (age 14+ to 16)",
       fees: [
-        { amount: "₹90", note: "Government school students" },
-        { amount: "₹230", note: "All other students" },
+        { label: "Government school", amount: "₹90" },
+        { label: "Non / semi-government school", amount: "₹230" },
+      ],
+      feeSummary: "₹90 for government school, ₹230 for non / semi-government school",
+      quiz: "Std 8 level, Rounds 1 to 3 online",
+      prize: schoolPrize,
+      journey: groupsJourney,
+    },
+    {
+      id: "B",
+      name: "Group B",
+      short: "Std 10 and 11",
+      title: "Group B, senior school",
+      who: "Age 16+ to 18, or Std 10 and 11",
+      finder: "In Std 10 or 11 (age 16+ to 18)",
+      fees: [
+        { label: "Government school", amount: "₹105" },
+        { label: "Non / semi-government school", amount: "₹369" },
+      ],
+      feeSummary: "₹105 for government school, ₹369 for non / semi-government school",
+      quiz: "Std 10 level, Rounds 1 to 3 online",
+      prize: schoolPrize,
+      journey: groupsJourney,
+    },
+    {
+      id: "C",
+      name: "Group C",
+      short: "Students 18+",
+      title: "Group C, students above 18",
+      who: "Age 18+, students only",
+      finder: "A student above 18 (12th pass, college or higher studies)",
+      fees: [{ label: "Fee", amount: "₹639" }],
+      feeSummary: "₹639",
+      quiz: "Std 12 basic level, Rounds 1 to 3 online",
+      prize: `${schoolPrize}. Also in the lucky draw for the Sindhu Darshan yatra, Leh-Ladakh.`,
+      journey: [
+        { title: "Online quiz, Rounds 1 to 3" },
+        { title: "Rounds 4 and 5 at one offline camp", note: "Marine camp in Gujarat, for students selected in Round 3" },
+        { title: "Astro Adventure Trekking Camp, Manali", note: "For students selected in Round 5", goal: true },
+        { title: "Lucky draw for the Sindhu Darshan yatra, Leh-Ladakh", note: "Groups C and D together", goal: true },
       ],
     },
     {
-      g: "B",
-      age: "16+ to 18 years",
-      std: "Std 10 to 12",
-      syllabus: "Set at your class level",
-      fees: [
-        { amount: "₹230", note: "Government school students" },
-        { amount: "₹320", note: "All other students" },
+      id: "D",
+      name: "Group D",
+      short: "Adults 25+",
+      title: "Group D, adults above 25",
+      who: "Everyone above 25: employees, professionals, business owners, homemakers, environmentalists, sports persons and nature lovers",
+      finder: "An adult above 25",
+      fees: [{ label: "Fee", amount: "₹1,963" }],
+      feeSummary: "₹1,963",
+      quiz: "No online quiz. Direct entry to Round 4 after a document check.",
+      prize: "lucky draw for the Sindhu Darshan yatra, Leh-Ladakh (100% scholarship*), plus the Lavkumar Khachar scholarship of up to 60%",
+      journey: [
+        { title: "Register and share documents", note: "Required government documents are checked" },
+        { title: "Direct entry to Round 4", note: "In-person lucky draw and selection by the institution" },
+        { title: "Lucky draw for the Sindhu Darshan yatra, Leh-Ladakh", note: "Groups C and D together", goal: true },
+      ],
+    },
+  ] satisfies OlympiadGroup[],
+  partners: [
+    {
+      kind: "school",
+      icon: "school",
+      title: "Register your school",
+      cta: "Register your school",
+      who: "For principals and coordinator teachers of schools and colleges.",
+      points: [
+        "One dashboard for all your students",
+        "Add students by Excel or one class link",
+        "Pay once for everyone, or parents pay",
+        "Government schools get the lower fee",
       ],
     },
     {
-      g: "C",
-      age: "18+ to 30 years",
-      std: "College and university students only",
-      syllabus: "Set at college level",
-      fees: [{ amount: "₹320", note: "All students" }],
+      kind: "ambassador",
+      icon: "ambassador",
+      title: "Become an Olympiad Ambassador",
+      cta: "Become an Ambassador",
+      who: "For teachers, NGO workers, coaches, past campers and parents.",
+      points: [
+        "Your own code, link and QR to share",
+        "See how many people joined through you",
+        "Certificate and rewards at milestones",
+        "Free to join",
+      ],
     },
-    {
-      g: "D",
-      age: "18+, no upper age limit",
-      std: "Nature, adventure and sports persons",
-      syllabus: "No exam: direct selection as a volunteer or escort",
-      fees: [{ amount: "₹923", note: "Volunteers and escorts" }],
-    },
-  ],
-  steps: [
-    [
-      "notePencil",
-      "Register & pay online",
-      "Read the rules, pay the registration fee online, then fill the Google Form with your payment screenshot.",
-    ],
-    [
-      "exam",
-      "Take the Eco-STEM quiz",
-      "100 MCQs, 100 marks, 60 minutes. Rounds 1 to 3 are online. Rounds 4 and 5 are offline, with basic training camps in Gujarat.",
-    ],
-    [
-      "trophy",
-      "Merit list & documents",
-      "The final merit list uses your quiz score plus other achievements (NMMS, science fairs, sports). Selected students send a medical certificate and parental consent within 10 days.",
-    ],
-    [
-      "mountains",
-      "Manali adventure camp",
-      "Travel from Ahmedabad and back by rail or bus, hotel or tent stay, vegetarian meals, trekking, rafting, star gazing, STEM sessions and a certificate.",
-    ],
-  ] satisfies Feature[],
-  quiz: [
-    ["Type", "Multiple choice questions (MCQ)"],
-    ["Language", "Gujarati or English"],
-    ["Subjects", "Maths, science, social studies, GK and logical reasoning"],
-    ["Level", "Based on your group and class"],
-    ["Format", "Online. The quiz link comes to your WhatsApp number."],
-  ],
-  rounds: [
-    ["Round 1", "Pre-prelims quiz", "Online"],
-    ["Round 2", "Prelims quiz", "Online"],
-    ["Round 3", "Quarter-final, selection for the pre-basic camp", "Online"],
-    ["Round 4", "Semi-final quiz and pre-basic camp", "Offline, Gujarat"],
-    ["Round 5", "Grand final quiz and basic adventure activity camp", "Offline, Gujarat"],
-  ],
-  roundsResult: "Selection for the Astro Adventure Trekking Camp, Manali (2026-27)",
-  selectionNote:
-    "The quiz is not the only test. The Trust also looks at NMMS results, science fairs, Gyan Sadhana, sports achievements and teacher recommendations.",
+  ] as const,
   scholarships: [
     {
-      n: 1,
-      name: "K.S. Sir Lavkumar Khachar Adventure Scholarship",
-      pct: "100%",
-      img: "/img/olympiad/lavkumar-khachar.webp",
-      pdf: "lavkumarPdf",
-      pdfLabel: "About Sir Lavkumar Khachar",
-      text: "A full scholarship for students who passed Std 8 from a government primary school (or RTE students in private schools).",
-      points: [
-        "100% scholarship for Group A and Group B",
-        "You must be in Std 8 to 12 now",
-        "Registration fee: ₹90 (Group A) or ₹230 (Group B)",
+      img: "/img/olympiad/ketankumar-trivedi.webp",
+      alt: "Late Sir Dr. Ketankumar P. Trivedi",
+      focus: "object-[center_25%]",
+      kicker: "Scholarship 1 · Groups A, B and C",
+      name: "Sir Dr. Ketankumar Trivedi Adventure Scholarship",
+      life: "In loving memory. Founder of CNA, 1971 to 2024.",
+      quote: "“A lamp of nature, for back to nature movements.”",
+      award: "60 to 100%",
+      awardFor: "for selected students of Groups A, B and C",
+      facts: [
+        ["Education", "PhD in Boxing and Master in Physical Education, Saurashtra University"],
+        ["Sports", "Committee member, Indian Olympic Association, from Gujarat. Organising committee, Commonwealth Games 2010."],
+        ["Outdoors", "Snow skiing and mountain rescue training, 1996"],
       ],
+      pdf: { label: "About Sir Dr. Ketankumar Trivedi (PDF)", href: "https://www.cnacamp.com/Dr-ketankumar-new.pdf" },
     },
     {
-      n: 2,
-      name: "Sir Dr. Ketankumar Trivedi Adventure Scholarship",
-      pct: "Up to 70%",
-      img: "/img/olympiad/ketankumar-trivedi.webp",
-      pdf: "ketankumarPdf",
-      pdfLabel: "About Sir Dr. Ketankumar Trivedi",
-      text: "For students from any school, college or university, named after CNA’s late founder.",
-      points: [
-        "Open to all students in Group A, B or C",
-        "Up to 60% of the camp fee",
-        "70% for Group C students who passed Std 8 from a government school and now study in a government or grant-aided college or university",
-        "Choose the right age group when you register",
-        "Registration fee: ₹230 (Group A) or ₹320 (Group B or C)",
+      img: "/img/olympiad/lavkumar-khachar.webp",
+      alt: "Sir K.S. Lavkumar Khachar",
+      focus: "object-[center_30%]",
+      kicker: "Scholarship 2 · Group D",
+      name: "Sir K.S. (Jasdan) Lavkumar Khachar Adventure Scholarship",
+      life: "Naturalist and visionary of this scholarship",
+      quote: "He started nature education camps for young people in Gujarat.",
+      award: "Up to 60%",
+      awardFor: "for selected adults of Group D",
+      facts: [
+        ["Nature", "Noted ornithologist from the Jasdan family. Worked with Dr. Salim Ali."],
+        ["Education", "Began the nature education movement in Gujarat with WWF India, 1976"],
+        ["Honours", "Salim Ali Loke Wan Tho Lifetime Achievement Award"],
       ],
+      pdf: { label: "About Sir Lavkumar Khachar (PDF)", href: "https://www.cnacamp.com/Lavkumar.pdf" },
     },
   ],
-  scholarshipRule:
-    "Apply for only ONE scholarship. Applying for both means automatic disqualification. Once you are selected, your choice cannot change. Scholarships cannot be transferred and are not paid in cash. The organiser’s decision is final.",
-  campPhotos: [
-    { img: "cna/real/campus-03", caption: "Our Manali campus", alt: "CNA’s Manali campus buildings with snow peaks behind" },
-    { img: "cna/real/river-01", caption: "River crossing", alt: "Campers crossing a river on a wooden bridge near Manali" },
-    { img: "cna/real/climb-03", caption: "Rappelling day", alt: "A camper rappelling down a rock face on a rope" },
-    { img: "cna/real/snow-02", caption: "Snow day", alt: "Campers walking up a snowy mountain road in warm layers" },
-  ],
-  included: [
-    [
-      "bus",
-      "Travel (Ahmedabad and back)",
-      "Return trip from Ahmedabad by rail or bus. Carry your own dry snacks: meals on the journey are not included.",
-    ],
-    ["tent", "Stay", "Hotel rooms or Swiss tents at our Manali campus, with the Himalaya all around."],
-    ["forkKnife", "Vegetarian meals", "Breakfast, lunch and dinner, checked by instructors. Tell us early about any special diet."],
-    ["boot", "Hiking & snow trekking", "Mountain and snow treks with trained instructors and clear safety rules."],
-    ["waves", "River rafting & rock climbing", "Run by certified instructors. Selected students are insured."],
-    ["planet", "Astro & STEM", "Night sky watching, telescope sessions, STEM workshops."],
-    ["lotus", "Yoga & meditation", "Simple morning sessions that suit beginners."],
-    ["chalkboard", "Expert talks", "Space, science, maths, environment, law, technology, cyber safety, art and social topics."],
-    ["certificate", "Certificate", "Participation and achievement certificate from Climber Nature Adventure Club."],
-  ] satisfies Feature[],
-  regions: ["Saurashtra", "Kutch", "North Gujarat", "Central Gujarat", "South Gujarat"],
-  eligibility: [
-    "Students aged 8+ to 30 (Std 4 to college); nature, adventure and sports persons aged 18+",
-    "Students from Std 4 to college, or nature, adventure and sports persons",
-    "From any district of Gujarat",
-    "Registered in the correct age group and class",
-    "Physically and mentally fit for camp activities",
-    "Selected students send a medical fitness certificate, parental consent and a risk declaration within 10 days",
+  prizes: [
+    {
+      img: "/img/cna/real/trek-02-wide.webp",
+      alt: "A line of CNA campers trekking up a green Himalayan hillside near Manali",
+      groups: "Groups A, B and C",
+      title: "Astro Adventure Trekking Camp, Manali",
+      text: "Treks, snow, river rafting, rock climbing and night-sky sessions at CNA's own Manali campus.",
+      place: "Vashisht, Manali",
+      meta: "2026-27",
+      link: { label: "See the camp", href: "/trips/astro-adventure-manali" },
+    },
+    {
+      img: "/img/olympiad/ladakh-trek.webp",
+      alt: "Trekkers crossing a rocky stream below Kangyatse peak in the Markha valley, Ladakh",
+      groups: "Groups C and D",
+      title: "Sindhu Darshan yatra, Leh-Ladakh",
+      text: "Chosen by lucky draw from Groups C and D, with a 100% scholarship as per the official notice.",
+      place: "Leh-Ladakh",
+      meta: "2026-27",
+    },
   ],
   rules: [
-    "The registration fee is non-refundable in all cases",
-    "Wrong age group or class means automatic rejection, with no refund",
-    "Apply for only ONE scholarship. Applying for both means disqualification",
-    "Pay only through the official payment link in the registration form. Check it carefully before you pay",
-    "Misconduct at camp means removal from the camp at the participant’s own cost",
-    "Participation is voluntary. The organiser is not liable for injury, accident, illness or natural events during the camp",
+    ["Choose the right group", " by age or class for the current academic year."],
+    ["Pay online only", ", as per the fee of your group."],
+    ["Under 18?", " A parent or guardian adds their details and consent in the form."],
+    ["Selection is not only the quiz.", " The Trust also looks at past activities, competitions, medical fitness and teachers' opinion."],
+    ["Quiz links and times", " come on the WhatsApp number in the form."],
+    ["Group D", " must share the required government documents."],
+    ["Results", " of every round are posted on the notice board."],
+    ["The institution's decision is final", " on all rules and selection."],
+  ],
+  keepReady: [
+    "Class or age of the participant",
+    "Parent's name and phone, if under 18",
+    "A WhatsApp number for quiz links",
+    "UPI, card or net banking for the fee",
+    "School or referral code, if you have one",
   ],
   faqs: [
     {
-      q: "What is the Adventure Olympiad 1.0?",
-      a: "An Eco-STEM quiz with an adventure prize, run by Saurashtra Education & Charitable Trust and Climber Nature Adventure Club, Rajkot. You take an online quiz (100 MCQs, 60 minutes). Top performers win scholarships of up to 100% for the Astro Adventure Trekking Camp in Manali.",
+      question: "Who can take part?",
+      answer:
+        'School students of Std 8 to 11, students above 18 (12th pass, college or higher studies), and adults above 25 who love nature, adventure or sport. Use "Find the right group" above.',
     },
     {
-      q: "Is registration free?",
-      a: "No. Group A: ₹90 for government school students, ₹230 for others. Group B: ₹230 for government school students, ₹320 for others. Group C: ₹320. Group D (volunteers and escorts): ₹923. It is paid online and is non-refundable.",
+      question: "Can adults above 25 join?",
+      answer: "Yes. They join Group D. There is no online quiz for Group D. They enter directly at Round 4 after a document check.",
     },
     {
-      q: "What is the difference between the two scholarships?",
-      a: "Scholarship 1 (K.S. Sir Lavkumar Khachar) gives 100% to government school students in Group A or B. Scholarship 2 (Sir Dr. Ketankumar Trivedi) gives up to 60% to all students in Group A, B or C, and 70% to Group C students with a government school background. You can apply for only one.",
+      question: "How do I register?",
+      answer: "From 15 Nov, press Register on this page, fill the form and pay online. The registration number comes on WhatsApp.",
     },
     {
-      q: "What does the scholarship cover?",
-      a: "It is a percentage of the ₹18,000 camp fee. 100% covers the full fee. With 60% you pay ₹7,200. The camp fee includes travel from Ahmedabad and back, stay, meals at camp, all activities and a certificate.",
+      question: "Which language is the quiz in?",
+      answer: "Gujarati or English. It has 100 multiple choice questions and lasts 60 minutes.",
     },
     {
-      q: "Is selection based only on the quiz?",
-      a: "No. The Trust makes the final merit list from your quiz score, NMMS results, maths and science fair and Gyan Sadhana results, sports and science activities, other merit certificates, medical fitness and government school teacher recommendations.",
+      question: "What does the scholarship cover?",
+      answer: "It is a share of the ₹18,000 camp fee. Groups A, B and C can get 60 to 100%. Group D can get up to 60%.",
     },
     {
-      q: "Who can apply?",
-      a: "Any eligible student from Std 4 to college (ages 8+ to 30), or a nature, adventure or sports person aged 18+, from any district of Gujarat: Saurashtra, Kutch, North, Central and South Gujarat.",
+      question: "Can a school register all its students together?",
+      answer:
+        'Yes. The school signs up once, adds students by Excel or a class link, and can pay for everyone in one payment. See "For schools and teachers" above.',
     },
     {
-      q: "What documents do I need after selection?",
-      a: "Within 10 days: a medical fitness certificate, a parental consent letter, a risk and responsibility declaration, and a hard copy of your registration form (Scholarship 1 applicants need the principal’s verification). If a document is missing, the selection is cancelled.",
+      question: "How does the Ambassador programme work?",
+      answer:
+        "Sign up, get your own code and link, and share it. Every paid registration through your code is counted, and CNA gives a certificate and rewards at milestones.",
     },
-    {
-      q: "How do I register?",
-      a: "Read the rules, pay the fee online, click Register, fill the Google Form and upload your payment screenshot. After you submit, the quiz link comes to your WhatsApp number.",
-    },
+    { question: "Where are results posted?", answer: "On the notice board of this page, and on WhatsApp." },
   ],
-} as const;
+  remindOptions: [
+    { value: "A", label: "Group A, Std 8 or 9" },
+    { value: "B", label: "Group B, Std 10 or 11" },
+    { value: "C", label: "Group C, student above 18" },
+    { value: "D", label: "Group D, adult above 25" },
+    { value: "school", label: "A school or class (teacher)" },
+    { value: "unsure", label: "Not sure yet" },
+  ],
+};

@@ -29,7 +29,7 @@ export function SectionNav({ links, label = "On this page" }: { links: readonly 
   }, [active]);
 
   return (
-    <nav className="sticky top-[72px] z-20 border-b border-line bg-light/95 backdrop-blur" aria-label={label}>
+    <nav className="sticky top-[72px] z-20 border-b border-line bg-light" aria-label={label}>
       <div ref={listRef} className="wrap flex [scrollbar-width:none] gap-2 overflow-x-auto py-3 [&::-webkit-scrollbar]:hidden">
         {links.map(([id, text]) => {
           const isActive = id === active;

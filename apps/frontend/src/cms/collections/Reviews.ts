@@ -9,7 +9,7 @@ export const Reviews: CollectionConfig = {
     group: "Website",
     useAsTitle: "name",
     defaultColumns: ["name", "role", "rating", "trip", "isSample"],
-    description: "The 3 most recent reviews with consent appear on the home page.",
+    description: "The 6 most recent reviews with consent appear on the home page.",
   },
   // Reviews without consent stay private through the API too, not only on the site.
   access: {

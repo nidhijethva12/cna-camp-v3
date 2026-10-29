@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Photo } from "@/components/media/Photo";
-import { ArrowRight, Check, Play } from "@/components/ui/icons";
+import { ArrowRight, Check } from "@/components/ui/icons";
 import { homeStory as s } from "@/content/about";
 
 export function StorySection() {
@@ -14,18 +14,6 @@ export function StorySection() {
             sizes="(min-width: 1024px) 590px, 100vw"
             className="transition duration-700 group-hover:scale-[1.04]"
           />
-          <div className="absolute inset-0 bg-linear-to-b from-dark/10 to-dark/65" />
-          <span
-            aria-hidden="true"
-            className="absolute top-1/2 left-1/2 flex h-16 w-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-primary text-light shadow-float transition group-hover:scale-110 sm:h-20 sm:w-20"
-          >
-            <span className="absolute inset-0 animate-ping rounded-full bg-primary/40 motion-reduce:hidden" />
-            <Play className="relative ml-1 text-[24px] sm:text-[28px]" />
-          </span>
-          <div className="absolute inset-x-0 bottom-0 p-5 pr-32 text-light sm:pr-40">
-            <span className="tag border-light/50 bg-dark/30 text-light">{s.video.tag}</span>
-            <p className="mt-2 text-[15px] font-semibold">{s.video.caption}</p>
-          </div>
         </div>
         <div className="absolute right-4 -bottom-6 flex h-28 w-28 flex-col items-center justify-center rounded-full border-4 border-light bg-primary text-center text-light shadow-float sm:-right-6 sm:h-36 sm:w-36">
           <span className="display text-[34px] leading-none sm:text-[42px]">{s.badge[0]}</span>

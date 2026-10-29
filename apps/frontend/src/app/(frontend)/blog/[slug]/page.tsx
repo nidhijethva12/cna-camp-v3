@@ -51,7 +51,7 @@ export default async function PostPage({ params }: PageProps<"/blog/[slug]">) {
     datePublished: post.publishedAt,
     url: absoluteUrl(path),
     image: post.cover ? absoluteUrl(photoSrc(post.cover)) : undefined,
-    author: { "@type": "Organization", name: site.legalName },
+    author: post.author === "Team CNA" ? { "@type": "Organization", name: site.legalName } : { "@type": "Person", name: post.author },
     publisher: { "@id": absoluteUrl("/#organization") },
   };
   const faqLd = post.faqs.length
@@ -69,18 +69,19 @@ export default async function PostPage({ params }: PageProps<"/blog/[slug]">) {
   return (
     <>
       <article>
-        <header className="wrap mt-12 max-w-3xl">
-          <nav aria-label="Breadcrumb" className="text-[13.5px] font-medium text-muted">
+        <header className="wrap mt-12 max-w-5xl">
+          <nav aria-label="Breadcrumb" className="text-[16px] font-semibold text-muted">
             <Link href="/blog" className="hover:text-primary">
               <ArrowLeft className="mr-1.5" />
               Blog
             </Link>
           </nav>
           <h1 className="display h-page mt-4">{post.title}</h1>
-          <p className="lead mt-4">{post.excerpt}</p>
-          <time dateTime={post.publishedAt} className="mt-5 block text-[13.5px] font-medium text-muted">
-            {formatDate(post.publishedAt)} · {site.name}
-          </time>
+          <p className="lead mt-4 max-w-3xl">{post.excerpt}</p>
+          <p className="mt-5 text-[14.5px] font-medium text-muted">
+            <span className="font-semibold text-dark">{post.author}</span> ·{" "}
+            <time dateTime={post.publishedAt}>{formatDate(post.publishedAt)}</time> · {site.name}
+          </p>
         </header>
 
         {post.cover && (
