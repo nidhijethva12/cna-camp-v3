@@ -43,6 +43,12 @@ export const Batches: CollectionConfig = {
     },
     { name: "note", type: "text", admin: { description: "Short tag, e.g. “Diwali break”, “Girls-only batch”." } },
     {
+      name: "showDates",
+      type: "checkbox",
+      defaultValue: false,
+      admin: { description: "Show this batch’s dates on the batch cards. Leave off until the dates are final." },
+    },
+    {
       name: "label",
       type: "text",
       admin: { hidden: true },
