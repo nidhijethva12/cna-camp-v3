@@ -1,5 +1,5 @@
 import type { Field, GlobalConfig } from "payload";
-import { publishedOrSignedIn, signedIn } from "../access";
+import { canEdit, hiddenFromAuthors, publishedOrSignedIn } from "../access";
 import { seoField, siteLink } from "../fields";
 import { revalidateSiteGlobal } from "../hooks/revalidate";
 import { sitePreview } from "../preview";
@@ -36,8 +36,8 @@ const photo = (name = "image", description?: string): Field => ({
 export const HomePage: GlobalConfig = {
   slug: "home-page",
   label: "Home page",
-  admin: { group: "Website", preview: sitePreview(() => "/") },
-  access: { read: publishedOrSignedIn, update: signedIn },
+  admin: { hidden: hiddenFromAuthors, group: "Website", preview: sitePreview(() => "/") },
+  access: { read: publishedOrSignedIn, update: canEdit },
   versions: { drafts: true, max: 20 },
   hooks: revalidateSiteGlobal,
   fields: [

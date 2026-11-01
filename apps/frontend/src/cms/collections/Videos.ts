@@ -1,7 +1,7 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import type { CollectionConfig } from "payload";
-import { anyone, signedIn } from "../access";
+import { anyone, canEdit, hiddenFromAuthors } from "../access";
 import { revalidateSite } from "../hooks/revalidate";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -10,12 +10,13 @@ export const Videos: CollectionConfig = {
   slug: "videos",
   labels: { singular: "Video", plural: "Videos" },
   admin: {
+    hidden: hiddenFromAuthors,
     group: "Website",
     useAsTitle: "title",
     defaultColumns: ["title", "showInGallery", "order", "updatedAt"],
     description: "Short phone clips (MP4). Keep each under about 15 MB; visitors load a clip only when they press play.",
   },
-  access: { read: anyone, create: signedIn, update: signedIn, delete: signedIn },
+  access: { read: anyone, create: canEdit, update: canEdit, delete: canEdit },
   hooks: revalidateSite,
   defaultSort: "order",
   upload: {

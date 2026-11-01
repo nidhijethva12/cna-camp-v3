@@ -714,8 +714,8 @@
   transform-origin: left;
 }
 
-/* A number that counts up from 0 to its final value every few seconds, its underline drawing in as it lands. The hidden
-   text inside keeps the final width so nothing around it shifts. */
+/* A number that counts up from 0 once when the page loads, its underline drawing in as it lands. The hidden text inside
+   keeps the final width so nothing around it shifts. */
 @property --count {
   syntax: "<integer>";
   inherits: false;
@@ -731,10 +731,10 @@
 }
 @media (prefers-reduced-motion: no-preference) {
   .count-up {
-    animation: count-up 4s 0.2s infinite;
+    animation: count-up 1.8s 0.2s both;
   }
   .count-up.marker::after {
-    animation: underline-in 4s 0.2s infinite;
+    animation: underline-in 1.8s 0.2s both;
   }
 }
 @keyframes count-up {
@@ -742,19 +742,29 @@
     --count: 0;
     animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1);
   }
-  45%,
   100% {
     --count: 100;
   }
 }
 @keyframes underline-in {
   0%,
-  35% {
+  70% {
     transform: scaleX(0);
     animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1);
   }
-  55%,
   100% {
     transform: scaleX(1);
   }
+}
+
+/* Gujarati pages: Latin letters keep the site fonts, Gujarati letters fall through to Noto Sans Gujarati. Gujarati vowel
+   signs sit above and below the line, so headings get more line height and no negative tracking. */
+.lang-gu {
+  --font-sans: var(--font-body), var(--font-gujarati), system-ui, sans-serif;
+  --font-display: var(--font-heading), var(--font-gujarati), system-ui, sans-serif;
+  font-family: var(--font-sans);
+}
+.lang-gu :is(h1, h2, h3, .display, .h-section) {
+  letter-spacing: 0;
+  line-height: 1.3;
 }

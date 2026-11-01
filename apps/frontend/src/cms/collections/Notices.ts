@@ -1,5 +1,5 @@
 import type { CollectionConfig } from "payload";
-import { anyone, signedIn } from "../access";
+import { anyone, canEdit, hiddenFromAuthors } from "../access";
 import { httpUrl } from "../fields";
 import { revalidateSite } from "../hooks/revalidate";
 
@@ -8,12 +8,13 @@ export const Notices: CollectionConfig = {
   slug: "notices",
   labels: { singular: "Notice", plural: "Notices" },
   admin: {
+    hidden: hiddenFromAuthors,
     group: "Olympiad",
     useAsTitle: "text",
     defaultColumns: ["text", "order", "link"],
     description: "Each notice is one line on the Olympiad page notice board. Lower order numbers show first.",
   },
-  access: { read: anyone, create: signedIn, update: signedIn, delete: signedIn },
+  access: { read: anyone, create: canEdit, update: canEdit, delete: canEdit },
   defaultSort: "order",
   hooks: revalidateSite,
   fields: [

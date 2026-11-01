@@ -102,16 +102,18 @@ export interface Config {
   db: {
     defaultIDType: string;
   };
-  fallbackLocale: null;
+  fallbackLocale: ('false' | 'none' | 'null') | false | null | ('en' | 'gu') | ('en' | 'gu')[];
   globals: {
     'home-page': HomePage;
     'site-settings': SiteSetting;
+    'olympiad-page': OlympiadPage;
   };
   globalsSelect: {
     'home-page': HomePageSelect<false> | HomePageSelect<true>;
     'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
+    'olympiad-page': OlympiadPageSelect<false> | OlympiadPageSelect<true>;
   };
-  locale: null;
+  locale: 'en' | 'gu';
   widgets: {
     collections: CollectionsWidget;
   };
@@ -432,6 +434,9 @@ export interface Post {
   slug: string;
   publishedAt?: string | null;
   author?: (string | null) | User;
+  /**
+   * Shown on the post before the date. Empty shows “Team CNA”.
+   */
   authorName?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -444,6 +449,10 @@ export interface Post {
 export interface User {
   id: string;
   name: string;
+  /**
+   * What this account can do. Only an Admin can change it.
+   */
+  role: 'admin' | 'editor' | 'author';
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -465,7 +474,7 @@ export interface User {
   collection: 'users';
 }
 /**
- * The 3 most recent reviews with consent appear on the home page.
+ * The 6 most recent reviews with consent appear on the home page.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "reviews".
@@ -919,6 +928,7 @@ export interface EnquiriesSelect<T extends boolean = true> {
  */
 export interface UsersSelect<T extends boolean = true> {
   name?: T;
+  role?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -1165,6 +1175,445 @@ export interface SiteSetting {
   createdAt?: string | null;
 }
 /**
+ * Every piece of text on the Olympiad page. Switch the language at the top right to edit the Gujarati. An empty Gujarati box shows the English.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "olympiad-page".
+ */
+export interface OlympiadPage {
+  id: string;
+  /**
+   * Name of the Olympiad, e.g. Adventure Olympiad 2.0
+   */
+  name: string;
+  /**
+   * Small line above the name.
+   */
+  eyebrow: string;
+  /**
+   * Short paragraph under the name.
+   */
+  intro: string;
+  /**
+   * Date registration opens, as shown, e.g. 15 Nov 2026
+   */
+  opensOn: string;
+  /**
+   * Line in the top bar, e.g. ।। विद्यार्थी देवो भव ।।
+   */
+  motto: string;
+  /**
+   * What Google and WhatsApp show for this page.
+   */
+  meta: {
+    /**
+     * Browser tab and Google title.
+     */
+    title: string;
+    /**
+     * Google description, about 150 characters.
+     */
+    description: string;
+    /**
+     * Title when the link is shared.
+     */
+    ogTitle: string;
+    ogDescription: string;
+  };
+  /**
+   * The official notice pinned at the top of the notice board.
+   */
+  notice: {
+    title: string;
+    /**
+     * Notice number, date and language.
+     */
+    meta: string;
+    /**
+     * PDF link, e.g. /docs/olympiad-2-notice.pdf
+     */
+    href: string;
+  };
+  /**
+   * In date order.
+   */
+  dates?:
+    | {
+        /**
+         * e.g. 15 Nov to 14 Dec 2026
+         */
+        when: string;
+        title: string;
+        note?: string | null;
+        key?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * The steps from registration to the merit list.
+   */
+  steps?:
+    | {
+        title: string;
+        when: string;
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  glance?:
+    | {
+        icon: 'questions' | 'timer' | 'star' | 'language' | 'book';
+        /**
+         * Big text, e.g. 60 minutes
+         */
+        value: string;
+        /**
+         * Small text under it.
+         */
+        label: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * One entry per group, A to D.
+   */
+  groups?:
+    | {
+        groupId: 'A' | 'B' | 'C' | 'D';
+        /**
+         * e.g. Group A
+         */
+        name: string;
+        /**
+         * e.g. Std 8 and 9
+         */
+        short: string;
+        title: string;
+        who: string;
+        /**
+         * What the group finder dropdown says for this group.
+         */
+        finder: string;
+        fees?:
+          | {
+              label: string;
+              /**
+               * As shown, e.g. ₹90
+               */
+              amount: string;
+              id?: string | null;
+            }[]
+          | null;
+        feeSummary: string;
+        quiz: string;
+        prize: string;
+        /**
+         * From the first round to the final camp.
+         */
+        journey?:
+          | {
+              /**
+               * e.g. 2026-27
+               */
+              year?: string | null;
+              title: string;
+              note?: string | null;
+              goal?: boolean | null;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * The school and ambassador cards.
+   */
+  partners?:
+    | {
+        /**
+         * Which sign-up form the button opens.
+         */
+        kind: 'school' | 'ambassador';
+        icon: 'school' | 'ambassador';
+        title: string;
+        cta: string;
+        who: string;
+        points?:
+          | {
+              text: string;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  scholarships?:
+    | {
+        /**
+         * Photo path, e.g. /img/olympiad/ketankumar-trivedi.webp
+         */
+        img: string;
+        /**
+         * Photo position, e.g. object-[center_25%]
+         */
+        focus: string;
+        /**
+         * For screen readers and Google.
+         */
+        alt: string;
+        /**
+         * Small line above the name.
+         */
+        kicker: string;
+        name: string;
+        life: string;
+        quote: string;
+        /**
+         * e.g. 60 to 100%
+         */
+        award: string;
+        awardFor: string;
+        facts?:
+          | {
+              /**
+               * e.g. Education
+               */
+              label: string;
+              value: string;
+              id?: string | null;
+            }[]
+          | null;
+        pdf: {
+          label: string;
+          /**
+           * Full web address of the PDF.
+           */
+          href: string;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  prizes?:
+    | {
+        /**
+         * Photo path, e.g. /img/olympiad/ladakh-trek.webp
+         */
+        img: string;
+        /**
+         * For screen readers and Google.
+         */
+        alt: string;
+        /**
+         * e.g. Groups A, B and C
+         */
+        groups: string;
+        title: string;
+        text: string;
+        place: string;
+        /**
+         * e.g. 2026-27
+         */
+        meta: string;
+        /**
+         * Optional button. Leave the link empty to hide it.
+         */
+        link?: {
+          label?: string | null;
+          /**
+           * e.g. /trips/astro-adventure-manali
+           */
+          href?: string | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * The bold start is followed straight by the rest, so begin the rest with a space or comma.
+   */
+  rules?:
+    | {
+        lead: string;
+        rest: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Checklist next to the registration box.
+   */
+  keepReady?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Choices in the “remind me” form.
+   */
+  remindOptions?:
+    | {
+        /**
+         * Saved code, e.g. A or school. Do not change.
+         */
+        value: string;
+        label: string;
+        id?: string | null;
+      }[]
+    | null;
+  faqs?:
+    | {
+        question: string;
+        answer: string;
+        id?: string | null;
+      }[]
+    | null;
+  ui: {
+    language: string;
+    contactUs: string;
+    seeGroups: string;
+    bar: {
+      opens: string;
+      details: string;
+    };
+    /**
+     * Hero line, e.g. with up to · 100% · scholarship
+     */
+    scholarshipLine: {
+      before: string;
+      value: string;
+      after: string;
+    };
+    heroBadge: {
+      title: string;
+      text: string;
+    };
+    joint: {
+      label: string;
+      trustLine: string;
+      cnaLine: string;
+    };
+    nav: {
+      notices: string;
+      how: string;
+      groups: string;
+      partners: string;
+      scholarships: string;
+      prizes: string;
+      rules: string;
+      faq: string;
+    };
+    sections: {
+      notices: {
+        /**
+         * Small line above the heading.
+         */
+        eyebrow: string;
+        title: string;
+        lead?: string | null;
+      };
+      how: {
+        /**
+         * Small line above the heading.
+         */
+        eyebrow: string;
+        title: string;
+        lead?: string | null;
+      };
+      groups: {
+        /**
+         * Small line above the heading.
+         */
+        eyebrow: string;
+        title: string;
+        lead?: string | null;
+      };
+      partners: {
+        /**
+         * Small line above the heading.
+         */
+        eyebrow: string;
+        title: string;
+        lead?: string | null;
+      };
+      scholarships: {
+        /**
+         * Small line above the heading.
+         */
+        eyebrow: string;
+        title: string;
+        lead?: string | null;
+      };
+      prizes: {
+        /**
+         * Small line above the heading.
+         */
+        eyebrow: string;
+        title: string;
+        lead?: string | null;
+      };
+      rules: {
+        /**
+         * Small line above the heading.
+         */
+        eyebrow: string;
+        title: string;
+        lead?: string | null;
+      };
+      faq: {
+        /**
+         * Small line above the heading.
+         */
+        eyebrow: string;
+        title: string;
+        lead?: string | null;
+      };
+    };
+    noticeBoard: {
+      title: string;
+      from: string;
+      live: string;
+      official: string;
+      viewPdf: string;
+      newTab: string;
+      moreTitle: string;
+      moreText: string;
+    };
+    keyDates: string;
+    glanceLabel: string;
+    register: {
+      eyebrow: string;
+      title: string;
+      text: string;
+      help: string;
+      keepReady: string;
+    };
+    help: {
+      title: string;
+      text: string;
+      whatsapp: string;
+      call: string;
+      trustEmail: string;
+      /**
+       * Pre-filled WhatsApp message.
+       */
+      whatsappMessage: string;
+    };
+    picker: {
+      participant: string;
+      choose: string;
+      empty: string;
+      thisIs: string;
+      fee: string;
+      quiz: string;
+      prize: string;
+      journey: string;
+      group: string;
+      tabsLabel: string;
+    };
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "home-page_select".
  */
@@ -1297,6 +1746,330 @@ export interface SiteSettingsSelect<T extends boolean = true> {
       };
   campersCount?: T;
   campsCount?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "olympiad-page_select".
+ */
+export interface OlympiadPageSelect<T extends boolean = true> {
+  name?: T;
+  eyebrow?: T;
+  intro?: T;
+  opensOn?: T;
+  motto?: T;
+  meta?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        ogTitle?: T;
+        ogDescription?: T;
+      };
+  notice?:
+    | T
+    | {
+        title?: T;
+        meta?: T;
+        href?: T;
+      };
+  dates?:
+    | T
+    | {
+        when?: T;
+        title?: T;
+        note?: T;
+        key?: T;
+        id?: T;
+      };
+  steps?:
+    | T
+    | {
+        title?: T;
+        when?: T;
+        text?: T;
+        id?: T;
+      };
+  glance?:
+    | T
+    | {
+        icon?: T;
+        value?: T;
+        label?: T;
+        id?: T;
+      };
+  groups?:
+    | T
+    | {
+        groupId?: T;
+        name?: T;
+        short?: T;
+        title?: T;
+        who?: T;
+        finder?: T;
+        fees?:
+          | T
+          | {
+              label?: T;
+              amount?: T;
+              id?: T;
+            };
+        feeSummary?: T;
+        quiz?: T;
+        prize?: T;
+        journey?:
+          | T
+          | {
+              year?: T;
+              title?: T;
+              note?: T;
+              goal?: T;
+              id?: T;
+            };
+        id?: T;
+      };
+  partners?:
+    | T
+    | {
+        kind?: T;
+        icon?: T;
+        title?: T;
+        cta?: T;
+        who?: T;
+        points?:
+          | T
+          | {
+              text?: T;
+              id?: T;
+            };
+        id?: T;
+      };
+  scholarships?:
+    | T
+    | {
+        img?: T;
+        focus?: T;
+        alt?: T;
+        kicker?: T;
+        name?: T;
+        life?: T;
+        quote?: T;
+        award?: T;
+        awardFor?: T;
+        facts?:
+          | T
+          | {
+              label?: T;
+              value?: T;
+              id?: T;
+            };
+        pdf?:
+          | T
+          | {
+              label?: T;
+              href?: T;
+            };
+        id?: T;
+      };
+  prizes?:
+    | T
+    | {
+        img?: T;
+        alt?: T;
+        groups?: T;
+        title?: T;
+        text?: T;
+        place?: T;
+        meta?: T;
+        link?:
+          | T
+          | {
+              label?: T;
+              href?: T;
+            };
+        id?: T;
+      };
+  rules?:
+    | T
+    | {
+        lead?: T;
+        rest?: T;
+        id?: T;
+      };
+  keepReady?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  remindOptions?:
+    | T
+    | {
+        value?: T;
+        label?: T;
+        id?: T;
+      };
+  faqs?:
+    | T
+    | {
+        question?: T;
+        answer?: T;
+        id?: T;
+      };
+  ui?:
+    | T
+    | {
+        language?: T;
+        contactUs?: T;
+        seeGroups?: T;
+        bar?:
+          | T
+          | {
+              opens?: T;
+              details?: T;
+            };
+        scholarshipLine?:
+          | T
+          | {
+              before?: T;
+              value?: T;
+              after?: T;
+            };
+        heroBadge?:
+          | T
+          | {
+              title?: T;
+              text?: T;
+            };
+        joint?:
+          | T
+          | {
+              label?: T;
+              trustLine?: T;
+              cnaLine?: T;
+            };
+        nav?:
+          | T
+          | {
+              notices?: T;
+              how?: T;
+              groups?: T;
+              partners?: T;
+              scholarships?: T;
+              prizes?: T;
+              rules?: T;
+              faq?: T;
+            };
+        sections?:
+          | T
+          | {
+              notices?:
+                | T
+                | {
+                    eyebrow?: T;
+                    title?: T;
+                    lead?: T;
+                  };
+              how?:
+                | T
+                | {
+                    eyebrow?: T;
+                    title?: T;
+                    lead?: T;
+                  };
+              groups?:
+                | T
+                | {
+                    eyebrow?: T;
+                    title?: T;
+                    lead?: T;
+                  };
+              partners?:
+                | T
+                | {
+                    eyebrow?: T;
+                    title?: T;
+                    lead?: T;
+                  };
+              scholarships?:
+                | T
+                | {
+                    eyebrow?: T;
+                    title?: T;
+                    lead?: T;
+                  };
+              prizes?:
+                | T
+                | {
+                    eyebrow?: T;
+                    title?: T;
+                    lead?: T;
+                  };
+              rules?:
+                | T
+                | {
+                    eyebrow?: T;
+                    title?: T;
+                    lead?: T;
+                  };
+              faq?:
+                | T
+                | {
+                    eyebrow?: T;
+                    title?: T;
+                    lead?: T;
+                  };
+            };
+        noticeBoard?:
+          | T
+          | {
+              title?: T;
+              from?: T;
+              live?: T;
+              official?: T;
+              viewPdf?: T;
+              newTab?: T;
+              moreTitle?: T;
+              moreText?: T;
+            };
+        keyDates?: T;
+        glanceLabel?: T;
+        register?:
+          | T
+          | {
+              eyebrow?: T;
+              title?: T;
+              text?: T;
+              help?: T;
+              keepReady?: T;
+            };
+        help?:
+          | T
+          | {
+              title?: T;
+              text?: T;
+              whatsapp?: T;
+              call?: T;
+              trustEmail?: T;
+              whatsappMessage?: T;
+            };
+        picker?:
+          | T
+          | {
+              participant?: T;
+              choose?: T;
+              empty?: T;
+              thisIs?: T;
+              fee?: T;
+              quiz?: T;
+              prize?: T;
+              journey?: T;
+              group?: T;
+              tabsLabel?: T;
+            };
+      };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

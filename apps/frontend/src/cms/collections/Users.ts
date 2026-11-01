@@ -1,9 +1,19 @@
-import type { Access, CollectionBeforeOperationHook, CollectionBeforeValidateHook, CollectionConfig } from "payload";
-import { ValidationError } from "payload";
+import type {
+  Access,
+  CollectionBeforeChangeHook,
+  CollectionBeforeDeleteHook,
+  CollectionBeforeOperationHook,
+  CollectionBeforeValidateHook,
+  CollectionConfig,
+  PayloadRequest,
+} from "payload";
+import { APIError, ValidationError } from "payload";
+import { isAdmin, isAdminField, roleOf, roles } from "../access";
 
 const isProduction = process.env.NODE_ENV === "production";
 
-const self: Access = ({ req: { user } }) => (user ? { id: { equals: user.id } } : false);
+/** Admins see and change every account; everyone else only their own. */
+const adminOrSelf: Access = ({ req: { user } }) => (roleOf(user) === "admin" ? true : user ? { id: { equals: user.id } } : false);
 
 const MIN_PASSWORD_LENGTH = 12;
 
@@ -35,15 +45,43 @@ const enforcePolicyOnReset: CollectionBeforeOperationHook = ({ args, operation, 
   return args;
 };
 
+const adminCount = async (req: PayloadRequest) =>
+  (await req.payload.count({ collection: "users", where: { role: { equals: "admin" } }, req })).totalDocs;
+
+const LAST_ADMIN = "At least one Admin account must remain, so the site always has someone who can manage accounts.";
+
+/** The very first account (made on /admin's first-user screen) is the Admin. */
+const firstAccountIsAdmin: CollectionBeforeChangeHook = async ({ data, operation, req }) => {
+  if (operation === "create" && (await req.payload.count({ collection: "users", req })).totalDocs === 0) data.role = "admin";
+  return data;
+};
+
+const keepLastAdminRole: CollectionBeforeChangeHook = async ({ data, originalDoc, operation, req }) => {
+  if (operation === "update" && originalDoc?.role === "admin" && data.role && data.role !== "admin" && (await adminCount(req)) <= 1) {
+    throw new APIError(LAST_ADMIN, 400, null, true);
+  }
+  return data;
+};
+
+const keepLastAdmin: CollectionBeforeDeleteHook = async ({ id, req }) => {
+  const doc = await req.payload.findByID({ collection: "users", id, depth: 0, req });
+  if (doc.role === "admin" && (await adminCount(req)) <= 1) throw new APIError(LAST_ADMIN, 400, null, true);
+};
+
 /**
- * Single admin account with full access. It is created once through /admin's first-user
- * screen (which Payload allows only while no user exists); no further accounts can be
- * added, and it can't be deleted, so the admin can never be locked out.
+ * Site accounts, each with a role: Admin (everything, including accounts), Editor (all site content)
+ * or Author (blog drafts only). Only Admins add or remove accounts and change roles; nobody can delete
+ * their own account, and the last Admin can't be removed or demoted, so the site is never left without one.
  */
 export const Users: CollectionConfig = {
   slug: "users",
-  labels: { singular: "Admin account", plural: "Admin account" },
-  admin: { group: "Settings", useAsTitle: "email", defaultColumns: ["name", "email"] },
+  labels: { singular: "Account", plural: "Accounts" },
+  admin: {
+    group: "Settings",
+    useAsTitle: "email",
+    defaultColumns: ["name", "email", "role"],
+    hidden: ({ user }) => roleOf(user) !== "admin",
+  },
   auth: {
     useSessions: true,
     tokenExpiration: 2 * 60 * 60,
@@ -53,12 +91,29 @@ export const Users: CollectionConfig = {
     cookies: { secure: isProduction, sameSite: "Strict" },
     forgotPassword: { expiration: 30 * 60 * 1000 },
   },
-  hooks: { beforeOperation: [enforcePolicyOnReset], beforeValidate: [enforcePasswordPolicy] },
-  access: {
-    create: () => false,
-    delete: () => false,
-    read: self,
-    update: self,
+  hooks: {
+    beforeOperation: [enforcePolicyOnReset],
+    beforeValidate: [enforcePasswordPolicy],
+    beforeChange: [firstAccountIsAdmin, keepLastAdminRole],
+    beforeDelete: [keepLastAdmin],
   },
-  fields: [{ name: "name", type: "text", required: true }],
+  access: {
+    create: isAdmin,
+    read: adminOrSelf,
+    update: adminOrSelf,
+    delete: ({ req: { user } }) => (roleOf(user) === "admin" ? { id: { not_equals: user?.id } } : false),
+  },
+  fields: [
+    { name: "name", type: "text", required: true },
+    {
+      name: "role",
+      type: "select",
+      required: true,
+      defaultValue: "author",
+      options: roles,
+      saveToJWT: true,
+      access: { create: isAdminField, update: isAdminField },
+      admin: { description: "What this account can do. Only an Admin can change it." },
+    },
+  ],
 };
