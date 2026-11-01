@@ -31,6 +31,12 @@ const tone: Record<GroupId, { tab: string; selected: string; edge: string; tile:
     edge: "border-t-success",
     tile: "bg-success/10",
   },
+  E: {
+    tab: "border-t-muted",
+    selected: "aria-selected:border-muted aria-selected:bg-muted aria-selected:text-light",
+    edge: "border-t-muted",
+    tile: "bg-muted/10",
+  },
 };
 
 /** "Find the right group": the class/age picker selects the matching tab, and the tabs can be used on their own. */
@@ -77,7 +83,7 @@ export function GroupPicker({ groups, labels }: { groups: OlympiadGroup[]; label
         </output>
       </div>
 
-      <div role="tablist" aria-label={labels.tabsLabel} className="mt-4 grid grid-cols-4 gap-2">
+      <div role="tablist" aria-label={labels.tabsLabel} className="mt-4 grid grid-cols-5 gap-2">
         {groups.map((g, i) => (
           <button
             key={g.id}

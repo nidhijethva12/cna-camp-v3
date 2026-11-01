@@ -51,7 +51,7 @@ const sectionText = (name: string, label: string, withLead = true): Field => ({
   ],
 });
 
-const groupIds = ["A", "B", "C", "D"].map((id) => ({ label: `Group ${id}`, value: id }));
+const groupIds = ["A", "B", "C", "D", "E"].map((id) => ({ label: `Group ${id}`, value: id }));
 
 export const OlympiadPage: GlobalConfig = {
   slug: "olympiad-page",

@@ -1279,7 +1279,7 @@ export interface OlympiadPage {
    */
   groups?:
     | {
-        groupId: 'A' | 'B' | 'C' | 'D';
+        groupId: 'A' | 'B' | 'C' | 'D' | 'E';
         /**
          * e.g. Group A
          */
