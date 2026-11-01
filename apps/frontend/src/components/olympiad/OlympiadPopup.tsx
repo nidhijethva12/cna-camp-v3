@@ -12,7 +12,7 @@ const SNOOZE_MS = 3 * 24 * 60 * 60 * 1000;
 const OPEN_DELAY_MS = 2000;
 
 const facts = [
-  ["₹90", "fee starts at"],
+  ["Free", "for govt. schools"],
   ["14+", "age to join"],
   ["15 Nov", "registration"],
 ];

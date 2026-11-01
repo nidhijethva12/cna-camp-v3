@@ -1,4 +1,4 @@
-export type GroupId = "A" | "B" | "C" | "D";
+export type GroupId = "A" | "B" | "C" | "D" | "E";
 
 export type JourneyStep = { year?: string; title: string; note?: string; goal?: boolean };
 
@@ -137,9 +137,9 @@ export const olympiad: OlympiadContent = {
   meta: {
     title: "Adventure Olympiad 2.0: Eco-STEM Quiz & Himalaya Scholarship | CNA Camp",
     description:
-      "An Eco-STEM quiz for Std 8 to 11, students above 18 and adults above 25. 4 groups, 5 rounds and a 60 to 100% scholarship on the ₹18,000 Manali camp. Registration opens 15 Nov 2026.",
+      "An Eco-STEM quiz for Std 8 to 11, students above 18 and adults above 25. 5 groups, 5 rounds and a 60 to 100% scholarship on the ₹18,000 Manali camp. Registration opens 15 Nov 2026.",
     ogTitle: "Adventure Olympiad 2.0: a quiz that can take you to the Himalaya",
-    ogDescription: "4 groups, 5 rounds and a 60 to 100% scholarship on the Manali camp. Registration opens 15 Nov 2026.",
+    ogDescription: "5 groups, 5 rounds and a 60 to 100% scholarship on the Manali camp. Registration opens 15 Nov 2026.",
   },
   motto: "।। विद्यार्थी देवो भव ।।",
   notice: {
@@ -170,7 +170,7 @@ export const olympiad: OlympiadContent = {
     },
     {
       title: "Rounds 4 and 5",
-      text: "Selected participants join the offline rounds at camp in Gujarat. Group D starts directly at Round 4.",
+      text: "Selected participants join the offline rounds at camp in Gujarat. Groups D and E start directly at Round 4.",
       when: "After Round 3",
     },
     {
@@ -195,10 +195,10 @@ export const olympiad: OlympiadContent = {
       who: "Age 14+ to 16, or Std 8 and 9",
       finder: "In Std 8 or 9 (age 14+ to 16)",
       fees: [
-        { label: "Government school", amount: "₹90" },
-        { label: "Non / semi-government school", amount: "₹230" },
+        { label: "Government school · Group A", amount: "Free" },
+        { label: "Non-government school · Group A+", amount: "₹230" },
       ],
-      feeSummary: "₹90 for government school, ₹230 for non / semi-government school",
+      feeSummary: "free for government schools (A), ₹230 for non-government schools (A+)",
       quiz: "Std 8 level, Rounds 1 to 3 online",
       prize: schoolPrize,
       journey: groupsJourney,
@@ -211,10 +211,10 @@ export const olympiad: OlympiadContent = {
       who: "Age 16+ to 18, or Std 10 and 11",
       finder: "In Std 10 or 11 (age 16+ to 18)",
       fees: [
-        { label: "Government school", amount: "₹105" },
-        { label: "Non / semi-government school", amount: "₹369" },
+        { label: "Government school · Group B", amount: "₹156" },
+        { label: "Non-government school · Group B+", amount: "₹369" },
       ],
-      feeSummary: "₹105 for government school, ₹369 for non / semi-government school",
+      feeSummary: "₹156 for government schools (B), ₹369 for non-government schools (B+)",
       quiz: "Std 10 level, Rounds 1 to 3 online",
       prize: schoolPrize,
       journey: groupsJourney,
@@ -226,15 +226,15 @@ export const olympiad: OlympiadContent = {
       title: "Group C, students above 18",
       who: "Age 18+, students only",
       finder: "A student above 18 (12th pass, college or higher studies)",
-      fees: [{ label: "Fee", amount: "₹639" }],
-      feeSummary: "₹639",
+      fees: [{ label: "Fee", amount: "₹651" }],
+      feeSummary: "₹651",
       quiz: "Std 12 basic level, Rounds 1 to 3 online",
       prize: `${schoolPrize}. Also in the lucky draw for the Sindhu Darshan yatra, Leh-Ladakh.`,
       journey: [
         { title: "Online quiz, Rounds 1 to 3" },
         { title: "Rounds 4 and 5 at one offline camp", note: "Marine camp in Gujarat, for students selected in Round 3" },
         { title: "Astro Adventure Trekking Camp, Manali", note: "For students selected in Round 5", goal: true },
-        { title: "Lucky draw for the Sindhu Darshan yatra, Leh-Ladakh", note: "Groups C and D together", goal: true },
+        { title: "Lucky draw for the Sindhu Darshan yatra, Leh-Ladakh", note: "Groups C, D and E together", goal: true },
       ],
     },
     {
@@ -242,16 +242,33 @@ export const olympiad: OlympiadContent = {
       name: "Group D",
       short: "Adults 25+",
       title: "Group D, adults above 25",
-      who: "Everyone above 25: employees, professionals, business owners, homemakers, environmentalists, sports persons and nature lovers",
+      who: "Everyone above 25: employees, professionals, business owners, homemakers, environmentalists, sports persons and nature lovers. Teachers join Group E.",
       finder: "An adult above 25",
-      fees: [{ label: "Fee", amount: "₹1,963" }],
-      feeSummary: "₹1,963",
+      fees: [{ label: "Fee", amount: "₹1,651" }],
+      feeSummary: "₹1,651",
       quiz: "No online quiz. Direct entry to Round 4 after a document check.",
       prize: "lucky draw for the Sindhu Darshan yatra, Leh-Ladakh (100% scholarship*), plus the Lavkumar Khachar scholarship of up to 60%",
       journey: [
         { title: "Register and share documents", note: "Required government documents are checked" },
         { title: "Direct entry to Round 4", note: "In-person lucky draw and selection by the institution" },
-        { title: "Lucky draw for the Sindhu Darshan yatra, Leh-Ladakh", note: "Groups C and D together", goal: true },
+        { title: "Lucky draw for the Sindhu Darshan yatra, Leh-Ladakh", note: "Groups C, D and E together", goal: true },
+      ],
+    },
+    {
+      id: "E",
+      name: "Group E",
+      short: "Teachers",
+      title: "Group E, teachers",
+      who: "Teachers only, of any school or college",
+      finder: "A teacher",
+      fees: [{ label: "Fee", amount: "₹963" }],
+      feeSummary: "₹963",
+      quiz: "No online quiz. Direct entry to Round 4 after a document check.",
+      prize: "lucky draw for the Sindhu Darshan yatra, Leh-Ladakh (100% scholarship*), plus the Lavkumar Khachar scholarship of up to 60%",
+      journey: [
+        { title: "Register and share documents", note: "Required government documents are checked" },
+        { title: "Direct entry to Round 4", note: "In-person lucky draw and selection by the institution" },
+        { title: "Lucky draw for the Sindhu Darshan yatra, Leh-Ladakh", note: "Groups C, D and E together", goal: true },
       ],
     },
   ],
@@ -305,12 +322,12 @@ export const olympiad: OlympiadContent = {
       img: "/img/olympiad/lavkumar-khachar.webp",
       alt: "Sir K.S. Lavkumar Khachar",
       focus: "object-[center_30%]",
-      kicker: "Scholarship 2 · Group D",
+      kicker: "Scholarship 2 · Groups D and E",
       name: "Sir K.S. (Jasdan) Lavkumar Khachar Adventure Scholarship",
       life: "Naturalist and visionary of this scholarship",
       quote: "He started nature education camps for young people in Gujarat.",
       award: "Up to 60%",
-      awardFor: "for selected adults of Group D",
+      awardFor: "for selected adults of Groups D and E",
       facts: [
         ["Nature", "Noted ornithologist from the Jasdan family. Worked with Dr. Salim Ali."],
         ["Education", "Began the nature education movement in Gujarat with WWF India, 1976"],
@@ -333,9 +350,9 @@ export const olympiad: OlympiadContent = {
     {
       img: "/img/olympiad/ladakh-trek.webp",
       alt: "Trekkers crossing a rocky stream below Kangyatse peak in the Markha valley, Ladakh",
-      groups: "Groups C and D",
+      groups: "Groups C, D and E",
       title: "Sindhu Darshan yatra, Leh-Ladakh",
-      text: "Chosen by lucky draw from Groups C and D, with a 100% scholarship as per the official notice.",
+      text: "Chosen by lucky draw from Groups C, D and E, with a 100% scholarship as per the official notice.",
       place: "Leh-Ladakh",
       meta: "2026-27",
     },
@@ -346,7 +363,7 @@ export const olympiad: OlympiadContent = {
     ["Under 18?", " A parent or guardian adds their details and consent in the form."],
     ["Selection is not only the quiz.", " The Trust also looks at past activities, competitions, medical fitness and teachers' opinion."],
     ["Quiz links and times", " come on the WhatsApp number in the form."],
-    ["Group D", " must share the required government documents."],
+    ["Groups D and E", " must share the required government documents."],
     ["Results", " of every round are posted on the notice board."],
     ["The institution's decision is final", " on all rules and selection."],
   ],
@@ -365,7 +382,8 @@ export const olympiad: OlympiadContent = {
     },
     {
       question: "Can adults above 25 join?",
-      answer: "Yes. They join Group D. There is no online quiz for Group D. They enter directly at Round 4 after a document check.",
+      answer:
+        "Yes. They join Group D, and teachers join Group E. There is no online quiz for Groups D and E. They enter directly at Round 4 after a document check.",
     },
     {
       question: "How do I register?",
@@ -377,7 +395,7 @@ export const olympiad: OlympiadContent = {
     },
     {
       question: "What does the scholarship cover?",
-      answer: "It is a share of the ₹18,000 camp fee. Groups A, B and C can get 60 to 100%. Group D can get up to 60%.",
+      answer: "It is a share of the ₹18,000 camp fee. Groups A, B and C can get 60 to 100%. Groups D and E can get up to 60%.",
     },
     {
       question: "Can a school register all its students together?",
@@ -396,6 +414,7 @@ export const olympiad: OlympiadContent = {
     { value: "B", label: "Group B, Std 10 or 11" },
     { value: "C", label: "Group C, student above 18" },
     { value: "D", label: "Group D, adult above 25" },
+    { value: "E", label: "Group E, teacher" },
     { value: "school", label: "A school or class (teacher)" },
     { value: "unsure", label: "Not sure yet" },
   ],
@@ -431,7 +450,7 @@ export const olympiad: OlympiadContent = {
       groups: {
         eyebrow: "Groups and fees",
         title: "Find the right group",
-        lead: "There are four groups. Each one has its own fee, journey and prize. Pick the class or age to see the right one.",
+        lead: "There are five groups. Each one has its own fee, journey and prize. Pick the class or age to see the right one.",
       },
       partners: {
         eyebrow: "For schools and teachers",
