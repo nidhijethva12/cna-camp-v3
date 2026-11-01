@@ -52,7 +52,10 @@ const LAST_ADMIN = "At least one Admin account must remain, so the site always h
 
 /** The very first account (made on /admin's first-user screen) is the Admin. */
 const firstAccountIsAdmin: CollectionBeforeChangeHook = async ({ data, operation, req }) => {
-  if (operation === "create" && (await req.payload.count({ collection: "users", req })).totalDocs === 0) data.role = "admin";
+  if (operation !== "create") return data;
+  // A plain find: MongoDB can't run a whole-collection count inside the transaction a save runs in.
+  const { docs } = await req.payload.find({ collection: "users", limit: 1, depth: 0, pagination: false, req });
+  if (!docs.length) data.role = "admin";
   return data;
 };
 

@@ -7,6 +7,7 @@ import { lexicalEditor } from "@payloadcms/richtext-lexical";
 import { buildConfig } from "payload";
 import sharp from "sharp";
 import { Batches } from "./cms/collections/Batches";
+import { Documents } from "./cms/collections/Documents";
 import { Enquiries } from "./cms/collections/Enquiries";
 import { Faqs } from "./cms/collections/Faqs";
 import { Media } from "./cms/collections/Media";
@@ -78,7 +79,7 @@ export default buildConfig({
       },
     },
   },
-  collections: [Trips, Batches, Posts, Reviews, Faqs, Notices, Media, Videos, Enquiries, Users],
+  collections: [Trips, Batches, Posts, Reviews, Faqs, Notices, Media, Documents, Videos, Enquiries, Users],
   globals: [HomePage, SiteSettings, OlympiadPage],
   localization: {
     locales: [
@@ -104,7 +105,12 @@ export default buildConfig({
     vercelBlobStorage({
       enabled: Boolean(process.env.BLOB_READ_WRITE_TOKEN),
       token: process.env.BLOB_READ_WRITE_TOKEN,
-      collections: { media: { disablePayloadAccessControl: true }, videos: { disablePayloadAccessControl: true } },
+      collections: {
+        media: { disablePayloadAccessControl: true },
+        videos: { disablePayloadAccessControl: true },
+        // Own folder, so a new notice never reuses an address the storage cache still remembers.
+        documents: { prefix: "documents", disablePayloadAccessControl: true },
+      },
       clientUploads: true,
     }),
   ],

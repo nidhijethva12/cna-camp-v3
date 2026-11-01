@@ -72,7 +72,10 @@ function toOlympiad(doc: Loose<OlympiadPage>, fb: OlympiadContent): OlympiadCont
     opensOn: str(doc.opensOn, fb.opensOn),
     motto: str(doc.motto, fb.motto),
     meta: strings(doc.meta, fb.meta),
-    notice: strings(doc.notice, fb.notice),
+    notice: {
+      ...strings({ title: doc.notice?.title, meta: doc.notice?.meta, href: doc.notice?.href }, fb.notice),
+      ...(typeof doc.notice?.file === "object" && doc.notice.file?.url ? { href: doc.notice.file.url } : {}),
+    },
     dates: list(doc.dates, fb.dates, (d, f) => ({
       when: str(d.when, f?.when),
       title: str(d.title, f?.title),
@@ -145,6 +148,6 @@ function toOlympiad(doc: Loose<OlympiadPage>, fb: OlympiadContent): OlympiadCont
 /** Olympiad page text in one language: the admin's copy, with the static copy filling anything left empty. */
 export const getOlympiadContent = cache(async (locale: "en" | "gu"): Promise<OlympiadContent> => {
   const payload = await getCms();
-  const doc = await payload.findGlobal({ slug: "olympiad-page", locale, fallbackLocale: "en", depth: 0 });
+  const doc = await payload.findGlobal({ slug: "olympiad-page", locale, fallbackLocale: "en", depth: 1 });
   return toOlympiad(doc, locale === "gu" ? olympiadGu : olympiad);
 });
