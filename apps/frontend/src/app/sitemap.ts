@@ -26,6 +26,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [trips, posts] = await Promise.all([getTrips(), getPosts()]);
   return [
     ...publicPages.map((path) => ({ url: absoluteUrl(path) })),
+    ...["/olympiad", "/olympiad/gu"].map((path) => ({
+      url: absoluteUrl(path),
+      alternates: { languages: { en: absoluteUrl("/olympiad"), gu: absoluteUrl("/olympiad/gu") } },
+    })),
     ...trips.map((trip) => ({ url: absoluteUrl(`/trips/${trip.slug}`), lastModified: trip.updatedAt })),
     ...posts.map((post) => ({ url: absoluteUrl(`/blog/${post.slug}`), lastModified: post.updatedAt })),
   ];

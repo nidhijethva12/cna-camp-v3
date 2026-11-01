@@ -1,6 +1,6 @@
 import type { CollectionConfig } from "payload";
 import { ValidationError } from "payload";
-import { anyone, signedIn } from "../access";
+import { anyone, canEdit, hiddenFromAuthors } from "../access";
 import { sampleField } from "../fields";
 import { revalidateSite } from "../hooks/revalidate";
 
@@ -10,12 +10,13 @@ export const Batches: CollectionConfig = {
   slug: "batches",
   labels: { singular: "Batch", plural: "Batches" },
   admin: {
+    hidden: hiddenFromAuthors,
     group: "Trips",
     useAsTitle: "label",
     defaultColumns: ["label", "startDate", "endDate", "seatsLeft", "note"],
     description: "Fixed departure dates. Past batches drop off the site automatically.",
   },
-  access: { read: anyone, create: signedIn, update: signedIn, delete: signedIn },
+  access: { read: anyone, create: canEdit, update: canEdit, delete: canEdit },
   defaultSort: "startDate",
   hooks: {
     ...revalidateSite,

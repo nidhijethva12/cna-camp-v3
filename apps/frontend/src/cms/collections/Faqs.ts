@@ -1,17 +1,18 @@
 import type { CollectionConfig } from "payload";
-import { anyone, signedIn } from "../access";
+import { anyone, canEdit, hiddenFromAuthors } from "../access";
 import { revalidateSite } from "../hooks/revalidate";
 
 export const Faqs: CollectionConfig = {
   slug: "faqs",
   labels: { singular: "FAQ", plural: "FAQs" },
   admin: {
+    hidden: hiddenFromAuthors,
     group: "Website",
     useAsTitle: "question",
     defaultColumns: ["question", "order", "showOnHome"],
     description: "Shown on the About page. Ticked ones also appear on the home page.",
   },
-  access: { read: anyone, create: signedIn, update: signedIn, delete: signedIn },
+  access: { read: anyone, create: canEdit, update: canEdit, delete: canEdit },
   defaultSort: "order",
   hooks: revalidateSite,
   fields: [

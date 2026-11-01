@@ -1,8 +1,16 @@
-import type { CollectionConfig } from "payload";
-import { publishedOrSignedIn, signedIn } from "../access";
+import { APIError, type CollectionBeforeChangeHook, type CollectionConfig } from "payload";
+import { canEdit, publishedOrSignedIn, roleOf, signedIn } from "../access";
 import { seoField, slugField } from "../fields";
 import { revalidateSite } from "../hooks/revalidate";
 import { sitePreview } from "../preview";
+
+/** Authors write and save drafts; an Editor or Admin reviews and publishes. */
+const authorsSaveDrafts: CollectionBeforeChangeHook = ({ data, req }) => {
+  if (roleOf(req.user) === "author" && data._status === "published") {
+    throw new APIError("Authors can save drafts only. An Editor or Admin will publish this post.", 403, null, true);
+  }
+  return data;
+};
 
 export const Posts: CollectionConfig = {
   slug: "posts",
@@ -13,10 +21,10 @@ export const Posts: CollectionConfig = {
     defaultColumns: ["title", "publishedAt", "_status"],
     preview: sitePreview((doc) => `/blog/${doc.slug}`),
   },
-  access: { read: publishedOrSignedIn, create: signedIn, update: signedIn, delete: signedIn },
+  access: { read: publishedOrSignedIn, create: signedIn, update: signedIn, delete: canEdit },
   versions: { drafts: true, maxPerDoc: 30 },
   defaultSort: "-publishedAt",
-  hooks: revalidateSite,
+  hooks: { ...revalidateSite, beforeChange: [authorsSaveDrafts] },
   fields: [
     { name: "title", type: "text", required: true },
     { name: "excerpt", type: "textarea", required: true, maxLength: 240 },

@@ -1,6 +1,6 @@
 export type GroupId = "A" | "B" | "C" | "D";
 
-type JourneyStep = { year?: string; title: string; note?: string; goal?: boolean };
+export type JourneyStep = { year?: string; title: string; note?: string; goal?: boolean };
 
 export interface OlympiadGroup {
   id: GroupId;
@@ -17,6 +17,107 @@ export interface OlympiadGroup {
   journey: JourneyStep[];
 }
 
+type SectionText = { eyebrow: string; title: string; lead?: string };
+
+/** Every piece of text on the Olympiad page, in one language. English and Gujarati share this shape. */
+export interface OlympiadContent {
+  name: string;
+  eyebrow: string;
+  intro: string;
+  opensOn: string;
+  motto: string;
+  meta: { title: string; description: string; ogTitle: string; ogDescription: string };
+  notice: { title: string; meta: string; href: string };
+  dates: { when: string; title: string; note?: string; key?: boolean }[];
+  steps: { title: string; text: string; when: string }[];
+  glance: { icon: "questions" | "timer" | "star" | "language" | "book"; value: string; label: string }[];
+  groups: OlympiadGroup[];
+  partners: { kind: "school" | "ambassador"; icon: "school" | "ambassador"; title: string; cta: string; who: string; points: string[] }[];
+  scholarships: {
+    img: string;
+    alt: string;
+    focus: string;
+    kicker: string;
+    name: string;
+    life: string;
+    quote: string;
+    award: string;
+    awardFor: string;
+    facts: [string, string][];
+    pdf: { label: string; href: string };
+  }[];
+  prizes: {
+    img: string;
+    alt: string;
+    groups: string;
+    title: string;
+    text: string;
+    place: string;
+    meta: string;
+    link?: { label: string; href: string };
+  }[];
+  rules: [string, string][];
+  keepReady: string[];
+  faqs: { question: string; answer: string }[];
+  remindOptions: { value: string; label: string }[];
+  /** Labels, headings and buttons around the content above. */
+  ui: {
+    language: string;
+    bar: { opens: string; details: string };
+    contactUs: string;
+    seeGroups: string;
+    scholarshipLine: { before: string; value: string; after: string };
+    heroBadge: { title: string; text: string };
+    joint: { label: string; trustLine: string; cnaLine: string };
+    nav: {
+      notices: string;
+      how: string;
+      groups: string;
+      partners: string;
+      scholarships: string;
+      prizes: string;
+      rules: string;
+      faq: string;
+    };
+    sections: {
+      notices: SectionText;
+      how: SectionText;
+      groups: SectionText;
+      partners: SectionText;
+      scholarships: SectionText;
+      prizes: SectionText;
+      rules: SectionText;
+      faq: SectionText;
+    };
+    noticeBoard: {
+      title: string;
+      from: string;
+      live: string;
+      official: string;
+      viewPdf: string;
+      newTab: string;
+      moreTitle: string;
+      moreText: string;
+    };
+    keyDates: string;
+    glanceLabel: string;
+    register: { eyebrow: string; title: string; text: string; help: string; keepReady: string };
+    help: { title: string; text: string; whatsapp: string; whatsappMessage: string; call: string; trustEmail: string };
+    picker: {
+      participant: string;
+      choose: string;
+      empty: string;
+      thisIs: string;
+      fee: string;
+      quiz: string;
+      prize: string;
+      journey: string;
+      group: string;
+      tabsLabel: string;
+    };
+  };
+}
+
 const groupsJourney: JourneyStep[] = [
   { title: "Online quiz, Rounds 1 to 3" },
   { year: "2026-27", title: "Round 4, pre basic nature education camp in Gujarat", note: "For students selected in Round 3" },
@@ -28,15 +129,18 @@ const groupsJourney: JourneyStep[] = [
 const schoolPrize = "Astro Adventure Trekking Camp, Manali, with the Dr. Ketankumar Trivedi scholarship of 60 to 100%";
 
 // Adventure Olympiad 2.0, before registration opens. Copy from the approved design B.
-export const olympiad = {
+export const olympiad: OlympiadContent = {
   name: "Adventure Olympiad 2.0",
   eyebrow: "Eco-STEM quiz and scholarship",
   intro: "A quiz that can take you to a camp in the Himalaya. For school students, college students and adults who love nature.",
-  facts: [
-    ["4", "groups"],
-    ["5", "rounds"],
-    ["60 to 100%", "scholarship"],
-  ],
+  opensOn: "15 Nov 2026",
+  meta: {
+    title: "Adventure Olympiad 2.0: Eco-STEM Quiz & Himalaya Scholarship | CNA Camp",
+    description:
+      "An Eco-STEM quiz for Std 8 to 11, students above 18 and adults above 25. 4 groups, 5 rounds and a 60 to 100% scholarship on the ₹18,000 Manali camp. Registration opens 15 Nov 2026.",
+    ogTitle: "Adventure Olympiad 2.0: a quiz that can take you to the Himalaya",
+    ogDescription: "4 groups, 5 rounds and a 60 to 100% scholarship on the Manali camp. Registration opens 15 Nov 2026.",
+  },
   motto: "।। विद्यार्थी देवो भव ।।",
   notice: {
     title: "Olympiad 2.0 જાહેરનામું",
@@ -52,7 +156,7 @@ export const olympiad = {
     { when: "Around 21 Feb 2027", title: "Round 3, online quiz" },
     { when: "After Round 3", title: "Rounds 4 and 5, offline camps in Gujarat", note: "Venue and dates on the notice board." },
     { when: "Around 10 Mar 2027", title: "Final merit list", key: true },
-  ] as { when: string; title: string; note?: string; key?: boolean }[],
+  ],
   steps: [
     {
       title: "Register and pay",
@@ -81,7 +185,7 @@ export const olympiad = {
     { icon: "star", value: "100 marks", label: "in every round" },
     { icon: "language", value: "ગુજરાતી or English", label: "your choice" },
     { icon: "book", value: "5 subjects", label: "Maths, science, social science, GK, reasoning" },
-  ] as const,
+  ],
   groups: [
     {
       id: "A",
@@ -150,7 +254,7 @@ export const olympiad = {
         { title: "Lucky draw for the Sindhu Darshan yatra, Leh-Ladakh", note: "Groups C and D together", goal: true },
       ],
     },
-  ] satisfies OlympiadGroup[],
+  ],
   partners: [
     {
       kind: "school",
@@ -178,7 +282,7 @@ export const olympiad = {
         "Free to join",
       ],
     },
-  ] as const,
+  ],
   scholarships: [
     {
       img: "/img/olympiad/ketankumar-trivedi.webp",
@@ -295,4 +399,92 @@ export const olympiad = {
     { value: "school", label: "A school or class (teacher)" },
     { value: "unsure", label: "Not sure yet" },
   ],
+  ui: {
+    language: "Language",
+    bar: { opens: "Registration opens", details: "All details are below." },
+    contactUs: "Contact us",
+    seeGroups: "See the groups",
+    scholarshipLine: { before: "with up to", value: "100%", after: "scholarship" },
+    heroBadge: { title: "Manali", text: "Astro Adventure Trekking Camp" },
+    joint: { label: "A joint initiative of", trustLine: "Rajkot · Reg.", cnaLine: "Rajkot · camps and treks for 28+ years" },
+    nav: {
+      notices: "Notice board",
+      how: "How it works",
+      groups: "Groups",
+      partners: "Schools and teachers",
+      scholarships: "Scholarships",
+      prizes: "Prizes",
+      rules: "Rules",
+      faq: "FAQs",
+    },
+    sections: {
+      notices: {
+        eyebrow: "Notice board",
+        title: "Latest news and key dates",
+        lead: "Official notices, PDFs, quiz dates and results are posted here first. Please check before every round.",
+      },
+      how: {
+        eyebrow: "How it works",
+        title: "Five rounds, from quiz to camp",
+        lead: "Part of the Mountain, Desert and Marine project. It mixes science, nature and adventure.",
+      },
+      groups: {
+        eyebrow: "Groups and fees",
+        title: "Find the right group",
+        lead: "There are four groups. Each one has its own fee, journey and prize. Pick the class or age to see the right one.",
+      },
+      partners: {
+        eyebrow: "For schools and teachers",
+        title: "Bring your whole class, or spread the word",
+        lead: "Schools can register many students from one place. Teachers and other people can share a personal code and get recognised for every student who joins.",
+      },
+      scholarships: {
+        eyebrow: "Scholarships",
+        title: "Named after two lamps of nature",
+        lead: "Both scholarships are on the ₹18,000 camp fee. They carry the names of two men who spent their lives taking young people into nature.",
+      },
+      prizes: { eyebrow: "The prizes", title: "Where the winners go" },
+      rules: { eyebrow: "Before you register", title: "Rules in one place" },
+      faq: { eyebrow: "FAQs", title: "Questions parents and participants ask" },
+    },
+    noticeBoard: {
+      title: "Notice board",
+      from: "From the CNA team",
+      live: "Live",
+      official: "Official",
+      viewPdf: "View PDF",
+      newTab: "(opens in a new tab)",
+      moreTitle: "More updates coming soon",
+      moreText: "Quiz dates, links and results will be posted here as each round comes up.",
+    },
+    keyDates: "Key dates",
+    glanceLabel: "The quiz at a glance",
+    register: {
+      eyebrow: "Registration",
+      title: "Registration opens on",
+      text: "Questions before then? Leave your details and the CNA team will get back to you.",
+      help: "Help:",
+      keepReady: "Keep these ready",
+    },
+    help: {
+      title: "Need help?",
+      text: "Questions about groups, fees or the quiz? Message or call the CNA team.",
+      whatsapp: "WhatsApp us",
+      whatsappMessage: "Hi, I have a question about Adventure Olympiad 2.0",
+      call: "Call",
+      trustEmail: "Trust email:",
+    },
+    picker: {
+      participant: "The participant is",
+      choose: "Choose class or age",
+      empty: "The group shows here.",
+      thisIs: "This is",
+      fee: "Fee",
+      quiz: "Quiz",
+      prize: "Prize:",
+      journey: "The journey",
+      group: "Group",
+      tabsLabel: "Groups",
+    },
+  },
 };

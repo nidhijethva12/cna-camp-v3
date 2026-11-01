@@ -1,5 +1,5 @@
 import type { CollectionConfig } from "payload";
-import { publishedOrSignedIn, signedIn } from "../access";
+import { canEdit, hiddenFromAuthors, publishedOrSignedIn } from "../access";
 import { sampleField, seoField, slugField, textList } from "../fields";
 import { revalidateSite } from "../hooks/revalidate";
 import { campusOptions, difficultyOptions, monthOptions, regionOptions, tripTypeOptions } from "../options";
@@ -8,13 +8,14 @@ import { sitePreview } from "../preview";
 export const Trips: CollectionConfig = {
   slug: "trips",
   admin: {
+    hidden: hiddenFromAuthors,
     group: "Trips",
     useAsTitle: "name",
     defaultColumns: ["name", "region", "type", "featured", "_status", "updatedAt"],
     listSearchableFields: ["name", "slug", "location"],
     preview: sitePreview((doc) => `/trips/${doc.slug}`),
   },
-  access: { read: publishedOrSignedIn, create: signedIn, update: signedIn, delete: signedIn },
+  access: { read: publishedOrSignedIn, create: canEdit, update: canEdit, delete: canEdit },
   versions: { drafts: true, maxPerDoc: 20 },
   defaultSort: "order",
   hooks: revalidateSite,

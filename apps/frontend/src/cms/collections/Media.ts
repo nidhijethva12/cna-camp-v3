@@ -1,7 +1,7 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import type { CollectionConfig } from "payload";
-import { anyone, signedIn } from "../access";
+import { anyone, canEdit, signedIn } from "../access";
 import { revalidateSite } from "../hooks/revalidate";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -10,7 +10,8 @@ export const Media: CollectionConfig = {
   slug: "media",
   labels: { singular: "Photo", plural: "Photos" },
   admin: { group: "Website", useAsTitle: "alt", defaultColumns: ["filename", "alt", "ownedByCna", "updatedAt"] },
-  access: { read: anyone, create: signedIn, update: signedIn, delete: signedIn },
+  // Authors upload photos for their posts; only Editors and Admins delete.
+  access: { read: anyone, create: signedIn, update: signedIn, delete: canEdit },
   hooks: revalidateSite,
   upload: {
     // Local disk (gitignored) in development; Vercel Blob when its token is set (payload.config.ts).

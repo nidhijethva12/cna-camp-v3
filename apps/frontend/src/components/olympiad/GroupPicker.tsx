@@ -3,7 +3,7 @@
 import { useRef, useState, type KeyboardEvent } from "react";
 import { Select } from "@/components/ui/Select";
 import { Mountains } from "@/components/ui/icons";
-import type { GroupId, OlympiadGroup } from "@/content/olympiad";
+import type { GroupId, OlympiadContent, OlympiadGroup } from "@/content/olympiad";
 
 /** Each group keeps one colour across its tab, panel edge and fee tiles. */
 const tone: Record<GroupId, { tab: string; selected: string; edge: string; tile: string }> = {
@@ -34,7 +34,7 @@ const tone: Record<GroupId, { tab: string; selected: string; edge: string; tile:
 };
 
 /** "Find the right group": the class/age picker selects the matching tab, and the tabs can be used on their own. */
-export function GroupPicker({ groups }: { groups: OlympiadGroup[] }) {
+export function GroupPicker({ groups, labels }: { groups: OlympiadGroup[]; labels: OlympiadContent["ui"]["picker"] }) {
   const [active, setActive] = useState<GroupId>(groups[0].id);
   const [picked, setPicked] = useState("");
   const tabs = useRef<(HTMLButtonElement | null)[]>([]);
@@ -53,10 +53,10 @@ export function GroupPicker({ groups }: { groups: OlympiadGroup[] }) {
     <>
       <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3 rounded-card bg-dark px-5 py-4.5 text-light sm:px-6">
         <label className="contents">
-          <span className="font-display text-[16px] font-bold">The participant is</span>
+          <span className="font-display text-[16px] font-bold">{labels.participant}</span>
           <Select
             name="participant"
-            emptyLabel="Choose class or age"
+            emptyLabel={labels.choose}
             options={groups.map((g) => ({ value: g.id, label: g.finder }))}
             value={picked}
             onValueChange={(v) => {
@@ -69,15 +69,15 @@ export function GroupPicker({ groups }: { groups: OlympiadGroup[] }) {
         <output aria-live="polite" className="text-[15px] text-light/75">
           {match ? (
             <>
-              This is <b className="text-secondary">{match.name}</b>. Fee: {match.feeSummary}.
+              {labels.thisIs} <b className="text-secondary">{match.name}</b>. {labels.fee}: {match.feeSummary}.
             </>
           ) : (
-            "The group shows here."
+            labels.empty
           )}
         </output>
       </div>
 
-      <div role="tablist" aria-label="Groups" className="mt-4 grid grid-cols-4 gap-2">
+      <div role="tablist" aria-label={labels.tabsLabel} className="mt-4 grid grid-cols-4 gap-2">
         {groups.map((g, i) => (
           <button
             key={g.id}
@@ -95,7 +95,7 @@ export function GroupPicker({ groups }: { groups: OlympiadGroup[] }) {
             className={`group flex min-h-12.5 flex-col items-center justify-center rounded-card border border-t-4 border-line bg-light p-1.5 text-center sm:min-h-15.5 sm:items-start sm:px-3.5 sm:py-2 sm:text-left ${tone[g.id].tab} ${tone[g.id].selected}`}
           >
             <b className="font-display text-[16px] font-bold">
-              <span className="max-[380px]:sr-only">Group </span>
+              <span className="max-[380px]:sr-only">{labels.group} </span>
               {g.id}
             </b>
             <span className="hidden text-[13px] text-muted group-aria-selected:text-inherit group-aria-selected:opacity-75 sm:block">
@@ -128,19 +128,19 @@ export function GroupPicker({ groups }: { groups: OlympiadGroup[] }) {
                 </div>
               ))}
               <div className={`col-span-2 min-w-0 rounded-card px-4 py-3.5 ${tone[g.id].tile}`}>
-                <dt className="text-[13px] font-semibold text-muted">Quiz</dt>
+                <dt className="text-[13px] font-semibold text-muted">{labels.quiz}</dt>
                 <dd className="text-[16px] font-semibold">{g.quiz}</dd>
               </div>
             </dl>
             <p className="mt-3 flex items-start gap-3 rounded-card bg-primary-soft px-4 py-3.5 text-[15px]">
               <Mountains className="mt-0.5 shrink-0 text-[20px] text-primary" />
               <span>
-                <b>Prize:</b> {g.prize}
+                <b>{labels.prize}</b> {g.prize}
               </span>
             </p>
           </div>
           <div>
-            <h4 className="text-[14px] font-bold text-primary">The journey</h4>
+            <h4 className="text-[14px] font-bold text-primary">{labels.journey}</h4>
             <ol className="mt-3.5">
               {g.journey.map((s) => (
                 <li

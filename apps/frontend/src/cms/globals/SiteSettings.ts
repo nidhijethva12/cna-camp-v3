@@ -1,13 +1,13 @@
 import type { GlobalConfig } from "payload";
-import { anyone, signedIn } from "../access";
+import { anyone, canEdit, hiddenFromAuthors } from "../access";
 import { httpUrl } from "../fields";
 import { revalidateSiteGlobal } from "../hooks/revalidate";
 
 export const SiteSettings: GlobalConfig = {
   slug: "site-settings",
   label: "Site settings",
-  admin: { group: "Settings", description: "Contact details and numbers used across the whole site." },
-  access: { read: anyone, update: signedIn },
+  admin: { hidden: hiddenFromAuthors, group: "Settings", description: "Contact details and numbers used across the whole site." },
+  access: { read: anyone, update: canEdit },
   hooks: revalidateSiteGlobal,
   fields: [
     {
