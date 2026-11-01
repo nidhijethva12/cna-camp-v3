@@ -74,6 +74,7 @@ export interface Config {
     faqs: Faq;
     notices: Notice;
     media: Media;
+    documents: Document;
     videos: Video;
     enquiries: Enquiry;
     users: User;
@@ -91,6 +92,7 @@ export interface Config {
     faqs: FaqsSelect<false> | FaqsSelect<true>;
     notices: NoticesSelect<false> | NoticesSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    documents: DocumentsSelect<false> | DocumentsSelect<true>;
     videos: VideosSelect<false> | VideosSelect<true>;
     enquiries: EnquiriesSelect<false> | EnquiriesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
@@ -540,6 +542,30 @@ export interface Notice {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "documents".
+ */
+export interface Document {
+  id: string;
+  /**
+   * What the PDF is, e.g. “Olympiad 2.0 official notice”.
+   */
+  title: string;
+  prefix?: string | null;
+  _objectKey?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "enquiries".
  */
 export interface Enquiry {
@@ -621,6 +647,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'media';
         value: string | Media;
+      } | null)
+    | ({
+        relationTo: 'documents';
+        value: string | Document;
       } | null)
     | ({
         relationTo: 'videos';
@@ -873,6 +903,26 @@ export interface MediaSelect<T extends boolean = true> {
               filename?: T;
             };
       };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "documents_select".
+ */
+export interface DocumentsSelect<T extends boolean = true> {
+  title?: T;
+  prefix?: T;
+  _objectKey?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1230,7 +1280,11 @@ export interface OlympiadPage {
      */
     meta: string;
     /**
-     * PDF link, e.g. /docs/olympiad-2-notice.pdf
+     * Upload a new notice here to replace the current one on the site, in both languages. Update “Details” above to match.
+     */
+    file?: (string | null) | Document;
+    /**
+     * Used only when no PDF is uploaded above, e.g. /docs/olympiad-2-notice.pdf
      */
     href: string;
   };
@@ -1773,6 +1827,7 @@ export interface OlympiadPageSelect<T extends boolean = true> {
     | {
         title?: T;
         meta?: T;
+        file?: T;
         href?: T;
       };
   dates?:

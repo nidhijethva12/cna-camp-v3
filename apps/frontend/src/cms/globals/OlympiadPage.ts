@@ -105,7 +105,17 @@ export const OlympiadPage: GlobalConfig = {
               fields: [
                 text("title"),
                 text("meta", { label: "Details", description: "Notice number, date and language." }),
-                link("href", "PDF link, e.g. /docs/olympiad-2-notice.pdf"),
+                {
+                  name: "file",
+                  label: "Notice PDF",
+                  type: "upload",
+                  relationTo: "documents",
+                  admin: {
+                    description:
+                      "Upload a new notice here to replace the current one on the site, in both languages. Update “Details” above to match.",
+                  },
+                },
+                link("href", "Used only when no PDF is uploaded above, e.g. /docs/olympiad-2-notice.pdf"),
               ],
             },
             {
