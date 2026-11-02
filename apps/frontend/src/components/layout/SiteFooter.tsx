@@ -35,7 +35,7 @@ export async function SiteFooter() {
             </p>
           </div>
           <p className="mt-5 max-w-sm text-light/70">
-            Treks, camps and outdoor learning from Rajkot since 1997. Backed by {site.trust.name}.
+            Treks, camps and outdoor learning from Rajkot for 28+ years. Backed by {site.trust.name}.
           </p>
           <div className="mt-6 flex gap-4">
             {social.map((s) => {

@@ -137,11 +137,11 @@ export const olympiad: OlympiadContent = {
   meta: {
     title: "Adventure Olympiad 2.0: Eco-STEM Quiz & Himalaya Scholarship | CNA Camp",
     description:
-      "An Eco-STEM quiz for Std 8 to 11, students above 18 and adults above 25. 5 groups, 5 rounds and a 60 to 100% scholarship on the ₹18,000 Manali camp. Registration opens 15 Nov 2026.",
+      "An Eco-STEM quiz for Std 8 to 11, students above 18 and adults aged 18+. 5 groups, 5 rounds and a 60 to 100% scholarship on the ₹18,000 Manali camp. Registration opens 15 Nov 2026.",
     ogTitle: "Adventure Olympiad 2.0: a quiz that can take you to the Himalaya",
     ogDescription: "5 groups, 5 rounds and a 60 to 100% scholarship on the Manali camp. Registration opens 15 Nov 2026.",
   },
-  motto: "।। विद्यार्थी देवो भव ।।",
+  motto: "।। વિદ્યાર્થી દેવો ભવ: ।।",
   notice: {
     title: "Olympiad 2.0 જાહેરનામું",
     meta: "Official notice no. 02/2026 · 20 Oct 2026 · Gujarati PDF",
@@ -190,15 +190,15 @@ export const olympiad: OlympiadContent = {
     {
       id: "A",
       name: "Group A",
-      short: "Std 8 and 9",
+      short: "Age 14 to 16",
       title: "Group A, school students",
-      who: "Age 14+ to 16, or Std 8 and 9",
-      finder: "In Std 8 or 9 (age 14+ to 16)",
+      who: "Age 14 to 16",
+      finder: "Age 14 to 16",
       fees: [
-        { label: "Government school · Group A", amount: "Free" },
-        { label: "Non-government school · Group A+", amount: "₹230" },
+        { label: "Group A, govt school", amount: "Free" },
+        { label: "Group A, non-govt school", amount: "₹230" },
       ],
-      feeSummary: "free for government schools (A), ₹230 for non-government schools (A+)",
+      feeSummary: "free for govt schools, ₹230 for non-govt schools",
       quiz: "Std 8 level, Rounds 1 to 3 online",
       prize: schoolPrize,
       journey: groupsJourney,
@@ -206,15 +206,15 @@ export const olympiad: OlympiadContent = {
     {
       id: "B",
       name: "Group B",
-      short: "Std 10 and 11",
+      short: "Age 16+ to 18",
       title: "Group B, senior school",
-      who: "Age 16+ to 18, or Std 10 and 11",
-      finder: "In Std 10 or 11 (age 16+ to 18)",
+      who: "Age 16+ to 18",
+      finder: "Age 16+ to 18",
       fees: [
-        { label: "Government school · Group B", amount: "₹156" },
-        { label: "Non-government school · Group B+", amount: "₹369" },
+        { label: "Group B, govt school", amount: "₹156" },
+        { label: "Group B, non-govt school", amount: "₹369" },
       ],
-      feeSummary: "₹156 for government schools (B), ₹369 for non-government schools (B+)",
+      feeSummary: "₹156 for govt schools, ₹369 for non-govt schools",
       quiz: "Std 10 level, Rounds 1 to 3 online",
       prize: schoolPrize,
       journey: groupsJourney,
@@ -240,10 +240,10 @@ export const olympiad: OlympiadContent = {
     {
       id: "D",
       name: "Group D",
-      short: "Adults 25+",
-      title: "Group D, adults above 25",
-      who: "Everyone above 25: employees, professionals, business owners, homemakers, environmentalists, sports persons and nature lovers. Teachers join Group E.",
-      finder: "An adult above 25",
+      short: "Age 18+",
+      title: "Group D, age 18+",
+      who: "Age 18+: employees, professionals, business owners, homemakers, environmentalists, sports persons and nature lovers. Teachers join Group E.",
+      finder: "An adult, age 18+",
       fees: [{ label: "Fee", amount: "₹1,651" }],
       feeSummary: "₹1,651",
       quiz: "No online quiz. Direct entry to Round 4 after a document check.",
@@ -259,7 +259,7 @@ export const olympiad: OlympiadContent = {
       name: "Group E",
       short: "Teachers",
       title: "Group E, teachers",
-      who: "Teachers only, of any school or college",
+      who: "Recognised school teachers, including retired. No age limit.",
       finder: "A teacher",
       fees: [{ label: "Fee", amount: "₹963" }],
       feeSummary: "₹963",
@@ -378,10 +378,10 @@ export const olympiad: OlympiadContent = {
     {
       question: "Who can take part?",
       answer:
-        'School students of Std 8 to 11, students above 18 (12th pass, college or higher studies), and adults above 25 who love nature, adventure or sport. Use "Find the right group" above.',
+        'School students of Std 8 to 11, students above 18 (12th pass, college or higher studies), and adults aged 18+ who love nature, adventure or sport. Use "Find the right group" above.',
     },
     {
-      question: "Can adults above 25 join?",
+      question: "Can adults join?",
       answer:
         "Yes. They join Group D, and teachers join Group E. There is no online quiz for Groups D and E. They enter directly at Round 4 after a document check.",
     },
@@ -397,23 +397,13 @@ export const olympiad: OlympiadContent = {
       question: "What does the scholarship cover?",
       answer: "It is a share of the ₹18,000 camp fee. Groups A, B and C can get 60 to 100%. Groups D and E can get up to 60%.",
     },
-    {
-      question: "Can a school register all its students together?",
-      answer:
-        'Yes. The school signs up once, adds students by Excel or a class link, and can pay for everyone in one payment. See "For schools and teachers" above.',
-    },
-    {
-      question: "How does the Ambassador programme work?",
-      answer:
-        "Sign up, get your own code and link, and share it. Every paid registration through your code is counted, and CNA gives a certificate and rewards at milestones.",
-    },
     { question: "Where are results posted?", answer: "On the notice board of this page, and on WhatsApp." },
   ],
   remindOptions: [
-    { value: "A", label: "Group A, Std 8 or 9" },
-    { value: "B", label: "Group B, Std 10 or 11" },
+    { value: "A", label: "Group A, age 14 to 16" },
+    { value: "B", label: "Group B, age 16+ to 18" },
     { value: "C", label: "Group C, student above 18" },
-    { value: "D", label: "Group D, adult above 25" },
+    { value: "D", label: "Group D, age 18+" },
     { value: "E", label: "Group E, teacher" },
     { value: "school", label: "A school or class (teacher)" },
     { value: "unsure", label: "Not sure yet" },

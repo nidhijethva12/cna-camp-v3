@@ -104,9 +104,6 @@ export const safetyPoints = [
   ["Plans bend for safety", "Weather, roads or a tired group can change the day. A group meeting before every camp sets the rules."],
 ];
 
-/** Placeholder roles until CNA shares team names and photos. */
-export const teamRoles = ["Trip leader", "Trip leader", "Instructor", "Camp coordinator"];
-
 /** Home page "Who we are" block, from the client's final home page copy. */
 export const homeStory = {
   image: "cna/real/group-06" as PhotoKey,

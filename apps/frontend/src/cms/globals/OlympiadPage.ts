@@ -78,7 +78,7 @@ export const OlympiadPage: GlobalConfig = {
             long("intro", { description: "Short paragraph under the name." }),
             row(
               text("opensOn", { label: "Opens on", description: "Date registration opens, as shown, e.g. 15 Nov 2026" }),
-              text("motto", { description: "Line in the top bar, e.g. ।। विद्यार्थी देवो भव ।।" }),
+              text("motto", { description: "Line in the top bar, e.g. ।। વિદ્યાર્થી દેવો ભવ: ।।" }),
             ),
             {
               name: "meta",
