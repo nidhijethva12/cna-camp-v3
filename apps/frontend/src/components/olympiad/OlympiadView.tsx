@@ -31,6 +31,9 @@ const partnerIcons = { school: GraduationCap, ambassador: UserCircleCheck } as c
 
 const sectionY = "py-[clamp(56px,7vw,80px)]";
 
+/** School registration and the Ambassador programme stay hidden until their dashboards are live. */
+const SHOW_PARTNERS = false;
+
 function SectionHead({ id, eyebrow, title, lead, dark }: { id: string; eyebrow: string; title: string; lead?: string; dark?: boolean }) {
   return (
     <>
@@ -65,9 +68,9 @@ function ContactCta({ className, children }: { className: string; children: Reac
 export function OlympiadView({ o, lang, contact }: { o: OlympiadContent; lang: OlympiadLang; contact: SiteSettings }) {
   const { ui } = o;
   const helpHref = whatsappLink(contact.whatsappNumber, ui.help.whatsappMessage);
-  const jumpLinks = (["notices", "how", "groups", "partners", "scholarships", "prizes", "rules", "faq"] as const).map(
-    (id) => [id, ui.nav[id]] as const,
-  );
+  const jumpLinks = (["notices", "how", "groups", "partners", "scholarships", "prizes", "rules", "faq"] as const)
+    .filter((id) => SHOW_PARTNERS || id !== "partners")
+    .map((id) => [id, ui.nav[id]] as const);
 
   return (
     <>
@@ -161,7 +164,7 @@ export function OlympiadView({ o, lang, contact }: { o: OlympiadContent; lang: O
               </div>
             </div>
           ))}
-          <p className="font-display text-[16px] font-extrabold whitespace-nowrap text-primary" lang="sa">
+          <p className="font-display text-[16px] font-extrabold whitespace-nowrap text-primary" lang="gu">
             {o.motto}
           </p>
         </div>
@@ -290,49 +293,51 @@ export function OlympiadView({ o, lang, contact }: { o: OlympiadContent; lang: O
         </div>
       </section>
 
-      <section id="partners" aria-labelledby="h-partners" className={`relative overflow-hidden bg-secondary/12 ${sectionY}`}>
-        <svg
-          aria-hidden="true"
-          viewBox="0 0 200 200"
-          className="pointer-events-none absolute top-7.5 -right-15 h-85 w-85 opacity-50 max-lg:hidden"
-        >
-          <g fill="none" strokeWidth="2" className="stroke-secondary">
-            <circle cx="100" cy="100" r="90" />
-            <circle cx="100" cy="100" r="64" strokeDasharray="4 6" />
-            <path d="M100 6v188M6 100h188" />
-          </g>
-          <path d="M100 20l12 80-12 80-12-80z" opacity=".8" className="fill-secondary" />
-          <path d="M100 20l12 80H88z" className="fill-primary" />
-        </svg>
-        <div className="wrap relative">
-          <SectionHead id="h-partners" {...ui.sections.partners} />
-          <div className="mt-8 grid gap-5 lg:grid-cols-2">
-            {o.partners.map((p, i) => {
-              const Icon = partnerIcons[p.icon];
-              return (
-                <article
-                  key={p.kind}
-                  className={`flex flex-col gap-3.5 rounded-card border border-t-4 border-secondary/30 bg-light p-7 shadow-card ${i === 0 ? "border-t-primary" : "border-t-dark"}`}
-                >
-                  <span className="flex h-13 w-13 items-center justify-center rounded-full bg-primary-soft text-[26px] text-primary">
-                    <Icon />
-                  </span>
-                  <h3 className="font-display text-[21px] font-extrabold">{p.title}</h3>
-                  <p className="text-[15.5px] text-muted">{p.who}</p>
-                  <ul className="grid gap-2">
-                    {p.points.map((point) => (
-                      <Tick key={point}>{point}</Tick>
-                    ))}
-                  </ul>
-                  <ContactCta className={`btn mt-auto self-start ${i === 0 ? "btn-primary" : "btn-dark"}`}>
-                    {ui.contactUs} <ArrowRight />
-                  </ContactCta>
-                </article>
-              );
-            })}
+      {SHOW_PARTNERS && (
+        <section id="partners" aria-labelledby="h-partners" className={`relative overflow-hidden bg-secondary/12 ${sectionY}`}>
+          <svg
+            aria-hidden="true"
+            viewBox="0 0 200 200"
+            className="pointer-events-none absolute top-7.5 -right-15 h-85 w-85 opacity-50 max-lg:hidden"
+          >
+            <g fill="none" strokeWidth="2" className="stroke-secondary">
+              <circle cx="100" cy="100" r="90" />
+              <circle cx="100" cy="100" r="64" strokeDasharray="4 6" />
+              <path d="M100 6v188M6 100h188" />
+            </g>
+            <path d="M100 20l12 80-12 80-12-80z" opacity=".8" className="fill-secondary" />
+            <path d="M100 20l12 80H88z" className="fill-primary" />
+          </svg>
+          <div className="wrap relative">
+            <SectionHead id="h-partners" {...ui.sections.partners} />
+            <div className="mt-8 grid gap-5 lg:grid-cols-2">
+              {o.partners.map((p, i) => {
+                const Icon = partnerIcons[p.icon];
+                return (
+                  <article
+                    key={p.kind}
+                    className={`flex flex-col gap-3.5 rounded-card border border-t-4 border-secondary/30 bg-light p-7 shadow-card ${i === 0 ? "border-t-primary" : "border-t-dark"}`}
+                  >
+                    <span className="flex h-13 w-13 items-center justify-center rounded-full bg-primary-soft text-[26px] text-primary">
+                      <Icon />
+                    </span>
+                    <h3 className="font-display text-[21px] font-extrabold">{p.title}</h3>
+                    <p className="text-[15.5px] text-muted">{p.who}</p>
+                    <ul className="grid gap-2">
+                      {p.points.map((point) => (
+                        <Tick key={point}>{point}</Tick>
+                      ))}
+                    </ul>
+                    <ContactCta className={`btn mt-auto self-start ${i === 0 ? "btn-primary" : "btn-dark"}`}>
+                      {ui.contactUs} <ArrowRight />
+                    </ContactCta>
+                  </article>
+                );
+              })}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       <section
         id="scholarships"

@@ -7,7 +7,7 @@ import { CountUp } from "@/components/ui/CountUp";
 import { FaqList } from "@/components/ui/FaqList";
 import { ArrowRight, CheckCircle } from "@/components/ui/icons";
 import { SectionHeader } from "@/components/ui/SectionHeader";
-import { different, ecoPrinciples, founder, mission, safetyPoints, storyParagraphs, teamRoles } from "@/content/about";
+import { different, ecoPrinciples, founder, mission, safetyPoints, storyParagraphs } from "@/content/about";
 import { site, yearsActive } from "@/content/site";
 import { getFaqs, getTrips } from "@/lib/content";
 
@@ -221,20 +221,6 @@ export default async function AboutPage() {
               </li>
             ))}
           </ul>
-        </div>
-      </section>
-
-      <section className="wrap mt-20">
-        <p className="eyebrow">Team &amp; trip leaders</p>
-        <h2 className="h-section mt-3">The people who will hold your rope</h2>
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {teamRoles.map((role, i) => (
-            <div key={i} className="rounded-card border border-line p-5">
-              <div className="aspect-square rounded-tag bg-soft" />
-              <p className="mt-4 font-bold">Name to add</p>
-              <p className="text-[13.5px] font-medium text-muted">{role}</p>
-            </div>
-          ))}
         </div>
       </section>
 
