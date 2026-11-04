@@ -7,9 +7,6 @@ const linkClass = "font-semibold text-dark underline";
 const name = site.legalName;
 const trust = `${site.trust.name} (Reg. ${site.trust.registration})`;
 
-/** "Last updated" on the terms, privacy and cancellation pages. */
-export const legalUpdated = "4 November 2026";
-
 /** The privacy policy's grievance officer, "Name, Role". Shown before the Trust's name once filled in. */
 const grievanceOfficer = "";
 

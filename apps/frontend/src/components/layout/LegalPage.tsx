@@ -13,12 +13,11 @@ export interface LegalSection {
 interface LegalPageProps {
   sections: LegalSection[];
   note?: string;
-  updated?: string;
 }
 
 const num = (i: number) => String(i + 1).padStart(2, "0");
 
-export function LegalPage({ sections, note, updated = "2 October 2026" }: LegalPageProps) {
+export function LegalPage({ sections, note }: LegalPageProps) {
   return (
     <div className="wrap mt-12 grid gap-10 lg:grid-cols-[240px_1fr]">
       <nav className="lg:sticky lg:top-28 lg:self-start" aria-label="On this page">
@@ -33,14 +32,13 @@ export function LegalPage({ sections, note, updated = "2 October 2026" }: LegalP
             </li>
           ))}
         </ol>
-        <p className="mt-6 text-[13.5px] font-medium text-muted">Last updated: {updated}</p>
       </nav>
       <div className="max-w-3xl">
         {note && <p className="mb-8 rounded-card border border-primary bg-primary-soft p-4 text-[15px]">{note}</p>}
         {sections.map((s, i) => (
           <section key={s.id} id={s.id} className="border-t border-line py-8 first:border-0 first:pt-0">
             <h2 className="h-sub">
-              <span className="mr-2 font-mono text-[14px] text-primary">{num(i)}</span>
+              <span className="mr-2.5 font-mono text-[18px] text-primary sm:text-[22px]">{num(i)}</span>
               {s.title}
             </h2>
             {s.body?.map((p, j) => (

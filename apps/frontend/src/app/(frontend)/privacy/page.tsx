@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { LegalPage } from "@/components/layout/LegalPage";
 import { PageHead } from "@/components/layout/PageHead";
-import { legalUpdated, privacySections } from "@/content/legal";
+import { privacySections } from "@/content/legal";
 import { getSiteSettings } from "@/lib/content";
 
 export const metadata: Metadata = {
@@ -26,7 +26,7 @@ export default async function PrivacyPage() {
         title={<>Privacy policy</>}
         text="What we collect, why we need it, and how you stay in control. Written for India’s Digital Personal Data Protection Act, 2023 (DPDP Act)."
       />
-      <LegalPage sections={privacySections(contact)} updated={legalUpdated} />
+      <LegalPage sections={privacySections(contact)} />
     </>
   );
 }

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { LegalPage } from "@/components/layout/LegalPage";
 import { PageHead } from "@/components/layout/PageHead";
-import { legalUpdated, termsSections } from "@/content/legal";
+import { termsSections } from "@/content/legal";
 import { getSiteSettings } from "@/lib/content";
 
 export const metadata: Metadata = {
@@ -26,7 +26,7 @@ export default async function TermsPage() {
         title={<>Terms &amp; conditions</>}
         text="How booking, payment, safety and changes work on a CNA trip, in plain words."
       />
-      <LegalPage sections={termsSections(contact)} updated={legalUpdated} />
+      <LegalPage sections={termsSections(contact)} />
     </>
   );
 }

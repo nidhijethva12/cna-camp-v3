@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { LegalPage } from "@/components/layout/LegalPage";
 import { PageHead } from "@/components/layout/PageHead";
-import { legalUpdated, cancellationSections } from "@/content/legal";
+import { cancellationSections } from "@/content/legal";
 import { getSiteSettings } from "@/lib/content";
 
 export const metadata: Metadata = {
@@ -26,7 +26,7 @@ export default async function CancellationPage() {
         title={<>Cancellation &amp; refund</>}
         text="Plans change. Exams move, someone falls ill. Here is exactly what happens if you need to cancel."
       />
-      <LegalPage sections={cancellationSections(contact)} updated={legalUpdated} />
+      <LegalPage sections={cancellationSections(contact)} />
     </>
   );
 }
