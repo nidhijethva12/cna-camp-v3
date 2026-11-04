@@ -14,6 +14,8 @@ export interface EnquiryFormProps {
   phone: { label: string; href: string };
   /** Trip pages pre-select their own trip. */
   defaultTrip?: string;
+  /** The Contact page's short form: name, email, phone and the enquiry, without the trip and traveller pickers. */
+  short?: boolean;
 }
 
 const initialState: EnquiryState = { status: "idle" };
@@ -22,7 +24,7 @@ const CONSENT_HINT = "Please accept the consent above to send your enquiry.";
 const options = (list: readonly string[]) => list.map((x) => ({ value: x, label: x }));
 
 /** The site's one enquiry form: every "Contact us" button leads here, so every lead has the same fields. */
-export function EnquiryFormClient({ trips, phone, defaultTrip = "" }: EnquiryFormProps) {
+export function EnquiryFormClient({ trips, phone, defaultTrip = "", short = false }: EnquiryFormProps) {
   const [state, formAction, pending] = useActionState(submitEnquiry, initialState);
   const [consent, setConsent] = useState(false);
   const pathname = usePathname();
@@ -48,6 +50,7 @@ export function EnquiryFormClient({ trips, phone, defaultTrip = "" }: EnquiryFor
       <p className="mt-2 text-[15px] text-muted">Tell us a little. We reply by email within a day.</p>
 
       <input type="hidden" name="sourcePath" value={pathname} />
+      {short && <input type="hidden" name="form" value="short" />}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute h-px w-px overflow-hidden whitespace-nowrap opacity-0 [clip-path:inset(50%)]"
@@ -58,7 +61,7 @@ export function EnquiryFormClient({ trips, phone, defaultTrip = "" }: EnquiryFor
       </div>
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2">
-        <Field label="Your name" field="name" required error={err("name")}>
+        <Field label="Your name" field="name" required error={err("name")} className={short ? "sm:col-span-2" : ""}>
           <input required name="name" defaultValue={v.name} autoComplete="name" maxLength={80} className="field mt-2" {...aria("name")} />
         </Field>
         <Field label="Phone / WhatsApp" field="phone" required error={err("phone")}>
@@ -75,7 +78,7 @@ export function EnquiryFormClient({ trips, phone, defaultTrip = "" }: EnquiryFor
           />
         </Field>
 
-        <Field label="Email" field="email" required error={err("email")} className="sm:col-span-2">
+        <Field label="Email" field="email" required error={err("email")} className={short ? "" : "sm:col-span-2"}>
           <input
             required
             name="email"
@@ -89,33 +92,45 @@ export function EnquiryFormClient({ trips, phone, defaultTrip = "" }: EnquiryFor
           />
         </Field>
 
-        <Field label="Trip" field="trip" error={err("trip")}>
-          <Select
-            name="trip"
-            emptyLabel="Not sure yet, suggest one"
-            options={trips.map((t) => ({ value: t.slug, label: t.name }))}
-            defaultValue={v.trip ?? defaultTrip}
-            className="mt-2"
-            {...aria("trip")}
-          />
-        </Field>
-        <Field label="Who’s travelling" field="travellerType" error={err("travellerType")}>
-          <Select
-            name="travellerType"
-            options={options(travellerTypes)}
-            defaultValue={v.travellerType}
-            className="mt-2"
-            {...aria("travellerType")}
-          />
-        </Field>
+        {!short && (
+          <>
+            <Field label="Trip" field="trip" error={err("trip")}>
+              <Select
+                name="trip"
+                emptyLabel="Not sure yet, suggest one"
+                options={trips.map((t) => ({ value: t.slug, label: t.name }))}
+                defaultValue={v.trip ?? defaultTrip}
+                className="mt-2"
+                {...aria("trip")}
+              />
+            </Field>
+            <Field label="Who’s travelling" field="travellerType" error={err("travellerType")}>
+              <Select
+                name="travellerType"
+                options={options(travellerTypes)}
+                defaultValue={v.travellerType}
+                className="mt-2"
+                {...aria("travellerType")}
+              />
+            </Field>
+          </>
+        )}
 
-        <Field label="Message (optional)" field="message" error={err("message")} className="sm:col-span-2">
+        <Field
+          label={short ? "Your enquiry" : "Message (optional)"}
+          field="message"
+          required={short}
+          error={err("message")}
+          className="sm:col-span-2"
+        >
           <textarea
             name="message"
+            required={short}
             maxLength={1000}
-            placeholder="Month, number of people, anything we should know"
+            placeholder={short ? "What would you like to know?" : "Month, number of people, anything we should know"}
             defaultValue={v.message}
             className="field mt-2 min-h-24"
+            {...aria("message")}
           />
         </Field>
         <div className="sm:col-span-2">

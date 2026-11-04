@@ -8,6 +8,7 @@ import { buildConfig } from "payload";
 import sharp from "sharp";
 import { Batches } from "./cms/collections/Batches";
 import { Documents } from "./cms/collections/Documents";
+import { Donors } from "./cms/collections/Donors";
 import { Enquiries } from "./cms/collections/Enquiries";
 import { Faqs } from "./cms/collections/Faqs";
 import { Media } from "./cms/collections/Media";
@@ -79,7 +80,7 @@ export default buildConfig({
       },
     },
   },
-  collections: [Trips, Batches, Posts, Reviews, Faqs, Notices, Media, Documents, Videos, Enquiries, Users],
+  collections: [Trips, Batches, Posts, Reviews, Donors, Faqs, Notices, Media, Documents, Videos, Enquiries, Users],
   globals: [HomePage, SiteSettings, OlympiadPage],
   localization: {
     locales: [

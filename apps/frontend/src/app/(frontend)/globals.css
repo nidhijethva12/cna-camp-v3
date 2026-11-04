@@ -491,6 +491,38 @@
       animation: none;
     }
   }
+
+  /* Donors strip: the same endless scroll as the filmstrip, paused on hover. */
+  .donors {
+    margin-top: 32px;
+    padding-block: 8px 24px;
+    overflow: hidden;
+  }
+  .donors-track {
+    display: flex;
+    gap: 20px;
+    width: max-content;
+    animation: var(--animate-film-roll);
+  }
+  .donors:hover .donors-track,
+  .donors:focus-within .donors-track {
+    animation-play-state: paused;
+  }
+  .donors-card {
+    flex-shrink: 0;
+    width: 270px;
+    @media (width >= 40rem) {
+      width: 310px;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .donors {
+      overflow-x: auto;
+    }
+    .donors-track {
+      animation: none;
+    }
+  }
 }
 
 @keyframes skeleton-shimmer {

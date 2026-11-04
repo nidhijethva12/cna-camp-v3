@@ -71,6 +71,7 @@ export interface Config {
     batches: Batch;
     posts: Post;
     reviews: Review;
+    donors: Donor;
     faqs: Faq;
     notices: Notice;
     media: Media;
@@ -89,6 +90,7 @@ export interface Config {
     batches: BatchesSelect<false> | BatchesSelect<true>;
     posts: PostsSelect<false> | PostsSelect<true>;
     reviews: ReviewsSelect<false> | ReviewsSelect<true>;
+    donors: DonorsSelect<false> | DonorsSelect<true>;
     faqs: FaqsSelect<false> | FaqsSelect<true>;
     notices: NoticesSelect<false> | NoticesSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
@@ -503,6 +505,43 @@ export interface Review {
   createdAt: string;
 }
 /**
+ * Shown on the home page in the order below. The phone number is for the team only and never appears on the site.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "donors".
+ */
+export interface Donor {
+  id: string;
+  name: string;
+  /**
+   * e.g. “Doctor”, “Businessman”
+   */
+  profession?: string | null;
+  photo?: (string | null) | Media;
+  /**
+   * Company or organisation, if any.
+   */
+  company?: string | null;
+  /**
+   * Leave empty to hide the amount.
+   */
+  amount?: number | null;
+  /**
+   * For the team's records. Not shown on the site.
+   */
+  phone?: string | null;
+  /**
+   * Lower numbers show first.
+   */
+  order?: number | null;
+  /**
+   * Sample/placeholder content, labelled on the site until replaced.
+   */
+  isSample?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * Shown on the About page. Ticked ones also appear on the home page.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -635,6 +674,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'reviews';
         value: string | Review;
+      } | null)
+    | ({
+        relationTo: 'donors';
+        value: string | Donor;
       } | null)
     | ({
         relationTo: 'faqs';
@@ -842,6 +885,22 @@ export interface ReviewsSelect<T extends boolean = true> {
   rating?: T;
   trip?: T;
   consentGiven?: T;
+  isSample?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "donors_select".
+ */
+export interface DonorsSelect<T extends boolean = true> {
+  name?: T;
+  profession?: T;
+  photo?: T;
+  company?: T;
+  amount?: T;
+  phone?: T;
+  order?: T;
   isSample?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -1249,7 +1308,7 @@ export interface OlympiadPage {
    */
   opensOn: string;
   /**
-   * Line in the top bar, e.g. ।। विद्यार्थी देवो भव ।।
+   * Line in the top bar, e.g. ।। વિદ્યાર્થી દેવો ભવ: ।।
    */
   motto: string;
   /**

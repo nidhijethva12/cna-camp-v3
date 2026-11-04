@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Audiences } from "@/components/home/Audiences";
 import { Destinations } from "@/components/home/Destinations";
+import { Donors } from "@/components/home/Donors";
 import { FaqEnquiry } from "@/components/home/FaqEnquiry";
 import { Filmstrip } from "@/components/home/Filmstrip";
 import { Hero } from "@/components/home/Hero";
@@ -25,6 +26,7 @@ import {
   getUpcomingBatches,
 } from "@/lib/content";
 import { photoSrc } from "@/lib/photos";
+import { getDonors } from "@/lib/donors";
 import { absoluteUrl } from "@/lib/seo";
 
 // Re-render hourly so past batches drop off the list.
@@ -41,7 +43,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function HomePage() {
-  const [home, popular, batches, allTrips, regionCounts, faqs, reviews, settings] = await Promise.all([
+  const [home, popular, batches, allTrips, regionCounts, faqs, reviews, settings, donors] = await Promise.all([
     getHome(),
     getFeaturedTrips(),
     getUpcomingBatches(4),
@@ -50,6 +52,7 @@ export default async function HomePage() {
     getHomeFaqs(),
     getReviews(6),
     getSiteSettings(),
+    getDonors(),
   ]);
 
   const websiteLd = {
@@ -81,6 +84,7 @@ export default async function HomePage() {
       <PopularTrips trips={popular} />
       <HolidayGrid content={home.holidays} />
       <JourneyStats tripCount={allTrips.length} counts={settings.stats} />
+      <Donors donors={donors} />
       <Destinations content={home.destinations} counts={regionCounts} />
       <Audiences content={home.audiences} />
       <WhyCna content={home.why} />

@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
+import { Fragment } from "react";
 import { EnquiryForm } from "@/components/enquiry/EnquiryForm";
 import { PageHead } from "@/components/layout/PageHead";
 import { FaqList } from "@/components/ui/FaqList";
-import { ArrowRight } from "@/components/ui/icons";
+import { ArrowRight, FacebookBrand, InstagramBrand } from "@/components/ui/icons";
 import { site } from "@/content/site";
 import { getSiteSettings, type SiteSettings } from "@/lib/content";
 
@@ -26,8 +27,10 @@ const faqs = [
   },
 ];
 
-const contactWays = (contact: SiteSettings) => [
-  { label: "Call", value: contact.phone, href: contact.phoneHref, note: "Mon to Sat, office hours" },
+const SOCIAL_ICONS: Record<string, typeof InstagramBrand> = { Instagram: InstagramBrand, Facebook: FacebookBrand };
+
+const contactWays = (contact: SiteSettings): { label: string; value: string; href: string; note?: string }[] => [
+  { label: "Call", value: contact.phone, href: contact.phoneHref },
   { label: "Email", value: contact.email, href: `mailto:${contact.email}`, note: "Trips, camps and group bookings" },
   ...(contact.trustEmail
     ? [{ label: "Trust email", value: contact.trustEmail, href: `mailto:${contact.trustEmail}`, note: site.trust.name }]
@@ -37,6 +40,7 @@ const contactWays = (contact: SiteSettings) => [
 export default async function ContactPage() {
   const contact = await getSiteSettings();
   const ways = contactWays(contact);
+  const social = contact.social.filter((s): s is { label: string; href: string } => Boolean(s.href) && s.label in SOCIAL_ICONS);
 
   return (
     <>
@@ -48,24 +52,42 @@ export default async function ContactPage() {
         text="Questions about a trip, a school group or a date? Send a message. The person who replies has been on these trips."
       >
         <p className="mt-3 text-[15px] font-medium text-light/75">Usually within a day, most often on WhatsApp.</p>
+        <p className="mt-3 max-w-2xl text-[14.5px] text-light/75">
+          <strong className="text-light">Registered name:</strong> {site.trust.name} (Reg. {site.trust.registration}), Rajkot.{" "}
+          {site.legalName} (CNA) is its nature and adventure initiative.
+        </p>
       </PageHead>
       <section className="wrap mt-12 grid gap-12 lg:grid-cols-[1fr_1.2fr]">
         <div className="space-y-4">
           {ways.map((w) => (
-            <a
-              key={w.label}
-              href={w.href}
-              target={w.href.startsWith("http") ? "_blank" : undefined}
-              rel="noopener"
-              className="lift flex items-center justify-between gap-4 rounded-card border border-line p-5 hover:border-dark"
-            >
-              <span className="min-w-0">
-                <span className="eyebrow">{w.label}</span>
-                <span className="mt-1 block text-[19px] font-bold break-all">{w.value}</span>
-                <span className="text-[14px] text-muted">{w.note}</span>
-              </span>
-              <ArrowRight />
-            </a>
+            <Fragment key={w.label}>
+              <a
+                href={w.href}
+                target={w.href.startsWith("http") ? "_blank" : undefined}
+                rel="noopener"
+                className="lift flex items-center justify-between gap-4 rounded-card border border-line p-5 hover:border-dark"
+              >
+                <span className="min-w-0">
+                  <span className="eyebrow">{w.label}</span>
+                  <span className="mt-1 block text-[19px] font-bold break-all">{w.value}</span>
+                  {w.note && <span className="text-[14px] text-muted">{w.note}</span>}
+                </span>
+                <ArrowRight />
+              </a>
+              {w.label === "Email" && (
+                <p className="px-1 text-[14.5px] text-muted">
+                  <strong className="text-dark">Payment or refund questions:</strong>{" "}
+                  <a href={`mailto:${contact.email}`} className="font-semibold text-dark underline">
+                    {contact.email}
+                  </a>{" "}
+                  or WhatsApp{" "}
+                  <a href={contact.whatsappHref} target="_blank" rel="noopener" className="font-semibold text-dark underline">
+                    {contact.phone}
+                  </a>
+                  , with your Registration ID or payment ID.
+                </p>
+              )}
+            </Fragment>
           ))}
           <div className="overflow-hidden rounded-card border border-line">
             <iframe
@@ -87,7 +109,25 @@ export default async function ContactPage() {
           </div>
         </div>
         <div id="enquire" className="scroll-mt-28">
-          <EnquiryForm />
+          <EnquiryForm short />
+          <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3 rounded-card border border-line p-5">
+            <p className="eyebrow">Follow us</p>
+            {social.map((s) => {
+              const Icon = SOCIAL_ICONS[s.label];
+              return (
+                <a
+                  key={s.label}
+                  href={s.href}
+                  target="_blank"
+                  rel="noopener"
+                  className="inline-flex items-center gap-2 font-semibold hover:text-primary"
+                >
+                  <Icon className="text-[26px]" />
+                  {s.label}
+                </a>
+              );
+            })}
+          </div>
         </div>
       </section>
 

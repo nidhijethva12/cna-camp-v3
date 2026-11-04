@@ -81,7 +81,11 @@ export async function submitEnquiry(_prev: EnquiryState, fd: FormData): Promise<
   if (!mobile) fieldErrors.phone = "Please enter a 10-digit mobile number.";
   if (!EMAIL.test(values.email)) fieldErrors.email = "Please enter a valid email address.";
   if (values.trip && !trip) fieldErrors.trip = "Please pick a trip from the list.";
-  if (!(travellerTypes as readonly string[]).includes(values.travellerType)) fieldErrors.travellerType = "Please choose who is travelling.";
+  if (values.travellerType && !(travellerTypes as readonly string[]).includes(values.travellerType)) {
+    fieldErrors.travellerType = "Please choose who is travelling.";
+  }
+  // The Contact page's short form asks only for the enquiry itself, so it must not be empty.
+  if (fd.get("form") === "short" && !values.message) fieldErrors.message = "Please write your enquiry.";
   if (fd.get("consent") !== "on") fieldErrors.consent = "Please agree so we can contact you.";
 
   if (Object.keys(fieldErrors).length) {
@@ -123,7 +127,7 @@ export async function submitEnquiry(_prev: EnquiryState, fd: FormData): Promise<
         email: values.email,
         trip: tripDoc?.id,
         tripName: trip?.name,
-        travellerType: values.travellerType,
+        travellerType: values.travellerType || undefined,
         message: values.message || undefined,
         meta: { sourcePath: text(fd, "sourcePath") || "/", consentAt: new Date().toISOString(), ipHash },
       },
