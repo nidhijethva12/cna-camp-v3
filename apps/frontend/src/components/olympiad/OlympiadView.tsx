@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { UpdatesNudge } from "@/components/layout/UpdatesNudge";
+import { AutoScroll } from "@/components/olympiad/AutoScroll";
 import { GroupPicker } from "@/components/olympiad/GroupPicker";
 import { LanguageSwitch, type OlympiadLang } from "@/components/olympiad/LanguageSwitch";
 import { RemindButton, RemindProvider } from "@/components/olympiad/Remind";
@@ -287,33 +288,38 @@ export function OlympiadView({ o, lang, contact, phase, closesOn, consentText }:
                   </Link>
                 </div>
               )}
-              <ul className="divide-y divide-line">
-                {o.notices.map((n, i) => (
-                  <li
-                    key={n.href}
-                    className={`flex items-center gap-3.5 px-5.5 max-sm:flex-wrap max-sm:gap-y-2 ${i === 0 ? "py-5" : "py-3.5"}`}
-                  >
-                    <FileText className={`shrink-0 text-primary ${i === 0 ? "text-[26px]" : "text-[22px]"}`} />
-                    <div className="min-w-0 max-sm:flex-1 max-sm:basis-[calc(100%-2.5rem)]">
-                      {n.tag && <span className="tag tag-solid mb-1.5 font-display font-bold">{n.tag}</span>}
-                      <p className={`font-display leading-snug font-bold ${i === 0 ? "text-[17px]" : "text-[15.5px]"}`}>{n.title}</p>
-                      <p className="text-[13.5px] text-muted">{n.meta}</p>
-                    </div>
-                    <a
-                      href={n.href}
-                      target="_blank"
-                      rel="noopener"
-                      className="ml-auto text-[14.5px] font-bold whitespace-nowrap text-primary hover:underline max-sm:ml-10"
+              <AutoScroll
+                label={ui.noticeBoard.title}
+                className="max-h-[340px] focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-primary sm:max-h-[360px]"
+              >
+                <ul className="divide-y divide-line">
+                  {o.notices.map((n, i) => (
+                    <li
+                      key={n.href}
+                      className={`flex items-center gap-3.5 px-5.5 max-sm:flex-wrap max-sm:gap-y-2 ${i === 0 ? "py-5" : "py-3.5"}`}
                     >
-                      {ui.noticeBoard.viewPdf}
-                      <span className="sr-only">
-                        {" "}
-                        {n.title}, {ui.noticeBoard.newTab}
-                      </span>
-                    </a>
-                  </li>
-                ))}
-              </ul>
+                      <FileText className={`shrink-0 text-primary ${i === 0 ? "text-[26px]" : "text-[22px]"}`} />
+                      <div className="min-w-0 max-sm:flex-1 max-sm:basis-[calc(100%-2.5rem)]">
+                        {n.tag && <span className="tag tag-solid mb-1.5 font-display font-bold">{n.tag}</span>}
+                        <p className={`font-display leading-snug font-bold ${i === 0 ? "text-[17px]" : "text-[15.5px]"}`}>{n.title}</p>
+                        <p className="text-[13.5px] text-muted">{n.meta}</p>
+                      </div>
+                      <a
+                        href={n.href}
+                        target="_blank"
+                        rel="noopener"
+                        className="ml-auto text-[14.5px] font-bold whitespace-nowrap text-primary hover:underline max-sm:ml-10"
+                      >
+                        {ui.noticeBoard.viewPdf}
+                        <span className="sr-only">
+                          {" "}
+                          {n.title}, {ui.noticeBoard.newTab}
+                        </span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </AutoScroll>
               <div className="mt-auto flex items-start gap-3 border-t border-dashed border-line px-5.5 py-5">
                 <Megaphone className="mt-0.5 shrink-0 text-[20px] text-primary" />
                 <p className="text-[14.5px] text-muted">

@@ -56,12 +56,13 @@ export function PaymentStep({
         onPaid: async (payment) => {
           setPhase({ step: "confirming" });
           const result = await waitForPayment(payment);
-          if (!result.ok) setPhase({ step: "stopped", message: result.message });
+          if (!result.ok) setPhase({ step: "stopped", message: t.confirmFailed });
           else if (!result.paid) setPhase({ step: "waiting" });
           else setPhase({ step: "paid", receipt: { paymentId: result.paymentId, paidAt: result.paidAt, amount: result.amount } });
         },
         onStopped: (message) => setPhase({ step: "stopped", message }),
       },
+      t,
     );
   };
 

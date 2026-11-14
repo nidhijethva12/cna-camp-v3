@@ -5,7 +5,7 @@ import { submitRegistration, type RegistrationResult } from "@/actions/olympiad/
 import { registrationPath, registrationText, type RegistrationText, type RegLang } from "@/content/registration";
 import { ArrowLeft, ArrowRight, Camera, CheckCircle, FileText, Translate } from "@/components/ui/icons";
 import { Select } from "@/components/ui/Select";
-import { compressImage, MAX_UPLOAD_BYTES } from "@/lib/olympiad/compressImage";
+import { compressImage } from "@/lib/olympiad/compressImage";
 import {
   ACHIEVEMENT_OTHER,
   emptyRegistration,
@@ -30,6 +30,7 @@ import {
   type GroupId,
   type QuizSlot,
 } from "@/lib/olympiad/rules";
+import { sniffFile, UPLOAD_ACCEPT, uploadProblem } from "@/lib/olympiad/uploads";
 import { PaymentStep } from "./PaymentStep";
 import { RegistrationDone, type SummarySection } from "./RegistrationDone";
 import { Honeypot, Turnstile } from "./Turnstile";
@@ -37,7 +38,6 @@ import { Honeypot, Turnstile } from "./Turnstile";
 type FileKey = "photo" | "aadhaarCard" | "schoolIdCard";
 type Errors = Partial<Record<RegistrationField, string>>;
 
-const UPLOAD_TYPES = ["image/jpeg", "image/png", "image/webp", "application/pdf"];
 const LANGUAGES = [
   { value: "en", label: "English" },
   { value: "gu", label: "ગુજરાતી" },
@@ -176,12 +176,11 @@ export function RegistrationForm({
   const pickFile = async (key: FileKey, file: File | undefined) => {
     if (!file) return;
     const ready = await compressImage(file);
-    if (!UPLOAD_TYPES.includes(ready.type)) {
-      setErrors((prev) => ({ ...prev, [key]: t.errors.file }));
-      return;
-    }
-    if (ready.size > MAX_UPLOAD_BYTES) {
-      setErrors((prev) => ({ ...prev, [key]: t.errors.fileTooBig }));
+    // The same checks the server makes: the real type from the file's first bytes, then the size.
+    const problem = uploadProblem(key, await sniffFile(ready), ready.size);
+    if (problem) {
+      setFiles((prev) => ({ ...prev, [key]: undefined }));
+      setErrors((prev) => ({ ...prev, [key]: t.errors[problem] }));
       return;
     }
     setFiles((prev) => ({ ...prev, [key]: ready }));
@@ -608,7 +607,7 @@ export function RegistrationForm({
                     title={t.step3.idCardTitle}
                     note={t.step3.idCardNote}
                     t={t}
-                    accept="image/*,.pdf"
+                    accept={UPLOAD_ACCEPT.schoolIdCard}
                     file={files.schoolIdCard}
                     error={err("schoolIdCard")}
                     onPick={(f) => pickFile("schoolIdCard", f)}
@@ -714,7 +713,7 @@ export function RegistrationForm({
               title={t.step4.photoTitle}
               note={t.step4.photoNote}
               t={t}
-              accept="image/*"
+              accept={UPLOAD_ACCEPT.photo}
               file={files.photo}
               error={err("photo")}
               onPick={(f) => pickFile("photo", f)}
@@ -735,7 +734,7 @@ export function RegistrationForm({
               title={t.step4.aadhaarCardTitle}
               note={t.step4.aadhaarCardNote}
               t={t}
-              accept="image/*,.pdf"
+              accept={UPLOAD_ACCEPT.aadhaarCard}
               file={files.aadhaarCard}
               error={err("aadhaarCard")}
               onPick={(f) => pickFile("aadhaarCard", f)}
@@ -1071,7 +1070,11 @@ function Upload({
           type="file"
           accept={accept}
           className="absolute inset-0 cursor-pointer opacity-0"
-          onChange={(e) => onPick(e.target.files?.[0])}
+          onChange={(e) => {
+            onPick(e.target.files?.[0]);
+            // Picking the same file again (after fixing it) still triggers a change.
+            e.target.value = "";
+          }}
         />
         <span className="grid h-11 w-11 shrink-0 place-items-center rounded-card bg-soft text-[22px]">
           {file ? <CheckCircle className="text-success" /> : <Icon />}

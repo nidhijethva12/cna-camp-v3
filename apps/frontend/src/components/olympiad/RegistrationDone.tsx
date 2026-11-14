@@ -36,6 +36,7 @@ export function RegistrationDone({
   t: RegistrationText;
 }) {
   const sheet = useRef<HTMLDivElement>(null);
+  const p = t.done.sheet;
   const [making, setMaking] = useState(false);
   const [failed, setFailed] = useState(false);
 
@@ -105,19 +106,19 @@ export function RegistrationDone({
           <div className="flex items-end justify-between gap-6 border-b-2 border-primary pb-4">
             <div>
               <p className="font-display text-[12px] font-bold tracking-[0.12em] text-primary uppercase">Adventure Olympiad 2.0</p>
-              <p className="mt-1 font-display text-[24px] font-extrabold">Registration</p>
+              <p className="mt-1 font-display text-[24px] font-extrabold">{p.title}</p>
               <p className="text-[12.5px] text-muted">Climber Nature Adventure Club · {TRUST}</p>
             </div>
             <div className="text-right">
-              <p className="text-[12px] text-muted">Registration ID</p>
+              <p className="text-[12px] text-muted">{p.regId}</p>
               <p className="font-display text-[24px] font-extrabold">{regId}</p>
             </div>
           </div>
           <div className="mt-5 grid grid-cols-3 gap-3">
             {[
-              ["Name", name],
-              ["Group", group],
-              ["Fee", fee === 0 ? "₹0 · Free" : rupees(fee)],
+              [p.name, name],
+              [p.group, group],
+              [p.fee, fee === 0 ? t.common.free : rupees(fee)],
             ].map(([k, v]) => (
               <div key={k} className="rounded-card bg-soft px-4 py-3">
                 <p className="text-[12px] text-muted">{k}</p>
@@ -140,14 +141,14 @@ export function RegistrationDone({
           ))}
           {receipt && (
             <div className="mt-6 rounded-card border-2 border-success/40 px-5 py-4">
-              <p className="font-display text-[15px] font-extrabold">Payment receipt</p>
+              <p className="font-display text-[15px] font-extrabold">{p.receipt}</p>
               <dl className="mt-1.5">
                 {[
-                  ["Amount paid", rupees(receipt.amount)],
-                  ["Paid to", TRUST],
-                  ["Razorpay payment ID", receipt.paymentId],
-                  ["Paid on", istDateTime(receipt.paidAt)],
-                  ["For", `Registration ${regId} · Group ${group}`],
+                  [p.amount, rupees(receipt.amount)],
+                  [p.paidTo, TRUST],
+                  [p.paymentId, receipt.paymentId],
+                  [p.paidOn, istDateTime(receipt.paidAt)],
+                  [p.for, `${regId} · ${p.group} ${group}`],
                 ].map(([k, v]) => (
                   <div key={k} className="grid grid-cols-[200px_1fr] gap-3 py-1">
                     <dt className="text-muted">{k}</dt>
@@ -157,10 +158,7 @@ export function RegistrationDone({
               </dl>
             </div>
           )}
-          <p className="mt-6 text-[12px] text-muted">
-            Agreed to the Rules and Terms ({RULES_VERSION}). Registration number, quiz link, time and results come only on WhatsApp.
-            Generated on {istDateTime(null)}.
-          </p>
+          <p className="mt-6 text-[12px] text-muted">{p.footer(RULES_VERSION, istDateTime(null))}</p>
         </div>
       </div>
     </div>
