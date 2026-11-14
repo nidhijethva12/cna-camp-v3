@@ -1,10 +1,15 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule, ObserveInstrument } from './app.module.js';
+import type { NestExpressApplication } from '@nestjs/platform-express';
+import { AppModule } from './app.module.js';
+import { config } from './config.js';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
-    instrument: ObserveInstrument,
+  // rawBody: the Razorpay and WhatsApp webhooks verify signatures on the exact bytes they sent.
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    rawBody: true,
   });
-  await app.listen(process.env.PORT ?? 4000);
+  app.disable('x-powered-by');
+  app.useBodyParser('json', { limit: '100kb' });
+  await app.listen(config.port);
 }
 await bootstrap();
