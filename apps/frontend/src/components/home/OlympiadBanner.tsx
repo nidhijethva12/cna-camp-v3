@@ -4,7 +4,7 @@ import { ArrowRight, Star } from "@/components/ui/icons";
 
 const facts = [
   { label: "Scholarship, up to", value: "100%" },
-  { label: "Registration from", value: "₹90" },
+  { label: "For govt. school students", value: "Free" },
   { label: "MCQs", value: "100" },
   { label: "Rounds", value: "5" },
 ];
@@ -27,14 +27,14 @@ export function OlympiadBanner() {
               Take the quiz. Win the Himalaya.
             </h2>
             <p className="mt-3 max-w-xl text-light/80">
-              An Eco-STEM online quiz for students from Std 4 to college, from every district of Gujarat. Top scorers win up to a 100%
-              scholarship on the ₹18,000 Astro Adventure Trekking Camp in Manali.
+              An Eco-STEM online quiz for students 13+, adults and teachers, from every district of Gujarat. Win up to a 100% scholarship on
+              adventure camps in Gujarat, Manali and Leh-Ladakh.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
               <Link href="/olympiad" className="btn btn-primary">
                 See the Olympiad <ArrowRight />
               </Link>
-              <Link href="/olympiad#finder" className="btn btn-outline-light">
+              <Link href="/olympiad#groups" className="btn btn-outline-light">
                 Which group am I?
               </Link>
             </div>

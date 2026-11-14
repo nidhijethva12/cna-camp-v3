@@ -4,6 +4,8 @@ import type { ReactNode } from "react";
 import { UpdatesNudge } from "@/components/layout/UpdatesNudge";
 import { GroupPicker } from "@/components/olympiad/GroupPicker";
 import { LanguageSwitch, type OlympiadLang } from "@/components/olympiad/LanguageSwitch";
+import { RemindButton, RemindProvider } from "@/components/olympiad/Remind";
+import { ShowAfterScroll } from "@/components/olympiad/ShowAfterScroll";
 import { FaqList } from "@/components/ui/FaqList";
 import {
   ArrowRight,
@@ -23,6 +25,9 @@ import {
 } from "@/components/ui/icons";
 import { SectionNav } from "@/components/ui/SectionNav";
 import type { OlympiadContent } from "@/content/olympiad";
+import { olympiadPhaseText, type OlympiadPhase, type OlympiadPhaseText } from "@/content/olympiadPhase";
+import { partnerPath } from "@/content/partnerPages";
+import { registrationPath } from "@/content/registration";
 import { enquireHref, site } from "@/content/site";
 import { whatsappLink, type SiteSettings } from "@/lib/content";
 
@@ -43,6 +48,20 @@ function SectionHead({ id, eyebrow, title, lead, dark }: { id: string; eyebrow: 
   );
 }
 
+/** Text with "[label](#anchor)" links, so editors can point a rule at a section of the page. */
+function InlineLinks({ text }: { text: string }) {
+  return text.split(/(\[[^\]]+\]\([^)\s]+\))/).map((part, i) => {
+    const m = part.match(/^\[([^\]]+)\]\(([^)\s]+)\)$/);
+    return m ? (
+      <a key={i} href={m[2]} className="font-semibold text-primary underline-offset-2 hover:underline">
+        {m[1]}
+      </a>
+    ) : (
+      part
+    );
+  });
+}
+
 function Tick({ children }: { children: ReactNode }) {
   return (
     <li className="flex gap-2.5 text-[15px]">
@@ -61,25 +80,84 @@ function ContactCta({ className, children }: { className: string; children: Reac
   );
 }
 
-/** The whole Olympiad page in one language; /olympiad and /olympiad/gu render it with their own content. */
-export function OlympiadView({ o, lang, contact }: { o: OlympiadContent; lang: OlympiadLang; contact: SiteSettings }) {
-  const { ui } = o;
-  const helpHref = whatsappLink(contact.whatsappNumber, ui.help.whatsappMessage);
-  const jumpLinks = (["notices", "how", "groups", "partners", "scholarships", "prizes", "rules", "faq"] as const).map(
-    (id) => [id, ui.nav[id]] as const,
-  );
-
+/**
+ * The page's main button for the registration state: contact form (API not connected yet), WhatsApp
+ * reminder (before registration opens), the registration form (while open) or the notice board (closed).
+ */
+function MainCta({
+  phase,
+  t,
+  contactUs,
+  registerHref,
+  short,
+  className,
+  children,
+}: {
+  phase: OlympiadPhase;
+  t: OlympiadPhaseText;
+  contactUs: string;
+  registerHref: string;
+  short?: boolean;
+  className: string;
+  children?: ReactNode;
+}) {
+  if (phase === "contact") return <ContactCta className={className}>{contactUs}</ContactCta>;
+  if (phase === "soon") return <RemindButton className={className}>{short ? t.remindShort : t.remindMe}</RemindButton>;
+  if (phase === "open")
+    return (
+      <Link href={registerHref} className={className}>
+        {t.registerNow}
+        {children}
+      </Link>
+    );
   return (
+    <Link href="#notices" className={className}>
+      {t.noticeBoard}
+    </Link>
+  );
+}
+
+export interface OlympiadViewProps {
+  o: OlympiadContent;
+  lang: OlympiadLang;
+  contact: SiteSettings;
+  phase: OlympiadPhase;
+  /** "14 Dec 2026", from Olympiad → Settings. */
+  closesOn: string;
+  consentText: string;
+}
+
+/** The whole Olympiad page in one language; /olympiad and /olympiad/gu render it with their own content. */
+export function OlympiadView({ o, lang, contact, phase, closesOn, consentText }: OlympiadViewProps) {
+  const { ui } = o;
+  const t = olympiadPhaseText[lang];
+  const registerHref = registrationPath[lang];
+  const helpHref = whatsappLink(contact.whatsappNumber, ui.help.whatsappMessage);
+  const jumpLinks = [
+    ...(["notices", "how", "groups", "partners", "scholarships", "prizes", "rules", "faq"] as const).map((id) => [id, ui.nav[id]] as const),
+    ...(phase === "open" ? [["register", t.navRegister] as const] : []),
+  ];
+  const cta = { phase, t, contactUs: ui.contactUs, registerHref };
+  const sticky = phase === "soon" ? t.sticky.soon(o.opensOn) : phase === "open" ? t.sticky.open(closesOn) : null;
+
+  const page = (
     <>
       <div className="bg-primary text-[13px] text-light sm:text-[14.5px]" role="status">
         <div className="wrap flex items-center justify-center gap-x-2.5 gap-y-1 py-2.25 text-center whitespace-nowrap sm:flex-wrap sm:gap-x-3.5 sm:whitespace-normal">
-          <span>
-            <b>
-              {ui.bar.opens} {o.opensOn}.
-            </b>
-            <span className="max-sm:hidden"> {ui.bar.details}</span>
-          </span>
-          <ContactCta className="cursor-pointer font-bold underline underline-offset-3">{ui.contactUs}</ContactCta>
+          {phase === "open" || phase === "closed" ? (
+            <span>
+              <b>{phase === "open" ? t.bar.open(closesOn).lead : t.bar.closed.lead}</b>
+              <span className="max-sm:hidden"> {phase === "open" ? t.bar.open(closesOn).rest : t.bar.closed.rest}</span>
+            </span>
+          ) : (
+            <span>
+              <b>
+                {ui.bar.opens} {o.opensOn}.
+              </b>
+              <span className="max-sm:hidden"> {ui.bar.details}</span>
+            </span>
+          )}
+          <MainCta {...cta} className="cursor-pointer font-bold underline underline-offset-3" />
         </div>
       </div>
 
@@ -113,13 +191,16 @@ export function OlympiadView({ o, lang, contact }: { o: OlympiadContent; lang: O
               <span className="text-[16px] text-dark sm:text-[22px] md:text-[26px]">{ui.scholarshipLine.after}</span>
             </p>
             <p className="mt-5.5 inline-flex items-center gap-2.25 rounded-full border border-line bg-light px-3.5 py-1.75 text-[14px] font-semibold">
-              <span aria-hidden="true" className="h-2 w-2 rounded-full bg-secondary" />
-              {ui.bar.opens} {o.opensOn}
+              <span
+                aria-hidden="true"
+                className={`h-2 w-2 rounded-full ${phase === "open" ? "live-dot bg-success" : phase === "closed" ? "bg-muted" : "bg-secondary"}`}
+              />
+              {phase === "open" ? t.status.open(closesOn) : phase === "closed" ? t.status.closed : `${ui.bar.opens} ${o.opensOn}`}
             </p>
             <div className="mt-5.5 flex flex-wrap gap-3">
-              <ContactCta className="btn btn-primary">{ui.contactUs}</ContactCta>
+              <MainCta {...cta} className="btn btn-primary" />
               <Link href="#groups" className="btn btn-outline">
-                {ui.seeGroups}
+                {phase === "open" ? t.findGroup : ui.seeGroups}
               </Link>
             </div>
           </div>
@@ -190,32 +271,54 @@ export function OlympiadView({ o, lang, contact }: { o: OlympiadContent; lang: O
                   {ui.noticeBoard.live}
                 </span>
               </div>
-              <div className="flex items-center gap-3.5 px-5.5 py-5 max-sm:flex-wrap max-sm:gap-y-2">
-                <FileText className="text-[26px] text-primary" />
-                <div className="min-w-0 max-sm:flex-1 max-sm:basis-[calc(100%-2.5rem)]">
-                  <span className="tag tag-solid mb-1.5 font-display font-bold">{ui.noticeBoard.official}</span>
-                  <p className="font-display text-[17px] leading-snug font-bold">{o.notice.title}</p>
-                  <p className="text-[13.5px] text-muted">{o.notice.meta}</p>
+              {phase === "open" && (
+                <div className="flex items-center gap-3.5 border-b border-line bg-soft px-5.5 py-4.5 max-sm:flex-wrap max-sm:gap-y-2">
+                  <Check className="text-[24px] text-success" />
+                  <div className="min-w-0 max-sm:flex-1 max-sm:basis-[calc(100%-2.5rem)]">
+                    <span className="tag tag-solid mb-1.5 font-display font-bold">{t.pinned.tag}</span>
+                    <p className="font-display text-[17px] leading-snug font-bold">{t.pinned.title}</p>
+                    <p className="text-[13.5px] text-muted">{t.pinned.when(o.opensOn, closesOn)}</p>
+                  </div>
+                  <Link
+                    href={registerHref}
+                    className="ml-auto text-[14.5px] font-bold whitespace-nowrap text-primary hover:underline max-sm:ml-10"
+                  >
+                    {t.pinned.link}
+                  </Link>
                 </div>
-                <a
-                  href={o.notice.href}
-                  target="_blank"
-                  rel="noopener"
-                  className="ml-auto text-[14.5px] font-bold whitespace-nowrap text-primary hover:underline max-sm:ml-10"
-                >
-                  {ui.noticeBoard.viewPdf}
-                  <span className="sr-only"> {ui.noticeBoard.newTab}</span>
-                </a>
-              </div>
-              <div className="mt-auto hidden flex-1 flex-col items-center justify-center gap-3 border-t border-dashed border-line px-6 py-10 text-center lg:flex">
-                <span
-                  aria-hidden="true"
-                  className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-soft text-[26px] text-primary"
-                >
-                  <Megaphone />
-                </span>
-                <p className="font-display text-[17px] font-bold">{ui.noticeBoard.moreTitle}</p>
-                <p className="max-w-[36ch] text-[14.5px] text-muted">{ui.noticeBoard.moreText}</p>
+              )}
+              <ul className="divide-y divide-line">
+                {o.notices.map((n, i) => (
+                  <li
+                    key={n.href}
+                    className={`flex items-center gap-3.5 px-5.5 max-sm:flex-wrap max-sm:gap-y-2 ${i === 0 ? "py-5" : "py-3.5"}`}
+                  >
+                    <FileText className={`shrink-0 text-primary ${i === 0 ? "text-[26px]" : "text-[22px]"}`} />
+                    <div className="min-w-0 max-sm:flex-1 max-sm:basis-[calc(100%-2.5rem)]">
+                      {n.tag && <span className="tag tag-solid mb-1.5 font-display font-bold">{n.tag}</span>}
+                      <p className={`font-display leading-snug font-bold ${i === 0 ? "text-[17px]" : "text-[15.5px]"}`}>{n.title}</p>
+                      <p className="text-[13.5px] text-muted">{n.meta}</p>
+                    </div>
+                    <a
+                      href={n.href}
+                      target="_blank"
+                      rel="noopener"
+                      className="ml-auto text-[14.5px] font-bold whitespace-nowrap text-primary hover:underline max-sm:ml-10"
+                    >
+                      {ui.noticeBoard.viewPdf}
+                      <span className="sr-only">
+                        {" "}
+                        {n.title}, {ui.noticeBoard.newTab}
+                      </span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-auto flex items-start gap-3 border-t border-dashed border-line px-5.5 py-5">
+                <Megaphone className="mt-0.5 shrink-0 text-[20px] text-primary" />
+                <p className="text-[14.5px] text-muted">
+                  <b className="text-dark">{ui.noticeBoard.moreTitle}</b> {ui.noticeBoard.moreText}
+                </p>
               </div>
             </div>
 
@@ -324,9 +427,25 @@ export function OlympiadView({ o, lang, contact }: { o: OlympiadContent; lang: O
                       <Tick key={point}>{point}</Tick>
                     ))}
                   </ul>
-                  <ContactCta className={`btn mt-auto self-start ${i === 0 ? "btn-primary" : "btn-dark"}`}>
-                    {ui.contactUs} <ArrowRight />
-                  </ContactCta>
+                  <div className="mt-auto flex flex-wrap items-center gap-x-5 gap-y-3">
+                    {phase === "contact" ? (
+                      <ContactCta className={`btn ${i === 0 ? "btn-primary" : "btn-dark"}`}>
+                        {ui.contactUs} <ArrowRight />
+                      </ContactCta>
+                    ) : (
+                      <Link href={partnerPath[lang][p.kind]} className={`btn ${i === 0 ? "btn-primary" : "btn-dark"}`}>
+                        {p.cta} <ArrowRight />
+                      </Link>
+                    )}
+                    {phase !== "contact" && (
+                      <Link
+                        href={p.kind === "school" ? "/school-dashboard" : "/ambassador-dashboard"}
+                        className="font-display text-[15px] font-bold text-primary underline underline-offset-3"
+                      >
+                        {p.kind === "school" ? t.dashboards.school : t.dashboards.ambassador}
+                      </Link>
+                    )}
+                  </div>
                 </article>
               );
             })}
@@ -437,7 +556,7 @@ export function OlympiadView({ o, lang, contact }: { o: OlympiadContent; lang: O
                 <Check className="mt-1 text-[18px] text-success" />
                 <span>
                   <b className="font-display">{lead}</b>
-                  {rest}
+                  <InlineLinks text={rest} />
                 </span>
               </li>
             ))}
@@ -454,13 +573,27 @@ export function OlympiadView({ o, lang, contact }: { o: OlympiadContent; lang: O
             />
             <span aria-hidden="true" className="absolute -right-10 -bottom-10 -z-10 h-55 w-55 rounded-full bg-secondary/15 max-sm:hidden" />
             <div>
-              <p className="font-display text-[15px] font-bold text-secondary-light">{ui.register.eyebrow}</p>
+              <p className="font-display text-[15px] font-bold text-secondary-light">
+                {phase === "open" ? t.register.open.eyebrow : ui.register.eyebrow}
+              </p>
               <h2 id="h-register" className="mt-1.5 text-[26px] md:text-[34px]">
-                {ui.register.title} {o.opensOn}
+                {phase === "open"
+                  ? t.register.open.title(closesOn)
+                  : phase === "closed"
+                    ? t.register.closed.title
+                    : `${ui.register.title} ${o.opensOn}`}
               </h2>
-              <p className="mt-2.5 text-light/90">{ui.register.text}</p>
+              <p className="mt-2.5 text-light/90">
+                {phase === "open"
+                  ? t.register.open.text
+                  : phase === "closed"
+                    ? t.register.closed.text
+                    : phase === "soon"
+                      ? t.register.soon.text
+                      : ui.register.text}
+              </p>
               <div className="mt-5 flex flex-wrap items-center gap-3">
-                <ContactCta className="btn bg-light text-primary hover:bg-primary-soft">{ui.contactUs}</ContactCta>
+                <MainCta {...cta} className="btn bg-light text-primary hover:bg-primary-soft" />
                 <span className="text-[14.5px]">
                   {ui.register.help} <b className="select-all">{contact.phone}</b>
                 </span>
@@ -511,7 +644,27 @@ export function OlympiadView({ o, lang, contact }: { o: OlympiadContent; lang: O
         <span aria-hidden="true" className="ridge ridge-alt bottom-0 bg-dark" />
       </section>
 
-      <UpdatesNudge />
+      {sticky && (
+        <ShowAfterScroll
+          label={sticky.title}
+          className="fixed right-24 bottom-6 z-30 hidden items-center gap-4 rounded-card border border-line bg-light py-2.5 pr-2.5 pl-4.5 shadow-float lg:flex"
+        >
+          <p className="leading-tight">
+            <b className="block font-display text-[15px]">{sticky.title}</b>
+            <span className="text-[13.5px] text-muted">{sticky.text}</span>
+          </p>
+          <MainCta {...cta} short className="btn btn-primary min-h-0 px-4 py-2.5 text-[15px]" />
+        </ShowAfterScroll>
+      )}
+
+      <UpdatesNudge lang={lang} />
     </>
+  );
+
+  if (phase !== "soon") return page;
+  return (
+    <RemindProvider opensOn={o.opensOn} consentText={consentText} name={o.name} options={o.remindOptions} lang={lang}>
+      {page}
+    </RemindProvider>
   );
 }

@@ -35,7 +35,7 @@ export const founder = {
       "Life member of the Red Cross Society and 20+ Gujarat sports associations. Voluntary work with RMC and non-profit organisations.",
     ],
   ],
-  legacy: "Saurashtra Education & Charitable Trust has dedicated the Adventure Olympiad Group C scholarship to him.",
+  legacy: "Saurashtra Education & Charitable Trust has dedicated the Adventure Olympiad scholarship for Groups 0, A, B and C to him.",
 };
 
 export const different = [

@@ -1,12 +1,11 @@
 "use server";
 
-import { createHmac } from "node:crypto";
-import { headers } from "next/headers";
 import { after } from "next/server";
 import { travellerTypes } from "@/content/site";
 import { enquiryConfirmationEmail } from "@/lib/emails/enquiryConfirmation";
 import { getSiteSettings, getTrips } from "@/lib/content";
 import { getCms } from "@/lib/payload";
+import { since, visitorKey } from "@/lib/security";
 
 export type EnquiryField = "name" | "phone" | "email" | "trip" | "travellerType" | "message" | "consent";
 
@@ -34,23 +33,6 @@ const LIMITS = {
   mailsPerAddress: 3,
   addressWindowMs: 24 * 60 * 60 * 1000,
 };
-
-/**
- * Identifies the visitor for rate limiting without storing their IP: a keyed hash of the address
- * the host's proxy reports (on Vercel the first x-forwarded-for entry is the real client).
- */
-async function visitorKey() {
-  const h = await headers();
-  const ip = h.get("x-forwarded-for")?.split(",")[0]?.trim() || h.get("x-real-ip");
-  return ip
-    ? createHmac("sha256", process.env.PAYLOAD_SECRET ?? "")
-        .update(ip)
-        .digest("hex")
-        .slice(0, 32)
-    : undefined;
-}
-
-const since = (ms: number) => new Date(Date.now() - ms).toISOString();
 
 const text = (fd: FormData, key: string, max = 200) =>
   String(fd.get(key) ?? "")

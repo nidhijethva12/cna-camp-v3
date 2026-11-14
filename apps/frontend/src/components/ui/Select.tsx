@@ -19,6 +19,8 @@ interface SelectProps {
   value?: string;
   onValueChange?: (value: string) => void;
   className?: string;
+  /** Where the list renders; pass the <dialog> when used inside a modal, or the list opens beneath it. */
+  container?: HTMLElement | null;
   "aria-invalid"?: boolean;
   "aria-describedby"?: string;
 }
@@ -35,6 +37,7 @@ export function Select({
   value: controlled,
   onValueChange,
   className = "",
+  container,
   ...aria
 }: SelectProps) {
   const toInternal = (v: string) => v || (emptyLabel ? EMPTY : (options[0]?.value ?? ""));
@@ -62,7 +65,7 @@ export function Select({
       </RadixSelect.Trigger>
       <input type="hidden" name={name} value={value === EMPTY ? "" : value} />
 
-      <RadixSelect.Portal>
+      <RadixSelect.Portal container={container}>
         <RadixSelect.Content
           position="popper"
           sideOffset={6}

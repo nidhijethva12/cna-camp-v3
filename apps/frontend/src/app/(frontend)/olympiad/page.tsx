@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import { OlympiadView } from "@/components/olympiad/OlympiadView";
 import { getSiteSettings } from "@/lib/content";
+import { getOlympiadPhase } from "@/lib/olympiad/settings";
 import { getOlympiadContent } from "@/lib/olympiadContent";
+
+// Switches from "Remind me" to "Register now" by itself when registration opens.
+export const revalidate = 300;
 
 export async function generateMetadata(): Promise<Metadata> {
   const { meta } = await getOlympiadContent("en");
@@ -14,6 +18,6 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function OlympiadPage() {
-  const [o, contact] = await Promise.all([getOlympiadContent("en"), getSiteSettings()]);
-  return <OlympiadView o={o} lang="en" contact={contact} />;
+  const [o, contact, state] = await Promise.all([getOlympiadContent("en"), getSiteSettings(), getOlympiadPhase()]);
+  return <OlympiadView o={o} lang="en" contact={contact} {...state} />;
 }

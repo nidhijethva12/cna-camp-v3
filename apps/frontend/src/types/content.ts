@@ -110,7 +110,12 @@ export interface Faq {
 export interface Notice {
   id: string;
   text: string;
-  link: string | null;
+  details: string | null;
+  type: "official" | "important" | "date" | "pdf" | "result";
+  date: string | null;
+  /** The PDF or page the notice opens, if any. */
+  href: string | null;
+  pinned: boolean;
 }
 
 export interface Review {

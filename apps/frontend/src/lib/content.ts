@@ -2,6 +2,7 @@ import "server-only";
 import { cache } from "react";
 import { pinnedBatchTrips, regionOrder } from "@/content/site";
 import { todayInIndia } from "@/lib/format";
+import { EDITION } from "@/lib/olympiad/rules";
 import { getCms } from "@/lib/payload";
 import type { HomePage as HomeDoc, Media, Post as PostDoc, SiteSetting, Trip as TripDoc, Video as VideoDoc } from "@/payload-types";
 import type {
@@ -24,10 +25,10 @@ import type {
 
 /* Every loader is wrapped in React `cache`, so a page and its layout share one query per request. */
 
+/** Payload prefixes uploads with the server URL; files on this site are served by path instead. */
 /** Set to true to show the prices saved in the admin again. */
 const SHOW_TRIP_PRICES = false;
 
-/** Payload prefixes uploads with the server URL; files on this site are served by path instead. */
 const mediaPath = (url: string) => url.replace(/^https?:\/\/[^/]+(?=\/api\/(media|videos)\/)/, "");
 
 function toImage(media: string | Media | null | undefined): ImageRef | null {
@@ -206,11 +207,25 @@ export const getFaqs = cache(async (): Promise<(Faq & { showOnHome: boolean })[]
   return docs.map((f) => ({ question: f.question, answer: f.answer, showOnHome: Boolean(f.showOnHome) }));
 });
 
-/** Olympiad notice lines, in the order set in the admin. */
+/** Notices of the current Olympiad: pinned first, then in the order set in the admin. A PDF wins over a plain link. */
 export const getNotices = cache(async (): Promise<Notice[]> => {
   const payload = await getCms();
-  const { docs } = await payload.find({ collection: "notices", sort: ["order", "createdAt"], depth: 0, limit: 50 });
-  return docs.map((n) => ({ id: n.id, text: n.text, link: n.link || null }));
+  const { docs } = await payload.find({
+    collection: "notices",
+    where: { edition: { equals: EDITION } },
+    sort: ["-pinned", "order", "createdAt"],
+    depth: 1,
+    limit: 50,
+  });
+  return docs.map((n) => ({
+    id: n.id,
+    text: n.text,
+    details: n.details || null,
+    type: n.type ?? "official",
+    date: n.date || null,
+    href: (typeof n.file === "object" && n.file?.url) || n.link || null,
+    pinned: Boolean(n.pinned),
+  }));
 });
 
 export async function getHomeFaqs(): Promise<Faq[]> {

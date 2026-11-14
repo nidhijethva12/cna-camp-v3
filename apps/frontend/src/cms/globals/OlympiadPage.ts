@@ -51,7 +51,7 @@ const sectionText = (name: string, label: string, withLead = true): Field => ({
   ],
 });
 
-const groupIds = ["A", "B", "C", "D", "E"].map((id) => ({ label: `Group ${id}`, value: id }));
+const groupIds = ["0", "A", "B", "C", "D", "E"].map((id) => ({ label: `Group ${id}`, value: id }));
 
 export const OlympiadPage: GlobalConfig = {
   slug: "olympiad-page",
@@ -98,24 +98,21 @@ export const OlympiadPage: GlobalConfig = {
           label: "Notice board & dates",
           fields: [
             {
-              name: "notice",
-              label: "Main notice",
-              type: "group",
-              admin: { description: "The official notice pinned at the top of the notice board." },
+              name: "notices",
+              label: "Notices",
+              type: "array",
+              admin: { description: "The PDFs on the notice board, in order. The first one is the official notice." },
               fields: [
-                text("title"),
-                text("meta", { label: "Details", description: "Notice number, date and language." }),
+                row(text("tag", { optional: true, description: "Small label, e.g. Official" }), text("title")),
+                text("meta", { label: "Details", description: "Notice number, date, who it is for and language." }),
                 {
                   name: "file",
-                  label: "Notice PDF",
+                  label: "PDF",
                   type: "upload",
                   relationTo: "documents",
-                  admin: {
-                    description:
-                      "Upload a new notice here to replace the current one on the site, in both languages. Update “Details” above to match.",
-                  },
+                  admin: { description: "The same file is used in both languages." },
                 },
-                link("href", "Used only when no PDF is uploaded above, e.g. /docs/olympiad-2-notice.pdf"),
+                link("href", "Used only when no PDF is uploaded above.", true),
               ],
             },
             {
@@ -168,7 +165,7 @@ export const OlympiadPage: GlobalConfig = {
             {
               name: "groups",
               type: "array",
-              admin: { description: "One entry per group, A to D." },
+              admin: { description: "One entry per group, 0 to E." },
               fields: [
                 row(
                   { name: "groupId", label: "Group", type: "select", required: true, options: groupIds },
@@ -196,6 +193,7 @@ export const OlympiadPage: GlobalConfig = {
                     { name: "goal", label: "Final goal", type: "checkbox", defaultValue: false },
                   ],
                 },
+                long("note", { optional: true, description: "Small note under the prize, e.g. who can choose this group." }),
               ],
             },
           ],
@@ -414,6 +412,7 @@ export const OlympiadPage: GlobalConfig = {
                 row(text("participant"), text("choose"), text("empty")),
                 row(text("thisIs"), text("fee"), text("quiz"), text("prize")),
                 row(text("journey"), text("group"), text("tabsLabel")),
+                long("footnote", { optional: true, description: "Small text under the group panels." }),
               ],
             },
           ],

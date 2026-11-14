@@ -8,6 +8,7 @@ import { SiteHeader } from "@/components/layout/SiteHeader";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { FOUNDED_YEAR, site } from "@/content/site";
 import { getSiteSettings, type SiteSettings } from "@/lib/content";
+import { getOlympiadPhase } from "@/lib/olympiad/settings";
 import { absoluteUrl, isIndexable, siteUrl } from "@/lib/seo";
 import { themeColors } from "@/lib/theme";
 import "./globals.css";
@@ -66,7 +67,7 @@ const organizationLd = (contact: SiteSettings) => ({
 });
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
-  const contact = await getSiteSettings();
+  const [contact, { phase }] = await Promise.all([getSiteSettings(), getOlympiadPhase()]);
   return (
     <html lang="en-IN" className={`${heading.variable} ${body.variable}`}>
       <meta name="google-site-verification" content="Yuga-8Zeij0uQ7_slO-mmxNaUCCzENcvX_B6k9qxbDU" />
@@ -87,7 +88,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         <main id="main">{children}</main>
         <SiteFooter />
         <ContactShortcuts />
-        <OlympiadPopup />
+        {phase !== "closed" && <OlympiadPopup open={phase === "open"} />}
         <JsonLd data={organizationLd(contact)} />
       </body>
     </html>
