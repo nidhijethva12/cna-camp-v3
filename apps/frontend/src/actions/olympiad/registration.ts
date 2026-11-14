@@ -4,8 +4,8 @@ import { cookies } from "next/headers";
 import type { CheckoutOrder } from "@/actions/olympiad/register";
 import { callBackend } from "@/lib/olympiad/backend";
 import { registrationText, type RegLang } from "@/content/registration";
-import { MAX_UPLOAD_BYTES } from "@/lib/olympiad/compressImage";
 import { antiSpam } from "@/lib/olympiad/forms";
+import { sniffFile, uploadProblem } from "@/lib/olympiad/uploads";
 import {
   ACHIEVEMENT_OTHER,
   emptyRegistration,
@@ -33,14 +33,13 @@ interface Saved {
 export type RegistrationResult =
   ({ ok: true } & Saved) | { ok: false; message: string; fieldErrors?: Partial<Record<RegistrationField, string>> };
 
-/** JPEG, PNG, WebP or PDF, told apart by their first bytes; anything else is refused. */
-function sniffType(head: Uint8Array) {
-  const starts = (...bytes: number[]) => bytes.every((b, i) => head[i] === b);
-  if (starts(0xff, 0xd8, 0xff)) return "image/jpeg";
-  if (starts(0x89, 0x50, 0x4e, 0x47)) return "image/png";
-  if (starts(0x52, 0x49, 0x46, 0x46) && String.fromCharCode(...head.slice(8, 12)) === "WEBP") return "image/webp";
-  if (starts(0x25, 0x50, 0x44, 0x46, 0x2d)) return "application/pdf";
-  return null;
+/** The API answers in English; each message it can send is shown in the form's language. */
+function apiMessage(status: number, message: string, t: (typeof registrationText)["en"]["errors"]) {
+  if (status === 429) return t.tooMany;
+  if (message.startsWith("Please complete the security check")) return t.securityCheck;
+  if (message.startsWith("Registration is not open")) return t.closed;
+  if (message.startsWith("This form was just sent")) return t.aadhaarBusy;
+  return t.tryAgain;
 }
 
 /** Reads the form's answers, keeping only known fields of the right kind. */
@@ -78,12 +77,14 @@ export async function submitRegistration(fd: FormData): Promise<RegistrationResu
     aadhaarCard: asFile(fd.get("aadhaarCard")),
     schoolIdCard: s.proof ? asFile(fd.get("schoolIdCard")) : null,
   };
-  // The browser's word for a file's type is not trusted: the first bytes decide what is stored.
+  // The browser's word for a file's type is not trusted: the first bytes decide what is stored, and
+  // each upload must be an allowed type for its slot and between 5 KB and 1 MB.
   for (const [key, file] of Object.entries(files) as [DocumentKind, File | null][]) {
     if (!file) continue;
-    const type = file.size <= MAX_UPLOAD_BYTES ? sniffType(new Uint8Array(await file.slice(0, 12).arrayBuffer())) : null;
-    if (!type) return { ok: false, message: t.checkFields, fieldErrors: { [key]: t.file } };
-    files[key] = new File([file], file.name, { type });
+    const type = await sniffFile(file);
+    const problem = uploadProblem(key, type, file.size);
+    if (problem) return { ok: false, message: t.checkFields, fieldErrors: { [key]: t[problem] } };
+    files[key] = new File([file], file.name.slice(0, 120), { type: type! });
   }
   const has = { photo: Boolean(files.photo), aadhaarCard: Boolean(files.aadhaarCard), schoolIdCard: Boolean(files.schoolIdCard) };
   const config = await getOlympiadConfig();
@@ -169,11 +170,14 @@ export async function submitRegistration(fd: FormData): Promise<RegistrationResu
     if (taken) return { ok: false, message: t.aadhaarTaken(taken), fieldErrors: { aadhaar: t.aadhaarTaken(taken) } };
     if (aadhaarError.startsWith("Already used")) return { ok: false, message: t.aadhaarUsed, fieldErrors: { aadhaar: t.aadhaarUsed } };
     if (aadhaarError.startsWith("Already being")) return { ok: false, message: t.aadhaarBusy, fieldErrors: { aadhaar: t.aadhaarBusy } };
-    if (!result.fieldErrors) return { ok: false, message: result.status === 503 ? t.tryAgain : result.message };
+    if (!result.fieldErrors) return { ok: false, message: apiMessage(result.status, result.message, t) };
     // The API repeats the website's own checks, so its field errors are rare; show them in the form's language.
     const messages = t as unknown as Record<string, unknown>;
     const fieldErrors = Object.fromEntries(
-      Object.keys(result.fieldErrors).map((f) => [f, typeof messages[f] === "string" ? messages[f] : t.checkFields]),
+      Object.keys(result.fieldErrors).map((f) => [
+        f,
+        typeof messages[f] === "string" ? messages[f] : f === "parentWho" || f === "govtStd6to8" ? t.choose : t.checkFields,
+      ]),
     ) as Partial<Record<RegistrationField, string>>;
     return { ok: false, message: t.checkFields, fieldErrors };
   }

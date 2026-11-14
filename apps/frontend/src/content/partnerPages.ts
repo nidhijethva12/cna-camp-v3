@@ -14,8 +14,6 @@ export const dashboardPath: Record<PartnerKind, string> = { school: "/school-das
 const en = {
   crumb: "Adventure Olympiad 2.0",
   howItWorks: "How it works",
-  afterApproval: "After approval",
-  exampleData: "Example data",
   alreadyPartner: "Already approved?",
   logIn: "Log in to your dashboard",
   required: "required",
@@ -61,8 +59,6 @@ const en = {
     emailHint: "The coordinator logs in to the dashboard with this email.",
     consent: "I confirm the school will collect consent from each parent, as per the Olympiad rules.",
     submit: "Send for approval",
-    dashboardTitle: "The school dashboard",
-    dashboardLead: "What the coordinator sees after logging in.",
   },
   ambassador: {
     meta: {
@@ -86,8 +82,6 @@ const en = {
     emailHint: "You log in to your dashboard with this email.",
     consent: "I will share correct information about the Olympiad and follow its rules.",
     submit: "Join as Ambassador",
-    dashboardTitle: "The Ambassador dashboard",
-    dashboardLead: "What an Ambassador sees after logging in.",
   },
   choose: "Choose",
   sending: "Sending…",
@@ -115,51 +109,6 @@ const en = {
     emailTaken: "This email is already used by another partner. Use a different one.",
     consent: "Please tick to confirm.",
   },
-  sample: {
-    school: {
-      name: "Shree Example Primary School",
-      line: "School code SCH-RJK-012 · Government school · Rajkot",
-      pay: "Pay for 14 pending students",
-    },
-    schoolStats: [
-      ["Students added", "48"],
-      ["Paid", "34"],
-      ["Payment pending", "14"],
-      ["Parent consent pending", "6"],
-    ],
-    schoolActions: ["Upload Excel", "Download template"],
-    columns: ["Student", "Class", "Group", "Fee", "Payment", "Parent consent"],
-    rows: [
-      ["Student 1", "Std 8", "A", "Paid", "Done"],
-      ["Student 2", "Std 9", "A", "Paid", "Waiting"],
-      ["Student 3", "Std 10", "B", "Pending", "Done"],
-    ],
-    paid: "Paid",
-    pending: "Pending",
-    doneWord: "Done",
-    schoolNote: "The group and fee are set from the class automatically. Each paid student gets a registration number.",
-    amb: {
-      name: "Example name",
-      line: "Teacher · Rajkot · Ambassador since 16 Nov 2026",
-      codeLabel: "Your Ambassador code",
-      code: "CNA-AMB-0142",
-      qr: "QR code to download",
-    },
-    ambStats: [
-      ["Link opened", "212"],
-      ["Registered", "41"],
-      ["Paid", "36"],
-      ["To next milestone", "14"],
-    ],
-    progress: "36 of 50 paid registrations to reach the next milestone",
-    milestones: [
-      ["25 · Reached", "Olympiad Ambassador certificate"],
-      ["50", "Name on the website Ambassadors list"],
-      ["100", "A free seat or escort seat on a camp (to be confirmed)"],
-    ],
-    ambNote:
-      "Only paid registrations count. You see counts only, not other people's personal details. Milestone rewards are decided by CNA.",
-  },
 };
 
 export type PartnerPageText = typeof en;
@@ -167,8 +116,6 @@ export type PartnerPageText = typeof en;
 const gu: PartnerPageText = {
   crumb: "એડવેન્ચર ઓલમ્પિયાડ 2.0",
   howItWorks: "કેવી રીતે કામ કરે છે",
-  afterApproval: "Approval પછી",
-  exampleData: "ઉદાહરણ",
   alreadyPartner: "Approval મળી ગયું છે?",
   logIn: "Dashboard માં login કરો",
   required: "જરૂરી",
@@ -211,8 +158,6 @@ const gu: PartnerPageText = {
     emailHint: "Coordinator આ email થી dashboard માં login કરશે.",
     consent: "Olympiad ના rules મુજબ school દરેક parent ની મંજૂરી લેશે, એની હું ખાતરી આપું છું.",
     submit: "Approval માટે મોકલો",
-    dashboardTitle: "School dashboard",
-    dashboardLead: "Login કર્યા પછી coordinator ને આ દેખાશે.",
   },
   ambassador: {
     meta: {
@@ -236,8 +181,6 @@ const gu: PartnerPageText = {
     emailHint: "તમે આ email થી dashboard માં login કરશો.",
     consent: "હું Olympiad વિશે સાચી માહિતી share કરીશ ને એના rules પાળીશ.",
     submit: "Ambassador તરીકે જોડાઓ",
-    dashboardTitle: "Ambassador dashboard",
-    dashboardLead: "Login કર્યા પછી Ambassador ને આ દેખાશે.",
   },
   choose: "Select કરો",
   sending: "મોકલાય છે…",
@@ -263,50 +206,6 @@ const gu: PartnerPageText = {
     email: "સાચું email લખો.",
     emailTaken: "આ email બીજા partner માટે વપરાયો છે. બીજો email વાપરો.",
     consent: "આગળ વધવા માટે tick કરો.",
-  },
-  sample: {
-    school: {
-      name: "શ્રી ઉદાહરણ પ્રાથમિક શાળા",
-      line: "School code SCH-RJK-012 · Government school · Rajkot",
-      pay: "14 pending students નું payment કરો",
-    },
-    schoolStats: [
-      ["ઉમેરેલા students", "48"],
-      ["Paid", "34"],
-      ["Payment બાકી", "14"],
-      ["Parent ની મંજૂરી બાકી", "6"],
-    ],
-    schoolActions: ["Excel upload કરો", "Template download કરો"],
-    columns: ["Student", "Class", "Group", "Fee", "Payment", "Parent ની મંજૂરી"],
-    rows: [
-      ["Student 1", "Std 8", "A", "Paid", "Done"],
-      ["Student 2", "Std 9", "A", "Paid", "Waiting"],
-      ["Student 3", "Std 10", "B", "Pending", "Done"],
-    ],
-    paid: "Paid",
-    pending: "બાકી",
-    doneWord: "થઈ ગયું",
-    schoolNote: "Group ને fee class પરથી આપોઆપ નક્કી થાય છે. Payment થયેલા દરેક student ને registration number મળે છે.",
-    amb: {
-      name: "ઉદાહરણ નામ",
-      line: "Teacher · Rajkot · 16 Nov 2026 થી Ambassador",
-      codeLabel: "તમારો Ambassador code",
-      code: "CNA-AMB-0142",
-      qr: "QR code download કરો",
-    },
-    ambStats: [
-      ["Link ખોલી", "212"],
-      ["Registered", "41"],
-      ["Paid", "36"],
-      ["આગળના milestone સુધી", "14"],
-    ],
-    progress: "આગળના milestone માટે 50 માંથી 36 paid registrations",
-    milestones: [
-      ["25 · પહોંચ્યા", "Olympiad Ambassador certificate"],
-      ["50", "Website ના Ambassadors list માં નામ"],
-      ["100", "Camp માં free seat કે escort seat (નક્કી થશે)"],
-    ],
-    ambNote: "ફક્ત paid registrations ગણાય છે. તમને ફક્ત ગણતરી દેખાય, બીજાની personal details નહીં. Milestone rewards CNA નક્કી કરે છે.",
   },
 };
 

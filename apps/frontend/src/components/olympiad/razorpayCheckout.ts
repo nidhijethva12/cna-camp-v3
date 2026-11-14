@@ -44,16 +44,30 @@ export interface CheckoutCallbacks {
   onStopped: (message: string) => void;
 }
 
+/** What the visitor is told when the payment stops, in the page's language. */
+export interface CheckoutMessages {
+  windowFailed: string;
+  windowClosed: string;
+  payFailed: string;
+}
+
+const englishMessages: CheckoutMessages = {
+  windowFailed: "The payment window couldn't load. Check your internet connection and try again.",
+  windowClosed: "The payment window was closed before paying. Your form is saved; you can pay now.",
+  payFailed: "The payment didn't go through. Please try again.",
+};
+
 /** Opens Razorpay Checkout for an order the Olympiad API created (the amount is fixed by the order). */
 export async function openCheckout(
   order: NonNullable<CheckoutOrder>,
   details: { description: string; prefill: { name: string; email: string; contact: string } },
   { onPaid, onStopped }: CheckoutCallbacks,
+  messages: CheckoutMessages = englishMessages,
 ) {
   try {
     await loadScript();
   } catch {
-    onStopped("The payment window couldn't load. Check your internet connection and try again.");
+    onStopped(messages.windowFailed);
     return;
   }
   const checkout = new window.Razorpay!({
@@ -68,8 +82,9 @@ export async function openCheckout(
     theme: { color: getComputedStyle(document.documentElement).getPropertyValue("--color-primary").trim() },
     handler: (r: RazorpaySuccess) =>
       onPaid({ orderId: r.razorpay_order_id, paymentId: r.razorpay_payment_id, signature: r.razorpay_signature }),
-    modal: { ondismiss: () => onStopped("The payment window was closed before paying. Your form is saved; you can pay now.") },
+    modal: { ondismiss: () => onStopped(messages.windowClosed) },
   });
-  checkout.on("payment.failed", (r) => onStopped(r.error?.description ?? "The payment didn't go through. Please try again."));
+  // Razorpay's own reason is in English, so the page's message is shown instead.
+  checkout.on("payment.failed", () => onStopped(messages.payFailed));
   checkout.open();
 }

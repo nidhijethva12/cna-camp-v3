@@ -1,15 +1,18 @@
 import { registrationText, type RegLang } from "@/content/registration";
 import {
-  AADHAAR,
   DISTRICTS,
   EMAIL,
   groupFor,
+  isAadhaar,
+  isBirthDate,
+  isPlainText,
   isSchoolGroup,
   needsSchoolProof,
   picksQuizSlot,
   withSchool,
   PERSON_NAME,
   PIN_CODE,
+  pinMatchesDistrict,
   takesQuiz,
   type GroupId,
   type GroupWarning,
@@ -152,6 +155,7 @@ export function stepErrors(step: number, input: RegistrationInput, files: Regist
   const text = (field: keyof RegistrationInput, message: string, max = 120, min = 1) => {
     const v = String(input[field] ?? "").trim();
     if (v.length < min || v.length > max) e[field] = message;
+    else if (!isPlainText(v)) e[field] = t.plainText;
   };
   const name = (field: keyof RegistrationInput, message: string) => {
     const v = String(input[field] ?? "").trim();
@@ -163,7 +167,8 @@ export function stepErrors(step: number, input: RegistrationInput, files: Regist
 
   if (step === 1) {
     if (!input.who) e.who = t.choose;
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(input.dob)) e.dob = t.dob;
+    if (!input.dob) e.dob = t.dob;
+    else if (!isBirthDate(input.dob)) e.dob = t.dobInvalid;
     if (s.student && !input.schoolType) e.schoolType = t.choose;
     if (s.asksStd6to8 && !input.govtStd6to8) e.govtStd6to8 = t.choose;
     if (s.warning) e.group = registrationText[lang].group.warnings[s.warning];
@@ -178,9 +183,10 @@ export function stepErrors(step: number, input: RegistrationInput, files: Regist
     mobile("mobile");
     if (!EMAIL.test(input.email.trim()) || input.email.length > 120) e.email = t.email;
     if (!input.whatsappSame) mobile("whatsapp");
-    text("address", t.address, 200, 3);
+    text("address", t.address, 200, 10);
     if (!DISTRICTS.some(([d]) => d === input.district)) e.district = t.district;
     if (!PIN_CODE.test(input.pin)) e.pin = t.pin;
+    else if (input.district && !pinMatchesDistrict(input.pin, input.district)) e.pin = t.pinDistrict;
     if (s.quiz && !input.quizLanguage) e.quizLanguage = t.choose;
     if (s.minor) {
       // A parent who is not alive can't be the one filling in the form; an orphan's guardian is "someone else".
@@ -192,7 +198,7 @@ export function stepErrors(step: number, input: RegistrationInput, files: Regist
   }
 
   if (step === 3) {
-    if (!s.adult) text("school", t.school, 150, 2);
+    if (!s.adult) text("school", t.school, 150, 3);
     if (s.student) {
       text("std", t.select);
       if (s.slot && slots.length) {
@@ -200,20 +206,23 @@ export function stepErrors(step: number, input: RegistrationInput, files: Regist
         if (!day) e.quizDate = t.select;
         else if (!day.times.includes(input.quizTime)) e.quizTime = t.select;
       }
-      if (input.schoolId.trim().length > 40) e.schoolId = t.schoolId;
+      if (!/^[A-Za-z0-9/ -]{0,40}$/.test(input.schoolId.trim())) e.schoolId = t.schoolId;
       if (s.proof && !files.schoolIdCard) e.schoolIdCard = t.schoolIdCard;
       if (!input.contactRole) e.contactRole = t.choose;
       name("contactName", t.name);
       mobile("contactMobile");
     }
     if (s.teacher && !input.teacherStatus) e.teacherStatus = t.choose;
+    if (s.teacher && input.subject.trim()) text("subject", t.subject, 60);
     if (s.adult) text("work", t.select);
     if (input.achievements.includes(ACHIEVEMENT_OTHER)) text("achievementOther", t.achievementOther, 120);
   }
 
   if (step === 4) {
     if (!files.photo) e.photo = t.photo;
-    if (!AADHAAR.test(digits(input.aadhaar))) e.aadhaar = t.aadhaar;
+    const aadhaar = digits(input.aadhaar);
+    if (aadhaar.length !== 12) e.aadhaar = t.aadhaar;
+    else if (!isAadhaar(aadhaar)) e.aadhaar = t.aadhaarInvalid;
     if (!files.aadhaarCard) e.aadhaarCard = t.aadhaarCard;
   }
 
@@ -248,6 +257,7 @@ export const FIELD_STEP: Partial<Record<RegistrationField, number>> = {
   quizDate: 3,
   quizTime: 3,
   schoolId: 3,
+  subject: 3,
   schoolIdCard: 3,
   contactRole: 3,
   contactName: 3,
