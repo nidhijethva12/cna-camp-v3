@@ -26,7 +26,6 @@ export function Donors({ donors }: { donors: Donor[] }) {
             return (
               <li key={i} className="donors-card" aria-hidden={copy || undefined}>
                 <article className="relative flex h-full flex-col items-center rounded-card border border-line bg-light px-6 pt-8 pb-7 text-center shadow-card">
-                  {d.isSample && <span className="absolute top-3 right-4 text-[12.5px] text-muted">Sample</span>}
                   <div className="relative h-32 w-32 overflow-hidden rounded-full border-4 border-secondary bg-soft sm:h-36 sm:w-36">
                     <Photo img={d.photo} alt={copy ? "" : d.name} label={d.name} sizes="144px" />
                   </div>

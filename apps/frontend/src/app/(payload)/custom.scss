@@ -242,3 +242,72 @@ input[type="radio"] {
 :root:not(:has(.global-edit--olympiad-page)) :is(.app-header__localizer, .app-header__localizer-spacing, .localizer-button) {
   display: none;
 }
+
+// Documents tab of an Olympiad participant.
+.cna-docs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+.cna-docs__photo {
+  width: 180px;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid var(--theme-elevation-150);
+}
+
+.cna-docs__label {
+  margin: 0;
+  font-size: 13px;
+  color: var(--theme-elevation-500);
+}
+
+.cna-docs__aadhaar {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin: 4px 0 16px;
+  font-size: 20px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+
+  .btn {
+    margin: 0;
+  }
+}
+
+.cna-docs__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+
+  .btn {
+    margin: 0;
+  }
+}
+
+.cna-docs__error {
+  color: var(--theme-error-500);
+}
+
+.cna-docs__empty {
+  color: var(--theme-elevation-500);
+}
+
+.cna-export {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  color: var(--theme-elevation-600);
+  font-size: 13px;
+
+  .btn {
+    margin: 0;
+  }
+}

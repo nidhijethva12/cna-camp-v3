@@ -13,6 +13,11 @@ import { Enquiries } from "./cms/collections/Enquiries";
 import { Faqs } from "./cms/collections/Faqs";
 import { Media } from "./cms/collections/Media";
 import { Notices } from "./cms/collections/Notices";
+import { OlympiadAmbassadors } from "./cms/collections/olympiad/OlympiadAmbassadors";
+import { OlympiadPartnerRequests } from "./cms/collections/olympiad/OlympiadPartnerRequests";
+import { OlympiadPayments } from "./cms/collections/olympiad/OlympiadPayments";
+import { OlympiadPeople } from "./cms/collections/olympiad/OlympiadPeople";
+import { OlympiadSchools } from "./cms/collections/olympiad/OlympiadSchools";
 import { Posts } from "./cms/collections/Posts";
 import { Reviews } from "./cms/collections/Reviews";
 import { Trips } from "./cms/collections/Trips";
@@ -20,6 +25,7 @@ import { Users } from "./cms/collections/Users";
 import { Videos } from "./cms/collections/Videos";
 import { HomePage } from "./cms/globals/HomePage";
 import { OlympiadPage } from "./cms/globals/OlympiadPage";
+import { OlympiadSettings } from "./cms/globals/OlympiadSettings";
 import { SiteSettings } from "./cms/globals/SiteSettings";
 import { siteUrl } from "./lib/seo";
 
@@ -80,8 +86,26 @@ export default buildConfig({
       },
     },
   },
-  collections: [Trips, Batches, Posts, Reviews, Donors, Faqs, Notices, Media, Documents, Videos, Enquiries, Users],
-  globals: [HomePage, SiteSettings, OlympiadPage],
+  collections: [
+    Trips,
+    Batches,
+    Posts,
+    Reviews,
+    Donors,
+    Faqs,
+    Notices,
+    Media,
+    Documents,
+    Videos,
+    Enquiries,
+    OlympiadPeople,
+    OlympiadPartnerRequests,
+    OlympiadPayments,
+    OlympiadAmbassadors,
+    OlympiadSchools,
+    Users,
+  ],
+  globals: [HomePage, SiteSettings, OlympiadSettings, OlympiadPage],
   localization: {
     locales: [
       { code: "en", label: "English" },

@@ -60,7 +60,7 @@ function toUi(ui: Maybe<Loose<OlympiadPage["ui"]>>, fb: Ui): Ui {
     glanceLabel: str(ui?.glanceLabel, fb.glanceLabel),
     register: strings(ui?.register, fb.register),
     help: strings(ui?.help, fb.help),
-    picker: strings(ui?.picker, fb.picker),
+    picker: { ...strings(ui?.picker, fb.picker), footnote: ui?.picker?.participant ? (ui.picker.footnote ?? "") : fb.picker.footnote },
   };
 }
 
@@ -72,10 +72,12 @@ function toOlympiad(doc: Loose<OlympiadPage>, fb: OlympiadContent): OlympiadCont
     opensOn: str(doc.opensOn, fb.opensOn),
     motto: str(doc.motto, fb.motto),
     meta: strings(doc.meta, fb.meta),
-    notice: {
-      ...strings({ title: doc.notice?.title, meta: doc.notice?.meta, href: doc.notice?.href }, fb.notice),
-      ...(typeof doc.notice?.file === "object" && doc.notice.file?.url ? { href: doc.notice.file.url } : {}),
-    },
+    notices: list(doc.notices, fb.notices, (n, f) => ({
+      tag: opt(n.tag),
+      title: str(n.title, f?.title),
+      meta: str(n.meta, f?.meta),
+      href: (typeof n.file === "object" && n.file?.url) || str(n.href, f?.href),
+    })),
     dates: list(doc.dates, fb.dates, (d, f) => ({
       when: str(d.when, f?.when),
       title: str(d.title, f?.title),
@@ -105,6 +107,7 @@ function toOlympiad(doc: Loose<OlympiadPage>, fb: OlympiadContent): OlympiadCont
         note: opt(j.note),
         goal: Boolean(j.goal),
       })),
+      note: opt(g.note),
     })),
     partners: list(doc.partners, fb.partners, (p, f) => ({
       kind: p.kind ?? f?.kind ?? "school",

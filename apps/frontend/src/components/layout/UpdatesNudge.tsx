@@ -6,8 +6,26 @@ import { ArrowRight, Close, Megaphone } from "@/components/ui/icons";
 
 const SEEN_KEY = "cna-updates-nudge-seen";
 
+const text = {
+  en: {
+    label: "More about the Olympiad",
+    close: "Close",
+    title: "Need more info on the Olympiad?",
+    body: "Questions about groups, fees, the quiz or the scholarships? Our team replies within a day.",
+    cta: "Contact us",
+  },
+  gu: {
+    label: "ઓલમ્પિયાડ વિશે વધુ",
+    close: "બંધ કરો",
+    title: "ઓલમ્પિયાડ વિશે વધુ માહિતી જોઈએ છે?",
+    body: "ગ્રુપ, ફી, ક્વિઝ કે સ્કોલરશીપ વિશે પ્રશ્ન છે? અમારી ટીમ એક દિવસમાં જવાબ આપશે.",
+    cta: "સંપર્ક કરો",
+  },
+};
+
 /** Help card on the Olympiad page: slides in at the bottom left once a visitor has read half the page; once per visit. */
-export function UpdatesNudge() {
+export function UpdatesNudge({ lang = "en" }: { lang?: keyof typeof text }) {
+  const t = text[lang];
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -33,7 +51,7 @@ export function UpdatesNudge() {
 
   return (
     <aside
-      aria-label="More about the Olympiad"
+      aria-label={t.label}
       aria-hidden={!open}
       inert={!open}
       className={`fixed bottom-20 left-4 z-40 w-[min(340px,calc(100vw-2rem))] transition duration-500 ease-out lg:bottom-6 lg:left-6 ${
@@ -45,7 +63,7 @@ export function UpdatesNudge() {
         <button
           type="button"
           onClick={() => setOpen(false)}
-          aria-label="Close"
+          aria-label={t.close}
           className="absolute top-2.5 right-2.5 flex h-9 w-9 items-center justify-center rounded-full text-[18px] text-muted transition hover:bg-soft hover:text-dark"
         >
           <Close />
@@ -55,14 +73,12 @@ export function UpdatesNudge() {
             <Megaphone />
           </span>
           <div>
-            <p className="font-display text-[18px] leading-tight font-bold">Need more info on the Olympiad?</p>
-            <p className="mt-1 text-[14.5px] leading-snug text-muted">
-              Questions about groups, fees, the quiz or the scholarships? Our team replies within a day.
-            </p>
+            <p className="font-display text-[18px] leading-tight font-bold">{t.title}</p>
+            <p className="mt-1 text-[14.5px] leading-snug text-muted">{t.body}</p>
           </div>
         </div>
         <Link href="/contact" onClick={() => setOpen(false)} className="btn btn-primary mt-4 w-full py-2.5!">
-          Contact us <ArrowRight />
+          {t.cta} <ArrowRight />
         </Link>
       </div>
     </aside>

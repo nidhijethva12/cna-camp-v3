@@ -7,6 +7,12 @@ import type { GroupId, OlympiadContent, OlympiadGroup } from "@/content/olympiad
 
 /** Each group keeps one colour across its tab, panel edge and fee tiles. */
 const tone: Record<GroupId, { tab: string; selected: string; edge: string; tile: string }> = {
+  "0": {
+    tab: "border-t-live",
+    selected: "aria-selected:border-live aria-selected:bg-live aria-selected:text-dark",
+    edge: "border-t-live",
+    tile: "bg-live/12",
+  },
   A: {
     tab: "border-t-primary",
     selected: "aria-selected:border-primary aria-selected:bg-primary aria-selected:text-light",
@@ -83,7 +89,7 @@ export function GroupPicker({ groups, labels }: { groups: OlympiadGroup[]; label
         </output>
       </div>
 
-      <div role="tablist" aria-label={labels.tabsLabel} className="mt-4 grid grid-cols-5 gap-2">
+      <div role="tablist" aria-label={labels.tabsLabel} className="mt-4 grid grid-cols-3 gap-2 sm:grid-cols-6">
         {groups.map((g, i) => (
           <button
             key={g.id}
@@ -144,6 +150,7 @@ export function GroupPicker({ groups, labels }: { groups: OlympiadGroup[]; label
                 <b>{labels.prize}</b> {g.prize}
               </span>
             </p>
+            {g.note && <p className="mt-3 rounded-card border border-dashed border-line px-4 py-3 text-[14.5px] text-muted">{g.note}</p>}
           </div>
           <div>
             <h4 className="text-[14px] font-bold text-primary">{labels.journey}</h4>
@@ -165,6 +172,7 @@ export function GroupPicker({ groups, labels }: { groups: OlympiadGroup[]; label
           </div>
         </div>
       ))}
+      {labels.footnote && <p className="mt-3 text-[13.5px] text-muted">{labels.footnote}</p>}
     </>
   );
 }

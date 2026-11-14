@@ -2,7 +2,11 @@ import type { Metadata } from "next";
 import { Noto_Sans_Gujarati } from "next/font/google";
 import { OlympiadView } from "@/components/olympiad/OlympiadView";
 import { getSiteSettings } from "@/lib/content";
+import { getOlympiadPhase } from "@/lib/olympiad/settings";
 import { getOlympiadContent } from "@/lib/olympiadContent";
+
+// Switches from "Remind me" to "Register now" by itself when registration opens.
+export const revalidate = 300;
 
 const gujarati = Noto_Sans_Gujarati({ subsets: ["gujarati"], variable: "--font-gujarati", display: "swap" });
 
@@ -17,10 +21,10 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function OlympiadGujaratiPage() {
-  const [o, contact] = await Promise.all([getOlympiadContent("gu"), getSiteSettings()]);
+  const [o, contact, state] = await Promise.all([getOlympiadContent("gu"), getSiteSettings(), getOlympiadPhase()]);
   return (
     <div lang="gu" className={`lang-gu ${gujarati.variable}`}>
-      <OlympiadView o={o} lang="gu" contact={contact} />
+      <OlympiadView o={o} lang="gu" contact={contact} {...state} />
     </div>
   );
 }

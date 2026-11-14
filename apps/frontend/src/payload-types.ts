@@ -78,6 +78,11 @@ export interface Config {
     documents: Document;
     videos: Video;
     enquiries: Enquiry;
+    'olympiad-people': OlympiadPerson;
+    'olympiad-partner-requests': OlympiadPartnerRequest;
+    'olympiad-payments': OlympiadPayment;
+    'olympiad-ambassadors': OlympiadAmbassador;
+    'olympiad-schools': OlympiadSchool;
     users: User;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
@@ -97,6 +102,11 @@ export interface Config {
     documents: DocumentsSelect<false> | DocumentsSelect<true>;
     videos: VideosSelect<false> | VideosSelect<true>;
     enquiries: EnquiriesSelect<false> | EnquiriesSelect<true>;
+    'olympiad-people': OlympiadPeopleSelect<false> | OlympiadPeopleSelect<true>;
+    'olympiad-partner-requests': OlympiadPartnerRequestsSelect<false> | OlympiadPartnerRequestsSelect<true>;
+    'olympiad-payments': OlympiadPaymentsSelect<false> | OlympiadPaymentsSelect<true>;
+    'olympiad-ambassadors': OlympiadAmbassadorsSelect<false> | OlympiadAmbassadorsSelect<true>;
+    'olympiad-schools': OlympiadSchoolsSelect<false> | OlympiadSchoolsSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -110,11 +120,13 @@ export interface Config {
   globals: {
     'home-page': HomePage;
     'site-settings': SiteSetting;
+    'olympiad-settings': OlympiadSetting;
     'olympiad-page': OlympiadPage;
   };
   globalsSelect: {
     'home-page': HomePageSelect<false> | HomePageSelect<true>;
     'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
+    'olympiad-settings': OlympiadSettingsSelect<false> | OlympiadSettingsSelect<true>;
     'olympiad-page': OlympiadPageSelect<false> | OlympiadPageSelect<true>;
   };
   locale: 'en' | 'gu';
@@ -560,16 +572,37 @@ export interface Faq {
   createdAt: string;
 }
 /**
- * Each notice is one line on the Olympiad page notice board. Lower order numbers show first.
+ * Each notice is one line on the Olympiad page notice board. Pinned notices show first, then lower order numbers.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "notices".
  */
 export interface Notice {
   id: string;
+  /**
+   * Only notices of the current Olympiad show on the page.
+   */
+  edition: '2.0' | '1.0';
   text: string;
   /**
-   * Optional: a PDF or page to open (https://…).
+   * Optional small line, e.g. “Notice no. 02/2026 · Gujarati PDF”.
+   */
+  details?: string | null;
+  type: 'official' | 'important' | 'date' | 'pdf' | 'result';
+  /**
+   * Shown on the notice, e.g. the round date.
+   */
+  date?: string | null;
+  /**
+   * Pinned notices show at the top.
+   */
+  pinned?: boolean | null;
+  /**
+   * Opens in a new tab.
+   */
+  file?: (string | null) | Document;
+  /**
+   * Or a page to open (https://…), if there is no PDF.
    */
   link?: string | null;
   /**
@@ -630,6 +663,384 @@ export interface Enquiry {
      */
     sourcePath?: string | null;
     consentAt?: string | null;
+    ipHash?: string | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Everyone who asked for a reminder or registered, in one list. Filter, then export or message.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "olympiad-people".
+ */
+export interface OlympiadPerson {
+  id: string;
+  regId: string;
+  type: 'reminder' | 'invited' | 'registered';
+  edition: string;
+  name: string;
+  participant?: ('student' | 'teacher' | 'adult') | null;
+  fatherName?: string | null;
+  motherName?: string | null;
+  fatherAlive?: boolean | null;
+  motherAlive?: boolean | null;
+  /**
+   * Students whose parents have both passed away.
+   */
+  orphan?: boolean | null;
+  /**
+   * +91 and 10 digits.
+   */
+  mobile?: string | null;
+  /**
+   * +91 and 10 digits.
+   */
+  whatsapp: string;
+  /**
+   * Required on the public forms; optional for students a school adds.
+   */
+  email?: string | null;
+  interest?: ('0' | 'A' | 'B' | 'C' | 'D' | 'E' | 'school' | 'unsure') | null;
+  group?: ('0' | 'A' | 'B' | 'C' | 'D' | 'E') | null;
+  /**
+   * YYYY-MM-DD
+   */
+  dob?: string | null;
+  quizLanguage?: ('gu' | 'en') | null;
+  address?: string | null;
+  city?: string | null;
+  district?:
+    | (
+        | 'Ahmedabad'
+        | 'Amreli'
+        | 'Anand'
+        | 'Aravalli'
+        | 'Banaskantha'
+        | 'Bharuch'
+        | 'Bhavnagar'
+        | 'Botad'
+        | 'Chhota Udaipur'
+        | 'Dahod'
+        | 'Dang'
+        | 'Devbhumi Dwarka'
+        | 'Gandhinagar'
+        | 'Gir Somnath'
+        | 'Jamnagar'
+        | 'Junagadh'
+        | 'Kheda'
+        | 'Kutch'
+        | 'Mahisagar'
+        | 'Mehsana'
+        | 'Morbi'
+        | 'Narmada'
+        | 'Navsari'
+        | 'Panchmahal'
+        | 'Patan'
+        | 'Porbandar'
+        | 'Rajkot'
+        | 'Sabarkantha'
+        | 'Surat'
+        | 'Surendranagar'
+        | 'Tapi'
+        | 'Vadodara'
+        | 'Valsad'
+        | 'Outside Gujarat'
+      )
+    | null;
+  pin?: string | null;
+  parentRelation?: ('father' | 'mother' | 'other') | null;
+  parentName?: string | null;
+  parentPhone?: string | null;
+  institution?: string | null;
+  stage?: string | null;
+  schoolType?: ('government' | 'non-government' | 'semi-government' | 'college' | 'not-a-student') | null;
+  /**
+   * Students under 16. Ticked means Group 0.
+   */
+  govtStd6to8?: boolean | null;
+  quizDate?: string | null;
+  quizTime?: string | null;
+  schoolId?: string | null;
+  contactRole?: string | null;
+  contactName?: string | null;
+  contactPhone?: string | null;
+  teacherStatus?: ('current' | 'retired') | null;
+  subject?: string | null;
+  work?: string | null;
+  achievements?: string[] | null;
+  aadhaarLast4?: string | null;
+  documents?: {
+    photo?: string | null;
+    aadhaarCard?: string | null;
+    schoolIdCard?: string | null;
+  };
+  aadhaarEnc?: string | null;
+  aadhaarHash?: string | null;
+  fee?: number | null;
+  paymentStatus?: ('free' | 'pending' | 'paid' | 'failed') | null;
+  paidAt?: string | null;
+  payment?: (string | null) | OlympiadPayment;
+  razorpayPaymentId?: string | null;
+  /**
+   * Group 0 or Group B at the government fee, without an approved government school code. Check the School ID card / bonafide certificate.
+   */
+  feeCheck?: boolean | null;
+  source?: ('direct' | 'school' | 'ambassador') | null;
+  code?: string | null;
+  school?: (string | null) | OlympiadSchool;
+  ambassador?: (string | null) | OlympiadAmbassador;
+  rounds?: {
+    r1?: ('appeared' | 'absent' | 'selected' | 'not-selected') | null;
+    r2?: ('appeared' | 'absent' | 'selected' | 'not-selected') | null;
+    r3?: ('appeared' | 'absent' | 'selected' | 'not-selected') | null;
+    r4?: ('appeared' | 'absent' | 'selected' | 'not-selected') | null;
+    r5?: ('appeared' | 'absent' | 'selected' | 'not-selected') | null;
+  };
+  scholarshipPct?: number | null;
+  consent?: {
+    at?: string | null;
+    version?: string | null;
+  };
+  rules?: {
+    at?: string | null;
+    version?: string | null;
+  };
+  /**
+   * Under 18: the parent fills in and submits the form.
+   */
+  parentConsent?: {
+    requestedAt?: string | null;
+    at?: string | null;
+  };
+  whatsappStopped?: boolean | null;
+  emailStopped?: boolean | null;
+  lastMessage?: {
+    template?: string | null;
+    channel?: ('whatsapp' | 'email') | null;
+    status?: ('queued' | 'sent' | 'delivered' | 'read' | 'failed' | 'skipped') | null;
+    at?: string | null;
+    providerId?: string | null;
+  };
+  /**
+   * Visible to the CNA team only.
+   */
+  notes?: string | null;
+  registeredAt?: string | null;
+  inviteSentAt?: string | null;
+  meta?: {
+    ipHash?: string | null;
+    consentIpHash?: string | null;
+    parentConsentIpHash?: string | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "olympiad-payments".
+ */
+export interface OlympiadPayment {
+  id: string;
+  razorpayOrderId: string;
+  razorpayPaymentId?: string | null;
+  receipt: string;
+  amount: number;
+  status: 'created' | 'paid' | 'failed';
+  mode: 'single' | 'bulk';
+  paidBy: 'participant' | 'school';
+  people: (string | OlympiadPerson)[];
+  school?: (string | null) | OlympiadSchool;
+  paidAt?: string | null;
+  failureReason?: string | null;
+  /**
+   * Paid, but the person had already paid or had moved to a newer order. Refund it in Razorpay, then untick.
+   */
+  needsRefund?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "olympiad-schools".
+ */
+export interface OlympiadSchool {
+  id: string;
+  status: 'pending' | 'approved' | 'blocked';
+  /**
+   * Given on approval.
+   */
+  code?: string | null;
+  approvedAt?: string | null;
+  name: string;
+  udise: string;
+  type: 'government' | 'grant-in-aid' | 'private' | 'college';
+  district:
+    | 'Ahmedabad'
+    | 'Amreli'
+    | 'Anand'
+    | 'Aravalli'
+    | 'Banaskantha'
+    | 'Bharuch'
+    | 'Bhavnagar'
+    | 'Botad'
+    | 'Chhota Udaipur'
+    | 'Dahod'
+    | 'Dang'
+    | 'Devbhumi Dwarka'
+    | 'Gandhinagar'
+    | 'Gir Somnath'
+    | 'Jamnagar'
+    | 'Junagadh'
+    | 'Kheda'
+    | 'Kutch'
+    | 'Mahisagar'
+    | 'Mehsana'
+    | 'Morbi'
+    | 'Narmada'
+    | 'Navsari'
+    | 'Panchmahal'
+    | 'Patan'
+    | 'Porbandar'
+    | 'Rajkot'
+    | 'Sabarkantha'
+    | 'Surat'
+    | 'Surendranagar'
+    | 'Tapi'
+    | 'Vadodara'
+    | 'Valsad'
+    | 'Outside Gujarat';
+  principal: string;
+  coordinator: {
+    name: string;
+    whatsapp: string;
+    /**
+     * Also the dashboard login.
+     */
+    email: string;
+  };
+  /**
+   * Kept up to date automatically.
+   */
+  stats?: {
+    students?: number | null;
+    paid?: number | null;
+  };
+  /**
+   * The partner logs in with the email above (coordinator.email). Approving emails them a link to choose their own password; you can also type one here and save.
+   */
+  login?: {
+    newPassword?: string | null;
+    passwordSetAt?: string | null;
+    lastLoginAt?: string | null;
+    passwordHash?: string | null;
+    failedAttempts?: number | null;
+    lockedUntil?: string | null;
+    resetSentAt?: string | null;
+  };
+  /**
+   * Visible to the CNA team only.
+   */
+  notes?: string | null;
+  meta?: {
+    consentAt?: string | null;
+    ipHash?: string | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Sort by Paid to see the leaderboard. Only paid registrations count towards milestones.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "olympiad-ambassadors".
+ */
+export interface OlympiadAmbassador {
+  id: string;
+  status: 'pending' | 'approved' | 'blocked';
+  /**
+   * Given on approval.
+   */
+  code?: string | null;
+  approvedAt?: string | null;
+  name: string;
+  whatsapp: string;
+  /**
+   * Also the dashboard login.
+   */
+  email?: string | null;
+  city?: string | null;
+  role?: ('teacher' | 'ngo' | 'coach' | 'past-camper' | 'parent' | 'other') | null;
+  /**
+   * Kept up to date automatically.
+   */
+  stats?: {
+    clicks?: number | null;
+    registered?: number | null;
+    paid?: number | null;
+  };
+  rewards?:
+    | {
+        milestone: number;
+        givenOn: string;
+        note?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * The partner logs in with the email above (email). Approving emails them a link to choose their own password; you can also type one here and save.
+   */
+  login?: {
+    newPassword?: string | null;
+    passwordSetAt?: string | null;
+    lastLoginAt?: string | null;
+    passwordHash?: string | null;
+    failedAttempts?: number | null;
+    lockedUntil?: string | null;
+    resetSentAt?: string | null;
+  };
+  /**
+   * Visible to the CNA team only.
+   */
+  notes?: string | null;
+  meta?: {
+    consentAt?: string | null;
+    ipHash?: string | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Sign-ups from the Olympiad page. Approving an Ambassador request gives them their code automatically.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "olympiad-partner-requests".
+ */
+export interface OlympiadPartnerRequest {
+  id: string;
+  kind: 'school' | 'ambassador';
+  status: 'new' | 'contacted' | 'approved' | 'rejected';
+  name: string;
+  /**
+   * +91 and 10 digits.
+   */
+  phone: string;
+  email?: string | null;
+  message?: string | null;
+  /**
+   * Created on approval.
+   */
+  ambassador?: (string | null) | OlympiadAmbassador;
+  /**
+   * Link the school once it is added.
+   */
+  school?: (string | null) | OlympiadSchool;
+  /**
+   * Visible to the CNA team only.
+   */
+  notes?: string | null;
+  meta?: {
+    sourcePath?: string | null;
     ipHash?: string | null;
   };
   updatedAt: string;
@@ -702,6 +1113,26 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'enquiries';
         value: string | Enquiry;
+      } | null)
+    | ({
+        relationTo: 'olympiad-people';
+        value: string | OlympiadPerson;
+      } | null)
+    | ({
+        relationTo: 'olympiad-partner-requests';
+        value: string | OlympiadPartnerRequest;
+      } | null)
+    | ({
+        relationTo: 'olympiad-payments';
+        value: string | OlympiadPayment;
+      } | null)
+    | ({
+        relationTo: 'olympiad-ambassadors';
+        value: string | OlympiadAmbassador;
+      } | null)
+    | ({
+        relationTo: 'olympiad-schools';
+        value: string | OlympiadSchool;
       } | null)
     | ({
         relationTo: 'users';
@@ -922,7 +1353,13 @@ export interface FaqsSelect<T extends boolean = true> {
  * via the `definition` "notices_select".
  */
 export interface NoticesSelect<T extends boolean = true> {
+  edition?: T;
   text?: T;
+  details?: T;
+  type?: T;
+  date?: T;
+  pinned?: T;
+  file?: T;
   link?: T;
   order?: T;
   updatedAt?: T;
@@ -1025,6 +1462,260 @@ export interface EnquiriesSelect<T extends boolean = true> {
     | T
     | {
         sourcePath?: T;
+        consentAt?: T;
+        ipHash?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "olympiad-people_select".
+ */
+export interface OlympiadPeopleSelect<T extends boolean = true> {
+  regId?: T;
+  type?: T;
+  edition?: T;
+  name?: T;
+  participant?: T;
+  fatherName?: T;
+  motherName?: T;
+  fatherAlive?: T;
+  motherAlive?: T;
+  orphan?: T;
+  mobile?: T;
+  whatsapp?: T;
+  email?: T;
+  interest?: T;
+  group?: T;
+  dob?: T;
+  quizLanguage?: T;
+  address?: T;
+  city?: T;
+  district?: T;
+  pin?: T;
+  parentRelation?: T;
+  parentName?: T;
+  parentPhone?: T;
+  institution?: T;
+  stage?: T;
+  schoolType?: T;
+  govtStd6to8?: T;
+  quizDate?: T;
+  quizTime?: T;
+  schoolId?: T;
+  contactRole?: T;
+  contactName?: T;
+  contactPhone?: T;
+  teacherStatus?: T;
+  subject?: T;
+  work?: T;
+  achievements?: T;
+  aadhaarLast4?: T;
+  documents?:
+    | T
+    | {
+        photo?: T;
+        aadhaarCard?: T;
+        schoolIdCard?: T;
+      };
+  aadhaarEnc?: T;
+  aadhaarHash?: T;
+  fee?: T;
+  paymentStatus?: T;
+  paidAt?: T;
+  payment?: T;
+  razorpayPaymentId?: T;
+  feeCheck?: T;
+  source?: T;
+  code?: T;
+  school?: T;
+  ambassador?: T;
+  rounds?:
+    | T
+    | {
+        r1?: T;
+        r2?: T;
+        r3?: T;
+        r4?: T;
+        r5?: T;
+      };
+  scholarshipPct?: T;
+  consent?:
+    | T
+    | {
+        at?: T;
+        version?: T;
+      };
+  rules?:
+    | T
+    | {
+        at?: T;
+        version?: T;
+      };
+  parentConsent?:
+    | T
+    | {
+        requestedAt?: T;
+        at?: T;
+      };
+  whatsappStopped?: T;
+  emailStopped?: T;
+  lastMessage?:
+    | T
+    | {
+        template?: T;
+        channel?: T;
+        status?: T;
+        at?: T;
+        providerId?: T;
+      };
+  notes?: T;
+  registeredAt?: T;
+  inviteSentAt?: T;
+  meta?:
+    | T
+    | {
+        ipHash?: T;
+        consentIpHash?: T;
+        parentConsentIpHash?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "olympiad-partner-requests_select".
+ */
+export interface OlympiadPartnerRequestsSelect<T extends boolean = true> {
+  kind?: T;
+  status?: T;
+  name?: T;
+  phone?: T;
+  email?: T;
+  message?: T;
+  ambassador?: T;
+  school?: T;
+  notes?: T;
+  meta?:
+    | T
+    | {
+        sourcePath?: T;
+        ipHash?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "olympiad-payments_select".
+ */
+export interface OlympiadPaymentsSelect<T extends boolean = true> {
+  razorpayOrderId?: T;
+  razorpayPaymentId?: T;
+  receipt?: T;
+  amount?: T;
+  status?: T;
+  mode?: T;
+  paidBy?: T;
+  people?: T;
+  school?: T;
+  paidAt?: T;
+  failureReason?: T;
+  needsRefund?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "olympiad-ambassadors_select".
+ */
+export interface OlympiadAmbassadorsSelect<T extends boolean = true> {
+  status?: T;
+  code?: T;
+  approvedAt?: T;
+  name?: T;
+  whatsapp?: T;
+  email?: T;
+  city?: T;
+  role?: T;
+  stats?:
+    | T
+    | {
+        clicks?: T;
+        registered?: T;
+        paid?: T;
+      };
+  rewards?:
+    | T
+    | {
+        milestone?: T;
+        givenOn?: T;
+        note?: T;
+        id?: T;
+      };
+  login?:
+    | T
+    | {
+        newPassword?: T;
+        passwordSetAt?: T;
+        lastLoginAt?: T;
+        passwordHash?: T;
+        failedAttempts?: T;
+        lockedUntil?: T;
+        resetSentAt?: T;
+      };
+  notes?: T;
+  meta?:
+    | T
+    | {
+        consentAt?: T;
+        ipHash?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "olympiad-schools_select".
+ */
+export interface OlympiadSchoolsSelect<T extends boolean = true> {
+  status?: T;
+  code?: T;
+  approvedAt?: T;
+  name?: T;
+  udise?: T;
+  type?: T;
+  district?: T;
+  principal?: T;
+  coordinator?:
+    | T
+    | {
+        name?: T;
+        whatsapp?: T;
+        email?: T;
+      };
+  stats?:
+    | T
+    | {
+        students?: T;
+        paid?: T;
+      };
+  login?:
+    | T
+    | {
+        newPassword?: T;
+        passwordSetAt?: T;
+        lastLoginAt?: T;
+        passwordHash?: T;
+        failedAttempts?: T;
+        lockedUntil?: T;
+        resetSentAt?: T;
+      };
+  notes?: T;
+  meta?:
+    | T
+    | {
         consentAt?: T;
         ipHash?: T;
       };
@@ -1284,6 +1975,87 @@ export interface SiteSetting {
   createdAt?: string | null;
 }
 /**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "olympiad-settings".
+ */
+export interface OlympiadSetting {
+  id: string;
+  /**
+   * Use “Open now” to open early. “Automatic” switches on and off at the dates below (IST).
+   */
+  registrationMode: 'auto' | 'open' | 'closed';
+  opensAt: string;
+  closesAt: string;
+  feeLastDate: string;
+  /**
+   * Group 0 is government school students under 16 (free). Group B has a lower fee for government school students.
+   */
+  fees: {
+    G0: {
+      other: number;
+    };
+    A: {
+      other: number;
+    };
+    B: {
+      govt: number;
+      other: number;
+    };
+    C: {
+      other: number;
+    };
+    D: {
+      other: number;
+    };
+    E: {
+      other: number;
+    };
+  };
+  /**
+   * Shown next to the consent tick and saved with every person as proof.
+   */
+  consentText: string;
+  /**
+   * Change this whenever the consent text changes.
+   */
+  consentVersion: string;
+  /**
+   * Std 10, Std 12 and Group C students pick one of these in the form. Leave empty to hide the question. Announce the same slots on the notice board.
+   */
+  quizSlots?:
+    | {
+        /**
+         * As shown in the form, e.g. Sun, 17 Jan 2027
+         */
+        date: string;
+        times: {
+          /**
+           * e.g. 10:00 AM to 11:00 AM
+           */
+          time: string;
+          id?: string | null;
+        }[];
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Paid registrations an Ambassador needs for each reward.
+   */
+  milestones?:
+    | {
+        paid: number;
+        reward: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * After this date, personal details of reminders and registrations can be deleted (DPDP Act).
+   */
+  retainUntil?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * Every piece of text on the Olympiad page. Switch the language at the top right to edit the Gujarati. An empty Gujarati box shows the English.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1330,23 +2102,30 @@ export interface OlympiadPage {
     ogDescription: string;
   };
   /**
-   * The official notice pinned at the top of the notice board.
+   * The PDFs on the notice board, in order. The first one is the official notice.
    */
-  notice: {
-    title: string;
-    /**
-     * Notice number, date and language.
-     */
-    meta: string;
-    /**
-     * Upload a new notice here to replace the current one on the site, in both languages. Update “Details” above to match.
-     */
-    file?: (string | null) | Document;
-    /**
-     * Used only when no PDF is uploaded above, e.g. /docs/olympiad-2-notice.pdf
-     */
-    href: string;
-  };
+  notices?:
+    | {
+        /**
+         * Small label, e.g. Official
+         */
+        tag?: string | null;
+        title: string;
+        /**
+         * Notice number, date, who it is for and language.
+         */
+        meta: string;
+        /**
+         * The same file is used in both languages.
+         */
+        file?: (string | null) | Document;
+        /**
+         * Used only when no PDF is uploaded above.
+         */
+        href?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   /**
    * In date order.
    */
@@ -1388,11 +2167,11 @@ export interface OlympiadPage {
       }[]
     | null;
   /**
-   * One entry per group, A to D.
+   * One entry per group, 0 to E.
    */
   groups?:
     | {
-        groupId: 'A' | 'B' | 'C' | 'D' | 'E';
+        groupId: '0' | 'A' | 'B' | 'C' | 'D' | 'E';
         /**
          * e.g. Group A
          */
@@ -1435,6 +2214,10 @@ export interface OlympiadPage {
               id?: string | null;
             }[]
           | null;
+        /**
+         * Small note under the prize, e.g. who can choose this group.
+         */
+        note?: string | null;
         id?: string | null;
       }[]
     | null;
@@ -1721,6 +2504,10 @@ export interface OlympiadPage {
       journey: string;
       group: string;
       tabsLabel: string;
+      /**
+       * Small text under the group panels.
+       */
+      footnote?: string | null;
     };
   };
   updatedAt?: string | null;
@@ -1865,6 +2652,76 @@ export interface SiteSettingsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "olympiad-settings_select".
+ */
+export interface OlympiadSettingsSelect<T extends boolean = true> {
+  registrationMode?: T;
+  opensAt?: T;
+  closesAt?: T;
+  feeLastDate?: T;
+  fees?:
+    | T
+    | {
+        G0?:
+          | T
+          | {
+              other?: T;
+            };
+        A?:
+          | T
+          | {
+              other?: T;
+            };
+        B?:
+          | T
+          | {
+              govt?: T;
+              other?: T;
+            };
+        C?:
+          | T
+          | {
+              other?: T;
+            };
+        D?:
+          | T
+          | {
+              other?: T;
+            };
+        E?:
+          | T
+          | {
+              other?: T;
+            };
+      };
+  consentText?: T;
+  consentVersion?: T;
+  quizSlots?:
+    | T
+    | {
+        date?: T;
+        times?:
+          | T
+          | {
+              time?: T;
+              id?: T;
+            };
+        id?: T;
+      };
+  milestones?:
+    | T
+    | {
+        paid?: T;
+        reward?: T;
+        id?: T;
+      };
+  retainUntil?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "olympiad-page_select".
  */
 export interface OlympiadPageSelect<T extends boolean = true> {
@@ -1881,13 +2738,15 @@ export interface OlympiadPageSelect<T extends boolean = true> {
         ogTitle?: T;
         ogDescription?: T;
       };
-  notice?:
+  notices?:
     | T
     | {
+        tag?: T;
         title?: T;
         meta?: T;
         file?: T;
         href?: T;
+        id?: T;
       };
   dates?:
     | T
@@ -1942,6 +2801,7 @@ export interface OlympiadPageSelect<T extends boolean = true> {
               goal?: T;
               id?: T;
             };
+        note?: T;
         id?: T;
       };
   partners?:
@@ -2182,6 +3042,7 @@ export interface OlympiadPageSelect<T extends boolean = true> {
               journey?: T;
               group?: T;
               tabsLabel?: T;
+              footnote?: T;
             };
       };
   updatedAt?: T;

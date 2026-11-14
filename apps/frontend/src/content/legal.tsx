@@ -66,8 +66,8 @@ export const termsSections = (contact: SiteSettings): LegalSection[] => [
       </>,
       "Our rates are based on hotel, transport and food prices at the time of booking. If these go up before the trip, we tell you before any change.",
       <>
-        Online Olympiad payments get a receipt by email from <EmailLink contact={contact} />. For camp payments, our team confirms on
-        WhatsApp or email.
+        Online Olympiad payments get a receipt in the registration PDF, which you can download after paying. The Registration ID also comes
+        on WhatsApp. For help, write to <EmailLink contact={contact} />. For camp payments, our team confirms on WhatsApp or email.
       </>,
     ],
   },
@@ -219,7 +219,7 @@ export const cancellationSections = (contact: SiteSettings): LegalSection[] => [
     title: "Adventure Olympiad",
     list: [
       "Olympiad registration fees are non-refundable once the registration is complete, including a wrong group choice, not taking the quiz or not clearing a round.",
-      "Fees (official notice): Group A ₹0 (government school) or ₹230; Group B ₹156 (government school) or ₹369; Group C ₹651; Group D ₹1,651; Group E ₹963.",
+      "Fees (official notice): Group 0 free (government school students, as per the rules); Group A ₹230; Group B ₹156 (government school) or ₹369; Group C ₹651; Group D ₹1,651; Group E ₹963.",
       "Exceptions: a failed or double payment (section 4) is returned in full. If the Trust cancels the Olympiad, the full fee is refunded.",
     ],
   },
@@ -247,8 +247,9 @@ export const privacySections = (contact: SiteSettings): LegalSection[] => [
       </>,
       <>
         <strong>Adventure Olympiad registration:</strong> name, parents’ names, birth date, mobile and WhatsApp number, email, address,
-        district, school or college, class, school ID number (government school students), principal or class teacher name and number, extra
-        achievements, participant photo, Aadhaar number and Aadhaar card copy, and the payment status.
+        district, school or college, class, quiz date and time (some classes), school GR number and school ID card or bonafide certificate
+        (Group 0 and the Group B government fee), principal or class teacher name and number, extra achievements, participant photo, Aadhaar
+        number and Aadhaar card copy, and the payment status.
       </>,
       <>
         <strong>Payments:</strong> payment ID, amount and status from Razorpay, for online Olympiad payments. We never see or store your

@@ -19,8 +19,9 @@ const siteCsp = [
   `img-src 'self' data: blob: ${blobStorage}`,
   `media-src 'self' ${blobStorage}`,
   "font-src 'self'",
-  // Google Maps on the contact page; vercel.live is the toolbar on preview deployments.
-  "frame-src https://www.google.com https://vercel.live",
+  // Google Maps on the contact page; vercel.live is the toolbar on preview deployments; Cloudflare
+  // Turnstile (spam check) and Razorpay Checkout on the Olympiad forms.
+  "frame-src https://www.google.com https://vercel.live https://challenges.cloudflare.com https://api.razorpay.com https://checkout.razorpay.com",
 ];
 
 const csp = (directives: string[]) => ({ key: "Content-Security-Policy", value: directives.join("; ") });
@@ -29,7 +30,8 @@ const securityHeaders = [
   { key: "X-Content-Type-Options", value: "nosniff" },
   { key: "X-Frame-Options", value: "DENY" },
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-  { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), payment=()" },
+  // Razorpay Checkout may use the Payment Request API (UPI and saved cards) inside its frame.
+  { key: "Permissions-Policy", value: 'camera=(), microphone=(), geolocation=(), payment=(self "https://api.razorpay.com")' },
   { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains" },
   { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
   csp(baseCsp),
@@ -42,6 +44,8 @@ const privateHeaders = [
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  // The Olympiad registration sends up to three 1.4 MB documents in one request.
+  experimental: { serverActions: { bodySizeLimit: "4.5mb" } },
   images: {
     // Sources are already-compressed web images; a high quality avoids visible double-compression.
     formats: ["image/webp"],
