@@ -4,8 +4,12 @@ import {
   DEFAULT_FEES,
   feeFor,
   groupFor,
+  isAadhaar,
+  isBirthDate,
+  isPlainText,
   istToday,
   needsSchoolProof,
+  pinMatchesDistrict,
   picksQuizSlot,
   withSchool,
 } from './rules.js';
@@ -84,5 +88,43 @@ describe('Group 0 and fees', () => {
   it('offers Std 7 to 12 to school groups', () => {
     expect(classesFor('0')[0]).toBe('Std 7');
     expect(classesFor('B').at(-1)).toBe('Std 12');
+  });
+});
+
+describe('field checks', () => {
+  it('accepts only real birth dates from 1920 up to today', () => {
+    expect(isBirthDate('2012-02-29', today)).toBe(true);
+    expect(isBirthDate('2013-02-29', today)).toBe(false);
+    expect(isBirthDate('2026-11-16', today)).toBe(false);
+    expect(isBirthDate('1919-12-31', today)).toBe(false);
+    expect(groupFor('student', '2013-02-30', today)).toBeNull();
+  });
+
+  it('accepts exactly one check digit for an Aadhaar number', () => {
+    const valid = '0123456789'
+      .split('')
+      .filter((d) => isAadhaar(`23456789012${d}`));
+    expect(valid).toHaveLength(1);
+    const good = `23456789012${valid[0]}`;
+    // A single changed digit or two swapped digits are caught.
+    expect(isAadhaar(`33456789012${valid[0]}`)).toBe(false);
+    expect(isAadhaar(`32456789012${valid[0]}`)).toBe(false);
+    expect(isAadhaar(good.replace(/^2/, '1'))).toBe(false);
+    expect(isAadhaar('12345678901')).toBe(false);
+  });
+
+  it('takes only Gujarat PIN codes unless the district is outside Gujarat', () => {
+    expect(pinMatchesDistrict('360002', 'Rajkot')).toBe(true);
+    expect(pinMatchesDistrict('395003', 'Surat')).toBe(true);
+    expect(pinMatchesDistrict('400001', 'Rajkot')).toBe(false);
+    expect(pinMatchesDistrict('400001', 'Outside Gujarat')).toBe(true);
+    expect(pinMatchesDistrict('060001', 'Outside Gujarat')).toBe(false);
+  });
+
+  it('refuses links and markup in free text', () => {
+    expect(isPlainText('12, Shanti Nagar, Rajkot')).toBe(true);
+    expect(isPlainText('visit https://x.io')).toBe(false);
+    expect(isPlainText('www.example.com')).toBe(false);
+    expect(isPlainText('<script>')).toBe(false);
   });
 });

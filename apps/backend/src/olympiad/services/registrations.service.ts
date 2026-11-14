@@ -19,6 +19,7 @@ import {
   feeFor,
   groupFor,
   isDistrict,
+  isPlainText,
   isSchoolGroup,
   needsSchoolProof,
   picksQuizSlot,
@@ -27,6 +28,7 @@ import {
   normalizeMobile,
   PERSON_NAME,
   PIN_CODE,
+  pinMatchesDistrict,
   QUIZ_LANGUAGES,
   takesQuiz,
   type GroupId,
@@ -266,9 +268,17 @@ export class RegistrationsService implements OnModuleInit {
     need('mobile', Boolean(mobile), 'Enter a 10 digit mobile number.');
     need('whatsapp', Boolean(whatsapp), 'Enter a 10 digit WhatsApp number.');
     need('email', EMAIL.test(v.email), 'Enter a valid email.');
-    need('address', v.address.length >= 3, 'Enter the address.');
+    need(
+      'address',
+      v.address.length >= 10 && isPlainText(v.address),
+      'Enter the full address.',
+    );
     need('district', isDistrict(v.district), 'Choose the district.');
-    need('pin', PIN_CODE.test(v.pin), 'Enter the 6 digit PIN code.');
+    need(
+      'pin',
+      PIN_CODE.test(v.pin) && pinMatchesDistrict(v.pin, v.district),
+      'Enter the 6 digit PIN code of the district.',
+    );
     if (group && takesQuiz(group))
       need(
         'quizLanguage',
@@ -294,7 +304,11 @@ export class RegistrationsService implements OnModuleInit {
       );
     }
     if (v.who !== 'adult')
-      need('school', v.school.length >= 2, 'Enter the school or college name.');
+      need(
+        'school',
+        v.school.length >= 3 && isPlainText(v.school),
+        'Enter the school or college name.',
+      );
     if (student) {
       need(
         'std',
@@ -311,6 +325,11 @@ export class RegistrationsService implements OnModuleInit {
             'Choose the quiz time.',
           );
       }
+      need(
+        'schoolId',
+        /^[A-Za-z0-9/ -]{0,40}$/.test(v.schoolId),
+        'Use only letters, numbers, / and -.',
+      );
       if (proof)
         need(
           'schoolIdCard',
@@ -329,6 +348,13 @@ export class RegistrationsService implements OnModuleInit {
         'Enter a 10 digit mobile number.',
       );
     }
+    if (v.who === 'teacher' && v.subject)
+      need('subject', isPlainText(v.subject), 'Remove links from the subject.');
+    need(
+      'achievements',
+      achievements.every(isPlainText),
+      'Remove links from the achievements.',
+    );
     if (v.who === 'teacher')
       need(
         'teacherStatus',
