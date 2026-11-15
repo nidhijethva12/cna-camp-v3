@@ -160,7 +160,7 @@ export default async function SchoolDashboardPage() {
                     <tr key={s.id}>
                       <td className="px-6 py-3">
                         <b className="block font-display">{s.name}</b>
-                        <span className="text-[13px] text-muted">{s.regId}</span>
+                        <span className="text-[13px] text-muted">{s.regId || "—"}</span>
                       </td>
                       <td className="px-6 py-3">{s.stage}</td>
                       <td className="px-6 py-3">{s.group}</td>

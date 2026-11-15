@@ -20,7 +20,10 @@ import { getOlympiadConfig, registrationState } from "@/lib/olympiad/settings";
 import { getCms } from "@/lib/payload";
 
 interface Saved {
+  /** The Registration ID; empty until the fee is paid (a free registration has it at once). */
   regId: string;
+  /** Opens the receipt of a free registration; paid ones get theirs once Razorpay confirms. */
+  receiptToken?: string | null;
   name: string;
   group: string;
   fee: number;
@@ -135,6 +138,8 @@ export async function submitRegistration(fd: FormData): Promise<RegistrationResu
       district: input.district,
       pin: input.pin,
       quizLanguage: input.quizLanguage,
+      quizWindow: input.quizWindow,
+      formLanguage: lang,
       parentRelation: input.parentWho,
       parentName: input.parentName,
       parentMobile: input.parentSameMobile ? input.mobile : input.parentMobile,

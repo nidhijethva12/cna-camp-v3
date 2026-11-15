@@ -676,7 +676,10 @@ export interface Enquiry {
  */
 export interface OlympiadPerson {
   id: string;
-  regId: string;
+  /**
+   * AO2-<group>-<number>: given when the fee is paid (Group 0: when the form is saved). Never changes. Empty while unpaid.
+   */
+  regId?: string | null;
   type: 'reminder' | 'invited' | 'registered';
   edition: string;
   name: string;
@@ -708,6 +711,11 @@ export interface OlympiadPerson {
    */
   dob?: string | null;
   quizLanguage?: ('gu' | 'en') | null;
+  quizWindow?: ('jan-1-15' | 'jan-16-31') | null;
+  /**
+   * The receipt link in the confirmation opens in this language.
+   */
+  formLanguage?: ('en' | 'gu') | null;
   address?: string | null;
   city?: string | null;
   district?:
@@ -782,6 +790,7 @@ export interface OlympiadPerson {
   paidAt?: string | null;
   payment?: (string | null) | OlympiadPayment;
   razorpayPaymentId?: string | null;
+  razorpayOrderId?: string | null;
   /**
    * Group 0 or Group B at the government fee, without an approved government school code. Check the School ID card / bonafide certificate.
    */
@@ -1490,6 +1499,8 @@ export interface OlympiadPeopleSelect<T extends boolean = true> {
   group?: T;
   dob?: T;
   quizLanguage?: T;
+  quizWindow?: T;
+  formLanguage?: T;
   address?: T;
   city?: T;
   district?: T;
@@ -1526,6 +1537,7 @@ export interface OlympiadPeopleSelect<T extends boolean = true> {
   paidAt?: T;
   payment?: T;
   razorpayPaymentId?: T;
+  razorpayOrderId?: T;
   feeCheck?: T;
   source?: T;
   code?: T;

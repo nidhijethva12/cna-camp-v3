@@ -17,6 +17,7 @@ interface Resume {
   whatsapp: string;
   paid: boolean;
   order: CheckoutOrder;
+  receiptToken?: string | null;
 }
 
 /** "Pay now" from the fee-pending WhatsApp message: a fresh order for one saved registration. */
@@ -39,9 +40,16 @@ export default async function PayPage({ params }: PageProps<"/olympiad/pay/[toke
               </Link>
             </>
           ) : result.data.paid ? (
-            <p className="text-muted">
-              The fee for {result.data.name} ({result.data.regId}) is already paid. Thank you!
-            </p>
+            <>
+              <p className="text-muted">
+                The fee for {result.data.name} ({result.data.regId}) is already paid. Thank you!
+              </p>
+              {result.data.receiptToken && (
+                <Link href={`/olympiad/receipt/${result.data.receiptToken}`} className="btn btn-primary mt-5">
+                  Open the receipt
+                </Link>
+              )}
+            </>
           ) : (
             <PaymentStep
               autoOpen={false}

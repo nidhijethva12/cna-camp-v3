@@ -32,9 +32,9 @@ import {
   type QuizSlot,
 } from "@/lib/olympiad/rules";
 import { sniffFile, UPLOAD_ACCEPT, uploadProblem } from "@/lib/olympiad/uploads";
-import { rulesEn, rulesIntro } from "@/content/olympiadRules";
+import { rulesEn, rulesGu, rulesIntro, rulesIntroGu } from "@/content/olympiadRules";
 import { PaymentStep } from "./PaymentStep";
-import { RegistrationDone, type SummarySection } from "./RegistrationDone";
+import { RegistrationDone } from "./RegistrationDone";
 import { Honeypot, Turnstile } from "./Turnstile";
 
 type FileKey = "photo" | "aadhaarCard" | "schoolIdCard";
@@ -236,20 +236,10 @@ export function RegistrationForm({
   };
 
   if (result) {
-    const done = (receipt: Parameters<typeof RegistrationDone>[0]["receipt"]) => (
-      <RegistrationDone
-        regId={result.regId}
-        name={result.name}
-        group={result.group}
-        fee={result.fee}
-        sections={reviewSections(input, files, t).map(({ title, rows }) => ({ title, rows }))}
-        receipt={receipt}
-        phone={phone}
-        t={t}
-      />
-    );
+    // The receipt comes from the saved registration: right away for a free one, after Razorpay confirms a paid one.
+    const done = (receiptToken: string) => <RegistrationDone receiptToken={receiptToken} lang={lang} phone={phone} rules={rules} />;
     if (!result.paid) return <PaymentStep summary={result} t={t.payment} done={done} />;
-    return done(null);
+    return result.receiptToken ? done(result.receiptToken) : null;
   }
 
   const err = (f: RegistrationField) => errors[f];
@@ -433,6 +423,7 @@ export function RegistrationForm({
               <Text
                 label={t.step2.mobile}
                 type="tel"
+                phone
                 value={input.mobile}
                 error={err("mobile")}
                 placeholder={t.common.tenDigit}
@@ -456,6 +447,7 @@ export function RegistrationForm({
               <Text
                 label={t.step2.whatsapp}
                 type="tel"
+                phone
                 value={input.whatsapp}
                 error={err("whatsapp")}
                 placeholder={t.common.tenDigit}
@@ -509,6 +501,16 @@ export function RegistrationForm({
                 ]}
               />
             )}
+            {s.quiz && (
+              <Choice
+                label={t.step2.quizWindow}
+                required
+                value={input.quizWindow}
+                error={err("quizWindow")}
+                onChange={(v) => set("quizWindow", v as RegistrationInput["quizWindow"])}
+                options={Object.entries(t.step2.quizWindows).map(([value, label]) => ({ value, label }))}
+              />
+            )}
             {s.minor && (
               <>
                 <hr className="border-line" />
@@ -540,6 +542,7 @@ export function RegistrationForm({
                   <Text
                     label={guardian ? t.step2.guardianMobile : t.step2.parentMobile}
                     type="tel"
+                    phone
                     value={input.parentMobile}
                     error={err("parentMobile")}
                     placeholder={t.common.tenDigit}
@@ -658,6 +661,7 @@ export function RegistrationForm({
                   <Text
                     label={t.step2.mobile}
                     type="tel"
+                    phone
                     value={input.contactMobile}
                     error={err("contactMobile")}
                     placeholder={t.common.tenDigit}
@@ -804,9 +808,9 @@ export function RegistrationForm({
               </div>
             )}
             <p className="-mt-3 text-[13px] text-muted">{fee === 0 ? t.step5.freeNote : t.step5.payNote}</p>
-            <RulesBox lang={lang} pdf={rules.gu} t={t} onRead={() => setReviewSeen(true)} />
+            <RulesBox lang={lang} t={t} onRead={() => setReviewSeen(true)} />
             {reviewSeen ? (
-              <Tick boxed checked={input.agree} error={err("agree")} onChange={(v) => set("agree", v)}>
+              <Tick boxed small checked={input.agree} error={err("agree")} onChange={(v) => set("agree", v)}>
                 {t.step5.agreeBefore}
                 <a href={rules.gu} target="_blank" rel="noopener" className="font-semibold text-dark underline">
                   {t.step5.rulesGu}
@@ -824,7 +828,7 @@ export function RegistrationForm({
                 {t.step5.privacyAfter}
               </Tick>
             ) : (
-              <p className="rounded-card border border-dashed border-line px-4 py-3 text-[14px] text-muted" {...bad("agree")}>
+              <p className="rounded-card border border-dashed border-line px-4 py-3 text-[13px] text-muted" {...bad("agree")}>
                 {t.step5.readFirst}
                 {err("agree") && <span className="mt-1 block font-medium text-danger">{err("agree")}</span>}
               </p>
@@ -852,7 +856,7 @@ export function RegistrationForm({
               <ArrowLeft /> <span className="max-[420px]:sr-only">{t.common.back}</span>
             </button>
           )}
-          <button type="submit" disabled={pending} className="btn btn-primary">
+          <button type="submit" disabled={pending || (step === STEP_COUNT && !input.agree)} className="btn btn-primary">
             {pending ? t.common.wait : nextLabel}
             {!pending && step < STEP_COUNT && <ArrowRight />}
           </button>
@@ -920,6 +924,7 @@ function Text({
   optional,
   optionalLabel,
   type = "text",
+  phone,
   placeholder,
   autoComplete,
 }: {
@@ -931,22 +936,31 @@ function Text({
   optional?: boolean;
   optionalLabel?: string;
   type?: "text" | "tel" | "email";
+  /** Indian mobile number: a fixed +91 shows before the 10 digits typed. */
+  phone?: boolean;
   placeholder?: string;
   autoComplete?: string;
 }) {
   return (
     <Field label={label} required={!optional} optional={optional} optionalLabel={optionalLabel} error={error} hint={hint}>
-      <input
-        type={type}
-        inputMode={type === "tel" ? "numeric" : undefined}
-        value={value}
-        placeholder={placeholder}
-        autoComplete={autoComplete}
-        maxLength={200}
-        onChange={(e) => onChange(e.target.value)}
-        aria-invalid={error ? true : undefined}
-        className={`field ${error ? "border-danger" : ""}`}
-      />
+      <span className="relative block">
+        {phone && (
+          <span aria-hidden="true" className="pointer-events-none absolute inset-y-0 left-3.5 flex items-center font-medium text-muted">
+            +91
+          </span>
+        )}
+        <input
+          type={type}
+          inputMode={type === "tel" ? "numeric" : undefined}
+          value={value}
+          placeholder={placeholder}
+          autoComplete={autoComplete}
+          maxLength={200}
+          onChange={(e) => onChange(e.target.value)}
+          aria-invalid={error ? true : undefined}
+          className={`field ${phone ? "pl-12!" : ""} ${error ? "border-danger" : ""}`}
+        />
+      </span>
     </Field>
   );
 }
@@ -1000,6 +1014,7 @@ function Tick({
   checked,
   onChange,
   boxed,
+  small,
   disabled,
   note,
   error,
@@ -1008,6 +1023,7 @@ function Tick({
   checked: boolean;
   onChange: (v: boolean) => void;
   boxed?: boolean;
+  small?: boolean;
   disabled?: boolean;
   /** Shown under the tick, e.g. why it can't be ticked yet. */
   note?: string;
@@ -1017,7 +1033,7 @@ function Tick({
   return (
     <div {...(error ? { "data-bad": true } : {})}>
       <label
-        className={`flex items-start gap-3 text-[15px] leading-snug ${disabled ? "cursor-not-allowed opacity-55" : "cursor-pointer"} ${boxed ? `rounded-card border-[1.5px] p-3.5 ${error ? "border-danger" : checked ? "border-dark" : "border-line hover:border-muted/40"}` : ""}`}
+        className={`flex items-start gap-3 ${small ? "text-[13px]" : "text-[15px]"} leading-snug ${disabled ? "cursor-not-allowed opacity-55" : "cursor-pointer"} ${boxed ? `rounded-card border-[1.5px] p-3.5 ${error ? "border-danger" : checked ? "border-dark" : "border-line hover:border-muted/40"}` : ""}`}
       >
         <input
           type="checkbox"
@@ -1034,12 +1050,11 @@ function Tick({
   );
 }
 
-/**
- * The Rules and Terms in a scrollable box. Reaching its end counts as read and shows the agree tick.
- * The rules text is in English; the Gujarati form links the Gujarati PDF above it.
- */
-function RulesBox({ lang, pdf, t, onRead }: { lang: RegLang; pdf: string; t: RegistrationText; onRead: () => void }) {
+/** The Rules and Terms in the form's language, in a scrollable box. Reaching its end counts as read and shows the agree tick. */
+function RulesBox({ lang, t, onRead }: { lang: RegLang; t: RegistrationText; onRead: () => void }) {
   const box = useRef<HTMLDivElement>(null);
+  const intro = lang === "gu" ? rulesIntroGu : rulesIntro;
+  const sections = lang === "gu" ? rulesGu : rulesEn;
   useEffect(() => {
     const el = box.current;
     if (!el) return;
@@ -1056,31 +1071,23 @@ function RulesBox({ lang, pdf, t, onRead }: { lang: RegLang; pdf: string; t: Reg
   }, []);
   return (
     <section aria-labelledby="rules-title" className="grid gap-2">
-      <h3 id="rules-title" className="font-display text-[17px] font-extrabold">
+      <h3 id="rules-title" className="font-display text-[15px] font-extrabold">
         {t.step5.rulesTitle}
       </h3>
-      {lang === "gu" && (
-        <p className="text-[14px] text-muted">
-          {t.step5.rulesGuNote}{" "}
-          <a href={pdf} target="_blank" rel="noopener" className="font-semibold text-dark underline">
-            {t.step5.rulesGu}
-          </a>
-        </p>
-      )}
       <div
         ref={box}
         tabIndex={0}
         role="region"
         aria-label={t.step5.rulesTitle}
-        lang="en"
-        className="max-h-[440px] overflow-y-auto overscroll-contain rounded-card border border-line bg-soft px-4.5 py-4 text-[14.5px] leading-relaxed focus-visible:outline-2 focus-visible:outline-primary"
+        lang={lang}
+        className="max-h-[440px] overflow-y-auto overscroll-contain rounded-card border border-line bg-soft px-4 py-3.5 text-[13px] leading-relaxed focus-visible:outline-2 focus-visible:outline-primary"
       >
-        <p className="font-display text-[16px] font-extrabold">{rulesIntro.title}</p>
-        <p className="text-[13px] text-muted">{rulesIntro.meta}</p>
-        <p className="mt-2 font-semibold">{rulesIntro.lead}</p>
-        {rulesEn.map((sec) => (
-          <div key={sec.title} className="mt-4">
-            <p className="font-display font-bold">{sec.title}</p>
+        <p className="font-display text-[14.5px] font-extrabold">{intro.title}</p>
+        <p className="text-[12px] text-muted">{intro.meta}</p>
+        <p className="mt-2 font-semibold">{intro.lead}</p>
+        {sections.map((sec) => (
+          <div key={sec.title} className="mt-3.5">
+            <p className="font-display text-[13.5px] font-bold">{sec.title}</p>
             {sec.blocks.map((b, i) =>
               "list" in b ? (
                 <ul key={i} className="mt-1.5 grid list-disc gap-1 pl-5">
@@ -1096,9 +1103,7 @@ function RulesBox({ lang, pdf, t, onRead }: { lang: RegLang; pdf: string; t: Reg
             )}
           </div>
         ))}
-        <p className="mt-5 border-t border-line pt-3 text-[13px] text-muted">
-          Saurashtra Education &amp; Charitable Trust, Rajkot · Climber Nature Adventure Club (CNA)
-        </p>
+        <p className="mt-5 border-t border-line pt-3 text-[12px] text-muted">{t.step5.rulesFooter}</p>
       </div>
     </section>
   );
@@ -1212,6 +1217,7 @@ function reviewSections(input: RegistrationInput, files: Partial<Record<FileKey,
         [r.email, input.email],
         [r.address, [input.address, input.district, input.pin].filter(Boolean).join(", ")],
         s.quiz && [r.quiz, input.quizLanguage === "gu" ? "ગુજરાતી" : input.quizLanguage === "en" ? "English" : ""],
+        s.quiz && [r.quizWindow, t.step2.quizWindows[input.quizWindow] ?? ""],
         s.student && [
           r.parents,
           input.fatherAlive && input.motherAlive
@@ -1259,12 +1265,7 @@ function reviewSections(input: RegistrationInput, files: Partial<Record<FileKey,
       ],
     },
   ];
-  return sections.map((sec) => ({
-    ...sec,
-    rows: sec.rows.filter((row): row is [string, string] => Boolean(row)),
-  })) satisfies (SummarySection & {
-    step: number;
-  })[];
+  return sections.map((sec) => ({ ...sec, rows: sec.rows.filter((row): row is [string, string] => Boolean(row)) }));
 }
 
 function Review({

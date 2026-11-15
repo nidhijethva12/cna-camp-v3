@@ -6,7 +6,6 @@ import type { CheckoutOrder } from "@/actions/olympiad/register";
 import { ArrowRight, Check } from "@/components/ui/icons";
 import { registrationText, type RegistrationText } from "@/content/registration";
 import { openCheckout } from "./razorpayCheckout";
-import type { Receipt } from "./RegistrationDone";
 import { waitForPayment } from "./waitForPayment";
 
 export interface PaymentSummary {
@@ -22,7 +21,7 @@ type Phase =
   | { step: "ready" }
   | { step: "paying" }
   | { step: "confirming" }
-  | { step: "paid"; receipt: Receipt }
+  | { step: "paid"; receiptToken: string | null; regId: string }
   | { step: "waiting" }
   | { step: "stopped"; message: string };
 
@@ -39,8 +38,8 @@ export function PaymentStep({
   summary: PaymentSummary;
   autoOpen?: boolean;
   t?: RegistrationText["payment"];
-  /** The screen once paid, given the receipt; without it a short confirmation shows. */
-  done?: (receipt: Receipt) => ReactNode;
+  /** The screen once paid, given the receipt link; without it a short confirmation shows. */
+  done?: (receiptToken: string) => ReactNode;
 }) {
   const [phase, setPhase] = useState<Phase>({ step: "ready" });
   const opened = useRef(false);
@@ -51,14 +50,17 @@ export function PaymentStep({
     setPhase({ step: "paying" });
     void openCheckout(
       order,
-      { description: `Registration ${summary.regId} · Group ${summary.group}`, prefill: summary.prefill },
+      { description: `Adventure Olympiad 2.0 · Group ${summary.group}`, prefill: summary.prefill },
       {
         onPaid: async (payment) => {
           setPhase({ step: "confirming" });
           const result = await waitForPayment(payment);
           if (!result.ok) setPhase({ step: "stopped", message: t.confirmFailed });
           else if (!result.paid) setPhase({ step: "waiting" });
-          else setPhase({ step: "paid", receipt: { paymentId: result.paymentId, paidAt: result.paidAt, amount: result.amount } });
+          else {
+            const me = result.people.find((x) => x.receiptToken) ?? result.people[0];
+            setPhase({ step: "paid", receiptToken: me?.receiptToken ?? null, regId: me?.regId ?? "" });
+          }
         },
         onStopped: (message) => setPhase({ step: "stopped", message }),
       },
@@ -75,7 +77,7 @@ export function PaymentStep({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (phase.step === "paid" && done) return done(phase.receipt);
+  if (phase.step === "paid" && done && phase.receiptToken) return done(phase.receiptToken);
 
   if (phase.step === "paid") {
     return (
@@ -84,7 +86,7 @@ export function PaymentStep({
           <Check />
         </span>
         <h2 className="text-[26px]">{t.paidTitle(summary.name.split(" ")[0])}</h2>
-        <p className="max-w-[44ch] text-muted">{t.paidText(summary.regId, summary.group, summary.fee)}</p>
+        <p className="max-w-[44ch] text-muted">{t.paidText(phase.regId, summary.group, summary.fee)}</p>
         <Link href="/olympiad#notices" className="btn btn-primary mt-2">
           {t.noticeBoard} <ArrowRight />
         </Link>
@@ -96,9 +98,7 @@ export function PaymentStep({
     <div className="grid gap-4">
       <div className="rounded-card bg-soft p-5">
         <p className="text-[14px] text-muted">{t.saved}</p>
-        <p className="font-display text-[20px] font-extrabold">
-          {summary.name} · {summary.regId}
-        </p>
+        <p className="font-display text-[20px] font-extrabold">{summary.name}</p>
         <p className="mt-1 text-[15px]">
           {t.group(summary.group)} · {t.fee} <b className="font-display">₹{summary.fee.toLocaleString("en-IN")}</b>
         </p>

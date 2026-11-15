@@ -43,6 +43,8 @@ export interface RegistrationInput {
   district: string;
   pin: string;
   quizLanguage: "gu" | "en" | "";
+  /** The fortnight for the online quiz Rounds 1 to 3. */
+  quizWindow: "jan-1-15" | "jan-16-31" | "";
   parentWho: "father" | "mother" | "other" | "";
   parentName: string;
   parentSameMobile: boolean;
@@ -92,6 +94,7 @@ export const emptyRegistration: RegistrationInput = {
   district: "",
   pin: "",
   quizLanguage: "",
+  quizWindow: "",
   parentWho: "",
   parentName: "",
   parentSameMobile: true,
@@ -194,6 +197,7 @@ export function stepErrors(step: number, input: RegistrationInput, files: Regist
     if (!DISTRICTS.some(([d]) => d === input.district)) e.district = t.district;
     if (!PIN_CODE.test(input.pin)) e.pin = t.pin;
     if (s.quiz && !input.quizLanguage) e.quizLanguage = t.choose;
+    if (s.quiz && !input.quizWindow) e.quizWindow = t.choose;
     if (s.minor) {
       // A parent who is not alive can't be the one filling in the form; an orphan's guardian is "someone else".
       // A parent who is not alive can't fill in the form; a guardian only when neither parent is alive.
@@ -257,6 +261,7 @@ export const FIELD_STEP: Partial<Record<RegistrationField, number>> = {
   district: 2,
   pin: 2,
   quizLanguage: 2,
+  quizWindow: 2,
   parentWho: 2,
   parentName: 2,
   parentMobile: 2,

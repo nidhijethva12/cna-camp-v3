@@ -13,7 +13,8 @@ export type PaymentConfirmation =
       paymentId: string;
       paidAt: string | null;
       amount: number;
-      people: { regId: string; name: string; group: string }[];
+      /** Each person on the order; the Registration ID and receipt link once the payment is confirmed. */
+      people: { regId: string; name: string; group: string; receiptToken: string | null }[];
     }
   | { ok: false; message: string };
 

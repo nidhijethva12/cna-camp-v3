@@ -114,7 +114,17 @@ export const OlympiadPeople: CollectionConfig = {
     {
       type: "row",
       fields: [
-        { name: "regId", label: "Reg. ID", type: "text", required: true, unique: true, admin: { readOnly: true } },
+        {
+          name: "regId",
+          label: "Reg. ID",
+          type: "text",
+          unique: true,
+          admin: {
+            readOnly: true,
+            description:
+              "AO2-<group>-<number>: given when the fee is paid (Group 0: when the form is saved). Never changes. Empty while unpaid.",
+          },
+        },
         {
           name: "type",
           type: "select",
@@ -203,6 +213,25 @@ export const OlympiadPeople: CollectionConfig = {
                 { name: "group", type: "select", index: true, options: groupOptions },
                 { name: "dob", label: "Date of birth", type: "text", admin: { description: "YYYY-MM-DD" } },
                 { name: "quizLanguage", type: "select", options: quizLanguageOptions },
+                {
+                  name: "quizWindow",
+                  label: "Quiz dates (Rounds 1-3)",
+                  type: "select",
+                  options: [
+                    { label: "1 to 15 Jan 2027", value: "jan-1-15" },
+                    { label: "16 to 31 Jan 2027", value: "jan-16-31" },
+                  ],
+                },
+                {
+                  name: "formLanguage",
+                  label: "Form language",
+                  type: "select",
+                  options: [
+                    { label: "English", value: "en" },
+                    { label: "Gujarati", value: "gu" },
+                  ],
+                  admin: { readOnly: true, description: "The receipt link in the confirmation opens in this language." },
+                },
               ],
             },
             { name: "address", type: "textarea" },
@@ -333,6 +362,7 @@ export const OlympiadPeople: CollectionConfig = {
               fields: [
                 { name: "payment", type: "relationship", relationTo: "olympiad-payments", ...apiOwned, admin: { readOnly: true } },
                 { name: "razorpayPaymentId", label: "Razorpay payment ID", type: "text", ...apiOwned, admin: { readOnly: true } },
+                { name: "razorpayOrderId", label: "Razorpay order ID", type: "text", ...apiOwned, admin: { readOnly: true } },
               ],
             },
             {

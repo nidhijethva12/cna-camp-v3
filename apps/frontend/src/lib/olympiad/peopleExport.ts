@@ -2,10 +2,11 @@ import ExcelJS from "exceljs";
 import type { OlympiadPerson } from "@/payload-types";
 
 const date = (value?: string | null) => (value ? new Date(value).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }) : "");
+const QUIZ_WINDOWS: Record<string, string> = { "jan-1-15": "1-15 Jan 2027", "jan-16-31": "16-31 Jan 2027" };
 const yes = (value?: boolean | null) => (value == null ? "" : value ? "Yes" : "No");
 
 const COLUMNS: { header: string; width: number; value: (p: OlympiadPerson) => string | number }[] = [
-  { header: "Reg. ID", width: 16, value: (p) => p.regId },
+  { header: "Reg. ID", width: 16, value: (p) => p.regId ?? "" },
   { header: "Type", width: 12, value: (p) => p.type },
   { header: "Group", width: 8, value: (p) => p.group ?? "" },
   { header: "Name", width: 28, value: (p) => p.name },
@@ -21,6 +22,7 @@ const COLUMNS: { header: string; width: number; value: (p: OlympiadPerson) => st
   { header: "District", width: 14, value: (p) => p.district ?? "" },
   { header: "PIN", width: 8, value: (p) => p.pin ?? "" },
   { header: "Quiz language", width: 10, value: (p) => p.quizLanguage ?? "" },
+  { header: "Quiz dates (Rounds 1-3)", width: 18, value: (p) => QUIZ_WINDOWS[p.quizWindow ?? ""] ?? "" },
   { header: "Quiz date", width: 18, value: (p) => p.quizDate ?? "" },
   { header: "Quiz time", width: 18, value: (p) => p.quizTime ?? "" },
   { header: "Guardian", width: 10, value: (p) => p.parentRelation ?? "" },
@@ -44,6 +46,7 @@ const COLUMNS: { header: string; width: number; value: (p: OlympiadPerson) => st
   { header: "Payment", width: 10, value: (p) => p.paymentStatus ?? "" },
   { header: "Paid on", width: 20, value: (p) => date(p.paidAt) },
   { header: "Razorpay payment ID", width: 22, value: (p) => p.razorpayPaymentId ?? "" },
+  { header: "Razorpay order ID", width: 22, value: (p) => p.razorpayOrderId ?? "" },
   { header: "Check school proof", width: 10, value: (p) => yes(p.feeCheck) },
   { header: "Source", width: 11, value: (p) => p.source ?? "" },
   { header: "Code", width: 14, value: (p) => p.code ?? "" },
