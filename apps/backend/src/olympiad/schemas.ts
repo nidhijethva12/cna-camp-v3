@@ -66,6 +66,10 @@ export interface PersonDoc {
   city?: string;
   district?: string;
   quizLanguage?: string;
+  /** The fortnight for quiz Rounds 1 to 3: jan-1-15 or jan-16-31. */
+  quizWindow?: string;
+  /** The language the form was filled in; the receipt link opens in it. */
+  formLanguage?: 'en' | 'gu';
   parentName?: string;
   parentPhone?: string;
   participant?: 'student' | 'teacher' | 'adult';
@@ -160,6 +164,8 @@ export const PersonSchema = new Schema<PersonDoc>(
     city: String,
     district: String,
     quizLanguage: String,
+    quizWindow: String,
+    formLanguage: String,
     parentName: String,
     parentPhone: String,
     participant: String,

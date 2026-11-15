@@ -31,6 +31,7 @@ import {
   PERSON_NAME,
   PIN_CODE,
   QUIZ_LANGUAGES,
+  QUIZ_WINDOWS,
   takesQuiz,
   type GroupId,
   type SchoolType,
@@ -72,6 +73,8 @@ export interface RegistrationInput {
   district?: unknown;
   pin?: unknown;
   quizLanguage?: unknown;
+  quizWindow?: unknown;
+  formLanguage?: unknown;
   parentRelation?: unknown;
   parentName?: unknown;
   parentMobile?: unknown;
@@ -127,6 +130,7 @@ const OPTIONAL_FIELDS = [
   'motherAlive',
   'orphan',
   'quizLanguage',
+  'quizWindow',
   'parentRelation',
   'parentName',
   'parentPhone',
@@ -203,6 +207,9 @@ export class RegistrationsService implements OnModuleInit {
       district: text(input.district, 40),
       pin: text(input.pin, 6),
       quizLanguage: text(input.quizLanguage, 5),
+      quizWindow: text(input.quizWindow, 12),
+      formLanguage:
+        input.formLanguage === 'gu' ? ('gu' as const) : ('en' as const),
       parentRelation: text(input.parentRelation, 10),
       parentName: text(input.parentName, 60),
       school: text(input.school, 150),
@@ -292,6 +299,12 @@ export class RegistrationsService implements OnModuleInit {
         'quizLanguage',
         QUIZ_LANGUAGES.some((l) => l.value === v.quizLanguage),
         'Choose the quiz language.',
+      );
+    if (group && takesQuiz(group))
+      need(
+        'quizWindow',
+        (QUIZ_WINDOWS as readonly string[]).includes(v.quizWindow),
+        'Choose the quiz dates.',
       );
     // Students say whether each parent is alive; a parent who is not can't be the one filling in the form.
     const fatherAlive = student ? input.fatherAlive !== false : undefined;
@@ -456,7 +469,10 @@ export class RegistrationsService implements OnModuleInit {
       address: v.address,
       district: v.district,
       pin: v.pin,
-      ...(takesQuiz(g) ? { quizLanguage: v.quizLanguage } : {}),
+      ...(takesQuiz(g)
+        ? { quizLanguage: v.quizLanguage, quizWindow: v.quizWindow }
+        : {}),
+      formLanguage: v.formLanguage,
       ...(minor
         ? {
             parentRelation: v.parentRelation,
