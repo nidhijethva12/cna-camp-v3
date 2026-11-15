@@ -1218,6 +1218,7 @@ function reviewSections(input: RegistrationInput, files: Partial<Record<FileKey,
         [r.address, [input.address, input.district, input.pin].filter(Boolean).join(", ")],
         s.quiz && [r.quiz, input.quizLanguage === "gu" ? "ગુજરાતી" : input.quizLanguage === "en" ? "English" : ""],
         s.quiz && [r.quizWindow, t.step2.quizWindows[input.quizWindow] ?? ""],
+        s.slot && input.quizDate && [r.quizSlot, [input.quizDate, input.quizTime].filter(Boolean).join(" · ")],
         s.student && [
           r.parents,
           input.fatherAlive && input.motherAlive
@@ -1240,7 +1241,6 @@ function reviewSections(input: RegistrationInput, files: Partial<Record<FileKey,
       rows: [
         !s.adult && [r.school, input.school],
         s.student && [r.std, input.std],
-        s.slot && input.quizDate && [r.quizSlot, `${input.quizDate} · ${input.quizTime}`],
         s.proof && input.schoolId.trim() && [r.schoolId, input.schoolId],
         s.proof && [r.idCard, files.schoolIdCard?.name ?? ""],
         s.student && [
