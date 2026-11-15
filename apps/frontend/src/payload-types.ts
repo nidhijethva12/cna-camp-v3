@@ -676,7 +676,10 @@ export interface Enquiry {
  */
 export interface OlympiadPerson {
   id: string;
-  regId: string;
+  /**
+   * AO2-<group>-<number>: given when the fee is paid (Group 0: when the form is saved). Never changes. Empty while unpaid.
+   */
+  regId?: string | null;
   type: 'reminder' | 'invited' | 'registered';
   edition: string;
   name: string;
@@ -782,6 +785,7 @@ export interface OlympiadPerson {
   paidAt?: string | null;
   payment?: (string | null) | OlympiadPayment;
   razorpayPaymentId?: string | null;
+  razorpayOrderId?: string | null;
   /**
    * Group 0 or Group B at the government fee, without an approved government school code. Check the School ID card / bonafide certificate.
    */
@@ -1526,6 +1530,7 @@ export interface OlympiadPeopleSelect<T extends boolean = true> {
   paidAt?: T;
   payment?: T;
   razorpayPaymentId?: T;
+  razorpayOrderId?: T;
   feeCheck?: T;
   source?: T;
   code?: T;

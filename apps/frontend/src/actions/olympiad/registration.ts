@@ -20,7 +20,10 @@ import { getOlympiadConfig, registrationState } from "@/lib/olympiad/settings";
 import { getCms } from "@/lib/payload";
 
 interface Saved {
+  /** The Registration ID; empty until the fee is paid (a free registration has it at once). */
   regId: string;
+  /** Opens the receipt of a free registration; paid ones get theirs once Razorpay confirms. */
+  receiptToken?: string | null;
   name: string;
   group: string;
   fee: number;

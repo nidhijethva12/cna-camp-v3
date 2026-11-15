@@ -5,7 +5,7 @@ const date = (value?: string | null) => (value ? new Date(value).toLocaleString(
 const yes = (value?: boolean | null) => (value == null ? "" : value ? "Yes" : "No");
 
 const COLUMNS: { header: string; width: number; value: (p: OlympiadPerson) => string | number }[] = [
-  { header: "Reg. ID", width: 16, value: (p) => p.regId },
+  { header: "Reg. ID", width: 16, value: (p) => p.regId ?? "" },
   { header: "Type", width: 12, value: (p) => p.type },
   { header: "Group", width: 8, value: (p) => p.group ?? "" },
   { header: "Name", width: 28, value: (p) => p.name },
@@ -44,6 +44,7 @@ const COLUMNS: { header: string; width: number; value: (p: OlympiadPerson) => st
   { header: "Payment", width: 10, value: (p) => p.paymentStatus ?? "" },
   { header: "Paid on", width: 20, value: (p) => date(p.paidAt) },
   { header: "Razorpay payment ID", width: 22, value: (p) => p.razorpayPaymentId ?? "" },
+  { header: "Razorpay order ID", width: 22, value: (p) => p.razorpayOrderId ?? "" },
   { header: "Check school proof", width: 10, value: (p) => yes(p.feeCheck) },
   { header: "Source", width: 11, value: (p) => p.source ?? "" },
   { header: "Code", width: 14, value: (p) => p.code ?? "" },

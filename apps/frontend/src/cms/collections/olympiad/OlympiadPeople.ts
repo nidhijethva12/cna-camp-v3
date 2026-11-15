@@ -114,7 +114,17 @@ export const OlympiadPeople: CollectionConfig = {
     {
       type: "row",
       fields: [
-        { name: "regId", label: "Reg. ID", type: "text", required: true, unique: true, admin: { readOnly: true } },
+        {
+          name: "regId",
+          label: "Reg. ID",
+          type: "text",
+          unique: true,
+          admin: {
+            readOnly: true,
+            description:
+              "AO2-<group>-<number>: given when the fee is paid (Group 0: when the form is saved). Never changes. Empty while unpaid.",
+          },
+        },
         {
           name: "type",
           type: "select",
@@ -333,6 +343,7 @@ export const OlympiadPeople: CollectionConfig = {
               fields: [
                 { name: "payment", type: "relationship", relationTo: "olympiad-payments", ...apiOwned, admin: { readOnly: true } },
                 { name: "razorpayPaymentId", label: "Razorpay payment ID", type: "text", ...apiOwned, admin: { readOnly: true } },
+                { name: "razorpayOrderId", label: "Razorpay order ID", type: "text", ...apiOwned, admin: { readOnly: true } },
               ],
             },
             {
