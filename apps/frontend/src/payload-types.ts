@@ -2374,7 +2374,7 @@ export interface OlympiadPage {
      * Hero line, e.g. with up to · 100% · scholarship
      */
     scholarshipLine: {
-      before: string;
+      before?: string | null;
       value: string;
       after: string;
     };

@@ -339,7 +339,7 @@ export const OlympiadPage: GlobalConfig = {
               name: "scholarshipLine",
               type: "group",
               admin: { description: "Hero line, e.g. with up to · 100% · scholarship" },
-              fields: [row(text("before"), text("value"), text("after"))],
+              fields: [row(text("before", { optional: true }), text("value"), text("after"))],
             },
             {
               name: "heroBadge",
