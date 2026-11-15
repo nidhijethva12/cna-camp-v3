@@ -39,6 +39,10 @@ export interface ApprovedPartner {
   setPasswordUrl?: string;
 }
 
+/** The registration receipt, ready to download as a PDF. The link works for two years. */
+export const receiptUrl = (personId: string) =>
+  url(`/olympiad/receipt/${createToken('receipt', personId, 730 * DAY)}`);
+
 /** The registration form, pre-filled for a student a school added. */
 export const inviteUrl = (personId: string) =>
   url(
@@ -135,7 +139,7 @@ export class NotifyService {
         template,
         params: [
           firstName(person.name),
-          person.regId,
+          person.regId ?? '',
           person.group ?? '',
           String(fee),
         ],
@@ -145,10 +149,11 @@ export class NotifyService {
     if (person.email && !person.emailStopped) {
       const mail = registrationEmail({
         name: person.name,
-        regId: person.regId,
+        regId: person.regId ?? '',
         group: person.group ?? '',
         fee,
         paymentId: person.razorpayPaymentId ?? '',
+        receiptUrl: receiptUrl(String(person._id)),
         pageUrl: url('/olympiad'),
         unsubscribeUrl: unsubscribeUrl(String(person._id)),
       });

@@ -8,8 +8,10 @@ import {
   createOrder,
   razorpayReady,
 } from '../razorpay.js';
+import { hasRegId, receiptToken } from '../registration-ids.js';
 import { MODELS, type PaymentDoc, type PersonDoc } from '../schemas.js';
 import { readToken } from '../tokens.js';
+import { CountersService } from './counters.service.js';
 import { NotifyService } from './notify.service.js';
 
 /** What the website needs to open Razorpay Checkout; null while Razorpay isn't set up yet. */
@@ -27,6 +29,7 @@ export class PaymentsService {
   constructor(
     @InjectModel(MODELS.payment) private readonly payments: Model<PaymentDoc>,
     @InjectModel(MODELS.person) private readonly people: Model<PersonDoc>,
+    private readonly counters: CountersService,
     private readonly notify: NotifyService,
   ) {}
 
@@ -40,9 +43,9 @@ export class PaymentsService {
     if (!razorpayReady()) return null;
     const amount = people.reduce((sum, p) => sum + (p.fee ?? 0), 0) * 100;
     const order = await createOrder(amount, receipt, {
-      regIds: people
-        .map((p) => p.regId)
-        .join(',')
+      people: people
+        .map((p) => p.name)
+        .join(', ')
         .slice(0, 250),
     });
     const payment = await this.payments.create({
@@ -105,9 +108,33 @@ export class PaymentsService {
     await this.people.updateMany(
       { ...current, _id: { $in: owed.map((p) => p._id) } },
       {
-        $set: { paymentStatus: 'paid', paidAt, razorpayPaymentId: paymentId },
+        $set: {
+          paymentStatus: 'paid',
+          paidAt,
+          razorpayPaymentId: paymentId,
+          razorpayOrderId: orderId,
+        },
       },
     );
+    // Each newly paid person gets their Registration ID now, from the one counter for all groups.
+    // Someone who already has one keeps it.
+    for (const person of await this.people
+      .find({
+        _id: { $in: owed.map((p) => p._id) },
+        razorpayPaymentId: paymentId,
+      })
+      .select('regId group')
+      .lean<PersonDoc[]>()) {
+      if (hasRegId(person)) continue;
+      await this.people.updateOne(
+        { _id: person._id, regId: { $not: /^AO2-/ } },
+        {
+          $set: {
+            regId: await this.counters.registrationId(person.group ?? ''),
+          },
+        },
+      );
+    }
     const paid = await this.people
       .find({
         _id: { $in: owed.map((p) => p._id) },
@@ -167,18 +194,21 @@ export class PaymentsService {
     const people = order
       ? await this.people
           .find({ _id: { $in: order.people } })
-          .select('regId name group paidAt razorpayPaymentId')
+          .select('regId name group paidAt razorpayPaymentId paymentStatus')
           .lean<PersonDoc[]>()
       : [];
+    const paid = order?.status === 'paid';
     return {
-      paid: order?.status === 'paid',
+      paid,
       paymentId: order?.razorpayPaymentId ?? paymentId,
       paidAt: order?.paidAt ?? null,
       amount: (order?.amount ?? 0) / 100,
       people: people.map((p) => ({
-        regId: p.regId,
+        regId: hasRegId(p) ? p.regId! : '',
         name: p.name,
         group: p.group ?? '',
+        // The receipt is ready once the payment is confirmed and the Registration ID given.
+        receiptToken: paid && hasRegId(p) ? receiptToken(p) : null,
       })),
     };
   }
@@ -196,7 +226,7 @@ export class PaymentsService {
         'This payment link is not valid any more. Please register again or contact CNA.',
       );
     const summary = {
-      regId: person.regId,
+      regId: hasRegId(person) ? person.regId! : '',
       name: person.name,
       group: person.group ?? '',
       fee: person.fee ?? 0,
@@ -204,13 +234,73 @@ export class PaymentsService {
       whatsapp: person.whatsapp,
     };
     if (person.paymentStatus === 'paid' || person.paymentStatus === 'free')
-      return { ...summary, paid: true, order: null };
+      return {
+        ...summary,
+        paid: true,
+        order: null,
+        receiptToken: hasRegId(person) ? receiptToken(person) : null,
+      };
     return {
       ...summary,
       paid: false,
       order:
         (await this.openOrderFor(person)) ??
-        (await this.openOrder([person], person.regId, 'participant')),
+        (await this.openOrder(
+          [person],
+          `form-${String(person._id)}`,
+          'participant',
+        )),
+    };
+  }
+
+  /**
+   * The registration receipt: everything the PDF shows, for a paid or free registration that has its
+   * Registration ID. Null for an unknown link or a registration that isn't complete yet.
+   */
+  async receipt(token: unknown) {
+    const ref = readToken(text(token, 512), 'receipt');
+    const p = ref
+      ? await this.people
+          .findOne({ _id: ref.id, type: 'registered' })
+          .lean<PersonDoc>()
+      : null;
+    if (
+      !p ||
+      !hasRegId(p) ||
+      (p.paymentStatus !== 'paid' && p.paymentStatus !== 'free')
+    )
+      return null;
+    return {
+      regId: p.regId!,
+      name: p.name,
+      group: p.group ?? '',
+      participant: p.participant ?? '',
+      dob: p.dob ?? '',
+      mobile: p.mobile ?? '',
+      whatsapp: p.whatsapp,
+      email: p.email ?? '',
+      institution: p.institution ?? '',
+      stage: p.stage ?? '',
+      schoolType: p.schoolType ?? '',
+      district: p.district ?? '',
+      pin: p.pin ?? '',
+      quizLanguage: p.quizLanguage ?? '',
+      quizDate: p.quizDate ?? '',
+      quizTime: p.quizTime ?? '',
+      guardian: p.parentName
+        ? {
+            relation: p.parentRelation ?? '',
+            name: p.parentName,
+            phone: p.parentPhone ?? '',
+          }
+        : null,
+      fee: p.fee ?? 0,
+      status: p.paymentStatus,
+      registeredAt: p.registeredAt ?? null,
+      paidAt: p.paidAt ?? null,
+      razorpayOrderId: p.razorpayOrderId ?? '',
+      razorpayPaymentId: p.razorpayPaymentId ?? '',
+      rulesVersion: p.rules?.version ?? '',
     };
   }
 

@@ -96,6 +96,7 @@ export const registrationEmail = (p: {
   group: string;
   fee: number;
   paymentId: string;
+  receiptUrl: string;
   pageUrl: string;
   unsubscribeUrl: string;
 }) =>
@@ -104,12 +105,14 @@ export const registrationEmail = (p: {
     hi(p.name),
     {
       lines: [
-        'Your Adventure Olympiad 2.0 registration is confirmed. Please keep this email as your receipt.',
-        `Registration number: ${p.regId}`,
-        `Group: ${p.group} · Fee paid: ₹${p.fee} · Razorpay payment ID: ${p.paymentId}`,
-        'Quiz links and times will come on your WhatsApp number. Results are posted on the notice board of the Olympiad page.',
+        'Your Adventure Olympiad 2.0 registration is confirmed.',
+        `Registration ID: ${p.regId}`,
+        p.fee > 0
+          ? `Group: ${p.group} · Fee paid: ₹${p.fee} · Razorpay payment ID: ${p.paymentId}`
+          : `Group: ${p.group} · Free registration`,
+        'Download your registration receipt (PDF) from the button below. Quiz links and times will come on your WhatsApp number, and results are posted on the notice board of the Olympiad page.',
       ],
-      action: { label: 'Open the notice board', href: `${p.pageUrl}#notices` },
+      action: { label: 'Download the receipt', href: p.receiptUrl },
       footer: {
         text: "Don't want Olympiad emails?",
         href: p.unsubscribeUrl,
