@@ -12,7 +12,6 @@ import {
   withSchool,
   PERSON_NAME,
   PIN_CODE,
-  pinMatchesDistrict,
   takesQuiz,
   groupZeroSchool,
   type FormSchoolType,
@@ -27,7 +26,7 @@ export interface RegistrationInput {
   who: Participant | "";
   dob: string;
   schoolType: FormSchoolType | "";
-  /** Under 16 at a Government or Granted school: did Std 6 to 8 fully in a government school (or is in Std 8 there). "yes" is Group 0. */
+  /** Under 16 at a Government school: did Std 6 to 8 fully in a government school (or is in Std 8 there). "yes" is Group 0. */
   govtStd6to8: "yes" | "no" | "";
   firstName: string;
   fatherName: string;
@@ -134,6 +133,8 @@ export function shape(input: RegistrationInput) {
     minor,
     asksStd6to8,
     waiting,
+    /** A student whose parents have both passed away: no father's or mother's name is asked. */
+    orphan: student && !input.fatherAlive && !input.motherAlive,
     teacher: input.who === "teacher",
     adult: input.who === "adult",
     quiz: takesQuiz(group),
@@ -183,28 +184,29 @@ export function stepErrors(step: number, input: RegistrationInput, files: Regist
 
   if (step === 2) {
     name("firstName", t.firstName);
-    name("fatherName", t.fatherName);
+    if (!s.orphan) name("fatherName", t.fatherName);
     name("surname", t.surname);
-    name("motherName", t.motherName);
+    if (!s.orphan) name("motherName", t.motherName);
     mobile("mobile");
     if (!EMAIL.test(input.email.trim()) || input.email.length > 120) e.email = t.email;
     if (!input.whatsappSame) mobile("whatsapp");
-    text("address", t.address, 200, 10);
+    text("address", t.address, 200, 3);
     if (!DISTRICTS.some(([d]) => d === input.district)) e.district = t.district;
     if (!PIN_CODE.test(input.pin)) e.pin = t.pin;
-    else if (input.district && !pinMatchesDistrict(input.pin, input.district)) e.pin = t.pinDistrict;
     if (s.quiz && !input.quizLanguage) e.quizLanguage = t.choose;
     if (s.minor) {
       // A parent who is not alive can't be the one filling in the form; an orphan's guardian is "someone else".
+      // A parent who is not alive can't fill in the form; a guardian only when neither parent is alive.
       const gone = (input.parentWho === "father" && !input.fatherAlive) || (input.parentWho === "mother" && !input.motherAlive);
-      if (!input.parentWho || gone) e.parentWho = t.choose;
-      name("parentName", t.parentName);
+      const anyAlive = input.fatherAlive || input.motherAlive;
+      if (!input.parentWho || gone || (anyAlive && input.parentWho === "other")) e.parentWho = t.choose;
+      name("parentName", input.parentWho === "other" ? t.guardianName : t.parentName);
       if (!input.parentSameMobile) mobile("parentMobile");
     }
   }
 
   if (step === 3) {
-    if (!s.adult) text("school", t.school, 150, 3);
+    if (!s.adult) text("school", t.school, 150, 2);
     if (s.student) {
       text("std", t.select);
       if (s.slot && slots.length) {
@@ -212,7 +214,7 @@ export function stepErrors(step: number, input: RegistrationInput, files: Regist
         if (!day) e.quizDate = t.select;
         else if (!day.times.includes(input.quizTime)) e.quizTime = t.select;
       }
-      if (!/^[A-Za-z0-9/ -]{0,40}$/.test(input.schoolId.trim())) e.schoolId = t.schoolId;
+      if (input.schoolId.trim()) text("schoolId", t.schoolId, 40);
       if (s.proof && !files.schoolIdCard) e.schoolIdCard = t.schoolIdCard;
       if (!input.contactRole) e.contactRole = t.choose;
       name("contactName", t.name);

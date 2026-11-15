@@ -240,7 +240,7 @@ export const olympiad: OlympiadContent = {
   steps: [
     {
       title: "Register and pay",
-      text: "Choose your group, fill the form and pay online through Razorpay (no fee for Group 0). Your registration number and all updates come on WhatsApp.",
+      text: "Choose your group, fill the form and pay online through Razorpay (no fee for Group 0). After registering, you can download your registration PDF with all your details and the payment receipt.",
       when: "15 Nov to 14 Dec 2026",
     },
     {

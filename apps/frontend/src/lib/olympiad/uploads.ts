@@ -5,7 +5,7 @@ export type UploadKind = "photo" | "aadhaarCard" | "schoolIdCard";
 /** 1 MB per file; three files stay well under the host's 4.5 MB request limit. */
 export const MAX_UPLOAD_BYTES = 1024 * 1024;
 /** Anything smaller is an empty or broken file, not a readable photo or scan. */
-export const MIN_UPLOAD_BYTES = 5 * 1024;
+export const MIN_UPLOAD_BYTES = 1024;
 
 const IMAGES = ["image/jpeg", "image/png", "image/webp"];
 
