@@ -51,8 +51,8 @@ export const isSchoolGroup = (group: string) =>
   group === '0' || group === 'A' || group === 'B';
 
 /**
- * The age rule gives "A" under 16. Group 0 is for a student who did Std 6 to 8 fully in a government
- * school (or is in Std 8 there) and is now at a Government or Granted (semi-government) school.
+ * The age rule gives "A" under 16. Group 0 is for a student at a Government school who did Std 6 to 8
+ * fully in a government school (or is in Std 8 there).
  */
 export const withSchool = (group: GroupId, groupZero: boolean): GroupId =>
   group === 'A' && groupZero ? '0' : group;
@@ -60,9 +60,8 @@ export const withSchool = (group: GroupId, groupZero: boolean): GroupId =>
 /** The school type a student picks in the form. Only "government" gets the lower Group B fee. */
 export const FORM_SCHOOL_TYPES = ['government', 'granted', 'private'] as const;
 export type FormSchoolType = (typeof FORM_SCHOOL_TYPES)[number];
-/** Group 0 is possible only at a Government or Granted school. */
-export const groupZeroSchool = (type: string) =>
-  type === 'government' || type === 'granted';
+/** Group 0 is possible only at a Government school; Granted and Private students are Group A. */
+export const groupZeroSchool = (type: string) => type === 'government';
 
 /** Group 0 and Group B at the government fee upload a school ID card or bonafide certificate. */
 export const needsSchoolProof = (group: string, government: boolean) =>
@@ -267,46 +266,11 @@ export function isBirthDate(dob: string, today = istToday()) {
   );
 }
 
-// Verhoeff check digit, which every Aadhaar number carries as its last digit.
-const VERHOEFF_D = [
-  [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
-  [1, 2, 3, 4, 0, 6, 7, 8, 9, 5],
-  [2, 3, 4, 0, 1, 7, 8, 9, 5, 6],
-  [3, 4, 0, 1, 2, 8, 9, 5, 6, 7],
-  [4, 0, 1, 2, 3, 9, 5, 6, 7, 8],
-  [5, 9, 8, 7, 6, 0, 4, 3, 2, 1],
-  [6, 5, 9, 8, 7, 1, 0, 4, 3, 2],
-  [7, 6, 5, 9, 8, 2, 1, 0, 4, 3],
-  [8, 7, 6, 5, 9, 3, 2, 1, 0, 4],
-  [9, 8, 7, 6, 5, 4, 3, 2, 1, 0],
-];
-const VERHOEFF_P = [
-  [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
-  [1, 5, 7, 6, 2, 8, 3, 0, 9, 4],
-  [5, 8, 0, 3, 7, 9, 6, 1, 4, 2],
-  [8, 9, 1, 6, 0, 4, 3, 5, 2, 7],
-  [9, 4, 5, 3, 1, 2, 8, 7, 6, 0],
-  [4, 2, 8, 6, 5, 7, 3, 9, 0, 1],
-  [2, 7, 9, 3, 8, 0, 6, 4, 1, 5],
-  [7, 0, 4, 6, 9, 1, 3, 2, 5, 8],
-];
-
-/** 12 digits, not starting with 0 or 1, with a valid check digit: catches most typing mistakes. */
-export function isAadhaar(digits: string) {
-  if (!/^[2-9]\d{11}$/.test(digits)) return false;
-  let c = 0;
-  digits
-    .split('')
-    .reverse()
-    .forEach((ch, i) => {
-      c = VERHOEFF_D[c][VERHOEFF_P[i % 8][Number(ch)]];
-    });
-  return c === 0;
-}
-
-/** Gujarat PIN codes start with 36 to 39; 'Outside Gujarat' takes any valid PIN. */
-export const pinMatchesDistrict = (pin: string, district: string) =>
-  PIN_CODE.test(pin) && (district === 'Outside Gujarat' || /^3[6-9]/.test(pin));
+/**
+ * 12 digits, not starting with 0 or 1. The check digit is not tested: a real card must never be
+ * refused, and CNA checks the uploaded Aadhaar card anyway.
+ */
+export const isAadhaar = (digits: string) => /^[2-9]\d{11}$/.test(digits);
 
 /** Free text without links or markup characters. */
 export const isPlainText = (value: string) =>

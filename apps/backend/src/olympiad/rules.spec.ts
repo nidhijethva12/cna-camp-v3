@@ -10,7 +10,6 @@ import {
   isPlainText,
   istToday,
   needsSchoolProof,
-  pinMatchesDistrict,
   picksQuizSlot,
   withSchool,
 } from './rules.js';
@@ -92,9 +91,9 @@ describe('Group 0 and fees', () => {
     expect(classesFor('B')).toEqual(['Std 9', 'Std 10', 'Std 11', 'Std 12']);
   });
 
-  it('allows Group 0 only at a Government or Granted school', () => {
+  it('allows Group 0 only at a Government school', () => {
     expect(groupZeroSchool('government')).toBe(true);
-    expect(groupZeroSchool('granted')).toBe(true);
+    expect(groupZeroSchool('granted')).toBe(false);
     expect(groupZeroSchool('private')).toBe(false);
     // Private + "yes" stays Group A; only Government pays the lower Group B fee.
     expect(withSchool('A', groupZeroSchool('private') && true)).toBe('A');
@@ -111,25 +110,13 @@ describe('field checks', () => {
     expect(groupFor('student', '2013-02-30', today)).toBeNull();
   });
 
-  it('accepts exactly one check digit for an Aadhaar number', () => {
-    const valid = '0123456789'
-      .split('')
-      .filter((d) => isAadhaar(`23456789012${d}`));
-    expect(valid).toHaveLength(1);
-    const good = `23456789012${valid[0]}`;
-    // A single changed digit or two swapped digits are caught.
-    expect(isAadhaar(`33456789012${valid[0]}`)).toBe(false);
-    expect(isAadhaar(`32456789012${valid[0]}`)).toBe(false);
-    expect(isAadhaar(good.replace(/^2/, '1'))).toBe(false);
-    expect(isAadhaar('12345678901')).toBe(false);
-  });
-
-  it('takes only Gujarat PIN codes unless the district is outside Gujarat', () => {
-    expect(pinMatchesDistrict('360002', 'Rajkot')).toBe(true);
-    expect(pinMatchesDistrict('395003', 'Surat')).toBe(true);
-    expect(pinMatchesDistrict('400001', 'Rajkot')).toBe(false);
-    expect(pinMatchesDistrict('400001', 'Outside Gujarat')).toBe(true);
-    expect(pinMatchesDistrict('060001', 'Outside Gujarat')).toBe(false);
+  it('takes 12 digits not starting with 0 or 1 as an Aadhaar number', () => {
+    expect(isAadhaar('234567890123')).toBe(true);
+    expect(isAadhaar('999999999999')).toBe(true);
+    expect(isAadhaar('123456789012')).toBe(false);
+    expect(isAadhaar('023456789012')).toBe(false);
+    expect(isAadhaar('23456789012')).toBe(false);
+    expect(isAadhaar('2345 6789 0123')).toBe(false);
   });
 
   it('refuses links and markup in free text', () => {
