@@ -32,6 +32,7 @@ import {
   type QuizSlot,
 } from "@/lib/olympiad/rules";
 import { sniffFile, UPLOAD_ACCEPT, uploadProblem } from "@/lib/olympiad/uploads";
+import { rulesEn, rulesIntro } from "@/content/olympiadRules";
 import { PaymentStep } from "./PaymentStep";
 import { RegistrationDone, type SummarySection } from "./RegistrationDone";
 import { Honeypot, Turnstile } from "./Turnstile";
@@ -106,21 +107,35 @@ export function RegistrationForm({
 
   const s = shape(input);
   const fee = feeOf(fees, input);
+  // "Someone else" fills in the form as the guardian; the labels say so.
+  const guardian = input.parentWho === "other";
   const has = { photo: Boolean(files.photo), aadhaarCard: Boolean(files.aadhaarCard), schoolIdCard: Boolean(files.schoolIdCard) };
 
   const set = <K extends keyof RegistrationInput>(key: K, value: RegistrationInput[K]) => {
     setInput((prev) => {
       const next = { ...prev, [key]: value };
-      // Unticking a parent who was chosen to fill in the form clears that choice; with neither alive, a guardian fills it in.
-      if (
-        (key === "fatherAlive" && !value && next.parentWho === "father") ||
-        (key === "motherAlive" && !value && next.parentWho === "mother")
-      ) {
-        next.parentWho = "";
-        next.parentName = "";
+      // Who fills in the form follows who is alive: both, either parent; one, that parent; neither, a guardian.
+      if (key === "fatherAlive" || key === "motherAlive") {
+        const was = prev.parentWho;
+        next.parentWho =
+          next.fatherAlive && next.motherAlive
+            ? was === "father" || was === "mother"
+              ? was
+              : ""
+            : next.fatherAlive
+              ? "father"
+              : next.motherAlive
+                ? "mother"
+                : "other";
+        if (next.parentWho !== was) next.parentName = "";
       }
-      if ((key === "fatherAlive" || key === "motherAlive") && !next.fatherAlive && !next.motherAlive) next.parentWho = "other";
-      const parentFrom = key === "parentWho" || key === "fatherName" || key === "motherName" || key === "surname";
+      const parentFrom =
+        key === "parentWho" ||
+        key === "fatherName" ||
+        key === "motherName" ||
+        key === "surname" ||
+        key === "fatherAlive" ||
+        key === "motherAlive";
       if (parentFrom && (next.parentWho === "father" || next.parentWho === "mother")) {
         next.parentName = [next.parentWho === "father" ? next.fatherName : next.motherName, next.surname].filter(Boolean).join(" ");
       }
@@ -369,13 +384,15 @@ export function RegistrationForm({
                 autoComplete="given-name"
                 onChange={(v) => set("firstName", v)}
               />
-              <Text
-                label={t.step2.fatherName}
-                value={input.fatherName}
-                error={err("fatherName")}
-                placeholder={t.step2.placeholders.fatherName}
-                onChange={(v) => set("fatherName", v)}
-              />
+              {!s.orphan && (
+                <Text
+                  label={t.step2.fatherName}
+                  value={input.fatherName}
+                  error={err("fatherName")}
+                  placeholder={t.step2.placeholders.fatherName}
+                  onChange={(v) => set("fatherName", v)}
+                />
+              )}
               <Text
                 label={t.step2.surname}
                 value={input.surname}
@@ -384,13 +401,15 @@ export function RegistrationForm({
                 autoComplete="family-name"
                 onChange={(v) => set("surname", v)}
               />
-              <Text
-                label={t.step2.motherName}
-                value={input.motherName}
-                error={err("motherName")}
-                placeholder={t.step2.placeholders.motherName}
-                onChange={(v) => set("motherName", v)}
-              />
+              {!s.orphan && (
+                <Text
+                  label={t.step2.motherName}
+                  value={input.motherName}
+                  error={err("motherName")}
+                  placeholder={t.step2.placeholders.motherName}
+                  onChange={(v) => set("motherName", v)}
+                />
+              )}
             </div>
             {s.student && (
               <fieldset className="grid gap-2">
@@ -493,33 +512,33 @@ export function RegistrationForm({
             {s.minor && (
               <>
                 <hr className="border-line" />
-                <Choice
-                  label={t.step2.parent}
-                  required
-                  columns={3}
-                  value={input.parentWho}
-                  error={err("parentWho")}
-                  hint={t.step2.parentHint}
-                  onChange={(v) => set("parentWho", v)}
-                  options={(["father", "mother", "other"] as const)
-                    .filter((v) => !s.student || (v === "father" ? input.fatherAlive : v === "mother" ? input.motherAlive : true))
-                    .map((v) => ({
-                      value: v,
-                      label: v === "other" && s.student && !input.fatherAlive && !input.motherAlive ? t.step2.guardian : t.step2.parents[v],
-                    }))}
-                />
+                {/* Both parents alive: father or mother. One alive: that parent only. Neither: only a guardian, no choice. */}
+                {(input.fatherAlive || input.motherAlive) && (
+                  <Choice
+                    label={t.step2.parent}
+                    required
+                    columns={2}
+                    value={input.parentWho}
+                    error={err("parentWho")}
+                    hint={t.step2.parentHint}
+                    onChange={(v) => set("parentWho", v)}
+                    options={(["father", "mother", "other"] as const)
+                      .filter((v) => (v === "father" ? input.fatherAlive : v === "mother" ? input.motherAlive : false))
+                      .map((v) => ({ value: v, label: t.step2.parents[v] }))}
+                  />
+                )}
                 <Text
-                  label={t.step2.parentName}
+                  label={guardian ? t.step2.guardianName : t.step2.parentName}
                   value={input.parentName}
                   error={err("parentName")}
                   onChange={(v) => set("parentName", v)}
                 />
                 <Tick checked={input.parentSameMobile} onChange={(v) => set("parentSameMobile", v)}>
-                  {t.step2.parentSameMobile}
+                  {guardian ? t.step2.guardianSameMobile : t.step2.parentSameMobile}
                 </Tick>
                 {!input.parentSameMobile && (
                   <Text
-                    label={t.step2.parentMobile}
+                    label={guardian ? t.step2.guardianMobile : t.step2.parentMobile}
                     type="tel"
                     value={input.parentMobile}
                     error={err("parentMobile")}
@@ -785,31 +804,31 @@ export function RegistrationForm({
               </div>
             )}
             <p className="-mt-3 text-[13px] text-muted">{fee === 0 ? t.step5.freeNote : t.step5.payNote}</p>
-            <ReviewEnd onSeen={() => setReviewSeen(true)} />
-            <Tick
-              boxed
-              checked={input.agree}
-              disabled={!reviewSeen}
-              note={reviewSeen ? undefined : t.step5.readFirst}
-              error={err("agree")}
-              onChange={(v) => set("agree", v)}
-            >
-              {t.step5.agreeBefore}
-              <a href={rules.gu} target="_blank" rel="noopener" className="font-semibold text-dark underline">
-                {t.step5.rulesGu}
-              </a>
-              {" / "}
-              <a href={rules.en} target="_blank" rel="noopener" className="font-semibold text-dark underline">
-                {t.step5.rulesEn}
-              </a>
-              {t.step5.agreeAfter}
-              {s.minor && t.step5.parentAgree}
-              {t.step5.privacyBefore}
-              <a href="/privacy" target="_blank" className="font-semibold text-dark underline">
-                {t.step5.privacy}
-              </a>
-              {t.step5.privacyAfter}
-            </Tick>
+            <RulesBox lang={lang} pdf={rules.gu} t={t} onRead={() => setReviewSeen(true)} />
+            {reviewSeen ? (
+              <Tick boxed checked={input.agree} error={err("agree")} onChange={(v) => set("agree", v)}>
+                {t.step5.agreeBefore}
+                <a href={rules.gu} target="_blank" rel="noopener" className="font-semibold text-dark underline">
+                  {t.step5.rulesGu}
+                </a>
+                {" / "}
+                <a href={rules.en} target="_blank" rel="noopener" className="font-semibold text-dark underline">
+                  {t.step5.rulesEn}
+                </a>
+                {t.step5.agreeAfter}
+                {s.minor && t.step5.parentAgree}
+                {t.step5.privacyBefore}
+                <a href="/privacy" target="_blank" className="font-semibold text-dark underline">
+                  {t.step5.privacy}
+                </a>
+                {t.step5.privacyAfter}
+              </Tick>
+            ) : (
+              <p className="rounded-card border border-dashed border-line px-4 py-3 text-[14px] text-muted" {...bad("agree")}>
+                {t.step5.readFirst}
+                {err("agree") && <span className="mt-1 block font-medium text-danger">{err("agree")}</span>}
+              </p>
+            )}
             <Turnstile key={attempt} />
           </>
         )}
@@ -1015,30 +1034,74 @@ function Tick({
   );
 }
 
-/** An invisible marker under the review list; once it has been on screen, the details were scrolled through. */
-function ReviewEnd({ onSeen }: { onSeen: () => void }) {
-  const ref = useRef<HTMLSpanElement>(null);
+/**
+ * The Rules and Terms in a scrollable box. Reaching its end counts as read and shows the agree tick.
+ * The rules text is in English; the Gujarati form links the Gujarati PDF above it.
+ */
+function RulesBox({ lang, pdf, t, onRead }: { lang: RegLang; pdf: string; t: RegistrationText; onRead: () => void }) {
+  const box = useRef<HTMLDivElement>(null);
   useEffect(() => {
+    const el = box.current;
+    if (!el) return;
     const check = () => {
-      const top = ref.current?.getBoundingClientRect().top;
-      if (top === undefined || top > window.innerHeight) return;
-      onSeen();
-      window.removeEventListener("scroll", check);
-      window.removeEventListener("resize", check);
+      if (el.scrollTop + el.clientHeight < el.scrollHeight - 12) return;
+      onRead();
+      el.removeEventListener("scroll", check);
     };
-    // The step opens scrolled to its top, so a long review starts locked; a short one that fits the screen is already read.
-    const first = requestAnimationFrame(check);
-    window.addEventListener("scroll", check, { passive: true });
-    window.addEventListener("resize", check);
-    return () => {
-      cancelAnimationFrame(first);
-      window.removeEventListener("scroll", check);
-      window.removeEventListener("resize", check);
-    };
-    // Watches once per visit to the review step; onSeen only flips a flag.
+    check();
+    el.addEventListener("scroll", check, { passive: true });
+    return () => el.removeEventListener("scroll", check);
+    // Watches once per visit to the review step; onRead only flips a flag.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  return <span ref={ref} aria-hidden="true" className="-mt-6 block h-px" />;
+  return (
+    <section aria-labelledby="rules-title" className="grid gap-2">
+      <h3 id="rules-title" className="font-display text-[17px] font-extrabold">
+        {t.step5.rulesTitle}
+      </h3>
+      {lang === "gu" && (
+        <p className="text-[14px] text-muted">
+          {t.step5.rulesGuNote}{" "}
+          <a href={pdf} target="_blank" rel="noopener" className="font-semibold text-dark underline">
+            {t.step5.rulesGu}
+          </a>
+        </p>
+      )}
+      <div
+        ref={box}
+        tabIndex={0}
+        role="region"
+        aria-label={t.step5.rulesTitle}
+        lang="en"
+        className="max-h-[440px] overflow-y-auto overscroll-contain rounded-card border border-line bg-soft px-4.5 py-4 text-[14.5px] leading-relaxed focus-visible:outline-2 focus-visible:outline-primary"
+      >
+        <p className="font-display text-[16px] font-extrabold">{rulesIntro.title}</p>
+        <p className="text-[13px] text-muted">{rulesIntro.meta}</p>
+        <p className="mt-2 font-semibold">{rulesIntro.lead}</p>
+        {rulesEn.map((sec) => (
+          <div key={sec.title} className="mt-4">
+            <p className="font-display font-bold">{sec.title}</p>
+            {sec.blocks.map((b, i) =>
+              "list" in b ? (
+                <ul key={i} className="mt-1.5 grid list-disc gap-1 pl-5">
+                  {b.list.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p key={i} className="mt-1.5">
+                  {b.text}
+                </p>
+              ),
+            )}
+          </div>
+        ))}
+        <p className="mt-5 border-t border-line pt-3 text-[13px] text-muted">
+          Saurashtra Education &amp; Charitable Trust, Rajkot · Climber Nature Adventure Club (CNA)
+        </p>
+      </div>
+    </section>
+  );
 }
 
 function Upload({
@@ -1142,8 +1205,8 @@ function reviewSections(input: RegistrationInput, files: Partial<Record<FileKey,
       step: 2,
       title: r.sections.details,
       rows: [
-        [r.name, [input.firstName, input.fatherName, input.surname].join(" ").trim()],
-        [r.mother, input.motherName],
+        [r.name, [input.firstName, s.orphan ? "" : input.fatherName, input.surname].filter(Boolean).join(" ")],
+        !s.orphan && [r.mother, input.motherName],
         [r.mobile, input.mobile],
         [r.whatsapp, input.whatsappSame ? input.mobile : input.whatsapp],
         [r.email, input.email],
@@ -1159,7 +1222,10 @@ function reviewSections(input: RegistrationInput, files: Partial<Record<FileKey,
                 ? r.onlyMother
                 : r.orphanRow,
         ],
-        s.minor && [r.parent, `${input.parentName} · ${input.parentSameMobile ? input.mobile : input.parentMobile}`],
+        s.minor && [
+          input.parentWho === "other" ? r.guardian : r.parent,
+          `${input.parentName} · ${input.parentSameMobile ? input.mobile : input.parentMobile}`,
+        ],
       ],
     },
     {

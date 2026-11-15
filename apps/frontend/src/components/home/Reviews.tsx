@@ -25,7 +25,6 @@ export function Reviews({ reviews }: { reviews: Review[] }) {
         {reviews.map((r) => (
           <li key={`${r.name}-${r.quote}`} className="reveal">
             <figure className="relative flex h-full flex-col rounded-card border border-line bg-light p-6">
-              {r.isSample && <span className="absolute top-5 right-5 text-[13px] text-muted">Sample</span>}
               <div className="flex items-center gap-4">
                 <span
                   className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-dark font-bold text-secondary"
