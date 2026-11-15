@@ -36,6 +36,7 @@ import {
   type SchoolType,
 } from '../rules.js';
 import { MODELS, type PersonDoc, type SchoolDoc } from '../schemas.js';
+import { hasRegId, receiptToken } from '../registration-ids.js';
 import { readToken } from '../tokens.js';
 import { CountersService } from './counters.service.js';
 import { NotifyService } from './notify.service.js';
@@ -522,10 +523,22 @@ export class RegistrationsService implements OnModuleInit {
     const unset = Object.fromEntries(
       OPTIONAL_FIELDS.filter((f) => !(f in fields)).map((f) => [f, 1]),
     );
-    const update = (regId?: string) => ({
-      $set: { ...fields, ...metaUpdate, ...(regId ? { regId } : {}) },
-      ...(Object.keys(unset).length ? { $unset: unset } : {}),
-    });
+    // The Registration ID (AO2-<group>-<number>) is given once: when the fee is paid (Razorpay's
+    // webhook), or now for a free registration. It never changes afterwards, even if the group does.
+    // A reminder's or invitation's own number (REM-, INV-) is not a Registration ID and is dropped.
+    const update = (row: PersonDoc, regId?: string) => {
+      const dropOld = !regId && !!row.regId && !hasRegId(row);
+      const toUnset = { ...unset, ...(dropOld ? { regId: 1 } : {}) };
+      return {
+        $set: { ...fields, ...metaUpdate, ...(regId ? { regId } : {}) },
+        ...(Object.keys(toUnset).length ? { $unset: toUnset } : {}),
+      };
+    };
+    /** A new Registration ID for a free registration that has none yet; paid ones wait for the payment. */
+    const newRegId = async (row: PersonDoc | null) =>
+      free && !hasRegId(row)
+        ? await this.counters.registrationId(g)
+        : undefined;
 
     // One Aadhaar, one registration. Only the same mobile or WhatsApp number may continue an earlier
     // attempt, so someone holding another person's Aadhaar number can neither overwrite their form
@@ -542,7 +555,7 @@ export class RegistrationsService implements OnModuleInit {
       [same.mobile, same.whatsapp].some((n) => n === mobile || n === whatsapp);
     if (same && !owner) throw usedElsewhere();
     if (same?.paymentStatus === 'paid' || same?.paymentStatus === 'free')
-      throw alreadyPaid(same.regId);
+      throw alreadyPaid(same.regId ?? '');
 
     // Documents of the earlier attempt that this one replaces; the website deletes them.
     const kept = new Set(DOCUMENT_KINDS.map((k) => documents[k]));
@@ -553,19 +566,15 @@ export class RegistrationsService implements OnModuleInit {
     let person: PersonDoc | null = null;
     try {
       if (same) {
-        // A Reg. ID carries the group letter, so a changed group gets a new one.
-        const regId = same.regId.startsWith(`AO2-${g}-`)
-          ? undefined
-          : await this.counters.registrationId(g);
         person = await this.people
           .findOneAndUpdate(
             { _id: same._id, paymentStatus: { $nin: ['paid', 'free'] } },
-            update(regId),
+            update(same, await newRegId(same)),
             { new: true },
           )
           .lean<PersonDoc>();
         // Paid in the moment between the check above and this update.
-        if (!person) throw alreadyPaid(same.regId);
+        if (!person) throw alreadyPaid(same.regId ?? '');
         // The school's invited row is now a duplicate of this registration.
         if (invited)
           await this.people.deleteOne({ _id: invited._id, type: 'invited' });
@@ -573,7 +582,7 @@ export class RegistrationsService implements OnModuleInit {
         person = await this.people
           .findOneAndUpdate(
             { _id: invited._id, type: 'invited' },
-            update(await this.counters.registrationId(g)),
+            update(invited, await newRegId(null)),
             { new: true },
           )
           .lean<PersonDoc>();
@@ -586,12 +595,12 @@ export class RegistrationsService implements OnModuleInit {
         const reminder = await this.people
           .findOne({ type: 'reminder', edition: EDITION, whatsapp })
           .lean<PersonDoc>();
-        const regId = await this.counters.registrationId(g);
+        const regId = await newRegId(null);
         person = reminder
           ? await this.people
               .findOneAndUpdate(
                 { _id: reminder._id, type: 'reminder' },
-                update(regId),
+                update(reminder, regId),
                 { new: true },
               )
               .lean<PersonDoc>()
@@ -599,7 +608,7 @@ export class RegistrationsService implements OnModuleInit {
         person ??= (
           await this.people.create({
             ...fields,
-            regId,
+            ...(regId ? { regId } : {}),
             whatsappStopped: false,
             emailStopped: false,
             meta: { ipHash: visitor, ...meta },
@@ -618,7 +627,8 @@ export class RegistrationsService implements OnModuleInit {
 
     const saved = person!;
     const summary = {
-      regId: saved.regId,
+      // Empty until the fee is paid; the payment confirmation brings it.
+      regId: hasRegId(saved) ? saved.regId! : '',
       name: saved.name,
       group: g,
       fee,
@@ -629,14 +639,22 @@ export class RegistrationsService implements OnModuleInit {
       background('registration confirmation', () =>
         this.notify.registrationConfirmed(saved),
       );
-      return { ...summary, paid: true, order: null };
+      return {
+        ...summary,
+        paid: true,
+        order: null,
+        receiptToken: receiptToken(saved),
+      };
     }
     // The form is saved either way; if Razorpay can't open the payment now, the person is told so
     // and can pay later, rather than losing the form.
     const order = await this.payments
-      .openOrder([saved], saved.regId, 'participant')
+      .openOrder([saved], `form-${String(saved._id)}`, 'participant')
       .catch((err: unknown) => {
-        this.log.error(`opening the order for ${saved.regId} failed`, err);
+        this.log.error(
+          `opening the order for ${String(saved._id)} failed`,
+          err,
+        );
         return null;
       });
     return { ...summary, paid: false, order };

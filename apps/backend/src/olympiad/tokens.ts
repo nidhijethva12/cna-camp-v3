@@ -7,7 +7,13 @@ import { safeEqual } from '../common/security.js';
  * dashboard sessions. Format: base64url(JSON payload) "." base64url(HMAC).
  */
 export type TokenPurpose =
-  'consent' | 'unsubscribe' | 'pay' | 'session' | 'password' | 'invite';
+  | 'consent'
+  | 'unsubscribe'
+  | 'pay'
+  | 'session'
+  | 'password'
+  | 'invite'
+  | 'receipt';
 
 interface TokenBody {
   /** What the token is for; a token for one purpose is never accepted for another. */

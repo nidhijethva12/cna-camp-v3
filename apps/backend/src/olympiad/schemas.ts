@@ -41,7 +41,11 @@ export interface LastMessage {
 
 export interface PersonDoc {
   _id: Types.ObjectId;
-  regId: string;
+  /**
+   * AO2-<group>-<000123> for a registration, given once the fee is paid (Group 0: when the form is
+   * saved) and never changed; REM-/INV- for reminders and school invitations; absent while unpaid.
+   */
+  regId?: string;
   /** "invited": added by a school from Excel; the parent's link turns it into "registered". */
   type: 'reminder' | 'invited' | 'registered';
   edition: string;
@@ -100,6 +104,8 @@ export interface PersonDoc {
   paidAt?: Date;
   payment?: Types.ObjectId;
   razorpayPaymentId?: string;
+  /** The Razorpay order the registration was paid with. */
+  razorpayOrderId?: string;
   feeCheck?: boolean;
   source?: 'direct' | 'school' | 'ambassador';
   code?: string;
@@ -187,6 +193,7 @@ export const PersonSchema = new Schema<PersonDoc>(
     paidAt: Date,
     payment: { type: ObjectId },
     razorpayPaymentId: String,
+    razorpayOrderId: String,
     feeCheck: Boolean,
     source: String,
     code: String,

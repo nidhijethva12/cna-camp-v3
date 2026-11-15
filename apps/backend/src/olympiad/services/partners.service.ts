@@ -31,6 +31,7 @@ import {
   type PersonDoc,
   type SchoolDoc,
 } from '../schemas.js';
+import { hasRegId } from '../registration-ids.js';
 import { createToken, DAY, readToken } from '../tokens.js';
 import { CountersService } from './counters.service.js';
 import {
@@ -336,7 +337,7 @@ export class PartnersService {
       classLink: partnerLinkUrl(me.code!),
       students: students.map((s) => ({
         id: String(s._id),
-        regId: s.regId,
+        regId: hasRegId(s) ? s.regId! : '',
         name: s.name,
         stage: stageOf(s.stage ?? '')?.label ?? s.stage ?? '',
         group: s.group ?? '',

@@ -64,6 +64,15 @@ export class OlympiadController {
     return this.registrations.register(body, ip);
   }
 
+  /** The registration receipt (for the PDF) behind a receipt link. */
+  @Post('receipts')
+  @HttpCode(200)
+  async receipt(@Body() body: { token?: unknown }) {
+    const receipt = await this.payments.receipt(body.token);
+    if (!receipt) throw new NotFoundException();
+    return receipt;
+  }
+
   @Post('payments/confirm')
   @HttpCode(200)
   confirmPayment(
