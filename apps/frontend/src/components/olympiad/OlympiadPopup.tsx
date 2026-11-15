@@ -7,10 +7,9 @@ import { useEffect, useRef } from "react";
 import { ArrowRight, Check, Close } from "@/components/ui/icons";
 import { registrationPath } from "@/content/registration";
 
-const SEEN_KEY = "cna-olympiad-popup-seen";
-const SNOOZE_KEY = "cna-olympiad-popup-snoozed-until";
-const SNOOZE_MS = 3 * 24 * 60 * 60 * 1000;
 const OPEN_DELAY_MS = 2000;
+// Resets on every full page load (opening the site, refresh); stays set while moving between pages.
+let shownThisLoad = false;
 
 const facts = [
   ["Free*", "for govt. schools"],
@@ -25,24 +24,9 @@ declare global {
 
 const track = (name: string) => window.gtag?.("event", name);
 
-const storage = {
-  get: (store: () => Storage, key: string) => {
-    try {
-      return store().getItem(key);
-    } catch {
-      return null;
-    }
-  },
-  set: (store: () => Storage, key: string, value: string) => {
-    try {
-      store().setItem(key, value);
-    } catch {}
-  },
-};
-
 /**
- * Site-wide Olympiad ticket that opens shortly after the site loads: once per visit, never on the Olympiad pages or dashboards.
- * Closing it keeps it away for 3 days. While registration is open it links straight to the form.
+ * Site-wide Olympiad ticket that opens shortly after each full page load (opening the site or refreshing), never on the
+ * Olympiad pages or dashboards. While registration is open it links straight to the form.
  */
 export function OlympiadPopup({ open }: { open: boolean }) {
   const ref = useRef<HTMLDialogElement>(null);
@@ -51,27 +35,24 @@ export function OlympiadPopup({ open }: { open: boolean }) {
   useEffect(() => {
     // Not on the Olympiad pages it advertises, nor on the partner dashboards.
     if (["/olympiad", "/school-dashboard", "/ambassador-dashboard"].some((p) => pathname.startsWith(p))) return;
-    if (storage.get(() => sessionStorage, SEEN_KEY)) return;
-    if (Number(storage.get(() => localStorage, SNOOZE_KEY)) > Date.now()) return;
+    if (shownThisLoad) return;
 
     const timer = setTimeout(() => {
       // Never stacks on another dialog, such as the trip enquiry form.
       if (document.querySelector("dialog[open]") || !ref.current) return;
-      storage.set(() => sessionStorage, SEEN_KEY, "1");
+      shownThisLoad = true;
       ref.current.showModal();
       track("olympiad_popup_view");
     }, OPEN_DELAY_MS);
     return () => clearTimeout(timer);
   }, [pathname]);
 
-  const snooze = () => storage.set(() => localStorage, SNOOZE_KEY, String(Date.now() + SNOOZE_MS));
   const close = () => ref.current?.close();
 
   return (
     <dialog
       ref={ref}
       aria-labelledby="olympiad-popup-title"
-      onClose={snooze}
       onClick={(e) => e.target === e.currentTarget && close()}
       className="olympiad-popup m-auto max-h-[100dvh] w-[min(100%-32px,440px)] max-w-none overflow-y-auto rounded-[14px] bg-transparent p-0 text-dark shadow-float backdrop:bg-dark/65 backdrop:backdrop-blur-[3px]"
     >
