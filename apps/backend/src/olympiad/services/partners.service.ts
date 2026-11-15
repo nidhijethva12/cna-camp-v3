@@ -514,7 +514,12 @@ export class PartnersService {
       0,
       MAX_IMPORT,
     ) as Record<string, unknown>[];
-    const schoolType = me.type === 'government' ? 'government' : 'private';
+    const schoolType =
+      me.type === 'government'
+        ? 'government'
+        : me.type === 'grant-in-aid'
+          ? 'semi-government'
+          : 'non-government';
     const skipped: { row: number; reason: string }[] = [];
     const valid: {
       name: string;
@@ -679,7 +684,12 @@ export class PartnersService {
       parentMobile: (person.parentPhone ?? '').replace(/^\+91/, ''),
       email: person.email ?? '',
       schoolName: school.name,
-      schoolType: school.type === 'government' ? 'government' : 'private',
+      schoolType:
+        school.type === 'government'
+          ? 'government'
+          : school.type === 'grant-in-aid'
+            ? 'granted'
+            : 'private',
     };
   }
 }

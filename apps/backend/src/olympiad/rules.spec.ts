@@ -4,6 +4,7 @@ import {
   DEFAULT_FEES,
   feeFor,
   groupFor,
+  groupZeroSchool,
   isAadhaar,
   isBirthDate,
   isPlainText,
@@ -85,9 +86,19 @@ describe('Group 0 and fees', () => {
     expect(picksQuizSlot('A', 'Std 9')).toBe(false);
   });
 
-  it('offers Std 7 to 12 to school groups', () => {
-    expect(classesFor('0')[0]).toBe('Std 7');
-    expect(classesFor('B').at(-1)).toBe('Std 12');
+  it('offers Std 7 to 10 to Groups 0 and A, and Std 9 to 12 to Group B', () => {
+    expect(classesFor('0')).toEqual(['Std 7', 'Std 8', 'Std 9', 'Std 10']);
+    expect(classesFor('A')).toEqual(['Std 7', 'Std 8', 'Std 9', 'Std 10']);
+    expect(classesFor('B')).toEqual(['Std 9', 'Std 10', 'Std 11', 'Std 12']);
+  });
+
+  it('allows Group 0 only at a Government or Granted school', () => {
+    expect(groupZeroSchool('government')).toBe(true);
+    expect(groupZeroSchool('granted')).toBe(true);
+    expect(groupZeroSchool('private')).toBe(false);
+    // Private + "yes" stays Group A; only Government pays the lower Group B fee.
+    expect(withSchool('A', groupZeroSchool('private') && true)).toBe('A');
+    expect(feeFor(DEFAULT_FEES, 'B', false)).toBe(369);
   });
 });
 
