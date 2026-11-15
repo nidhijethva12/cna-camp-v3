@@ -8,7 +8,7 @@ export type CheckoutOrder = { orderId: string; amount: number; keyId: string } |
 export type PaymentConfirmation =
   | {
       ok: true;
-      /** True once Razorpay's webhook has marked the order paid. */
+      /** True once the order is marked paid (this verified callback or Razorpay's webhook). */
       paid: boolean;
       paymentId: string;
       paidAt: string | null;
@@ -20,7 +20,8 @@ export type PaymentConfirmation =
 
 /**
  * Razorpay Checkout's success callback, asked again while the page waits. The API checks Razorpay's
- * signature and says whether the webhook has marked the order paid yet.
+ * signature (a mismatch is an error and nothing is marked paid), confirms the payment with Razorpay,
+ * marks the order paid and says whether it is paid yet.
  */
 export async function confirmPayment(input: { orderId: string; paymentId: string; signature: string }): Promise<PaymentConfirmation> {
   const result = await callBackend<Omit<Extract<PaymentConfirmation, { ok: true }>, "ok">>("/olympiad/payments/confirm", {

@@ -27,7 +27,7 @@ type Phase =
 
 /**
  * Pays one saved registration with Razorpay. Checkout opens once on arrival; after it, the page waits
- * for Razorpay's webhook to mark the payment paid, then shows `done` (or a short confirmation).
+ * for the API to verify the payment and mark it paid, then shows `done` (or a short confirmation).
  */
 export function PaymentStep({
   summary,
