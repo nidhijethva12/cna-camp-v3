@@ -17,6 +17,9 @@ class HealthController {
       dbName: config.database.name,
       // The website's Payload admin owns the indexes of the collections both apps share.
       autoIndex: false,
+      // Fail fast with the driver's error instead of hanging a serverless start-up.
+      serverSelectionTimeoutMS: 5000,
+      retryAttempts: 1,
     }),
     OlympiadModule,
   ],
