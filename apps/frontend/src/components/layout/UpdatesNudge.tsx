@@ -11,14 +11,14 @@ const text = {
     label: "More about the Olympiad",
     close: "Close",
     title: "Need more info on the Olympiad?",
-    body: "Questions about groups, fees, the quiz or the scholarships? Our team replies within a day.",
+    body: "Questions about groups, fees, the quiz or the scholarships? Our team will get back to you soon.",
     cta: "Contact us",
   },
   gu: {
     label: "ઓલમ્પિયાડ વિશે વધુ",
     close: "બંધ કરો",
     title: "ઓલમ્પિયાડ વિશે વધુ માહિતી જોઈએ છે?",
-    body: "ગ્રુપ, ફી, ક્વિઝ કે સ્કોલરશીપ વિશે પ્રશ્ન છે? અમારી ટીમ એક દિવસમાં જવાબ આપશે.",
+    body: "ગ્રુપ, ફી, ક્વિઝ કે સ્કોલરશીપ વિશે પ્રશ્ન છે? અમારી ટીમ જલદી જવાબ આપશે.",
     cta: "સંપર્ક કરો",
   },
 };

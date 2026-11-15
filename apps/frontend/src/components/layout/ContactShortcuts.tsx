@@ -1,9 +1,9 @@
-import Link from "next/link";
-import { ArrowRight, WhatsApp } from "@/components/ui/icons";
-import { enquireHref } from "@/content/site";
+import { WhatsApp } from "@/components/ui/icons";
 import { getSiteSettings } from "@/lib/content";
+import { MobileContactBar } from "./MobileContactBar";
 
-export async function ContactShortcuts() {
+/** WhatsApp on desktop; on phones a bottom bar with WhatsApp and a main action for the page. */
+export async function ContactShortcuts({ olympiadOpen }: { olympiadOpen: boolean }) {
   const contact = await getSiteSettings();
   return (
     <>
@@ -17,22 +17,7 @@ export async function ContactShortcuts() {
         <WhatsApp className="text-[28px]" />
       </a>
 
-      <nav
-        className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-2 border-t border-line bg-light pb-[env(safe-area-inset-bottom)] lg:hidden"
-        aria-label="Quick contact"
-      >
-        <a
-          href={contact.whatsappHref}
-          rel="noopener"
-          target="_blank"
-          className="flex h-16 items-center justify-center gap-2 font-semibold text-whatsapp-dark"
-        >
-          <WhatsApp className="text-[22px]" /> WhatsApp
-        </a>
-        <Link href={enquireHref()} className="flex h-16 items-center justify-center gap-2 bg-primary font-bold text-light">
-          Contact us <ArrowRight />
-        </Link>
-      </nav>
+      <MobileContactBar whatsappHref={contact.whatsappHref} olympiadOpen={olympiadOpen} />
     </>
   );
 }

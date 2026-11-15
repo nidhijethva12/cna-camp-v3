@@ -41,7 +41,11 @@ function toUi(ui: Maybe<Loose<OlympiadPage["ui"]>>, fb: Ui): Ui {
     bar: strings(ui?.bar, fb.bar),
     contactUs: str(ui?.contactUs, fb.contactUs),
     seeGroups: str(ui?.seeGroups, fb.seeGroups),
-    scholarshipLine: strings(ui?.scholarshipLine, fb.scholarshipLine),
+    // "before" may be empty on purpose once the line is saved (Gujarati puts "100%" first).
+    scholarshipLine: {
+      ...strings(ui?.scholarshipLine, fb.scholarshipLine),
+      before: ui?.scholarshipLine?.value ? (ui.scholarshipLine.before ?? "") : fb.scholarshipLine.before,
+    },
     heroBadge: strings(ui?.heroBadge, fb.heroBadge),
     joint: strings(ui?.joint, fb.joint),
     nav: strings(ui?.nav, fb.nav),

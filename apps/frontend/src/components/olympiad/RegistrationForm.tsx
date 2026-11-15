@@ -21,6 +21,7 @@ import {
 import {
   ACHIEVEMENTS,
   ADULT_WORK,
+  FORM_SCHOOL_TYPES,
   classesFor,
   DISTRICTS,
   feeFor,
@@ -55,12 +56,12 @@ function latestBirthDate() {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 
-/** The fee for the group so far; null until the group, the school type and (under 16) the Std 6 to 8 answer are known. */
+/** The fee for the group so far; null until the group, the school type and (if asked) the Std 6 to 8 answer are known. */
 function feeOf(fees: Fees, input: RegistrationInput) {
-  const { group, minor, govt, asksStd6to8 } = shape(input);
+  const { group, minor, govt, waiting } = shape(input);
   if (!group) return null;
   if (minor && !input.schoolType) return null;
-  if (asksStd6to8 && !input.govtStd6to8) return null;
+  if (waiting) return null;
   return feeFor(fees, group, govt);
 }
 
@@ -242,7 +243,7 @@ export function RegistrationForm({
     step === STEP_COUNT ? (fee === 0 ? t.common.register : t.common.pay(fee ?? 0)) : fromReview ? t.common.backToReview : t.common.next;
 
   return (
-    <div lang={lang} className={`overflow-hidden rounded-card border border-line bg-light shadow-card ${lang === "gu" ? "lang-gu" : ""}`}>
+    <div lang={lang} className={`overflow-clip rounded-card border border-line bg-light shadow-card ${lang === "gu" ? "lang-gu" : ""}`}>
       <header className="bg-dark px-5 pt-7 pb-6 text-light sm:px-8">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="min-w-0">
@@ -332,7 +333,8 @@ export function RegistrationForm({
                 error={err("schoolType")}
                 hint={t.step1.schoolTypeHint}
                 onChange={(v) => set("schoolType", v)}
-                options={(["government", "private"] as const).map((v) => ({ value: v, label: t.step1.schoolTypes[v] }))}
+                columns={3}
+                options={FORM_SCHOOL_TYPES.map((v) => ({ value: v, label: t.step1.schoolTypes[v] }))}
               />
             )}
             {s.asksStd6to8 && (
@@ -346,7 +348,12 @@ export function RegistrationForm({
                 options={(["yes", "no"] as const).map((v) => ({ value: v, label: t.step1.std6to8Options[v] }))}
               />
             )}
-            <GroupBox group={s.group} warning={(s.warning && t.group.warnings[s.warning]) || err("group")} t={t} />
+            <GroupBox
+              group={s.group}
+              warning={(s.warning && t.group.warnings[s.warning]) || err("group")}
+              pending={s.waiting ? t.group.answerAbove : undefined}
+              t={t}
+            />
           </>
         )}
 
@@ -813,7 +820,8 @@ export function RegistrationForm({
           </p>
         )}
 
-        <div className="flex items-center gap-3 border-t border-line pt-5">
+        {/* On phones the fee and the Next button stay in view at the bottom of the screen. */}
+        <div className="flex items-center gap-3 border-t border-line pt-5 max-lg:sticky max-lg:bottom-0 max-lg:z-20 max-lg:-mx-5 max-lg:-mb-7 max-lg:bg-light max-lg:px-5 max-lg:pb-[calc(12px+env(safe-area-inset-bottom))] max-lg:shadow-[0_-6px_16px_-10px_var(--color-dark)] sm:max-lg:-mx-8 sm:max-lg:px-8">
           <div className="min-w-0 flex-1 leading-tight">
             <small className="block text-[12.5px] text-muted">{s.group ? t.common.groupFee(s.group) : t.common.yourFee}</small>
             <b className={`font-display text-[19px] font-extrabold whitespace-nowrap tabular-nums ${fee === 0 ? "text-success" : ""}`}>
@@ -1092,7 +1100,7 @@ function Upload({
   );
 }
 
-function GroupBox({ group, warning, t }: { group: GroupId | ""; warning?: string; t: RegistrationText }) {
+function GroupBox({ group, warning, pending, t }: { group: GroupId | ""; warning?: string; pending?: string; t: RegistrationText }) {
   const tone = group ? "border-success/30 bg-success/10" : warning ? "border-danger/30 bg-danger/5" : "border-line bg-soft";
   return (
     <div
@@ -1106,7 +1114,7 @@ function GroupBox({ group, warning, t }: { group: GroupId | ""; warning?: string
       </span>
       <span className="grid min-w-0 gap-0.5">
         <b className="font-display">{group ? t.group.yours(group) : warning ? t.group.undecided : t.group.empty}</b>
-        <span className="text-[14px] text-muted">{group ? t.group.summary[group] : warning || t.group.fillAbove}</span>
+        <span className="text-[14px] text-muted">{group ? t.group.summary[group] : warning || pending || t.group.fillAbove}</span>
       </span>
     </div>
   );

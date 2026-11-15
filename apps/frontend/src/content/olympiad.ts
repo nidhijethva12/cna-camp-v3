@@ -149,10 +149,10 @@ export const olympiad: OlympiadContent = {
   meta: {
     title: "Adventure Olympiad 2.0: Eco-STEM Quiz & Himalaya Scholarship | CNA Camp",
     description:
-      "Eco-STEM quiz for students 13+, adults and teachers. 6 groups, free for govt school students, up to 100% scholarship. Registration open till 14 Dec 2026.",
+      "Eco-STEM quiz for students 13+, adults 18+ and teachers. 6 groups, free for Group 0 (govt schools), up to 100% scholarship. Registration open till 14 Dec 2026.",
     ogTitle: "Adventure Olympiad 2.0: a quiz that can take you to the Himalaya",
     ogDescription:
-      "6 groups, free for govt school students and up to 100% scholarship on adventure camps. Registration open till 14 Dec 2026.",
+      "6 groups, free for Group 0 (govt schools) and up to 100% scholarship on adventure camps. Registration open till 14 Dec 2026.",
   },
   motto: "।। વિદ્યાર્થી દેવો ભવ: ।।",
   notices: [
@@ -235,11 +235,12 @@ export const olympiad: OlympiadContent = {
       title: "Round 4, Groups 0, A and B",
       note: "Groups C, D and E: Round 4 at the Marine camp, date on the notice board.",
     },
+    { when: "Date on the notice board", title: "Round 5 (offline, at camp)" },
   ],
   steps: [
     {
       title: "Register and pay",
-      text: "Choose your group, fill the form and pay online through Razorpay. Your registration number and all updates come on WhatsApp.",
+      text: "Choose your group, fill the form and pay online through Razorpay (no fee for Group 0). Your registration number and all updates come on WhatsApp.",
       when: "15 Nov to 14 Dec 2026",
     },
     {
@@ -248,14 +249,14 @@ export const olympiad: OlympiadContent = {
       when: "Jan to Feb 2027 (tentative)",
     },
     {
-      title: "Rounds 4 and 5",
-      text: "Selected participants join the offline rounds at camp in Gujarat. Groups D and E: after a government document check, an online live lucky draw picks who goes straight to Round 4.",
-      when: "After Round 3",
+      title: "Merit list after Round 3",
+      text: "The merit list is not made on quiz marks alone. The Trust also looks at co-curricular activities and competitions (NMMS, maths and science fairs, Gyan Sadhana, sports), medical fitness and teachers' opinion.",
+      when: "March 2027 (tentative)",
     },
     {
-      title: "Merit list and scholarship",
-      text: "The merit list after Round 3 is made on the quiz score plus past activities, competitions, medical fitness and teachers' opinion.",
-      when: "March 2027 (tentative)",
+      title: "Rounds 4 and 5",
+      text: "Selected students take the offline rounds at camp in Gujarat. Groups D and E: after a government document check, an online live lucky draw picks who goes straight to Round 4 (Marine camp).",
+      when: "After the merit list, at camp",
     },
   ],
   glance: [
@@ -283,7 +284,7 @@ export const olympiad: OlympiadContent = {
     {
       id: "A",
       name: "Group A",
-      short: "Non-govt school, 14 to 16",
+      short: "Non / semi-govt school, 14 to 16",
       title: "Group A, non-govt and semi-govt school students",
       who: ageLine,
       finder: "A non-govt or semi-govt school student, age 14 to 16",
@@ -302,9 +303,9 @@ export const olympiad: OlympiadContent = {
       finder: "Age 16+ to 18",
       fees: [
         { label: "Group B, govt school", amount: "₹156" },
-        { label: "Group B, non-govt school", amount: "₹369" },
+        { label: "Group B, non / semi-govt school", amount: "₹369" },
       ],
-      feeSummary: "₹156 for govt schools, ₹369 for non-govt schools",
+      feeSummary: "₹156 for govt schools, ₹369 for non / semi-govt schools",
       quiz: "Std 10 level, Rounds 1 to 3 online",
       prize: "Astro Adventure Trekking Camp, Manali, with the Dr. Ketankumar Trivedi scholarship of 60 to 100%*",
       journey: groupsJourney,
@@ -392,7 +393,7 @@ export const olympiad: OlympiadContent = {
       focus: "object-[center_25%]",
       kicker: "Groups 0, A, B and C",
       name: "Sir Dr. Ketankumar Trivedi Adventure Scholarship",
-      life: "In loving memory. Founder of CNA, 1971 to 2024.",
+      life: "In loving memory of the founder of CNA (born 24 Nov 1971, passed away 20 Mar 2024).",
       quote: "“A lamp of nature, for back to nature movements.”",
       award: "60 to 100%",
       awardFor: "for selected students of Groups A, B and C. Group 0: 100%, travel included.",
@@ -464,6 +465,10 @@ export const olympiad: OlympiadContent = {
     ["Groups D and E", " must upload a government ID."],
     ["Selection is not only the quiz.", " The Trust also looks at past activities, competitions, medical fitness and teachers' opinion."],
     ["The scholarship is on the camp fee only.", " The registration fee is not refundable."],
+    [
+      "One person gets only one scholarship.",
+      " It cannot be given to someone else or taken as cash. Group 0, A and B students must continue their studies till 2030.",
+    ],
     ["The Trust's decision is final on all rules and selection.", " Read the full rules on the [notice board](#notices)."],
   ],
   keepReady: [
@@ -557,7 +562,7 @@ export const olympiad: OlympiadContent = {
       partners: {
         eyebrow: "For schools and teachers",
         title: "Bring your whole class, or spread the word",
-        lead: "Schools can register many students from one place. Teachers and other people can share a personal code and get recognised for every student who joins.",
+        lead: "Schools can register many students from one place. Teachers and others can share a personal code. We count everyone who joins through it, and you get a certificate and rewards when you reach the set number.",
       },
       scholarships: {
         eyebrow: "Scholarships",

@@ -87,7 +87,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         <SiteHeader />
         <main id="main">{children}</main>
         <SiteFooter />
-        <ContactShortcuts />
+        <ContactShortcuts olympiadOpen={phase === "open"} />
         {phase !== "closed" && <OlympiadPopup open={phase === "open"} />}
         <JsonLd data={organizationLd(contact)} />
       </body>

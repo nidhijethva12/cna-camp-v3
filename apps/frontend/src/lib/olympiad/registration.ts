@@ -14,6 +14,8 @@ import {
   PIN_CODE,
   pinMatchesDistrict,
   takesQuiz,
+  groupZeroSchool,
+  type FormSchoolType,
   type GroupId,
   type GroupWarning,
   type Participant,
@@ -24,8 +26,8 @@ import {
 export interface RegistrationInput {
   who: Participant | "";
   dob: string;
-  schoolType: "government" | "private" | "";
-  /** Students under 16: did Std 6 to 8 fully in a government school (or is in Std 8 there). "yes" is Group 0. */
+  schoolType: FormSchoolType | "";
+  /** Under 16 at a Government or Granted school: did Std 6 to 8 fully in a government school (or is in Std 8 there). "yes" is Group 0. */
   govtStd6to8: "yes" | "no" | "";
   firstName: string;
   fatherName: string;
@@ -120,15 +122,18 @@ export function shape(input: RegistrationInput) {
   const ageGroup: GroupId | "" = result && "group" in result ? result.group : "";
   const student = input.who === "student";
   const minor = isSchoolGroup(ageGroup);
-  const asksStd6to8 = student && ageGroup === "A";
-  const group = withSchool(ageGroup, asksStd6to8 && input.govtStd6to8 === "yes");
   const govt = minor && input.schoolType === "government";
+  const asksStd6to8 = student && ageGroup === "A" && groupZeroSchool(input.schoolType);
+  // Until the Std 6 to 8 question is answered, the group isn't known yet (0 or A).
+  const waiting = asksStd6to8 && !input.govtStd6to8;
+  const group = waiting ? "" : withSchool(ageGroup, asksStd6to8 && input.govtStd6to8 === "yes");
   return {
     group,
     warning: (result && "warning" in result ? result.warning : "") as GroupWarning | "",
     student,
     minor,
     asksStd6to8,
+    waiting,
     teacher: input.who === "teacher",
     adult: input.who === "adult",
     quiz: takesQuiz(group),
@@ -159,7 +164,8 @@ export function stepErrors(step: number, input: RegistrationInput, files: Regist
   };
   const name = (field: keyof RegistrationInput, message: string) => {
     const v = String(input[field] ?? "").trim();
-    if (!v || v.length > 60 || !PERSON_NAME.test(v)) e[field] = message;
+    if (!v) e[field] = message;
+    else if (v.length > 60 || !PERSON_NAME.test(v)) e[field] = t.lettersOnly;
   };
   const mobile = (field: keyof RegistrationInput) => {
     if (!MOBILE.test(digits(String(input[field] ?? "")))) e[field] = t.mobile;
@@ -172,7 +178,7 @@ export function stepErrors(step: number, input: RegistrationInput, files: Regist
     if (s.student && !input.schoolType) e.schoolType = t.choose;
     if (s.asksStd6to8 && !input.govtStd6to8) e.govtStd6to8 = t.choose;
     if (s.warning) e.group = registrationText[lang].group.warnings[s.warning];
-    else if (input.who && input.dob && !s.group) e.group = t.group;
+    else if (input.who && input.dob && !s.group && !s.waiting) e.group = t.group;
   }
 
   if (step === 2) {

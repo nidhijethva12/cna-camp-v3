@@ -37,7 +37,7 @@ type InvitePreview =
       parentMobile: string;
       email: string;
       schoolName: string;
-      schoolType: "government" | "private";
+      schoolType: "government" | "granted" | "private";
     };
 
 /** A school's invitation turned into the form's starting answers; the name splits as "first father surname". */

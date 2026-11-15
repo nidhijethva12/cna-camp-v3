@@ -182,7 +182,9 @@ export function OlympiadView({ o, lang, contact, phase, closesOn, consentText }:
             </h1>
             <p className="lead mt-3 max-w-[44ch]">{o.intro}</p>
             <p className="mt-4 flex flex-wrap items-baseline gap-x-2.5 font-display leading-none font-extrabold md:gap-x-3">
-              <span className="text-[16px] text-muted sm:text-[22px] md:text-[26px]">{ui.scholarshipLine.before}</span>
+              {ui.scholarshipLine.before && (
+                <span className="text-[16px] text-muted sm:text-[22px] md:text-[26px]">{ui.scholarshipLine.before}</span>
+              )}
               <span className="marker count-up relative inline-block text-[40px] tracking-tight text-primary tabular-nums sm:text-[56px] md:text-[68px]">
                 <span aria-hidden="true" className="invisible">
                   {ui.scholarshipLine.value}
