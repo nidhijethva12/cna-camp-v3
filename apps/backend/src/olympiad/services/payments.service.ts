@@ -331,6 +331,7 @@ export class PaymentsService {
       district: p.district ?? '',
       pin: p.pin ?? '',
       quizLanguage: p.quizLanguage ?? '',
+      quizWindow: p.quizWindow ?? '',
       quizDate: p.quizDate ?? '',
       quizTime: p.quizTime ?? '',
       guardian: p.parentName

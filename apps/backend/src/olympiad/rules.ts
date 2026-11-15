@@ -157,6 +157,9 @@ export const DEFAULT_FEES: Fees = {
 export const feeFor = (fees: Fees, group: GroupId, government: boolean) =>
   group === 'B' && government ? fees.B.govt : fees[group].other;
 
+/** The two fortnights for the online quiz Rounds 1 to 3. */
+export const QUIZ_WINDOWS = ['jan-1-15', 'jan-16-31'] as const;
+
 export const QUIZ_LANGUAGES = [
   { value: 'gu', label: 'ગુજરાતી (Gujarati)' },
   { value: 'en', label: 'English' },

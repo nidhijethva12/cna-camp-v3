@@ -40,8 +40,10 @@ export interface ApprovedPartner {
 }
 
 /** The registration receipt, ready to download as a PDF. The link works for two years. */
-export const receiptUrl = (personId: string) =>
-  url(`/olympiad/receipt/${createToken('receipt', personId, 730 * DAY)}`);
+export const receiptUrl = (personId: string, lang?: string) =>
+  url(
+    `/olympiad/receipt/${createToken('receipt', personId, 730 * DAY)}${lang === 'gu' ? '?lang=gu' : ''}`,
+  );
 
 /** The registration form, pre-filled for a student a school added. */
 export const inviteUrl = (personId: string) =>
@@ -153,7 +155,7 @@ export class NotifyService {
         group: person.group ?? '',
         fee,
         paymentId: person.razorpayPaymentId ?? '',
-        receiptUrl: receiptUrl(String(person._id)),
+        receiptUrl: receiptUrl(String(person._id), person.formLanguage),
         pageUrl: url('/olympiad'),
         unsubscribeUrl: unsubscribeUrl(String(person._id)),
       });
