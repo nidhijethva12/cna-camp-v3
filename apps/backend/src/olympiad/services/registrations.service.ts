@@ -30,7 +30,6 @@ import {
   normalizeMobile,
   PERSON_NAME,
   PIN_CODE,
-  pinMatchesDistrict,
   QUIZ_LANGUAGES,
   takesQuiz,
   type GroupId,
@@ -118,6 +117,8 @@ const schoolTypeOf = (group: GroupId, picked: string): SchoolType =>
 
 /** Answers only some participants give; cleared when a new attempt leaves them out. */
 const OPTIONAL_FIELDS = [
+  'fatherName',
+  'motherName',
   'govtStd6to8',
   'quizDate',
   'quizTime',
@@ -267,23 +268,24 @@ export class RegistrationsService implements OnModuleInit {
     if (asksStd6to8)
       need('govtStd6to8', ['yes', 'no'].includes(v.govtStd6to8), 'Choose one.');
     need('firstName', isName(v.firstName), 'Enter the name.');
-    need('fatherName', isName(v.fatherName), "Enter the father's name.");
+    // A student whose parents have both passed away gives no father's or mother's name.
+    const orphan =
+      student && input.fatherAlive === false && input.motherAlive === false;
+    if (!orphan)
+      need('fatherName', isName(v.fatherName), "Enter the father's name.");
     need('surname', isName(v.surname), 'Enter the surname.');
-    need('motherName', isName(v.motherName), "Enter the mother's name.");
+    if (!orphan)
+      need('motherName', isName(v.motherName), "Enter the mother's name.");
     need('mobile', Boolean(mobile), 'Enter a 10 digit mobile number.');
     need('whatsapp', Boolean(whatsapp), 'Enter a 10 digit WhatsApp number.');
     need('email', EMAIL.test(v.email), 'Enter a valid email.');
     need(
       'address',
-      v.address.length >= 10 && isPlainText(v.address),
-      'Enter the full address.',
+      v.address.length >= 3 && isPlainText(v.address),
+      'Enter the address.',
     );
     need('district', isDistrict(v.district), 'Choose the district.');
-    need(
-      'pin',
-      PIN_CODE.test(v.pin) && pinMatchesDistrict(v.pin, v.district),
-      'Enter the 6 digit PIN code of the district.',
-    );
+    need('pin', PIN_CODE.test(v.pin), 'Enter the 6 digit PIN code.');
     if (group && takesQuiz(group))
       need(
         'quizLanguage',
@@ -298,7 +300,9 @@ export class RegistrationsService implements OnModuleInit {
         'parentWho',
         ['father', 'mother', 'other'].includes(v.parentRelation) &&
           !(v.parentRelation === 'father' && fatherAlive === false) &&
-          !(v.parentRelation === 'mother' && motherAlive === false),
+          !(v.parentRelation === 'mother' && motherAlive === false) &&
+          // A guardian fills in the form only when neither parent is alive.
+          !(v.parentRelation === 'other' && (fatherAlive || motherAlive)),
         'Choose the parent.',
       );
       need('parentName', isName(v.parentName), "Enter the parent's name.");
@@ -311,7 +315,7 @@ export class RegistrationsService implements OnModuleInit {
     if (v.who !== 'adult')
       need(
         'school',
-        v.school.length >= 3 && isPlainText(v.school),
+        v.school.length >= 2 && isPlainText(v.school),
         'Enter the school or college name.',
       );
     if (student) {
@@ -332,8 +336,8 @@ export class RegistrationsService implements OnModuleInit {
       }
       need(
         'schoolId',
-        /^[A-Za-z0-9/ -]{0,40}$/.test(v.schoolId),
-        'Use only letters, numbers, / and -.',
+        isPlainText(v.schoolId),
+        'Remove links from the GR number.',
       );
       if (proof)
         need(
@@ -428,7 +432,9 @@ export class RegistrationsService implements OnModuleInit {
     // school added this student itself. A school's public class link vouches for nobody.
     const feeCheck = proof && !(invited && school?.type === 'government');
     const now = new Date();
-    const name = `${v.firstName} ${v.fatherName} ${v.surname}`;
+    const name = [v.firstName, orphan ? '' : v.fatherName, v.surname]
+      .filter(Boolean)
+      .join(' ');
     const free = fee === 0;
 
     const fields = {
@@ -436,8 +442,7 @@ export class RegistrationsService implements OnModuleInit {
       edition: EDITION,
       participant: v.who as PersonDoc['participant'],
       name,
-      fatherName: v.fatherName,
-      motherName: v.motherName,
+      ...(orphan ? {} : { fatherName: v.fatherName, motherName: v.motherName }),
       ...(student
         ? { fatherAlive, motherAlive, orphan: !fatherAlive && !motherAlive }
         : {}),
