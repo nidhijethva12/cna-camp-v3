@@ -18,8 +18,16 @@ class HealthController {
       // The website's Payload admin owns the indexes of the collections both apps share.
       autoIndex: false,
       // Fail fast with the driver's error instead of hanging a serverless start-up.
-      serverSelectionTimeoutMS: 5000,
       retryAttempts: 1,
+      serverSelectionTimeoutMS: 5000,
+      onConnectionCreate: (connection) => {
+        connection.on('connected', () =>
+          console.log('[startup] database connected'),
+        );
+        connection.on('error', (err: Error) =>
+          console.error('[startup] database error:', err.message),
+        );
+      },
     }),
     OlympiadModule,
   ],
