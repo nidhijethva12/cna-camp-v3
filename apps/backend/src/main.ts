@@ -14,4 +14,7 @@ async function bootstrap() {
   await app.listen(config.port);
   console.log('[startup] app ready');
 }
-await bootstrap();
+bootstrap().catch((err: unknown) => {
+  console.error('[startup] failed:', err);
+  process.exit(1);
+});
