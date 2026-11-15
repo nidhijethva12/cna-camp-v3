@@ -711,6 +711,11 @@ export interface OlympiadPerson {
    */
   dob?: string | null;
   quizLanguage?: ('gu' | 'en') | null;
+  quizWindow?: ('jan-1-15' | 'jan-16-31') | null;
+  /**
+   * The receipt link in the confirmation opens in this language.
+   */
+  formLanguage?: ('en' | 'gu') | null;
   address?: string | null;
   city?: string | null;
   district?:
@@ -1494,6 +1499,8 @@ export interface OlympiadPeopleSelect<T extends boolean = true> {
   group?: T;
   dob?: T;
   quizLanguage?: T;
+  quizWindow?: T;
+  formLanguage?: T;
   address?: T;
   city?: T;
   district?: T;

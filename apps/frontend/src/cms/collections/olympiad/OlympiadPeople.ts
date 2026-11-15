@@ -213,6 +213,25 @@ export const OlympiadPeople: CollectionConfig = {
                 { name: "group", type: "select", index: true, options: groupOptions },
                 { name: "dob", label: "Date of birth", type: "text", admin: { description: "YYYY-MM-DD" } },
                 { name: "quizLanguage", type: "select", options: quizLanguageOptions },
+                {
+                  name: "quizWindow",
+                  label: "Quiz dates (Rounds 1-3)",
+                  type: "select",
+                  options: [
+                    { label: "1 to 15 Jan 2027", value: "jan-1-15" },
+                    { label: "16 to 31 Jan 2027", value: "jan-16-31" },
+                  ],
+                },
+                {
+                  name: "formLanguage",
+                  label: "Form language",
+                  type: "select",
+                  options: [
+                    { label: "English", value: "en" },
+                    { label: "Gujarati", value: "gu" },
+                  ],
+                  admin: { readOnly: true, description: "The receipt link in the confirmation opens in this language." },
+                },
               ],
             },
             { name: "address", type: "textarea" },

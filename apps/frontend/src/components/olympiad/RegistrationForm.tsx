@@ -237,7 +237,7 @@ export function RegistrationForm({
 
   if (result) {
     // The receipt comes from the saved registration: right away for a free one, after Razorpay confirms a paid one.
-    const done = (receiptToken: string) => <RegistrationDone receiptToken={receiptToken} lang={lang} phone={phone} />;
+    const done = (receiptToken: string) => <RegistrationDone receiptToken={receiptToken} lang={lang} phone={phone} rules={rules} />;
     if (!result.paid) return <PaymentStep summary={result} t={t.payment} done={done} />;
     return result.receiptToken ? done(result.receiptToken) : null;
   }
@@ -499,6 +499,16 @@ export function RegistrationForm({
                   { value: "gu", label: "ગુજરાતી" },
                   { value: "en", label: "English" },
                 ]}
+              />
+            )}
+            {s.quiz && (
+              <Choice
+                label={t.step2.quizWindow}
+                required
+                value={input.quizWindow}
+                error={err("quizWindow")}
+                onChange={(v) => set("quizWindow", v as RegistrationInput["quizWindow"])}
+                options={Object.entries(t.step2.quizWindows).map(([value, label]) => ({ value, label }))}
               />
             )}
             {s.minor && (
@@ -846,7 +856,7 @@ export function RegistrationForm({
               <ArrowLeft /> <span className="max-[420px]:sr-only">{t.common.back}</span>
             </button>
           )}
-          <button type="submit" disabled={pending} className="btn btn-primary">
+          <button type="submit" disabled={pending || (step === STEP_COUNT && !input.agree)} className="btn btn-primary">
             {pending ? t.common.wait : nextLabel}
             {!pending && step < STEP_COUNT && <ArrowRight />}
           </button>
@@ -1207,6 +1217,7 @@ function reviewSections(input: RegistrationInput, files: Partial<Record<FileKey,
         [r.email, input.email],
         [r.address, [input.address, input.district, input.pin].filter(Boolean).join(", ")],
         s.quiz && [r.quiz, input.quizLanguage === "gu" ? "ગુજરાતી" : input.quizLanguage === "en" ? "English" : ""],
+        s.quiz && [r.quizWindow, t.step2.quizWindows[input.quizWindow] ?? ""],
         s.student && [
           r.parents,
           input.fatherAlive && input.motherAlive

@@ -138,6 +138,8 @@ export async function submitRegistration(fd: FormData): Promise<RegistrationResu
       district: input.district,
       pin: input.pin,
       quizLanguage: input.quizLanguage,
+      quizWindow: input.quizWindow,
+      formLanguage: lang,
       parentRelation: input.parentWho,
       parentName: input.parentName,
       parentMobile: input.parentSameMobile ? input.mobile : input.parentMobile,

@@ -14,6 +14,7 @@ export interface ReceiptData {
   district: string;
   pin: string;
   quizLanguage: string;
+  quizWindow: string;
   quizDate: string;
   quizTime: string;
   guardian: { relation: string; name: string; phone: string } | null;
