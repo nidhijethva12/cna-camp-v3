@@ -180,9 +180,9 @@ export class RegistrationsService implements OnModuleInit {
     private readonly settings: SettingsService,
   ) {}
 
-  /** Builds the one index this API owns: a single registration per Aadhaar number and edition. */
-  async onModuleInit() {
-    await this.people.createIndexes().catch((err: unknown) => {
+  /** Builds the one index this API owns (a single registration per Aadhaar number and edition), without holding up start-up. */
+  onModuleInit() {
+    void this.people.createIndexes().catch((err: unknown) => {
       this.log.error('creating the Aadhaar index failed', err);
     });
   }
