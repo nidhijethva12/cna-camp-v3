@@ -12,7 +12,7 @@ Object.assign(process.env, {
 });
 
 const { createToken, readToken } = await import('./tokens.js');
-const { checkoutSignatureValid, webhookSignatureValid } =
+const { checkoutSignatureValid, createOrder, webhookSignatureValid } =
   await import('./razorpay.js');
 
 const hmac = (secret: string, data: string) =>
@@ -68,5 +68,49 @@ describe('Razorpay signatures', () => {
     );
     expect(webhookSignatureValid(body, undefined)).toBe(false);
     expect(webhookSignatureValid(undefined, good)).toBe(false);
+  });
+});
+
+describe('Razorpay orders', () => {
+  const answer = (status: number, body: unknown) =>
+    vi
+      .spyOn(globalThis, 'fetch')
+      .mockResolvedValue(new Response(JSON.stringify(body), { status }));
+  const statusOf = (p: Promise<unknown>) =>
+    p.then(
+      () => 200,
+      (err: { getStatus?: () => number }) => err.getStatus?.(),
+    );
+  afterEach(() => vi.restoreAllMocks());
+
+  it('refuses an amount under 100 paise without calling Razorpay', async () => {
+    const fetch = answer(200, { id: 'order_1' });
+    expect(await statusOf(createOrder(99, 'r', {}))).toBe(400);
+    expect(await statusOf(createOrder(150.5, 'r', {}))).toBe(400);
+    expect(fetch).not.toHaveBeenCalled();
+  });
+
+  it('creates an INR order with the amount in paise', async () => {
+    const fetch = answer(200, {
+      id: 'order_1',
+      amount: 50000,
+      currency: 'INR',
+    });
+    expect((await createOrder(50000, 'form-1', {})).id).toBe('order_1');
+    const [url, init] = fetch.mock.calls[0];
+    expect(url).toBe('https://api.razorpay.com/v1/orders');
+    expect(JSON.parse(init?.body as string)).toMatchObject({
+      amount: 50000,
+      currency: 'INR',
+      receipt: 'form-1',
+    });
+  });
+
+  it('answers 401 when Razorpay rejects the keys and 500 for other failures', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+    answer(401, { error: { description: 'Authentication failed' } });
+    expect(await statusOf(createOrder(100, 'r', {}))).toBe(401);
+    answer(400, { error: { description: 'Bad request' } });
+    expect(await statusOf(createOrder(100, 'r', {}))).toBe(500);
   });
 });
