@@ -50,9 +50,19 @@ export function groupFor(
 export const isSchoolGroup = (group: string) =>
   group === '0' || group === 'A' || group === 'B';
 
-/** The age rule gives "A" under 16; a student who did Std 6 to 8 fully in a government school (or is in Std 8 there) is Group 0. */
-export const withSchool = (group: GroupId, govtStd6to8: boolean): GroupId =>
-  group === 'A' && govtStd6to8 ? '0' : group;
+/**
+ * The age rule gives "A" under 16. Group 0 is for a student who did Std 6 to 8 fully in a government
+ * school (or is in Std 8 there) and is now at a Government or Granted (semi-government) school.
+ */
+export const withSchool = (group: GroupId, groupZero: boolean): GroupId =>
+  group === 'A' && groupZero ? '0' : group;
+
+/** The school type a student picks in the form. Only "government" gets the lower Group B fee. */
+export const FORM_SCHOOL_TYPES = ['government', 'granted', 'private'] as const;
+export type FormSchoolType = (typeof FORM_SCHOOL_TYPES)[number];
+/** Group 0 is possible only at a Government or Granted school. */
+export const groupZeroSchool = (type: string) =>
+  type === 'government' || type === 'granted';
 
 /** Group 0 and Group B at the government fee upload a school ID card or bonafide certificate. */
 export const needsSchoolProof = (group: string, government: boolean) =>
@@ -78,7 +88,9 @@ export const classesFor = (group: GroupId | '') =>
         'College 4th year',
         'Master / Higher studies',
       ]
-    : ['Std 7', 'Std 8', 'Std 9', 'Std 10', 'Std 11', 'Std 12'];
+    : group === 'B'
+      ? ['Std 9', 'Std 10', 'Std 11', 'Std 12']
+      : ['Std 7', 'Std 8', 'Std 9', 'Std 10'];
 
 export const ADULT_WORK = [
   'Government job',
@@ -116,8 +128,8 @@ export const stageOf = (value: string) => STAGES.find((s) => s.value === value);
 
 export const SCHOOL_TYPES = [
   { value: 'government', label: 'Government' },
-  { value: 'non-government', label: 'Non-government' },
-  { value: 'semi-government', label: 'Semi-government' },
+  { value: 'non-government', label: 'Private' },
+  { value: 'semi-government', label: 'Granted (semi-government)' },
   { value: 'college', label: 'College' },
   { value: 'not-a-student', label: 'Not a student' },
 ] as const;

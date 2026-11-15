@@ -21,6 +21,8 @@ import {
   isDistrict,
   isPlainText,
   isSchoolGroup,
+  FORM_SCHOOL_TYPES,
+  groupZeroSchool,
   needsSchoolProof,
   picksQuizSlot,
   RULES_VERSION,
@@ -102,12 +104,14 @@ type DocumentKind = (typeof DOCUMENT_KINDS)[number];
 const fileId = (value: unknown) =>
   typeof value === 'string' && /^[a-f0-9]{24}$/.test(value) ? value : null;
 
-/** The fee type kept for reports: 0, A and B by school, C college, D and E not students. */
-const schoolTypeOf = (group: GroupId, govt: boolean): SchoolType =>
+/** The school type kept for reports: 0, A and B as picked, C college, D and E not students. */
+const schoolTypeOf = (group: GroupId, picked: string): SchoolType =>
   isSchoolGroup(group)
-    ? govt
+    ? picked === 'government'
       ? 'government'
-      : 'non-government'
+      : picked === 'granted'
+        ? 'semi-government'
+        : 'non-government'
     : group === 'C'
       ? 'college'
       : 'not-a-student';
@@ -234,7 +238,8 @@ export class RegistrationsService implements OnModuleInit {
     const student = v.who === 'student';
     const minor = ageGroup ? isSchoolGroup(ageGroup) : false;
     const govt = minor && v.schoolType === 'government';
-    const asksStd6to8 = student && ageGroup === 'A';
+    const asksStd6to8 =
+      student && ageGroup === 'A' && groupZeroSchool(v.schoolType);
     const group = ageGroup
       ? withSchool(ageGroup, asksStd6to8 && v.govtStd6to8 === 'yes')
       : null;
@@ -256,7 +261,7 @@ export class RegistrationsService implements OnModuleInit {
     if (student)
       need(
         'schoolType',
-        ['government', 'private'].includes(v.schoolType),
+        (FORM_SCHOOL_TYPES as readonly string[]).includes(v.schoolType),
         'Choose the school type.',
       );
     if (asksStd6to8)
@@ -456,7 +461,7 @@ export class RegistrationsService implements OnModuleInit {
           }
         : {}),
       ...(v.who !== 'adult' ? { institution: v.school } : {}),
-      schoolType: schoolTypeOf(g, govt),
+      schoolType: schoolTypeOf(g, v.schoolType),
       ...(student
         ? {
             stage: v.std,
