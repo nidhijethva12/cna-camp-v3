@@ -669,7 +669,7 @@ export interface Enquiry {
   createdAt: string;
 }
 /**
- * Everyone who asked for a reminder or registered, in one list. Filter, then export or message.
+ * Everyone who asked for a reminder or registered, in one list. Click a number to filter, then export or message.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "olympiad-people".

@@ -80,6 +80,7 @@ export default buildConfig({
     importMap: { baseDir: path.resolve(dirname) },
     meta: { titleSuffix: " · CNA Camp admin", icons: [{ rel: "icon", type: "image/png", url: "/icon.png" }] },
     components: {
+      beforeDashboard: [{ path: "@/components/admin/OlympiadOverview#OlympiadOverview", serverProps: { compact: true } }],
       graphics: {
         Logo: "@/components/admin/AdminLogo",
         Icon: "@/components/admin/AdminIcon",

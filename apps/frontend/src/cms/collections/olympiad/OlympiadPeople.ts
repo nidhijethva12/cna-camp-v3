@@ -87,10 +87,12 @@ export const OlympiadPeople: CollectionConfig = {
     hidden: hiddenFromAuthors,
     group: "Olympiad",
     useAsTitle: "name",
-    defaultColumns: ["regId", "name", "type", "group", "whatsapp", "paymentStatus", "district", "createdAt"],
+    defaultColumns: ["regId", "name", "group", "paymentStatus", "type", "institution", "stage", "district", "whatsapp", "registeredAt"],
     listSearchableFields: SEARCHABLE,
-    description: "Everyone who asked for a reminder or registered, in one list. Filter, then export or message.",
-    components: { beforeListTable: ["@/components/admin/ExportPeople#ExportPeople"] },
+    description: "Everyone who asked for a reminder or registered, in one list. Click a number to filter, then export or message.",
+    components: {
+      beforeListTable: ["@/components/admin/OlympiadOverview#OlympiadOverview", "@/components/admin/ExportPeople#ExportPeople"],
+    },
   },
   access: { create: () => false, read: canEdit, update: canEdit, delete: canEdit },
   endpoints: [
@@ -139,6 +141,7 @@ export const OlympiadPeople: CollectionConfig = {
         { name: "edition", type: "text", required: true, defaultValue: "2.0", index: true, admin: { readOnly: true } },
       ],
     },
+    { name: "summary", type: "ui", admin: { components: { Field: "@/components/admin/OlympiadSummary#OlympiadSummary" } } },
     {
       type: "tabs",
       tabs: [
