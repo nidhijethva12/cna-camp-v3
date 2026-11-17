@@ -3,11 +3,13 @@
 import * as NavigationMenu from "@radix-ui/react-navigation-menu";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { CaretDown } from "@/components/ui/icons";
+import { CaretDown, Fire } from "@/components/ui/icons";
 import { isNavActive, type NavItem } from "@/content/site";
 
 const itemClass =
   "flex items-center gap-1 whitespace-nowrap rounded-card px-2.5 py-2 text-[14.5px] font-semibold transition-colors hover:bg-soft data-[state=open]:bg-soft";
+const hotClass =
+  "hot-badge flex items-center gap-1.5 whitespace-nowrap rounded-full bg-primary px-3.5 py-2 text-[14.5px] font-bold text-light transition-colors hover:bg-primary-hover";
 
 export function DesktopNav({ items }: { items: NavItem[] }) {
   const pathname = usePathname();
@@ -63,8 +65,9 @@ export function DesktopNav({ items }: { items: NavItem[] }) {
                   <Link
                     href={item.href}
                     aria-current={isNavActive(item, pathname) ? "page" : undefined}
-                    className={`${itemClass} ${isNavActive(item, pathname) ? "text-primary" : ""}`}
+                    className={item.hot ? hotClass : `${itemClass} ${isNavActive(item, pathname) ? "text-primary" : ""}`}
                   >
+                    {item.hot && <Fire className="flame text-[15px] text-secondary" />}
                     {item.label}
                   </Link>
                 </NavigationMenu.Link>

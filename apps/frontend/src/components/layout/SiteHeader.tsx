@@ -6,7 +6,7 @@ import { DesktopNav } from "./DesktopNav";
 import { MobileNav } from "./MobileNav";
 
 const afterBatches = mainNav.findIndex((item) => item.href === "/batches") + 1;
-const nav = [...mainNav.slice(0, afterBatches), { label: "Olympiad", href: "/olympiad" }, ...mainNav.slice(afterBatches)];
+const nav = [...mainNav.slice(0, afterBatches), { label: "Olympiad", href: "/olympiad", hot: true }, ...mainNav.slice(afterBatches)];
 
 export async function SiteHeader() {
   const contact = await getSiteSettings();
