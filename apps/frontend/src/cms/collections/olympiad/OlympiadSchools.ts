@@ -1,5 +1,5 @@
 import type { CollectionConfig } from "payload";
-import { canEdit, hiddenFromAuthors } from "../../access";
+import { canEdit, canManageRecords, hiddenFromAuthors } from "../../access";
 import { assignCodeOnApproval, notifyOnApproval } from "./approval";
 import { hashNewPassword, loginFields, lowerCaseEmail } from "./login";
 import { districtOptions, institutionTypeOptions, partnerStatusOptions } from "./options";
@@ -18,7 +18,7 @@ export const OlympiadSchools: CollectionConfig = {
     defaultColumns: ["name", "code", "status", "type", "district", "stats.students", "stats.paid"],
     listSearchableFields: ["name", "udise", "code", "coordinator.whatsapp"],
   },
-  access: { create: canEdit, read: canEdit, update: canEdit, delete: canEdit },
+  access: { create: canManageRecords, read: canManageRecords, update: canManageRecords, delete: canEdit },
   defaultSort: "-createdAt",
   hooks: { beforeChange: [assignCodeOnApproval, hashNewPassword], afterChange: [notifyOnApproval] },
   fields: [

@@ -1,5 +1,5 @@
 import { APIError, type CollectionBeforeChangeHook, type CollectionConfig } from "payload";
-import { canEdit, publishedOrSignedIn, roleOf, signedIn } from "../access";
+import { canEdit, canWriteContent, hiddenFromOfficers, publishedOrSignedIn, roleOf } from "../access";
 import { seoField, slugField } from "../fields";
 import { revalidateSite } from "../hooks/revalidate";
 import { sitePreview } from "../preview";
@@ -16,12 +16,13 @@ export const Posts: CollectionConfig = {
   slug: "posts",
   labels: { singular: "Blog post", plural: "Blog posts" },
   admin: {
+    hidden: hiddenFromOfficers,
     group: "Website",
     useAsTitle: "title",
     defaultColumns: ["title", "publishedAt", "_status"],
     preview: sitePreview((doc) => `/blog/${doc.slug}`),
   },
-  access: { read: publishedOrSignedIn, create: signedIn, update: signedIn, delete: canEdit },
+  access: { read: publishedOrSignedIn, create: canWriteContent, update: canWriteContent, delete: canEdit },
   versions: { drafts: true, maxPerDoc: 30 },
   defaultSort: "-publishedAt",
   hooks: { ...revalidateSite, beforeChange: [authorsSaveDrafts] },

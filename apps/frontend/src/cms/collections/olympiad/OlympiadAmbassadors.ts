@@ -1,5 +1,5 @@
 import type { CollectionConfig } from "payload";
-import { canEdit, hiddenFromAuthors } from "../../access";
+import { canEdit, canManageRecords, hiddenFromAuthors } from "../../access";
 import { assignCodeOnApproval, notifyOnApproval } from "./approval";
 import { hashNewPassword, loginFields, lowerCaseEmail } from "./login";
 import { ambassadorRoleOptions, partnerStatusOptions } from "./options";
@@ -19,7 +19,7 @@ export const OlympiadAmbassadors: CollectionConfig = {
     listSearchableFields: ["name", "whatsapp", "email", "code", "city"],
     description: "Sort by Paid to see the leaderboard. Only paid registrations count towards milestones.",
   },
-  access: { create: canEdit, read: canEdit, update: canEdit, delete: canEdit },
+  access: { create: canManageRecords, read: canManageRecords, update: canManageRecords, delete: canEdit },
   defaultSort: "-stats.paid",
   hooks: { beforeChange: [hashNewPassword, assignCodeOnApproval], afterChange: [notifyOnApproval] },
   fields: [

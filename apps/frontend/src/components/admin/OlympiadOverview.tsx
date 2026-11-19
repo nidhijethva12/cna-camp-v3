@@ -1,5 +1,5 @@
 import type { Payload } from "payload";
-import { roleOf } from "@/cms/access";
+import { handlesRecords } from "@/cms/access";
 import { getOlympiadStats } from "@/lib/olympiad/adminStats";
 import { OlympiadViews } from "./OlympiadViews";
 
@@ -12,8 +12,7 @@ interface Props {
 
 /** Registration totals with one-click filters, above the Olympiad master list and on the admin home page. */
 export async function OlympiadOverview({ payload, user, compact = false }: Props) {
-  const role = roleOf(user);
-  if (role !== "admin" && role !== "editor") return null;
+  if (!handlesRecords(user)) return null;
   const stats = await getOlympiadStats(payload).catch((err) => {
     payload.logger.error({ err }, "[olympiad] overview counts failed");
     return null;

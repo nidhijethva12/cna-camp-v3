@@ -1,6 +1,6 @@
 import type { CollectionConfig } from "payload";
 import { ValidationError } from "payload";
-import { anyone, canEdit, hiddenFromAuthors } from "../access";
+import { anyone, canEdit, contentHidden } from "../access";
 import { sampleField } from "../fields";
 import { revalidateSite } from "../hooks/revalidate";
 
@@ -10,7 +10,7 @@ export const Batches: CollectionConfig = {
   slug: "batches",
   labels: { singular: "Batch", plural: "Batches" },
   admin: {
-    hidden: hiddenFromAuthors,
+    hidden: contentHidden,
     group: "Trips",
     useAsTitle: "label",
     defaultColumns: ["label", "startDate", "endDate", "seatsLeft", "note"],

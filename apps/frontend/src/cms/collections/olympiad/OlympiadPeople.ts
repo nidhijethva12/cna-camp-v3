@@ -1,7 +1,7 @@
 import type { CollectionConfig, PayloadHandler, PayloadRequest, Where } from "payload";
 import { decryptText, deleteFiles, readFile, type DocumentKind } from "../../../lib/olympiad/secure";
 import { peopleWorkbook } from "../../../lib/olympiad/peopleExport";
-import { canEdit, hiddenFromAuthors, roleOf } from "../../access";
+import { canEdit, canManageRecords, hiddenFromAuthors, handlesRecords } from "../../access";
 import { groupOptions, messageStatusOptions, quizLanguageOptions, roundOptions, schoolTypeOptions, districtOptions } from "./options";
 
 const round = (n: number) => ({ name: `r${n}`, label: `Round ${n}`, type: "select" as const, options: roundOptions });
@@ -12,10 +12,9 @@ const SHOWN_TYPES = ["image/jpeg", "image/png", "image/webp", "application/pdf"]
 const privateHeaders = { "Cache-Control": "private, no-store", "X-Content-Type-Options": "nosniff", "X-Robots-Tag": "noindex" };
 const notFound = () => Response.json({ message: "Not found" }, { status: 404, headers: privateHeaders });
 
-/** The person behind a document or Aadhaar request; only Admins and Editors get past this. */
+/** The person behind a document or Aadhaar request; only Admins, Editors and Officers get past this. */
 async function personFor(req: PayloadRequest) {
-  const role = roleOf(req.user);
-  if (role !== "admin" && role !== "editor") return null;
+  if (!handlesRecords(req.user)) return null;
   return req.payload
     .findByID({ collection: "olympiad-people", id: String(req.routeParams?.id ?? ""), depth: 0, overrideAccess: true, disableErrors: true })
     .catch(() => null);
@@ -44,8 +43,7 @@ const showAadhaar: PayloadHandler = async (req) => {
 
 /** The list as an Excel file, with the filters the admin has applied; Aadhaar shows only its last 4 digits. */
 const exportPeople: PayloadHandler = async (req) => {
-  const role = roleOf(req.user);
-  if (role !== "admin" && role !== "editor") return notFound();
+  if (!handlesRecords(req.user)) return notFound();
   const filters = (req.query?.where ?? {}) as Where;
   // The list's search box searches these fields, as Payload's own list does.
   const search = typeof req.query?.search === "string" ? req.query.search.trim().slice(0, 100) : "";
@@ -94,7 +92,7 @@ export const OlympiadPeople: CollectionConfig = {
       beforeListTable: ["@/components/admin/OlympiadOverview#OlympiadOverview", "@/components/admin/ExportPeople#ExportPeople"],
     },
   },
-  access: { create: () => false, read: canEdit, update: canEdit, delete: canEdit },
+  access: { create: () => false, read: canManageRecords, update: canManageRecords, delete: canEdit },
   endpoints: [
     { path: "/:id/document/:kind", method: "get", handler: showDocument },
     { path: "/:id/aadhaar", method: "get", handler: showAadhaar },

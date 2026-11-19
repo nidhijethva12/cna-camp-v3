@@ -466,7 +466,7 @@ export interface User {
   /**
    * What this account can do. Only an Admin can change it.
    */
-  role: 'admin' | 'editor' | 'author';
+  role: 'admin' | 'editor' | 'officer' | 'author';
   updatedAt: string;
   createdAt: string;
   email: string;

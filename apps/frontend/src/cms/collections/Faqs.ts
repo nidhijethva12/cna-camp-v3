@@ -1,12 +1,12 @@
 import type { CollectionConfig } from "payload";
-import { anyone, canEdit, hiddenFromAuthors } from "../access";
+import { anyone, canEdit, contentHidden } from "../access";
 import { revalidateSite } from "../hooks/revalidate";
 
 export const Faqs: CollectionConfig = {
   slug: "faqs",
   labels: { singular: "FAQ", plural: "FAQs" },
   admin: {
-    hidden: hiddenFromAuthors,
+    hidden: contentHidden,
     group: "Website",
     useAsTitle: "question",
     defaultColumns: ["question", "order", "showOnHome"],

@@ -72,8 +72,8 @@ const keepLastAdmin: CollectionBeforeDeleteHook = async ({ id, req }) => {
 };
 
 /**
- * Site accounts, each with a role: Admin (everything, including accounts), Editor (all site content)
- * or Author (blog drafts only). Only Admins add or remove accounts and change roles; nobody can delete
+ * Site accounts, each with a role: Admin (everything, including accounts), Editor (all site content),
+ * Officer (enquiries and Olympiad records only) or Author (blog drafts only). Only Admins add or remove accounts and change roles; nobody can delete
  * their own account, and the last Admin can't be removed or demoted, so the site is never left without one.
  */
 export const Users: CollectionConfig = {
