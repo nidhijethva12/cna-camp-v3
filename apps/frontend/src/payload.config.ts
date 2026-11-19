@@ -14,7 +14,6 @@ import { Faqs } from "./cms/collections/Faqs";
 import { Media } from "./cms/collections/Media";
 import { Notices } from "./cms/collections/Notices";
 import { OlympiadAmbassadors } from "./cms/collections/olympiad/OlympiadAmbassadors";
-import { OlympiadPartnerRequests } from "./cms/collections/olympiad/OlympiadPartnerRequests";
 import { OlympiadPayments } from "./cms/collections/olympiad/OlympiadPayments";
 import { OlympiadPeople } from "./cms/collections/olympiad/OlympiadPeople";
 import { OlympiadSchools } from "./cms/collections/olympiad/OlympiadSchools";
@@ -100,7 +99,6 @@ export default buildConfig({
     Videos,
     Enquiries,
     OlympiadPeople,
-    OlympiadPartnerRequests,
     OlympiadPayments,
     OlympiadAmbassadors,
     OlympiadSchools,
