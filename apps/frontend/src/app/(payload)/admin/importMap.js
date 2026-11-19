@@ -25,6 +25,7 @@ import { OlympiadSummary as OlympiadSummary_f70dd8cc2ed6ad67aa429624620dafc7 } f
 import { OlympiadDocuments as OlympiadDocuments_8a439d492f629a1201bb81d750c986eb } from '@/components/admin/OlympiadDocuments'
 import { OlympiadOverview as OlympiadOverview_7ccf1a30ef1ca3d5aac1685c7555bbbf } from '@/components/admin/OlympiadOverview'
 import { ExportPeople as ExportPeople_73628aeca91857daf923138e9536830c } from '@/components/admin/ExportPeople'
+import { RupeeCell as RupeeCell_778c307b147a20ca788d0c772e255c42 } from '@/components/admin/RupeeCell'
 import { default as default_d500ae2ad98a0a33d640ae0ac1a3417c } from '@/components/admin/AdminIcon'
 import { default as default_b80a86fce1072afc84cd6a430a965697 } from '@/components/admin/AdminLogo'
 import { VercelBlobClientUploadHandler as VercelBlobClientUploadHandler_16c82c5e25f430251a3e3ba57219ff4e } from '@payloadcms/storage-vercel-blob/client'
@@ -59,6 +60,7 @@ export const importMap = {
   "@/components/admin/OlympiadDocuments#OlympiadDocuments": OlympiadDocuments_8a439d492f629a1201bb81d750c986eb,
   "@/components/admin/OlympiadOverview#OlympiadOverview": OlympiadOverview_7ccf1a30ef1ca3d5aac1685c7555bbbf,
   "@/components/admin/ExportPeople#ExportPeople": ExportPeople_73628aeca91857daf923138e9536830c,
+  "@/components/admin/RupeeCell#RupeeCell": RupeeCell_778c307b147a20ca788d0c772e255c42,
   "@/components/admin/AdminIcon#default": default_d500ae2ad98a0a33d640ae0ac1a3417c,
   "@/components/admin/AdminLogo#default": default_b80a86fce1072afc84cd6a430a965697,
   "@payloadcms/storage-vercel-blob/client#VercelBlobClientUploadHandler": VercelBlobClientUploadHandler_16c82c5e25f430251a3e3ba57219ff4e,

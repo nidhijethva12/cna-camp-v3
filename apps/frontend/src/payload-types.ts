@@ -852,6 +852,9 @@ export interface OlympiadPayment {
   razorpayOrderId: string;
   razorpayPaymentId?: string | null;
   receipt: string;
+  /**
+   * Kept in paise, as Razorpay does: 96300 is ₹963. The list shows rupees.
+   */
   amount: number;
   status: 'created' | 'paid' | 'failed';
   mode: 'single' | 'bulk';
