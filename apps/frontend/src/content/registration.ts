@@ -144,7 +144,7 @@ export const registrationText = {
       subjectPlaceholder: "e.g. Science",
       ambassador: "Do you want to be an Olympiad Ambassador?",
       ambassadorHint:
-        "Ambassadors share their own link and earn rewards as people register through it. If you choose Yes, your code and dashboard login come by email once your fee is paid.",
+        "As an Ambassador you get your own registration link. You share it on WhatsApp with friends, family and groups, and people register through it. The more people open your link and register, the more rewards you earn: an Ambassador certificate, a free registration and a free Manali trip. If you choose Yes, your link and dashboard login come by email once your fee is paid.",
       ambassadorOptions: { yes: "Yes", no: "No" },
       work: "What do you do?",
       workOptions: {
@@ -513,7 +513,7 @@ export const registrationText = {
       subjectPlaceholder: "દા.ત. Science",
       ambassador: "તમે Olympiad Ambassador બનવા માંગો છો?",
       ambassadorHint:
-        "Ambassador પોતાની link share કરે ને એના થકી registration થાય એમ rewards મળે. Yes select કરશો તો fee ભર્યા પછી તમારો code ને dashboard login email પર આવશે.",
+        "Ambassador બનશો તો તમને તમારી પોતાની registration link મળશે. એ link WhatsApp પર મિત્રો, પરિવાર ને groups માં share કરવાની, ને લોકો એના થકી register કરે. જેટલા વધુ લોકો link ખોલે ને register કરે એટલા વધુ rewards મળે: Ambassador certificate, free registration ને free Manali trip. Yes select કરશો તો fee ભર્યા પછી તમારી link ને dashboard login email પર આવશે.",
       ambassadorOptions: { yes: "હા", no: "ના" },
       work: "તમે શું કરો છો?",
       workOptions: {

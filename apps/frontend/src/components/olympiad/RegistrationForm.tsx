@@ -722,6 +722,7 @@ export function RegistrationForm({
               <Choice
                 label={t.step3.ambassador}
                 hint={t.step3.ambassadorHint}
+                hintStrong
                 required
                 value={input.ambassador}
                 error={err("ambassador")}
@@ -999,6 +1000,7 @@ function Choice<V extends string>({
   onChange,
   error,
   hint,
+  hintStrong,
   required,
   columns = 2,
 }: {
@@ -1008,6 +1010,8 @@ function Choice<V extends string>({
   onChange: (v: V) => void;
   error?: string;
   hint?: string;
+  /** Shows the hint in dark ink, for a note people must read before choosing. */
+  hintStrong?: boolean;
   required?: boolean;
   columns?: 2 | 3;
 }) {
@@ -1031,7 +1035,7 @@ function Choice<V extends string>({
           </button>
         ))}
       </div>
-      {hint && <span className="text-[13px] text-muted">{hint}</span>}
+      {hint && <span className={hintStrong ? "text-[14px] leading-relaxed text-dark" : "text-[13px] text-muted"}>{hint}</span>}
       {error && <span className="text-[13px] font-medium text-danger">{error}</span>}
     </div>
   );

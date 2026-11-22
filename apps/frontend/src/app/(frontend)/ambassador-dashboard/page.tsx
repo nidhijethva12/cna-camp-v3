@@ -45,7 +45,7 @@ export default async function AmbassadorDashboardPage() {
   const { clicks, registered, paid } = ambassador.stats;
   const qr = await qrPng(shareUrl);
   const subtitle = [
-    ambassador.role && (a.roles[ambassador.role] ?? ambassador.role),
+    ambassador.role && ambassador.role !== "Other" && (a.roles[ambassador.role] ?? ambassador.role),
     ambassador.city,
     ambassador.approvedAt && a.since(formatIstDate(ambassador.approvedAt)),
   ]
@@ -75,7 +75,7 @@ export default async function AmbassadorDashboardPage() {
           <div className="flex flex-wrap items-center justify-between gap-3.5 border-b border-line px-6 py-5">
             <h2 className="font-display text-[21px] font-extrabold">
               {ambassador.name}
-              {subtitle && <small className="block font-sans text-[14px] font-normal text-muted">{subtitle}</small>}
+              {subtitle && <small className="mt-1.5 block font-sans text-[14px] font-normal text-muted">{subtitle}</small>}
             </h2>
             <span className="rounded-full bg-success/12 px-2.5 py-1 font-display text-[12.5px] font-bold text-success">{t.approved}</span>
           </div>
