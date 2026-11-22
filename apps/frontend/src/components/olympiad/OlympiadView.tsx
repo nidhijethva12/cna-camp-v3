@@ -158,7 +158,7 @@ export function OlympiadView({ o, lang, contact, phase, closesOn, consentText }:
               <span className="max-sm:hidden"> {ui.bar.details}</span>
             </span>
           )}
-          <MainCta {...cta} className="cursor-pointer font-bold underline underline-offset-3" />
+          <MainCta {...cta} className="-my-2 cursor-pointer py-2 font-bold underline underline-offset-3" />
         </div>
       </div>
 
@@ -168,7 +168,7 @@ export function OlympiadView({ o, lang, contact, phase, closesOn, consentText }:
           aria-hidden="true"
           className="pointer-events-none absolute -top-30 -right-30 h-130 w-130 rounded-full bg-radial from-secondary/28 to-secondary/0 to-65%"
         />
-        <div className="wrap relative grid items-center gap-9 pt-12 pb-24 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-14 lg:pt-16 lg:pb-27">
+        <div className="wrap relative grid items-center gap-9 pt-7 pb-24 sm:pt-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-14 lg:pt-16 lg:pb-27">
           <div className="min-w-0">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <p className="eyebrow inline-flex items-center gap-2 rounded-full border border-line bg-light px-3 py-1.25 text-[14px]!">
@@ -200,9 +200,9 @@ export function OlympiadView({ o, lang, contact, phase, closesOn, consentText }:
               />
               {phase === "open" ? t.status.open(closesOn) : phase === "closed" ? t.status.closed : `${ui.bar.opens} ${o.opensOn}`}
             </p>
-            <div className="mt-5.5 flex flex-wrap gap-3">
-              <MainCta {...cta} className="btn btn-primary" />
-              <Link href="#groups" className="btn btn-outline">
+            <div className="mt-5.5 flex flex-wrap gap-3 max-sm:grid max-sm:grid-cols-2">
+              <MainCta {...cta} className="btn btn-primary max-sm:px-3" />
+              <Link href="#groups" className="btn btn-outline max-sm:px-3">
                 {phase === "open" ? t.findGroup : ui.seeGroups}
               </Link>
             </div>
@@ -284,7 +284,7 @@ export function OlympiadView({ o, lang, contact, phase, closesOn, consentText }:
                   </div>
                   <Link
                     href={registerHref}
-                    className="ml-auto text-[14.5px] font-bold whitespace-nowrap text-primary hover:underline max-sm:ml-10"
+                    className="-my-2 ml-auto py-2 text-[14.5px] font-bold whitespace-nowrap text-primary hover:underline max-sm:ml-10"
                   >
                     {t.pinned.link}
                   </Link>
@@ -310,7 +310,7 @@ export function OlympiadView({ o, lang, contact, phase, closesOn, consentText }:
                         href={n.href}
                         target="_blank"
                         rel="noopener"
-                        className="ml-auto text-[14.5px] font-bold whitespace-nowrap text-primary hover:underline max-sm:ml-10"
+                        className="-my-2 ml-auto py-2 text-[14.5px] font-bold whitespace-nowrap text-primary hover:underline max-sm:ml-10"
                       >
                         {ui.noticeBoard.viewPdf}
                         <span className="sr-only">
@@ -543,7 +543,7 @@ export function OlympiadView({ o, lang, contact, phase, closesOn, consentText }:
                     </span>
                   </p>
                   {p.link && (
-                    <Link href={p.link.href} className="mt-auto pt-2 font-display font-bold text-primary hover:underline">
+                    <Link href={p.link.href} className="mt-auto -mb-2 py-2 font-display font-bold text-primary hover:underline">
                       {p.link.label}
                     </Link>
                   )}

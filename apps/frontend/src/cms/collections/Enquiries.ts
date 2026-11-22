@@ -1,5 +1,5 @@
 import type { CollectionConfig } from "payload";
-import { canEdit, hiddenFromAuthors } from "../access";
+import { canEdit, canManageRecords, hiddenFromAuthors } from "../access";
 
 /** Leads from the site forms. Created only by the server action (never via the public API). */
 export const Enquiries: CollectionConfig = {
@@ -12,7 +12,7 @@ export const Enquiries: CollectionConfig = {
     listSearchableFields: ["name", "phone", "email"],
   },
   // Personal data (DPDP Act): the signed-in admin only, never the public API.
-  access: { create: () => false, read: canEdit, update: canEdit, delete: canEdit },
+  access: { create: () => false, read: canManageRecords, update: canManageRecords, delete: canEdit },
   defaultSort: "-createdAt",
   // The enquiry action's rate limits count recent rows per visitor and per address.
   indexes: [{ fields: ["meta.ipHash", "createdAt"] }, { fields: ["email", "createdAt"] }],

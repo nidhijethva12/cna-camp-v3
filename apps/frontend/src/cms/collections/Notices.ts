@@ -1,5 +1,5 @@
 import type { CollectionConfig } from "payload";
-import { anyone, canEdit, hiddenFromAuthors } from "../access";
+import { anyone, canEdit, contentHidden } from "../access";
 import { httpUrl } from "../fields";
 import { revalidateSite } from "../hooks/revalidate";
 
@@ -8,7 +8,7 @@ export const Notices: CollectionConfig = {
   slug: "notices",
   labels: { singular: "Notice", plural: "Notices" },
   admin: {
-    hidden: hiddenFromAuthors,
+    hidden: contentHidden,
     group: "Olympiad",
     useAsTitle: "text",
     defaultColumns: ["text", "type", "date", "pinned", "order"],

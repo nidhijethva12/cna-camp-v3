@@ -1,12 +1,12 @@
 import type { CollectionConfig } from "payload";
-import { canEdit, hiddenFromAuthors } from "../access";
+import { canEdit, contentHidden } from "../access";
 import { sampleField } from "../fields";
 import { revalidateSite } from "../hooks/revalidate";
 
 export const Reviews: CollectionConfig = {
   slug: "reviews",
   admin: {
-    hidden: hiddenFromAuthors,
+    hidden: contentHidden,
     group: "Website",
     useAsTitle: "name",
     defaultColumns: ["name", "role", "rating", "trip", "isSample"],

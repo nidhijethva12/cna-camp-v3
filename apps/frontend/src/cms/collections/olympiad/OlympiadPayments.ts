@@ -1,5 +1,5 @@
 import type { CollectionConfig, Field } from "payload";
-import { canEdit, hiddenFromAuthors } from "../../access";
+import { canManageRecords, hiddenFromAuthors } from "../../access";
 
 /** Fields only the site writes; an admin save keeps what is stored. */
 const siteOwned = (fields: Field[]): Field[] =>
@@ -19,10 +19,10 @@ export const OlympiadPayments: CollectionConfig = {
     hidden: hiddenFromAuthors,
     group: "Olympiad",
     useAsTitle: "razorpayOrderId",
-    defaultColumns: ["razorpayOrderId", "amount", "mode", "status", "paidBy", "createdAt"],
+    defaultColumns: ["razorpayOrderId", "people", "amount", "status", "mode", "paidBy", "createdAt"],
     listSearchableFields: ["razorpayOrderId", "razorpayPaymentId", "receipt"],
   },
-  access: { create: () => false, read: canEdit, update: canEdit, delete: () => false },
+  access: { create: () => false, read: canManageRecords, update: canManageRecords, delete: () => false },
   defaultSort: "-createdAt",
   fields: [
     ...siteOwned([
@@ -37,7 +37,16 @@ export const OlympiadPayments: CollectionConfig = {
       {
         type: "row",
         fields: [
-          { name: "amount", label: "Amount (paise)", type: "number", required: true, min: 100 },
+          {
+            name: "amount",
+            type: "number",
+            required: true,
+            min: 100,
+            admin: {
+              description: "Kept in paise, as Razorpay does: 96300 is ₹963. The list shows rupees.",
+              components: { Cell: "@/components/admin/RupeeCell#RupeeCell" },
+            },
+          },
           {
             name: "status",
             type: "select",
@@ -45,7 +54,7 @@ export const OlympiadPayments: CollectionConfig = {
             defaultValue: "created",
             index: true,
             options: [
-              { label: "Created", value: "created" },
+              { label: "Not paid", value: "created" },
               { label: "Paid", value: "paid" },
               { label: "Failed", value: "failed" },
             ],

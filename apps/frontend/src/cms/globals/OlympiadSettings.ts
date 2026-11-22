@@ -1,5 +1,5 @@
 import type { GlobalConfig } from "payload";
-import { anyone, canEdit, hiddenFromAuthors } from "../access";
+import { anyone, canEdit, contentHidden } from "../access";
 import { revalidateSiteGlobal } from "../hooks/revalidate";
 
 const fee = (group: string, govt: number, other: number, hasGovtFee: boolean) => ({
@@ -31,7 +31,7 @@ const fee = (group: string, govt: number, other: number, hasGovtFee: boolean) =>
 export const OlympiadSettings: GlobalConfig = {
   slug: "olympiad-settings",
   label: "Olympiad settings",
-  admin: { hidden: hiddenFromAuthors, group: "Olympiad" },
+  admin: { hidden: contentHidden, group: "Olympiad" },
   // Dates and fees are public on the page anyway; only the admin can change them.
   access: { read: anyone, update: canEdit },
   hooks: revalidateSiteGlobal,

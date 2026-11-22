@@ -1,5 +1,5 @@
 import type { CollectionConfig } from "payload";
-import { canEdit, hiddenFromAuthors, publishedOrSignedIn } from "../access";
+import { canEdit, contentHidden, publishedOrSignedIn } from "../access";
 import { sampleField, seoField, slugField, textList } from "../fields";
 import { revalidateSite } from "../hooks/revalidate";
 import { campusOptions, difficultyOptions, monthOptions, regionOptions, tripTypeOptions } from "../options";
@@ -8,7 +8,7 @@ import { sitePreview } from "../preview";
 export const Trips: CollectionConfig = {
   slug: "trips",
   admin: {
-    hidden: hiddenFromAuthors,
+    hidden: contentHidden,
     group: "Trips",
     useAsTitle: "name",
     defaultColumns: ["name", "region", "type", "featured", "_status", "updatedAt"],

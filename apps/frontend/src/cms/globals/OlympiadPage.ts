@@ -1,5 +1,5 @@
 import type { Field, GlobalConfig } from "payload";
-import { anyone, canEdit, hiddenFromAuthors } from "../access";
+import { anyone, canEdit, contentHidden } from "../access";
 import { revalidateSiteGlobal } from "../hooks/revalidate";
 
 type TextOptions = { label?: string; description?: string; optional?: boolean };
@@ -57,7 +57,7 @@ export const OlympiadPage: GlobalConfig = {
   slug: "olympiad-page",
   label: "Olympiad page",
   admin: {
-    hidden: hiddenFromAuthors,
+    hidden: contentHidden,
     group: "Olympiad",
     description:
       "Every piece of text on the Olympiad page. Switch the language at the top right to edit the Gujarati. An empty Gujarati box shows the English.",

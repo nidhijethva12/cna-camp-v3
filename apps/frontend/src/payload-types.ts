@@ -79,7 +79,6 @@ export interface Config {
     videos: Video;
     enquiries: Enquiry;
     'olympiad-people': OlympiadPerson;
-    'olympiad-partner-requests': OlympiadPartnerRequest;
     'olympiad-payments': OlympiadPayment;
     'olympiad-ambassadors': OlympiadAmbassador;
     'olympiad-schools': OlympiadSchool;
@@ -103,7 +102,6 @@ export interface Config {
     videos: VideosSelect<false> | VideosSelect<true>;
     enquiries: EnquiriesSelect<false> | EnquiriesSelect<true>;
     'olympiad-people': OlympiadPeopleSelect<false> | OlympiadPeopleSelect<true>;
-    'olympiad-partner-requests': OlympiadPartnerRequestsSelect<false> | OlympiadPartnerRequestsSelect<true>;
     'olympiad-payments': OlympiadPaymentsSelect<false> | OlympiadPaymentsSelect<true>;
     'olympiad-ambassadors': OlympiadAmbassadorsSelect<false> | OlympiadAmbassadorsSelect<true>;
     'olympiad-schools': OlympiadSchoolsSelect<false> | OlympiadSchoolsSelect<true>;
@@ -468,7 +466,7 @@ export interface User {
   /**
    * What this account can do. Only an Admin can change it.
    */
-  role: 'admin' | 'editor' | 'author';
+  role: 'admin' | 'editor' | 'officer' | 'author';
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -669,7 +667,7 @@ export interface Enquiry {
   createdAt: string;
 }
 /**
- * Everyone who asked for a reminder or registered, in one list. Filter, then export or message.
+ * Everyone who asked for a reminder or registered, in one list. Click a number to filter, then export or message.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "olympiad-people".
@@ -854,6 +852,9 @@ export interface OlympiadPayment {
   razorpayOrderId: string;
   razorpayPaymentId?: string | null;
   receipt: string;
+  /**
+   * Kept in paise, as Razorpay does: 96300 is ₹963. The list shows rupees.
+   */
   amount: number;
   status: 'created' | 'paid' | 'failed';
   mode: 'single' | 'bulk';
@@ -1020,42 +1021,6 @@ export interface OlympiadAmbassador {
   createdAt: string;
 }
 /**
- * Sign-ups from the Olympiad page. Approving an Ambassador request gives them their code automatically.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "olympiad-partner-requests".
- */
-export interface OlympiadPartnerRequest {
-  id: string;
-  kind: 'school' | 'ambassador';
-  status: 'new' | 'contacted' | 'approved' | 'rejected';
-  name: string;
-  /**
-   * +91 and 10 digits.
-   */
-  phone: string;
-  email?: string | null;
-  message?: string | null;
-  /**
-   * Created on approval.
-   */
-  ambassador?: (string | null) | OlympiadAmbassador;
-  /**
-   * Link the school once it is added.
-   */
-  school?: (string | null) | OlympiadSchool;
-  /**
-   * Visible to the CNA team only.
-   */
-  notes?: string | null;
-  meta?: {
-    sourcePath?: string | null;
-    ipHash?: string | null;
-  };
-  updatedAt: string;
-  createdAt: string;
-}
-/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
@@ -1126,10 +1091,6 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'olympiad-people';
         value: string | OlympiadPerson;
-      } | null)
-    | ({
-        relationTo: 'olympiad-partner-requests';
-        value: string | OlympiadPartnerRequest;
       } | null)
     | ({
         relationTo: 'olympiad-payments';
@@ -1591,29 +1552,6 @@ export interface OlympiadPeopleSelect<T extends boolean = true> {
         ipHash?: T;
         consentIpHash?: T;
         parentConsentIpHash?: T;
-      };
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "olympiad-partner-requests_select".
- */
-export interface OlympiadPartnerRequestsSelect<T extends boolean = true> {
-  kind?: T;
-  status?: T;
-  name?: T;
-  phone?: T;
-  email?: T;
-  message?: T;
-  ambassador?: T;
-  school?: T;
-  notes?: T;
-  meta?:
-    | T
-    | {
-        sourcePath?: T;
-        ipHash?: T;
       };
   updatedAt?: T;
   createdAt?: T;

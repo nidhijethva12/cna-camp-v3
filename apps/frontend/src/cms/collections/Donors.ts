@@ -1,5 +1,5 @@
 import type { CollectionConfig } from "payload";
-import { anyone, canEdit, hiddenFromAuthors } from "../access";
+import { anyone, canEdit, contentHidden } from "../access";
 import { sampleField } from "../fields";
 import { revalidateSite } from "../hooks/revalidate";
 
@@ -8,7 +8,7 @@ export const Donors: CollectionConfig = {
   slug: "donors",
   labels: { singular: "Donor", plural: "Donors" },
   admin: {
-    hidden: hiddenFromAuthors,
+    hidden: contentHidden,
     group: "Website",
     useAsTitle: "name",
     defaultColumns: ["name", "company", "amount", "order", "isSample"],
