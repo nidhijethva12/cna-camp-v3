@@ -115,6 +115,8 @@ export interface PersonDoc {
   code?: string;
   school?: Types.ObjectId;
   ambassador?: Types.ObjectId;
+  /** Group C, D or E: asked to become an Ambassador; the account is made once the fee is paid. */
+  wantsAmbassador?: boolean;
   consent?: { at?: Date; version?: string };
   /** The Rules and Terms the person agreed to. */
   rules?: { at?: Date; version?: string };
@@ -205,6 +207,7 @@ export const PersonSchema = new Schema<PersonDoc>(
     code: String,
     school: { type: ObjectId },
     ambassador: { type: ObjectId },
+    wantsAmbassador: Boolean,
     rounds: { r1: String, r2: String, r3: String, r4: String, r5: String },
     scholarshipPct: Number,
     consent: { at: Date, version: String },

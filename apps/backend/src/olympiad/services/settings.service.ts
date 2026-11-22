@@ -17,8 +17,15 @@ export interface OlympiadConfig {
   fees: Fees;
   consentText: string;
   consentVersion: string;
-  milestones: { paid: number; reward: string }[];
+  /** `metric` says what `paid` counts: link opens, or confirmed registrations (the default). */
+  milestones: Milestone[];
   quizSlots: QuizSlot[];
+}
+
+export interface Milestone {
+  metric: 'clicks' | 'paid';
+  paid: number;
+  reward: string;
 }
 
 export interface Contact {
@@ -39,13 +46,14 @@ const FALLBACK = {
   consentVersion: '2026-10',
   // The admin's defaults for Ambassador milestones, until CNA saves the settings.
   milestones: [
-    { paid: 25, reward: 'Olympiad Ambassador certificate' },
-    { paid: 50, reward: 'Name on the website Ambassadors list' },
+    { metric: 'clicks', paid: 50, reward: 'Olympiad Ambassador certificate' },
     {
+      metric: 'paid',
       paid: 100,
-      reward: 'A free seat or escort seat on a camp (to be confirmed)',
+      reward: '1 free registration coupon for Group C, D or E',
     },
-  ],
+    { metric: 'paid', paid: 200, reward: 'Free Manali trip' },
+  ] as Milestone[],
 };
 
 const istDate = new Intl.DateTimeFormat('en-IN', {
@@ -108,10 +116,15 @@ export class SettingsService {
       consentText: (doc.consentText as string) || FALLBACK.consentText,
       consentVersion: (doc.consentVersion as string) || FALLBACK.consentVersion,
       milestones: (
-        (doc.milestones as { paid: number; reward: string }[] | undefined) ??
+        (doc.milestones as Partial<Milestone>[] | undefined) ??
         FALLBACK.milestones
       )
-        .map(({ paid, reward }) => ({ paid, reward }))
+        .map(({ metric, paid, reward }) => ({
+          metric: metric === 'clicks' ? ('clicks' as const) : ('paid' as const),
+          paid: Number(paid) || 0,
+          reward: String(reward ?? ''),
+        }))
+        .filter((m) => m.paid > 0 && m.reward)
         .sort((a, b) => a.paid - b.paid),
       quizSlots: (
         (doc.quizSlots as

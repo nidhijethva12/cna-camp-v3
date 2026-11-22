@@ -13,6 +13,7 @@ import {
 import { hasRegId, receiptToken } from '../registration-ids.js';
 import { MODELS, type PaymentDoc, type PersonDoc } from '../schemas.js';
 import { readToken } from '../tokens.js';
+import { AmbassadorEnrolService } from './ambassador-enrol.service.js';
 import { CountersService } from './counters.service.js';
 import { NotifyService } from './notify.service.js';
 
@@ -33,6 +34,7 @@ export class PaymentsService {
     @InjectModel(MODELS.person) private readonly people: Model<PersonDoc>,
     private readonly counters: CountersService,
     private readonly notify: NotifyService,
+    private readonly enrol: AmbassadorEnrolService,
   ) {}
 
   /** Opens an order for unpaid people and links them to it. The amount comes from their stored fees. */
@@ -145,8 +147,10 @@ export class PaymentsService {
       })
       .lean<PersonDoc[]>();
     background('registration confirmations', async () => {
-      for (const person of paid)
+      for (const person of paid) {
         await this.notify.registrationConfirmed(person);
+        await this.enrol.enrol(person);
+      }
     });
     return true;
   }
@@ -348,6 +352,7 @@ export class PaymentsService {
       razorpayOrderId: p.razorpayOrderId ?? '',
       razorpayPaymentId: p.razorpayPaymentId ?? '',
       rulesVersion: p.rules?.version ?? '',
+      ambassador: Boolean(p.wantsAmbassador),
     };
   }
 

@@ -39,6 +39,7 @@ import {
 import { MODELS, type PersonDoc, type SchoolDoc } from '../schemas.js';
 import { hasRegId, receiptToken } from '../registration-ids.js';
 import { readToken } from '../tokens.js';
+import { AmbassadorEnrolService } from './ambassador-enrol.service.js';
 import { CountersService } from './counters.service.js';
 import { NotifyService } from './notify.service.js';
 import { PartnersService } from './partners.service.js';
@@ -98,6 +99,8 @@ export interface RegistrationInput {
     aadhaarCard?: unknown;
     schoolIdCard?: unknown;
   };
+  /** Group C, D or E: "yes" to becoming an Olympiad Ambassador. */
+  ambassador?: unknown;
   agree?: unknown;
 }
 
@@ -147,6 +150,7 @@ const OPTIONAL_FIELDS = [
   'code',
   'school',
   'ambassador',
+  'wantsAmbassador',
   'paidAt',
   'payment',
   'razorpayPaymentId',
@@ -174,6 +178,7 @@ export class RegistrationsService implements OnModuleInit {
   constructor(
     @InjectModel(MODELS.person) private readonly people: Model<PersonDoc>,
     private readonly counters: CountersService,
+    private readonly enrol: AmbassadorEnrolService,
     private readonly notify: NotifyService,
     private readonly partners: PartnersService,
     private readonly payments: PaymentsService,
@@ -500,6 +505,10 @@ export class RegistrationsService implements OnModuleInit {
         ? { teacherStatus: v.teacherStatus, subject: v.subject }
         : {}),
       ...(v.who === 'adult' ? { work: v.work } : {}),
+      // Only adults can be Ambassadors: college students (C), other adults (D) and teachers (E).
+      ...(input.ambassador === true && !isSchoolGroup(g)
+        ? { wantsAmbassador: true }
+        : {}),
       achievements,
       aadhaarLast4: v.aadhaarLast4,
       aadhaarHash: v.aadhaarHash,
@@ -652,9 +661,10 @@ export class RegistrationsService implements OnModuleInit {
       prefill: { name: saved.name, email: v.email, contact: mobile! },
     };
     if (free) {
-      background('registration confirmation', () =>
-        this.notify.registrationConfirmed(saved),
-      );
+      background('registration confirmation', async () => {
+        await this.notify.registrationConfirmed(saved);
+        await this.enrol.enrol(saved);
+      });
       return {
         ...summary,
         paid: true,
