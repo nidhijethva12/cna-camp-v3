@@ -198,23 +198,3 @@ export const partnerSignupEmail = (p: {
       action: { label: 'Open in the admin', href: p.adminUrl },
     },
   );
-
-/** To the parent of a student the school added from Excel: finish the form with the documents. */
-export const studentInviteEmail = (p: {
-  parentName: string;
-  studentName: string;
-  schoolName: string;
-  registerUrl: string;
-}) =>
-  render(
-    `${p.schoolName}: complete ${p.studentName}'s Adventure Olympiad 2.0 registration`,
-    `Hi ${p.parentName.split(' ')[0] || 'Parent'},`,
-    {
-      lines: [
-        `${p.schoolName} has added ${p.studentName} for Adventure Olympiad 2.0, a nature and science quiz that can take students to a camp in the Himalaya.`,
-        'Please complete the registration with the button below. The details the school gave are already filled in; you add the photo, the Aadhaar number and card, and give your consent. It takes about 3 minutes.',
-        'The registration form opens on the dates shown on the Olympiad page. If it is not open yet, keep this email and use the same button then.',
-      ],
-      action: { label: 'Complete the registration', href: p.registerUrl },
-    },
-  );

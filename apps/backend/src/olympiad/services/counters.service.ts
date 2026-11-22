@@ -32,23 +32,6 @@ export class CountersService {
   /** REM-501, REM-502 … */
   reminderId = async () => `REM-${await this.next('reminder', 500)}`;
 
-  /** INV-1001 … students a school added from Excel, until the parent finishes the form; `count` at once. */
-  async inviteIds(count: number) {
-    if (count < 1) return [];
-    const doc = await this.counters
-      .findOneAndUpdate(
-        { key: 'invite' },
-        { $inc: { value: count } },
-        { upsert: true, new: true },
-      )
-      .lean<{ value: number }>();
-    const last = 1000 + (doc?.value ?? count);
-    return Array.from(
-      { length: count },
-      (_, i) => `INV-${last - count + 1 + i}`,
-    );
-  }
-
   /** AO2-0-000123, AO2-A-000124 … one running number across groups, never reused. */
   registrationId = async (group: string) =>
     `AO2-${group}-${pad(await this.next('registration'), 6)}`;

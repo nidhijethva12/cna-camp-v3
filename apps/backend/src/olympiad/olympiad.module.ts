@@ -13,6 +13,7 @@ import {
   ReferralClickSchema,
   SchoolSchema,
 } from './schemas.js';
+import { AmbassadorEnrolService } from './services/ambassador-enrol.service.js';
 import { CountersService } from './services/counters.service.js';
 import { FormsService } from './services/forms.service.js';
 import { LinksService } from './services/links.service.js';
@@ -21,6 +22,7 @@ import { NotifyService } from './services/notify.service.js';
 import { PartnersService } from './services/partners.service.js';
 import { PaymentsService } from './services/payments.service.js';
 import { RegistrationsService } from './services/registrations.service.js';
+import { SchoolStudentsService } from './services/school-students.service.js';
 import { SettingsService } from './services/settings.service.js';
 import { WebhooksController } from './webhooks.controller.js';
 
@@ -71,6 +73,7 @@ import { WebhooksController } from './webhooks.controller.js';
   ],
   controllers: [OlympiadController, WebhooksController],
   providers: [
+    AmbassadorEnrolService,
     CountersService,
     FormsService,
     LinksService,
@@ -79,6 +82,7 @@ import { WebhooksController } from './webhooks.controller.js';
     PartnersService,
     PaymentsService,
     RegistrationsService,
+    SchoolStudentsService,
     SettingsService,
   ],
 })

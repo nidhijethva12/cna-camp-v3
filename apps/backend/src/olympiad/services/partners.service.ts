@@ -12,16 +12,11 @@ import {
 import {
   AMBASSADOR_CODE,
   AMBASSADOR_ROLES,
-  classesFor,
   EDITION,
   EMAIL,
-  groupFor,
   isSchoolGroup,
-  withSchool,
-  type GroupId,
+  needsSchoolProof,
   normalizeCode,
-  normalizeMobile,
-  PERSON_NAME,
   SCHOOL_CODE,
   stageOf,
 } from '../rules.js';
@@ -31,14 +26,13 @@ import {
   type PersonDoc,
   type SchoolDoc,
 } from '../schemas.js';
+import { passwordLinkFor, passwordVersion } from '../partner-links.js';
 import { hasRegId } from '../registration-ids.js';
-import { createToken, DAY, readToken } from '../tokens.js';
+import { createToken, readToken } from '../tokens.js';
 import { CountersService } from './counters.service.js';
 import {
   partnerLinkUrl,
   NotifyService,
-  inviteUrl,
-  setPasswordUrl,
   type ApprovedPartner,
 } from './notify.service.js';
 import { PaymentsService } from './payments.service.js';
@@ -51,9 +45,6 @@ const LOCK = { maxAttempts: 5, ms: 15 * 60 * 1000 };
 const WRONG =
   'That email and password don\'t match. Check them, or use "Forgot your password?" below.';
 
-const LINK_DAYS = 7;
-/** Rows read from one Excel upload; a bigger school uploads in parts. */
-const MAX_IMPORT = 500;
 /** A new reset email goes out at most this often per partner, so the form can't be used to flood an inbox. */
 const RESET_GAP_MS = 2 * 60 * 1000;
 const loginEmail = (p: SchoolDoc | AmbassadorDoc) =>
@@ -65,11 +56,6 @@ const indiaDay = () =>
   new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' });
 
 /** Schools and Ambassadors: referral links, dashboard login, dashboard data and approval steps. */
-/** Changes whenever the password is set, so links and sessions made before it stop working. */
-const passwordVersion = (partner: {
-  login?: { passwordSetAt?: Date | null };
-}) => String(partner.login?.passwordSetAt?.getTime() ?? 0);
-
 @Injectable()
 export class PartnersService {
   constructor(
@@ -254,6 +240,11 @@ export class PartnersService {
     return doc;
   }
 
+  /** The signed-in school, for the services that act on its students. */
+  schoolSession(token: string | undefined) {
+    return this.session('school', token);
+  }
+
   /**
    * Dashboard data. Counts are taken live from the master list (only paid registrations count towards
    * milestones), and the stored counts the admin sorts by are refreshed on the way.
@@ -284,6 +275,8 @@ export class PartnersService {
       shareUrl: partnerLinkUrl(me.code!),
       stats: { clicks, registered, paid },
       milestones: config.milestones,
+      // What each milestone counts: link opens, or confirmed registrations (paid, or free in Group 0).
+      progress: { clicks, paid },
     };
   }
 
@@ -294,7 +287,7 @@ export class PartnersService {
       .find({ school: me._id, type: { $in: ['registered', 'invited'] } })
       .sort({ createdAt: -1 })
       .select(
-        'type regId name stage group fee paymentStatus parentConsent dob email inviteSentAt',
+        'type regId name stage group fee paymentStatus parentConsent dob email inviteSentAt aadhaarLast4 documents parentPhone mobile payment',
       )
       .lean<PersonDoc[]>();
     const students = everyone.filter((s) => s.type === 'registered');
@@ -320,21 +313,47 @@ export class PartnersService {
         consentPending: students.filter(
           (s) => isSchoolGroup(s.group ?? '') && !s.parentConsent?.at,
         ).length,
-        waitingForParent: invited.length,
+        waitingForParent: 0,
+        documentsPending: invited.length,
       },
       pay: {
         count: owed.length,
         amount: owed.reduce((sum, s) => sum + (s.fee ?? 0), 0),
       },
-      invited: invited.map((s) => ({
-        id: String(s._id),
-        name: s.name,
-        stage: s.stage ?? '',
-        group: s.group ?? '',
-        emailed: Boolean(s.inviteSentAt),
-        link: inviteUrl(String(s._id)),
-      })),
+      // Kept empty for older dashboard pages: parents no longer finish the form from a link.
+      invited: [],
       classLink: partnerLinkUrl(me.code!),
+      // Every student the school added from its sheet, with what each still needs.
+      sheet: everyone.map((s) => {
+        const proof = needsSchoolProof(s.group ?? '', me.type === 'government');
+        return {
+          id: String(s._id),
+          regId: hasRegId(s) ? s.regId! : '',
+          name: s.name,
+          dob: s.dob ?? '',
+          stage: s.stage ?? '',
+          group: s.group ?? '',
+          fee: s.fee ?? 0,
+          aadhaarLast4: s.aadhaarLast4 ?? '',
+          mobile: s.parentPhone ?? s.mobile ?? '',
+          needsProof: proof,
+          documents: {
+            photo: Boolean(s.documents?.photo),
+            aadhaarCard: Boolean(s.documents?.aadhaarCard),
+            schoolIdCard: Boolean(s.documents?.schoolIdCard),
+          },
+          status:
+            s.type === 'invited'
+              ? ('documents' as const)
+              : done(s)
+                ? s.paymentStatus === 'free'
+                  ? ('free' as const)
+                  : ('paid' as const)
+                : ('pending' as const),
+          // A student can be taken off the sheet until they are confirmed or a payment is started.
+          removable: !done(s) && !s.payment,
+        };
+      }),
       students: students.map((s) => ({
         id: String(s._id),
         regId: hasRegId(s) ? s.regId! : '',
@@ -353,23 +372,6 @@ export class PartnersService {
     return kind === 'school'
       ? this.counters.schoolCode(text(district, 40))
       : this.counters.ambassadorCode();
-  }
-
-  /**
-   * A one-time "choose your password" link for an approved partner. It carries the time the password
-   * was last set, so it stops working as soon as any password is set.
-   */
-  private passwordLink(kind: PartnerKind, partner: SchoolDoc | AmbassadorDoc) {
-    const version = passwordVersion(partner);
-    return setPasswordUrl(
-      createToken(
-        'password',
-        String(partner._id),
-        LINK_DAYS * DAY,
-        kind,
-        version,
-      ),
-    );
   }
 
   /** Called by the admin right after an approval: the welcome message with the code and, if no password is set yet, the link to choose one. */
@@ -394,7 +396,7 @@ export class PartnersService {
       schoolName: text(input.schoolName, 120) || undefined,
       setPasswordUrl:
         partner && !partner.login?.passwordHash
-          ? this.passwordLink(kind, partner)
+          ? passwordLinkFor(kind, partner)
           : undefined,
     });
   }
@@ -483,7 +485,7 @@ export class PartnersService {
       )
       .lean<SchoolDoc | AmbassadorDoc>();
     if (partner) {
-      const link = this.passwordLink(kind, partner);
+      const link = passwordLinkFor(kind, partner);
       background('password reset email', () =>
         this.notify.passwordReset(email, greetName(partner) ?? '', link),
       );
@@ -501,139 +503,6 @@ export class PartnersService {
         fee: { $gt: 0 },
       })
       .lean<PersonDoc[]>();
-  }
-
-  /**
-   * Students from the school's Excel sheet. Each valid row becomes an "invited" entry on the school's
-   * dashboard; the parent gets an email link to finish the form. The same name and birth date in the
-   * same school is skipped, so uploading a sheet twice adds nobody twice.
-   */
-  async importStudents(token: string | undefined, input: { rows?: unknown }) {
-    const me = await this.session('school', token);
-    if (!me) return null;
-    const rows = (Array.isArray(input.rows) ? input.rows : []).slice(
-      0,
-      MAX_IMPORT,
-    ) as Record<string, unknown>[];
-    const schoolType =
-      me.type === 'government'
-        ? 'government'
-        : me.type === 'grant-in-aid'
-          ? 'semi-government'
-          : 'non-government';
-    const skipped: { row: number; reason: string }[] = [];
-    const valid: {
-      name: string;
-      dob: string;
-      std: string;
-      group: GroupId;
-      parentName: string;
-      parentPhone: string;
-      email: string;
-    }[] = [];
-    // Everyone the school already has, read once: the same name (any case) and birth date is a repeat.
-    const key = (name: string, dob: string) => `${name.toLowerCase()}|${dob}`;
-    const known = new Set(
-      (
-        await this.people
-          .find({ school: me._id, type: { $in: ['invited', 'registered'] } })
-          .select('name dob')
-          .lean<Pick<PersonDoc, 'name' | 'dob'>[]>()
-      ).map((p) => key(p.name, p.dob ?? '')),
-    );
-
-    for (const [i, raw] of rows.entries()) {
-      const row = Number(raw.row) || i + 2;
-      const name = text(raw.name, 120);
-      const dob = text(raw.dob, 10);
-      const std = text(raw.std, 40);
-      const parentName = text(raw.parentName, 80);
-      const parentPhone = normalizeMobile(text(raw.parentMobile, 20));
-      const email = text(raw.parentEmail, 120).toLowerCase();
-      const result = groupFor('student', dob);
-      const ageGroup = result && 'group' in result ? result.group : null;
-      // Group 0 depends on where the student did Std 6 to 8; the parent answers that in the form.
-      const group = ageGroup ? withSchool(ageGroup, false) : null;
-      const problem =
-        name.length < 2 || !PERSON_NAME.test(name)
-          ? 'Student name missing or not valid'
-          : !/^\d{4}-\d{2}-\d{2}$/.test(dob)
-            ? 'Date of birth missing or not a date'
-            : !group
-              ? 'Must be 13 or older today'
-              : !classesFor(group).includes(std)
-                ? `Class must be one of: ${classesFor(group).join(', ')}`
-                : parentName.length < 2 || !PERSON_NAME.test(parentName)
-                  ? 'Parent name missing'
-                  : !parentPhone
-                    ? 'Parent mobile must be 10 digits'
-                    : email && !EMAIL.test(email)
-                      ? 'Parent email not valid'
-                      : null;
-      if (problem) {
-        skipped.push({ row, reason: problem });
-        continue;
-      }
-      if (known.has(key(name, dob))) {
-        skipped.push({ row, reason: 'Already added' });
-        continue;
-      }
-      known.add(key(name, dob));
-      valid.push({
-        name,
-        dob,
-        std,
-        group: group!,
-        parentName,
-        parentPhone: parentPhone!,
-        email,
-      });
-    }
-
-    const ids = await this.counters.inviteIds(valid.length);
-    const added = valid.length
-      ? (
-          await this.people.insertMany(
-            valid.map((s, i) => ({
-              type: 'invited',
-              edition: EDITION,
-              regId: ids[i],
-              participant: 'student',
-              name: s.name,
-              dob: s.dob,
-              group: s.group,
-              stage: s.std,
-              schoolType,
-              institution: me.name,
-              parentName: s.parentName,
-              parentPhone: s.parentPhone,
-              whatsapp: s.parentPhone,
-              ...(s.email ? { email: s.email } : {}),
-              source: 'school',
-              code: me.code,
-              school: me._id,
-              whatsappStopped: false,
-              emailStopped: false,
-            })),
-          )
-        ).map((d) => d.toObject() as PersonDoc)
-      : [];
-
-    if (added.length)
-      background('school invite emails', async () => {
-        for (const person of added) {
-          if (await this.notify.studentInvite(person, me.name))
-            await this.people.updateOne(
-              { _id: person._id },
-              { $set: { inviteSentAt: new Date() } },
-            );
-        }
-      });
-    return {
-      added: added.length,
-      emailed: added.filter((p) => p.email).length,
-      skipped,
-    };
   }
 
   /** "Pay for N pending students": one Razorpay order for every registered student the school still owes for. */

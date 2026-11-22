@@ -24,6 +24,7 @@ import {
   type PartnerKind,
 } from './services/partners.service.js';
 import { PaymentsService } from './services/payments.service.js';
+import { SchoolStudentsService } from './services/school-students.service.js';
 import {
   RegistrationsService,
   type RegistrationInput,
@@ -44,6 +45,7 @@ export class OlympiadController {
     private readonly payments: PaymentsService,
     private readonly partners: PartnersService,
     private readonly links: LinksService,
+    private readonly schoolStudents: SchoolStudentsService,
   ) {}
 
   @Post('reminders')
@@ -176,10 +178,34 @@ export class OlympiadController {
   @Post('partners/school/students')
   @HttpCode(200)
   async importStudents(
-    @Body() body: { rows?: unknown },
+    @Body() body: { rows?: unknown; declared?: unknown },
     @Headers('x-session') session?: string,
   ) {
-    const result = await this.partners.importStudents(session, body);
+    const result = await this.schoolStudents.importSheet(session, body);
+    if (!result) throw new UnauthorizedException();
+    return result;
+  }
+
+  /** School dashboard: one uploaded document (photo, Aadhaar card, bonafide) for one student. */
+  @Post('partners/school/students/document')
+  @HttpCode(200)
+  async studentDocument(
+    @Body() body: { id?: unknown; kind?: unknown; file?: unknown },
+    @Headers('x-session') session?: string,
+  ) {
+    const result = await this.schoolStudents.attachDocument(session, body);
+    if (!result) throw new UnauthorizedException();
+    return result;
+  }
+
+  /** School dashboard: take an unconfirmed student off the sheet. */
+  @Post('partners/school/students/remove')
+  @HttpCode(200)
+  async removeStudent(
+    @Body() body: { id?: unknown },
+    @Headers('x-session') session?: string,
+  ) {
+    const result = await this.schoolStudents.remove(session, body);
     if (!result) throw new UnauthorizedException();
     return result;
   }

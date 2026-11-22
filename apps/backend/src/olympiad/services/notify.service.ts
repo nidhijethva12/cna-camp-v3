@@ -6,7 +6,6 @@ import {
   partnerApprovedEmail,
   partnerSignupEmail,
   passwordResetEmail,
-  studentInviteEmail,
   registrationEmail,
   reminderEmail,
 } from '../emails.js';
@@ -43,12 +42,6 @@ export interface ApprovedPartner {
 export const receiptUrl = (personId: string, lang?: string) =>
   url(
     `/olympiad/receipt/${createToken('receipt', personId, 730 * DAY)}${lang === 'gu' ? '?lang=gu' : ''}`,
-  );
-
-/** The registration form, pre-filled for a student a school added. */
-export const inviteUrl = (personId: string) =>
-  url(
-    `/olympiad/register?invite=${createToken('invite', personId, 120 * DAY)}`,
   );
 
 /** Where a partner chooses their dashboard password. */
@@ -196,22 +189,6 @@ export class NotifyService {
       if (result.status === 'failed')
         this.log.error(`approval email failed for ${p.code}: ${result.error}`);
     }
-  }
-
-  /** The link for a parent to finish a registration their child's school started. */
-  async studentInvite(person: PersonDoc, schoolName: string) {
-    if (!person.email || person.emailStopped) return false;
-    const result = await this.messaging.email({
-      to: person.email,
-      ...studentInviteEmail({
-        parentName: person.parentName ?? '',
-        studentName: person.name,
-        schoolName,
-        registerUrl: inviteUrl(String(person._id)),
-      }),
-    });
-    await this.record(person._id, 'invite', 'email', result);
-    return result.status === 'sent';
   }
 
   /** "Forgot your password?": a fresh one-time link to the partner's login email. */
