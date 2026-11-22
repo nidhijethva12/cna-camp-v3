@@ -2039,6 +2039,7 @@ export interface OlympiadSetting {
         metric: 'clicks' | 'paid';
         paid: number;
         reward: string;
+        rewardGu?: string | null;
         id?: string | null;
       }[]
     | null;
@@ -2708,6 +2709,7 @@ export interface OlympiadSettingsSelect<T extends boolean = true> {
         metric?: T;
         paid?: T;
         reward?: T;
+        rewardGu?: T;
         id?: T;
       };
   retainUntil?: T;

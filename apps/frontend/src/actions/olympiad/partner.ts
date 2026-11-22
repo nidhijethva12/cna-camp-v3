@@ -1,7 +1,9 @@
 "use server";
 
 import { partnerPageText, type PartnerKind } from "@/content/partnerPages";
+import { apiMessage } from "@/content/dashboards";
 import { callBackend } from "@/lib/olympiad/backend";
+import { dashboardLanguage } from "@/lib/olympiad/dashboardLanguage";
 import { antiSpam, checked, field, type FormState } from "@/lib/olympiad/forms";
 
 export type SignupField =
@@ -31,7 +33,8 @@ export async function signupPartner(_prev: SignupState, fd: FormData): Promise<S
   const t = partnerPageText[fd.get("lang") === "gu" ? "gu" : "en"].errors;
   const values = Object.fromEntries(FIELDS[kind].map((f) => [f, field(fd, f, 120)])) as Partial<Record<SignupField, string>>;
   const result = await callBackend<NonNullable<SignupState["data"]>>(`/olympiad/partners/${kind}/signup`, {
-    body: { ...values, consent: checked(fd, "consent"), ...antiSpam(fd) },
+    // The sign-up page's language is kept, so later messages and the dashboard come in it.
+    body: { ...values, consent: checked(fd, "consent"), lang: fd.get("lang") === "gu" ? "gu" : "en", ...antiSpam(fd) },
   });
   if (result.ok) return { status: "success", data: result.data };
   if (!result.fieldErrors) return { status: "error", message: result.message, values };
@@ -53,7 +56,13 @@ export async function requestPasswordReset(_prev: ResetState, fd: FormData): Pro
   const email = field(fd, "email", 120);
   const result = await callBackend<{ sent: true }>(`/olympiad/partners/${kind}/password-reset`, { body: { email } });
   if (result.ok) return { status: "success", data: result.data };
-  return { status: "error", message: result.message, fieldErrors: result.fieldErrors as ResetState["fieldErrors"], values: { email } };
+  const lang = await dashboardLanguage();
+  return {
+    status: "error",
+    message: apiMessage(result.message, lang),
+    fieldErrors: result.fieldErrors?.email ? { email: apiMessage(result.fieldErrors.email, lang) } : undefined,
+    values: { email },
+  };
 }
 
 export type PasswordState = FormState<"password" | "confirm", { kind: PartnerKind; email: string }>;

@@ -3,13 +3,17 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { payForStudents } from "@/actions/olympiad/school";
+import type { OlympiadLang } from "@/components/olympiad/LanguageSwitch";
+import { dashboardText } from "@/content/dashboards";
 import { openCheckout } from "./razorpayCheckout";
 import { waitForPayment } from "./waitForPayment";
 
-const rupees = (n: number) => `₹${n.toLocaleString("en-IN")}`;
-
-/** "Pay ₹X for N pending students": one Razorpay payment for every student the school still owes for. */
-export function SchoolPay({ count, amount }: { count: number; amount: number }) {
+/**
+ * "Pay ₹X for N students": one Razorpay payment for every student the school still owes for. The
+ * button stays switched off while any student is still missing a document, so the school pays once.
+ */
+export function SchoolPay({ count, amount, waiting, lang }: { count: number; amount: number; waiting: number; lang: OlympiadLang }) {
+  const t = dashboardText[lang].pay;
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<{ tone: "ok" | "error"; text: string } | null>(null);
@@ -25,13 +29,12 @@ export function SchoolPay({ count, amount }: { count: number; amount: number }) 
     }
     if (!opened.order) {
       setBusy(false);
-      setMessage({ tone: "error", text: "Online payment is being set up. Please try again in a few days, or contact the CNA team." });
+      setMessage({ tone: "error", text: t.notReady });
       return;
     }
-    const students = opened.count === 1 ? "1 student" : `${opened.count} students`;
     await openCheckout(
       opened.order,
-      { description: `Adventure Olympiad 2.0 · ${students}`, prefill: opened.prefill },
+      { description: t.description(opened.count), prefill: opened.prefill },
       {
         onPaid: async (payment) => {
           const result = await waitForPayment(payment);
@@ -39,9 +42,7 @@ export function SchoolPay({ count, amount }: { count: number; amount: number }) 
           setMessage(
             !result.ok
               ? { tone: "error", text: result.message }
-              : result.paid
-                ? { tone: "ok", text: `Paid ${rupees(opened.amount)} for ${students}. Each one gets their confirmation.` }
-                : { tone: "ok", text: "Payment received. Razorpay is confirming it; the students show as paid within a few minutes." },
+              : { tone: "ok", text: result.paid ? t.paid(opened.amount, opened.count) : t.confirming },
           );
           router.refresh();
         },
@@ -50,14 +51,21 @@ export function SchoolPay({ count, amount }: { count: number; amount: number }) 
           setMessage({ tone: "error", text });
         },
       },
+      t.checkout,
     );
   };
 
   return (
     <div className="grid justify-items-end gap-1.5">
-      <button type="button" onClick={pay} disabled={busy} className="btn btn-primary">
-        {busy ? "Opening the payment…" : `Pay ${rupees(amount)} for ${count} pending ${count === 1 ? "student" : "students"}`}
+      <button
+        type="button"
+        onClick={pay}
+        disabled={busy || waiting > 0}
+        className="btn btn-primary disabled:cursor-not-allowed disabled:opacity-50"
+      >
+        {busy ? t.opening : t.button(amount, count)}
       </button>
+      {waiting > 0 && <p className="max-w-[46ch] text-right text-[13.5px] text-muted">{t.waiting(waiting)}</p>}
       {message && (
         <p
           role={message.tone === "error" ? "alert" : "status"}

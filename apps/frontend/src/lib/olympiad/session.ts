@@ -46,7 +46,9 @@ export interface AmbassadorDashboard {
   shareUrl: string;
   stats: { clicks: number; registered: number; paid: number };
   /** Each reward and what it needs: `metric` says whether `paid` counts link opens or confirmed registrations. */
-  milestones: { metric: "clicks" | "paid"; paid: number; reward: string }[];
+  milestones: { metric: "clicks" | "paid"; paid: number; reward: string; rewardGu?: string }[];
+  /** The language they signed up in; the dashboard opens in it until they pick another. */
+  language?: string;
 }
 
 export interface SchoolDashboard {
@@ -55,6 +57,8 @@ export interface SchoolDashboard {
   type: string;
   district: string;
   coordinator: string;
+  /** The language the school signed up in; the dashboard opens in it until they pick another. */
+  language?: string;
   /** `students` counts complete registrations; `documentsPending` counts sheet rows still missing a document. */
   stats: { students: number; paid: number; pending: number; documentsPending: number };
   /** Students the school can pay for now, and their total fee in rupees. */

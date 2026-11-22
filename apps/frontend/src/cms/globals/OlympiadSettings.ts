@@ -132,9 +132,14 @@ export const OlympiadSettings: GlobalConfig = {
           "What an Ambassador needs for each reward. Confirmed registrations are paid ones, plus free Group 0 ones, made through the Ambassador's link.",
       },
       defaultValue: [
-        { metric: "clicks", paid: 50, reward: "Olympiad Ambassador certificate" },
-        { metric: "paid", paid: 100, reward: "1 free registration coupon for Group C, D or E" },
-        { metric: "paid", paid: 200, reward: "Free Manali trip" },
+        { metric: "clicks", paid: 50, reward: "Olympiad Ambassador certificate", rewardGu: "ઓલમ્પિયાડ એમ્બેસેડર સર્ટિફિકેટ" },
+        {
+          metric: "paid",
+          paid: 100,
+          reward: "1 free registration coupon for Group C, D or E",
+          rewardGu: "ગ્રુપ C, D કે E માટે 1 ફ્રી રજિસ્ટ્રેશન કૂપન",
+        },
+        { metric: "paid", paid: 200, reward: "Free Manali trip", rewardGu: "મનાલીની ફ્રી ટ્રિપ" },
       ],
       fields: [
         {
@@ -153,6 +158,7 @@ export const OlympiadSettings: GlobalConfig = {
             },
             { name: "paid", label: "How many", type: "number", required: true, min: 1 },
             { name: "reward", type: "text", required: true },
+            { name: "rewardGu", label: "Reward (Gujarati)", type: "text" },
           ],
         },
       ],

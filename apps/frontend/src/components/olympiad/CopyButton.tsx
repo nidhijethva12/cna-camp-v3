@@ -3,7 +3,17 @@
 import { useState } from "react";
 
 /** Copies `value` to the clipboard and says so for a moment. */
-export function CopyButton({ value, label = "Copy", className = "" }: { value: string; label?: string; className?: string }) {
+export function CopyButton({
+  value,
+  label = "Copy",
+  copiedLabel = "Copied",
+  className = "",
+}: {
+  value: string;
+  label?: string;
+  copiedLabel?: string;
+  className?: string;
+}) {
   const [copied, setCopied] = useState(false);
   return (
     <button
@@ -19,7 +29,7 @@ export function CopyButton({ value, label = "Copy", className = "" }: { value: s
       }}
       className={className}
     >
-      <span aria-live="polite">{copied ? "Copied" : label}</span>
+      <span aria-live="polite">{copied ? copiedLabel : label}</span>
     </button>
   );
 }

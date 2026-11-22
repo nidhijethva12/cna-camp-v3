@@ -2,12 +2,14 @@
 
 import { revalidatePath } from "next/cache";
 import type { CheckoutOrder } from "@/actions/olympiad/register";
+import { apiMessage, dashboardText } from "@/content/dashboards";
 import { callBackend } from "@/lib/olympiad/backend";
+import { dashboardLanguage } from "@/lib/olympiad/dashboardLanguage";
 import { isAadhaar } from "@/lib/olympiad/rules";
 import { aadhaarHash, deleteFiles, encryptText, storeFile, type DocumentKind } from "@/lib/olympiad/secure";
 import { sessionToken } from "@/lib/olympiad/session";
 import { readSheet } from "@/lib/olympiad/studentSheet";
-import { sniffFile, uploadProblem, type UploadProblem } from "@/lib/olympiad/uploads";
+import { MAX_UPLOAD_BYTES, sniffFile, uploadProblem } from "@/lib/olympiad/uploads";
 import { getCms } from "@/lib/payload";
 
 export interface ImportState {
@@ -19,40 +21,32 @@ export interface ImportState {
 
 const MAX_FILE_BYTES = 2 * 1024 * 1024;
 const MAX_STUDENTS = 500;
-const LOGGED_OUT = "Your login has ended. Please log in again.";
+const MAX_MB = MAX_UPLOAD_BYTES / (1024 * 1024);
 const DOCUMENTS: DocumentKind[] = ["photo", "aadhaarCard", "schoolIdCard"];
-const UPLOAD_MESSAGES: Record<UploadProblem, string> = {
-  photoType: "The photo must be a JPG, PNG or WebP picture.",
-  fileType: "Upload a JPG, PNG or WebP picture, or a PDF.",
-  fileTooBig: "This file is larger than 1 MB. Please upload a smaller one.",
-  fileTooSmall: "This file looks empty or damaged. Please choose it again.",
-};
 
 /**
  * "Upload Excel": reads the sheet here, encrypts each Aadhaar number, and sends the rows to the
  * Olympiad API, which checks each one. The plain Aadhaar number never leaves this server.
  */
 export async function importStudents(_prev: ImportState, fd: FormData): Promise<ImportState> {
+  const lang = await dashboardLanguage();
+  const t = dashboardText[lang];
   const session = await sessionToken();
-  if (!session) return { status: "error", message: LOGGED_OUT };
-  if (fd.get("declared") !== "on")
-    return { status: "error", message: "Please tick the box to confirm the school holds each parent's consent." };
+  if (!session) return { status: "error", message: t.loggedOut };
+  if (fd.get("declared") !== "on") return { status: "error", message: t.sheetUpload.needConsent };
   const file = fd.get("sheet");
-  if (!(file instanceof File) || !file.size) return { status: "error", message: "Choose the Excel file to upload." };
-  if (file.size > MAX_FILE_BYTES || !/\.(xlsx|csv)$/i.test(file.name))
-    return { status: "error", message: "Upload the template as an .xlsx (or .csv) file, up to 2 MB." };
+  if (!(file instanceof File) || !file.size) return { status: "error", message: t.sheetUpload.chooseFile };
+  if (file.size > MAX_FILE_BYTES || !/\.(xlsx|csv)$/i.test(file.name)) return { status: "error", message: t.sheetUpload.wrongFile };
 
   let rows;
   try {
     rows = await readSheet(file);
   } catch (err) {
     console.error("[olympiad] reading a school sheet failed", err);
-    return { status: "error", message: "This file could not be read. Download the template, fill it and upload it again." };
+    return { status: "error", message: t.sheetUpload.unreadable };
   }
-  if (!rows.length)
-    return { status: "error", message: "No students found in the file. Fill the rows under the headings and upload again." };
-  if (rows.length > MAX_STUDENTS)
-    return { status: "error", message: `Up to ${MAX_STUDENTS} students per upload. Split the sheet into parts.` };
+  if (!rows.length) return { status: "error", message: t.sheetUpload.noRows };
+  if (rows.length > MAX_STUDENTS) return { status: "error", message: t.sheetUpload.tooMany(MAX_STUDENTS) };
 
   let students;
   try {
@@ -64,16 +58,20 @@ export async function importStudents(_prev: ImportState, fd: FormData): Promise<
     );
   } catch (err) {
     console.error("[olympiad] encrypting a school sheet failed", err);
-    return { status: "error", message: "The sheet could not be saved just now. Please try again in a minute." };
+    return { status: "error", message: t.sheetUpload.notSaved };
   }
 
   const result = await callBackend<{ added: number; skipped: { row: number; reason: string }[] }>("/olympiad/partners/school/students", {
     body: { rows: students, declared: true },
     session,
   });
-  if (!result.ok) return { status: "error", message: result.message };
+  if (!result.ok) return { status: "error", message: apiMessage(result.message, lang) };
   revalidatePath("/school-dashboard");
-  return { status: "success", ...result.data };
+  return {
+    status: "success",
+    added: result.data.added,
+    skipped: result.data.skipped.map((s) => ({ row: s.row, reason: apiMessage(s.reason, lang) })),
+  };
 }
 
 export type StudentActionResult = { ok: true; complete?: boolean } | { ok: false; message: string };
@@ -83,16 +81,18 @@ export type StudentActionResult = { ok: true; complete?: boolean } | { ok: false
  * encrypted and stored here; the API links it to the student and says whether the entry is now complete.
  */
 export async function uploadStudentDocument(fd: FormData): Promise<StudentActionResult> {
+  const lang = await dashboardLanguage();
+  const t = dashboardText[lang];
   const session = await sessionToken();
-  if (!session) return { ok: false, message: LOGGED_OUT };
+  if (!session) return { ok: false, message: t.loggedOut };
   const id = String(fd.get("id") ?? "");
   const kind = DOCUMENTS.find((k) => k === fd.get("kind"));
   const file = fd.get("file");
-  if (!/^[a-f0-9]{24}$/.test(id) || !kind || !(file instanceof File) || !file.size)
-    return { ok: false, message: "Choose the file to upload." };
+  if (!/^[a-f0-9]{24}$/.test(id) || !kind || !(file instanceof File) || !file.size) return { ok: false, message: t.students.chooseTheFile };
   const type = await sniffFile(file);
   const problem = uploadProblem(kind, type, file.size);
-  if (problem) return { ok: false, message: UPLOAD_MESSAGES[problem] };
+  if (problem)
+    return { ok: false, message: problem === "fileTooBig" ? t.students.problems.fileTooBig(MAX_MB) : t.students.problems[problem] };
 
   const payload = await getCms();
   let stored: string;
@@ -100,7 +100,7 @@ export async function uploadStudentDocument(fd: FormData): Promise<StudentAction
     stored = await storeFile(payload, kind, new File([file], file.name.slice(0, 120), { type: type! }));
   } catch (err) {
     console.error("[olympiad] storing a student document failed", err);
-    return { ok: false, message: "The file could not be saved just now. Please try again." };
+    return { ok: false, message: t.students.notStored };
   }
   const result = await callBackend<{ complete: boolean; replaced: string | null }>("/olympiad/partners/school/students/document", {
     body: { id, kind, file: stored },
@@ -110,7 +110,7 @@ export async function uploadStudentDocument(fd: FormData): Promise<StudentAction
     // Only a clear "no" means the student does not point at this file; after a timeout it may.
     if (result.status >= 400 && result.status < 500) await deleteFiles(payload, [stored]).catch(() => {});
     else console.error(`[olympiad] student document not confirmed (${result.status}); kept file ${stored}`);
-    return { ok: false, message: result.message };
+    return { ok: false, message: apiMessage(result.message, lang) };
   }
   await deleteFiles(payload, [result.data.replaced]).catch((err) => console.error("[olympiad] removing a replaced document failed", err));
   revalidatePath("/school-dashboard");
@@ -119,11 +119,13 @@ export async function uploadStudentDocument(fd: FormData): Promise<StudentAction
 
 /** Takes a student who is not confirmed yet off the school's sheet, with their uploaded files. */
 export async function removeStudent(id: string): Promise<StudentActionResult> {
+  const lang = await dashboardLanguage();
+  const t = dashboardText[lang];
   const session = await sessionToken();
-  if (!session) return { ok: false, message: LOGGED_OUT };
-  if (!/^[a-f0-9]{24}$/.test(id)) return { ok: false, message: "This student could not be removed." };
+  if (!session) return { ok: false, message: t.loggedOut };
+  if (!/^[a-f0-9]{24}$/.test(id)) return { ok: false, message: t.students.notRemoved };
   const result = await callBackend<{ files: string[] }>("/olympiad/partners/school/students/remove", { body: { id }, session });
-  if (!result.ok) return { ok: false, message: result.message };
+  if (!result.ok) return { ok: false, message: apiMessage(result.message, lang) };
   await deleteFiles(await getCms(), result.data.files).catch((err) =>
     console.error("[olympiad] removing a student's documents failed", err),
   );
@@ -137,11 +139,12 @@ export type SchoolPayResult =
 
 /** "Pay for N students": one Razorpay order for every complete student the school still owes for. */
 export async function payForStudents(): Promise<SchoolPayResult> {
+  const lang = await dashboardLanguage();
   const session = await sessionToken();
-  if (!session) return { ok: false, message: LOGGED_OUT };
+  if (!session) return { ok: false, message: dashboardText[lang].loggedOut };
   const result = await callBackend<Omit<Extract<SchoolPayResult, { ok: true }>, "ok">>("/olympiad/partners/school/pay", {
     method: "POST",
     session,
   });
-  return result.ok ? { ok: true, ...result.data } : { ok: false, message: result.message };
+  return result.ok ? { ok: true, ...result.data } : { ok: false, message: apiMessage(result.message, lang) };
 }

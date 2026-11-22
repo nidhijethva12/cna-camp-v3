@@ -41,7 +41,7 @@ export const SHEET_COLUMNS = [
   { key: "aadhaar", header: "Aadhaar number (12 digits)", kind: "digits", width: 22, example: "234567890123" },
   { key: "mobile", header: "Mobile number (10 digits)", kind: "digits", width: 20, example: "9825012345" },
   { key: "whatsapp", header: "WhatsApp number (if different)", kind: "digits", width: 24, example: "" },
-  { key: "email", header: "Email (optional)", kind: "text", width: 26, example: "" },
+  { key: "email", header: "Email", kind: "text", width: 26, example: "parent@example.com" },
   { key: "address", header: "Home address", kind: "text", width: 36, example: "12, Shanti Nagar, Kalawad Road" },
   { key: "district", header: "District", kind: "district", width: 18, example: "Rajkot" },
   { key: "pin", header: "PIN code", kind: "digits", width: 12, example: "360005" },
@@ -125,6 +125,7 @@ export async function buildTemplate(quizSlots: QuizSlot[] = []) {
     "Std 6 to 8 in a government school: only asked for students under 16 in a Government school. Yes means Group 0 (free).",
     "Aadhaar number: all 12 digits, no spaces. One Aadhaar number can register only once.",
     "WhatsApp number: leave empty if it is the same as the mobile number.",
+    "Email: needed for every student. The confirmation and receipt go there.",
     "Parent: for students under 18. Choose Guardian only when neither parent is alive.",
     quizSlots.length
       ? `Quiz date and time (Std 10, Std 12 and college students only). Type them exactly as shown: ${quizSlots

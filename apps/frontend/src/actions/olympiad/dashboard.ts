@@ -1,7 +1,9 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { apiMessage, dashboardText } from "@/content/dashboards";
 import { callBackend } from "@/lib/olympiad/backend";
+import { dashboardLanguage } from "@/lib/olympiad/dashboardLanguage";
 import { field, type FormState } from "@/lib/olympiad/forms";
 import { endSession, startSession, type PartnerKind } from "@/lib/olympiad/session";
 
@@ -17,15 +19,17 @@ export async function loginToDashboard(_prev: LoginState, fd: FormData): Promise
   const kind = kindOf(field(fd, "kind", 20));
   const email = field(fd, "email", 120);
   const password = String(fd.get("password") ?? "").slice(0, 200);
-  if (!kind) return { status: "error", message: "Please reload the page and try again." };
+  const lang = await dashboardLanguage();
+  const t = dashboardText[lang].login;
+  if (!kind) return { status: "error", message: t.reload };
 
   const fieldErrors: LoginState["fieldErrors"] = {};
-  if (!email) fieldErrors.email = "Enter the email the CNA team registered for you.";
-  if (!password) fieldErrors.password = "Enter your password.";
+  if (!email) fieldErrors.email = t.needEmail;
+  if (!password) fieldErrors.password = t.needPassword;
   if (Object.keys(fieldErrors).length) return { status: "error", fieldErrors, values: { email } };
 
   const result = await callBackend<{ token: string; maxAge: number }>(`/olympiad/partners/${kind}/login`, { body: { email, password } });
-  if (!result.ok) return { status: "error", message: result.message, values: { email } };
+  if (!result.ok) return { status: "error", message: apiMessage(result.message, lang), values: { email } };
   await startSession(result.data.token, result.data.maxAge);
   redirect(DASHBOARD[kind]);
 }
