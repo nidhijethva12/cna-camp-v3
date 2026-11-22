@@ -110,6 +110,10 @@ export interface PersonDoc {
   razorpayPaymentId?: string;
   /** The Razorpay order the registration was paid with. */
   razorpayOrderId?: string;
+  /** Set when the fee was taken at the CNA office (cash, UPI, bank transfer, cheque). */
+  paymentMethod?: OfficeMethod;
+  /** The staff member who filled in the form for this person at the office. */
+  enteredBy?: string;
   feeCheck?: boolean;
   source?: 'direct' | 'school' | 'ambassador';
   code?: string;
@@ -202,6 +206,8 @@ export const PersonSchema = new Schema<PersonDoc>(
     payment: { type: ObjectId },
     razorpayPaymentId: String,
     razorpayOrderId: String,
+    paymentMethod: String,
+    enteredBy: String,
     feeCheck: Boolean,
     source: String,
     code: String,
@@ -361,6 +367,10 @@ export const SchoolSchema = new Schema<SchoolDoc>(
   base,
 );
 
+/** Ways a fee can be paid at the CNA office instead of through Razorpay. */
+export const OFFICE_METHODS = ['cash', 'upi', 'bank', 'cheque'] as const;
+export type OfficeMethod = (typeof OFFICE_METHODS)[number];
+
 export interface PaymentDoc {
   _id: Types.ObjectId;
   razorpayOrderId: string;
@@ -369,8 +379,13 @@ export interface PaymentDoc {
   amount: number;
   status: 'created' | 'paid' | 'failed';
   mode: 'single' | 'bulk';
-  paidBy: 'participant' | 'school';
+  paidBy: 'participant' | 'school' | 'office';
   people: Types.ObjectId[];
+  /** How money taken at the CNA office came in; absent for Razorpay. */
+  method?: OfficeMethod;
+  reference?: string;
+  /** The Admin who recorded an office payment. */
+  receivedBy?: string;
   school?: Types.ObjectId;
   paidAt?: Date;
   failureReason?: string;
@@ -392,6 +407,9 @@ export const PaymentSchema = new Schema<PaymentDoc>(
     paidAt: Date,
     failureReason: String,
     needsRefund: Boolean,
+    method: String,
+    reference: String,
+    receivedBy: String,
   },
   base,
 );

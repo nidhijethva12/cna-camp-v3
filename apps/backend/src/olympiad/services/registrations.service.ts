@@ -102,6 +102,11 @@ export interface RegistrationInput {
   /** Group C, D or E: "yes" to becoming an Olympiad Ambassador. */
   ambassador?: unknown;
   agree?: unknown;
+  /**
+   * The signed-in staff member's email when CNA fills in the form for someone at the office. The
+   * website sets it only after checking the admin login, so the spam checks and dates don't apply.
+   */
+  office?: unknown;
 }
 
 const DOCUMENT_KINDS = ['photo', 'aadhaarCard', 'schoolIdCard'] as const;
@@ -151,6 +156,8 @@ const OPTIONAL_FIELDS = [
   'school',
   'ambassador',
   'wantsAmbassador',
+  'enteredBy',
+  'paymentMethod',
   'paidAt',
   'payment',
   'razorpayPaymentId',
@@ -194,7 +201,8 @@ export class RegistrationsService implements OnModuleInit {
 
   async register(input: RegistrationInput, ip: string | undefined) {
     const config = await this.settings.olympiad();
-    if (registrationState(config) !== 'open')
+    const office = text(input.office, 120).toLowerCase();
+    if (!office && registrationState(config) !== 'open')
       throw new FormError(
         'Registration is not open right now. Please check the dates on the Olympiad page.',
       );
@@ -411,12 +419,17 @@ export class RegistrationsService implements OnModuleInit {
     need('agree', input.agree === true, 'Tick to continue.');
     throwIfErrors(errors);
 
-    if (text(input.website)) throw new FormError('Please try again.');
-    if (!(await passesTurnstile(text(input.turnstileToken, 2048), ip)))
-      throw new FormError('Please complete the security check and try again.');
+    if (!office) {
+      if (text(input.website)) throw new FormError('Please try again.');
+      if (!(await passesTurnstile(text(input.turnstileToken, 2048), ip)))
+        throw new FormError(
+          'Please complete the security check and try again.',
+        );
+    }
     // A family or a school computer may register a few children in a row; a script may not.
     const visitor = ipHash(ip);
     if (
+      !office &&
       visitor &&
       (await this.people.countDocuments({
         'meta.consentIpHash': visitor,
@@ -533,6 +546,7 @@ export class RegistrationsService implements OnModuleInit {
       consent: { at: now, version: config.consentVersion },
       rules: { at: now, version: RULES_VERSION },
       registeredAt: now,
+      ...(office ? { enteredBy: office } : {}),
       paymentStatus: free ? ('free' as const) : ('pending' as const),
     };
     const meta = {
@@ -672,6 +686,9 @@ export class RegistrationsService implements OnModuleInit {
         receiptToken: receiptToken(saved),
       };
     }
+    // At the office the fee is taken by hand and recorded by an Admin, so no online order is opened.
+    if (office)
+      return { ...summary, id: String(saved._id), paid: false, order: null };
     // The form is saved either way; if Razorpay can't open the payment now, the person is told so
     // and can pay later, rather than losing the form.
     const order = await this.payments
