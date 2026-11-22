@@ -33,6 +33,7 @@ import {
 } from "@/lib/olympiad/rules";
 import { sniffFile, UPLOAD_ACCEPT, uploadProblem } from "@/lib/olympiad/uploads";
 import { rulesEn, rulesGu, rulesIntro, rulesIntroGu } from "@/content/olympiadRules";
+import { OfficePayment } from "./OfficePayment";
 import { PaymentStep } from "./PaymentStep";
 import { RegistrationDone } from "./RegistrationDone";
 import { Honeypot, Turnstile } from "./Turnstile";
@@ -75,6 +76,7 @@ export function RegistrationForm({
   quizSlots,
   rules,
   phone,
+  office,
 }: {
   fees: Fees;
   lang: RegLang;
@@ -87,6 +89,8 @@ export function RegistrationForm({
   rules: { gu: string; en: string };
   /** CNA's help number, shown on the done screen. */
   phone?: string;
+  /** Staff are filling in the form at the office: the fee is recorded by hand instead of paid online. */
+  office?: { canRecordPayments: boolean };
 }) {
   const [lang, setLang] = useState<RegLang>(initialLang);
   const t = registrationText[lang];
@@ -210,6 +214,7 @@ export function RegistrationForm({
     fd.set("input", JSON.stringify(input));
     fd.set("lang", lang);
     if (invite) fd.set("invite", invite);
+    if (office) fd.set("office", "1");
     for (const [key, file] of Object.entries(files)) if (file && (key !== "schoolIdCard" || s.proof)) fd.set(key, file);
     startTransition(async () => {
       const answer = await submitRegistration(fd);
@@ -238,6 +243,17 @@ export function RegistrationForm({
   if (result) {
     // The receipt comes from the saved registration: right away for a free one, after Razorpay confirms a paid one.
     const done = (receiptToken: string) => <RegistrationDone receiptToken={receiptToken} lang={lang} phone={phone} rules={rules} />;
+    if (!result.paid && office && result.id)
+      return (
+        <OfficePayment
+          id={result.id}
+          name={result.name}
+          group={result.group}
+          fee={result.fee}
+          canRecordPayments={office.canRecordPayments}
+          done={done}
+        />
+      );
     if (!result.paid) return <PaymentStep summary={result} t={t.payment} done={done} />;
     return result.receiptToken ? done(result.receiptToken) : null;
   }

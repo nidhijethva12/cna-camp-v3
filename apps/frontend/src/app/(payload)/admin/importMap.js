@@ -22,8 +22,10 @@ import { UnderlineFeatureClient as UnderlineFeatureClient_e70f5e05f09f93e00b997e
 import { BoldFeatureClient as BoldFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { ItalicFeatureClient as ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { OlympiadSummary as OlympiadSummary_f70dd8cc2ed6ad67aa429624620dafc7 } from '@/components/admin/OlympiadSummary'
+import { RecordPayment as RecordPayment_de5c58ae41a72d0044bde98eca88e059 } from '@/components/admin/RecordPayment'
 import { OlympiadDocuments as OlympiadDocuments_8a439d492f629a1201bb81d750c986eb } from '@/components/admin/OlympiadDocuments'
 import { OlympiadOverview as OlympiadOverview_7ccf1a30ef1ca3d5aac1685c7555bbbf } from '@/components/admin/OlympiadOverview'
+import { OfficeRegisterLink as OfficeRegisterLink_260bf55653f53bb6e5d25e3875fe7ae7 } from '@/components/admin/OfficeRegisterLink'
 import { ExportPeople as ExportPeople_73628aeca91857daf923138e9536830c } from '@/components/admin/ExportPeople'
 import { RupeeCell as RupeeCell_778c307b147a20ca788d0c772e255c42 } from '@/components/admin/RupeeCell'
 import { default as default_d500ae2ad98a0a33d640ae0ac1a3417c } from '@/components/admin/AdminIcon'
@@ -57,8 +59,10 @@ export const importMap = {
   "@payloadcms/richtext-lexical/client#BoldFeatureClient": BoldFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/richtext-lexical/client#ItalicFeatureClient": ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@/components/admin/OlympiadSummary#OlympiadSummary": OlympiadSummary_f70dd8cc2ed6ad67aa429624620dafc7,
+  "@/components/admin/RecordPayment#RecordPayment": RecordPayment_de5c58ae41a72d0044bde98eca88e059,
   "@/components/admin/OlympiadDocuments#OlympiadDocuments": OlympiadDocuments_8a439d492f629a1201bb81d750c986eb,
   "@/components/admin/OlympiadOverview#OlympiadOverview": OlympiadOverview_7ccf1a30ef1ca3d5aac1685c7555bbbf,
+  "@/components/admin/OfficeRegisterLink#OfficeRegisterLink": OfficeRegisterLink_260bf55653f53bb6e5d25e3875fe7ae7,
   "@/components/admin/ExportPeople#ExportPeople": ExportPeople_73628aeca91857daf923138e9536830c,
   "@/components/admin/RupeeCell#RupeeCell": RupeeCell_778c307b147a20ca788d0c772e255c42,
   "@/components/admin/AdminIcon#default": default_d500ae2ad98a0a33d640ae0ac1a3417c,

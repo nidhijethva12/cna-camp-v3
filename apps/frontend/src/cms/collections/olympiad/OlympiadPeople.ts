@@ -1,7 +1,9 @@
 import type { CollectionConfig, PayloadHandler, PayloadRequest, Where } from "payload";
 import { decryptText, deleteFiles, readFile, type DocumentKind } from "../../../lib/olympiad/secure";
+import { OFFICE_METHOD_LABELS, OFFICE_METHODS } from "../../../lib/olympiad/officePayments";
 import { peopleWorkbook } from "../../../lib/olympiad/peopleExport";
-import { canEdit, canManageRecords, hiddenFromAuthors, handlesRecords } from "../../access";
+import { canEdit, canManageRecords, hiddenFromAuthors, handlesRecords, roleOf } from "../../access";
+import { backendAsk } from "../../backend";
 import { groupOptions, messageStatusOptions, quizLanguageOptions, roundOptions, schoolTypeOptions, districtOptions } from "./options";
 
 const round = (n: number) => ({ name: `r${n}`, label: `Round ${n}`, type: "select" as const, options: roundOptions });
@@ -69,6 +71,30 @@ const exportPeople: PayloadHandler = async (req) => {
   });
 };
 
+/** An Admin records a fee taken at the office; the Olympiad API confirms the registration and sends the messages. */
+const recordPayment: PayloadHandler = async (req) => {
+  if (roleOf(req.user) !== "admin" || !req.user?.email) return notFound();
+  const body = ((await req.json?.().catch(() => null)) ?? {}) as { method?: unknown; reference?: unknown };
+  const result = await backendAsk<{ regId: string }>("/olympiad/payments/office", {
+    id: String(req.routeParams?.id ?? ""),
+    method: body.method,
+    reference: typeof body.reference === "string" ? body.reference.slice(0, 120) : "",
+    by: req.user.email,
+  });
+  return result.ok
+    ? Response.json({ regId: result.data.regId }, { headers: privateHeaders })
+    : Response.json({ message: result.message }, { status: 400, headers: privateHeaders });
+};
+
+/** An Admin changes a fee recorded at the office back to "not paid". */
+const undoPayment: PayloadHandler = async (req) => {
+  if (roleOf(req.user) !== "admin" || !req.user?.email) return notFound();
+  const result = await backendAsk("/olympiad/payments/office/undo", { id: String(req.routeParams?.id ?? ""), by: req.user.email });
+  return result.ok
+    ? Response.json({ ok: true }, { headers: privateHeaders })
+    : Response.json({ message: result.message }, { status: 400, headers: privateHeaders });
+};
+
 const hiddenSecret = { admin: { hidden: true }, access: { read: () => false, update: () => false } };
 /** Written only by the Olympiad API. An admin save keeps the stored value instead of writing back what the page loaded. */
 const apiOwned = { access: { update: () => false } };
@@ -89,7 +115,11 @@ export const OlympiadPeople: CollectionConfig = {
     listSearchableFields: SEARCHABLE,
     description: "Everyone who asked for a reminder or registered, in one list. Click a number to filter, then export or message.",
     components: {
-      beforeListTable: ["@/components/admin/OlympiadOverview#OlympiadOverview", "@/components/admin/ExportPeople#ExportPeople"],
+      beforeListTable: [
+        "@/components/admin/OlympiadOverview#OlympiadOverview",
+        "@/components/admin/OfficeRegisterLink#OfficeRegisterLink",
+        "@/components/admin/ExportPeople#ExportPeople",
+      ],
     },
   },
   access: { create: () => false, read: canManageRecords, update: canManageRecords, delete: canEdit },
@@ -97,6 +127,8 @@ export const OlympiadPeople: CollectionConfig = {
     { path: "/:id/document/:kind", method: "get", handler: showDocument },
     { path: "/:id/aadhaar", method: "get", handler: showAadhaar },
     { path: "/export", method: "get", handler: exportPeople },
+    { path: "/:id/record-payment", method: "post", handler: recordPayment },
+    { path: "/:id/undo-payment", method: "post", handler: undoPayment },
   ],
   hooks: {
     // Deleting a person deletes their documents too.
@@ -140,6 +172,7 @@ export const OlympiadPeople: CollectionConfig = {
       ],
     },
     { name: "summary", type: "ui", admin: { components: { Field: "@/components/admin/OlympiadSummary#OlympiadSummary" } } },
+    { name: "recordPayment", type: "ui", admin: { components: { Field: "@/components/admin/RecordPayment#RecordPayment" } } },
     {
       type: "tabs",
       tabs: [
@@ -348,6 +381,13 @@ export const OlympiadPeople: CollectionConfig = {
                   name: "paymentStatus",
                   type: "select",
                   index: true,
+                  // A status typed in by hand would skip the Registration ID, the confirmation and the receipt.
+                  ...apiOwned,
+                  admin: {
+                    readOnly: true,
+                    description:
+                      "Changes when the fee is paid online. Only an Admin can change it by hand, with the payment box at the top of this page.",
+                  },
                   options: [
                     { label: "Free (₹0)", value: "free" },
                     { label: "Pending", value: "pending" },
@@ -356,6 +396,14 @@ export const OlympiadPeople: CollectionConfig = {
                   ],
                 },
                 { name: "paidAt", label: "Paid on", type: "date", ...apiOwned },
+                {
+                  name: "paymentMethod",
+                  label: "Paid at the office by",
+                  type: "select",
+                  ...apiOwned,
+                  admin: { readOnly: true, description: "Empty for online (Razorpay) payments." },
+                  options: OFFICE_METHODS.map((value) => ({ value, label: OFFICE_METHOD_LABELS[value] })),
+                },
               ],
             },
             {
@@ -498,6 +546,13 @@ export const OlympiadPeople: CollectionConfig = {
     },
     { name: "registeredAt", type: "date", ...apiOwned, admin: { position: "sidebar", readOnly: true } },
     { name: "inviteSentAt", label: "Parent link emailed", type: "date", ...apiOwned, admin: { position: "sidebar", readOnly: true } },
+    {
+      name: "enteredBy",
+      label: "Filled in at the office by",
+      type: "text",
+      ...apiOwned,
+      admin: { position: "sidebar", readOnly: true, description: "Empty when the person registered themselves." },
+    },
     {
       name: "meta",
       type: "group",

@@ -25,4 +25,6 @@ export interface ReceiptData {
   razorpayOrderId: string;
   razorpayPaymentId: string;
   rulesVersion: string;
+  /** "cash", "upi", "bank" or "cheque" when the fee was taken at the CNA office; empty for Razorpay. */
+  paymentMethod?: string;
 }

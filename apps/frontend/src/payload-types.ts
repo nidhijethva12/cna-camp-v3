@@ -784,8 +784,15 @@ export interface OlympiadPerson {
   aadhaarEnc?: string | null;
   aadhaarHash?: string | null;
   fee?: number | null;
+  /**
+   * Changes when the fee is paid online, or when an Admin uses “Record a payment” above.
+   */
   paymentStatus?: ('free' | 'pending' | 'paid' | 'failed') | null;
   paidAt?: string | null;
+  /**
+   * Empty for online (Razorpay) payments.
+   */
+  paymentMethod?: ('cash' | 'upi' | 'bank' | 'cheque') | null;
   payment?: (string | null) | OlympiadPayment;
   razorpayPaymentId?: string | null;
   razorpayOrderId?: string | null;
@@ -835,6 +842,10 @@ export interface OlympiadPerson {
   notes?: string | null;
   registeredAt?: string | null;
   inviteSentAt?: string | null;
+  /**
+   * Empty when the person registered themselves.
+   */
+  enteredBy?: string | null;
   meta?: {
     ipHash?: string | null;
     consentIpHash?: string | null;
@@ -849,6 +860,9 @@ export interface OlympiadPerson {
  */
 export interface OlympiadPayment {
   id: string;
+  /**
+   * From Razorpay, or OFFICE-… for a fee recorded at the office.
+   */
   razorpayOrderId: string;
   razorpayPaymentId?: string | null;
   receipt: string;
@@ -858,10 +872,16 @@ export interface OlympiadPayment {
   amount: number;
   status: 'created' | 'paid' | 'failed';
   mode: 'single' | 'bulk';
-  paidBy: 'participant' | 'school';
+  paidBy: 'participant' | 'school' | 'office';
   people: (string | OlympiadPerson)[];
   school?: (string | null) | OlympiadSchool;
   paidAt?: string | null;
+  /**
+   * Empty for online (Razorpay) payments.
+   */
+  method?: ('cash' | 'upi' | 'bank' | 'cheque') | null;
+  reference?: string | null;
+  receivedBy?: string | null;
   failureReason?: string | null;
   /**
    * Paid, but the person had already paid or had moved to a newer order. Refund it in Razorpay, then untick.
@@ -1496,6 +1516,7 @@ export interface OlympiadPeopleSelect<T extends boolean = true> {
   fee?: T;
   paymentStatus?: T;
   paidAt?: T;
+  paymentMethod?: T;
   payment?: T;
   razorpayPaymentId?: T;
   razorpayOrderId?: T;
@@ -1546,6 +1567,7 @@ export interface OlympiadPeopleSelect<T extends boolean = true> {
   notes?: T;
   registeredAt?: T;
   inviteSentAt?: T;
+  enteredBy?: T;
   meta?:
     | T
     | {
@@ -1571,6 +1593,9 @@ export interface OlympiadPaymentsSelect<T extends boolean = true> {
   people?: T;
   school?: T;
   paidAt?: T;
+  method?: T;
+  reference?: T;
+  receivedBy?: T;
   failureReason?: T;
   needsRefund?: T;
   updatedAt?: T;

@@ -73,7 +73,7 @@ export function OlympiadSummary() {
     ["Email", v.email],
     ["Parent", join(v.parentName, v.parentPhone)],
     ["Quiz", join(v.quizDate, v.quizTime)],
-    ["Fee", v.fee ? join(`₹${v.fee}`, v.paidAt ? `paid ${format(v.paidAt, dayTime)}` : "") : ""],
+    ["Fee", Number(v.fee) > 0 ? join(`₹${v.fee}`, v.paidAt ? `paid ${format(v.paidAt, dayTime)}` : "") : v.fee ? "Free" : ""],
     ["Came through", join(SOURCE_LABELS[v.source] ?? "", v.code)],
     ["Registered on", v.registeredAt ? format(v.registeredAt, dayTime) : ""],
   ];
