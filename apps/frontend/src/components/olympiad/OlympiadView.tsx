@@ -123,7 +123,7 @@ export interface OlympiadViewProps {
   lang: OlympiadLang;
   contact: SiteSettings;
   phase: OlympiadPhase;
-  /** "14 Dec 2026", from Olympiad → Settings. */
+  /** "31 Dec 2026", from Olympiad → Settings. */
   closesOn: string;
   consentText: string;
 }

@@ -64,7 +64,7 @@ export const OlympiadSettings: GlobalConfig = {
           label: "Registration closes",
           type: "date",
           required: true,
-          defaultValue: "2026-12-14T18:29:00.000Z",
+          defaultValue: "2026-12-31T18:29:00.000Z",
           admin: { date: { pickerAppearance: "dayAndTime" } },
         },
         { name: "feeLastDate", label: "Last date to pay the fee", type: "date", required: true, defaultValue: "2026-12-31T18:29:00.000Z" },

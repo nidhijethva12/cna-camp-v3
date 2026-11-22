@@ -149,10 +149,10 @@ export const olympiad: OlympiadContent = {
   meta: {
     title: "Adventure Olympiad 2.0: Eco-STEM Quiz & Himalaya Scholarship | CNA Camp",
     description:
-      "Eco-STEM quiz for students 13+, adults 18+ and teachers. 6 groups, free for Group 0 (govt schools), up to 100% scholarship. Registration open till 14 Dec 2026.",
+      "Eco-STEM quiz for students 13+, adults 18+ and teachers. 6 groups, free for Group 0 (govt schools), up to 100% scholarship. Registration open till 31 Dec 2026.",
     ogTitle: "Adventure Olympiad 2.0: a quiz that can take you to the Himalaya",
     ogDescription:
-      "6 groups, free for Group 0 (govt schools) and up to 100% scholarship on adventure camps. Registration open till 14 Dec 2026.",
+      "6 groups, free for Group 0 (govt schools) and up to 100% scholarship on adventure camps. Registration open till 31 Dec 2026.",
   },
   motto: "।। વિદ્યાર્થી દેવો ભવ: ।।",
   notices: [
@@ -224,7 +224,7 @@ export const olympiad: OlympiadContent = {
     },
   ],
   dates: [
-    { when: "15 Nov to 14 Dec 2026", title: "Registration", note: "Register and pay online on this page (till 11:59 PM).", key: true },
+    { when: "15 Nov to 31 Dec 2026", title: "Registration", note: "Register and pay online on this page (till 11:59 PM).", key: true },
     { when: "27 Dec 2026", title: "Last buffer date" },
     { when: "31 Dec 2026", title: "Last date to pay the fee" },
     { when: "Jan to Feb 2027 (tentative)", title: "Rounds 1 to 3, online quiz", note: "The quiz link comes on WhatsApp." },
@@ -241,7 +241,7 @@ export const olympiad: OlympiadContent = {
     {
       title: "Register and pay",
       text: "Choose your group, fill the form and pay online through Razorpay (no fee for Group 0). After registering, you can download your registration PDF with all your details and the payment receipt.",
-      when: "15 Nov to 14 Dec 2026",
+      when: "15 Nov to 31 Dec 2026",
     },
     {
       title: "Online quiz, Rounds 1 to 3",
