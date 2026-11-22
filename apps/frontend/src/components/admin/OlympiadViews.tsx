@@ -77,7 +77,7 @@ export function OlympiadViews({ stats, compact }: { stats: OlympiadStats; compac
       tone: stats.feeCheck ? "warn" : undefined,
     },
     {
-      label: "Waiting for parent",
+      label: "Documents pending",
       value: number.format(stats.invited),
       hint: "Added by a school",
       conditions: [["type", "equals", "invited"]],

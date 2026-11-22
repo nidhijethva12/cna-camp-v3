@@ -1,6 +1,6 @@
 import type { CollectionConfig, Field } from "payload";
 import { OFFICE_METHOD_LABELS, OFFICE_METHODS } from "../../../lib/olympiad/officePayments";
-import { canManageRecords, hiddenFromAuthors } from "../../access";
+import { canManageRecords, hiddenFromAuthors, roleOf } from "../../access";
 
 /** Fields only the site writes; an admin save keeps what is stored. */
 const siteOwned = (fields: Field[]): Field[] =>
@@ -11,7 +11,7 @@ const siteOwned = (fields: Field[]): Field[] =>
 /**
  * One Razorpay order: a single registration, or many students a school pays for at once. Written only
  * by the site (order creation and the Razorpay webhook), so it stays a true record. The team can only
- * clear "Refund this payment" once the refund is done in Razorpay.
+ * clear "Refund this payment" once the refund is done in Razorpay; an Admin can delete orders that were never paid.
  */
 export const OlympiadPayments: CollectionConfig = {
   slug: "olympiad-payments",
@@ -23,7 +23,13 @@ export const OlympiadPayments: CollectionConfig = {
     defaultColumns: ["razorpayOrderId", "people", "amount", "status", "mode", "paidBy", "createdAt"],
     listSearchableFields: ["razorpayOrderId", "razorpayPaymentId", "receipt"],
   },
-  access: { create: () => false, read: canManageRecords, update: canManageRecords, delete: () => false },
+  access: {
+    create: () => false,
+    read: canManageRecords,
+    update: canManageRecords,
+    // A paid order is the record of money received and stays. An Admin may clear orders nobody paid.
+    delete: ({ req }) => (roleOf(req.user) === "admin" ? { status: { not_equals: "paid" } } : false),
+  },
   defaultSort: "-createdAt",
   fields: [
     ...siteOwned([

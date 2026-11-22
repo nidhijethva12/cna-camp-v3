@@ -43,6 +43,17 @@ export const OlympiadAmbassadors: CollectionConfig = {
       type: "row",
       fields: [
         { name: "city", type: "text" },
+        {
+          name: "language",
+          label: "Message language",
+          type: "select",
+          defaultValue: "en",
+          options: [
+            { label: "English", value: "en" },
+            { label: "Gujarati", value: "gu" },
+          ],
+          admin: { description: "WhatsApp messages (approval, password link) are sent in this language." },
+        },
         { name: "role", label: "They are a", type: "select", options: ambassadorRoleOptions },
       ],
     },

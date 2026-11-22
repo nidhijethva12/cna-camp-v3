@@ -43,6 +43,17 @@ export const OlympiadSchools: CollectionConfig = {
         { name: "type", type: "select", required: true, options: institutionTypeOptions },
         { name: "district", type: "select", required: true, options: districtOptions },
         { name: "principal", label: "Principal's name", type: "text", required: true },
+        {
+          name: "language",
+          label: "Message language",
+          type: "select",
+          defaultValue: "en",
+          options: [
+            { label: "English", value: "en" },
+            { label: "Gujarati", value: "gu" },
+          ],
+          admin: { description: "WhatsApp messages (approval, password link) are sent in this language." },
+        },
       ],
     },
     {
@@ -81,6 +92,20 @@ export const OlympiadSchools: CollectionConfig = {
           ],
         },
       ],
+    },
+    {
+      name: "students",
+      label: "Students of this school",
+      type: "join",
+      collection: "olympiad-people",
+      on: "school",
+      defaultSort: "-createdAt",
+      defaultLimit: 25,
+      admin: {
+        allowCreate: false,
+        defaultColumns: ["regId", "name", "stage", "group", "fee", "paymentStatus", "type"],
+        description: "Everyone this school added from its sheet or who registered with its class link, with their payment status.",
+      },
     },
     loginFields("coordinator.email"),
     { name: "notes", type: "textarea", admin: { description: "Visible to the CNA team only." } },

@@ -22,6 +22,7 @@ import { Reviews } from "./cms/collections/Reviews";
 import { Trips } from "./cms/collections/Trips";
 import { Users } from "./cms/collections/Users";
 import { Videos } from "./cms/collections/Videos";
+import { withRowActions } from "./cms/fields";
 import { HomePage } from "./cms/globals/HomePage";
 import { OlympiadPage } from "./cms/globals/OlympiadPage";
 import { OlympiadSettings } from "./cms/globals/OlympiadSettings";
@@ -103,7 +104,7 @@ export default buildConfig({
     OlympiadAmbassadors,
     OlympiadSchools,
     Users,
-  ],
+  ].map(withRowActions),
   globals: [HomePage, SiteSettings, OlympiadSettings, OlympiadPage],
   localization: {
     locales: [

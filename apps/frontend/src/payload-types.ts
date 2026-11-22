@@ -88,7 +88,11 @@ export interface Config {
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
   };
-  collectionsJoins: {};
+  collectionsJoins: {
+    'olympiad-schools': {
+      students: 'olympiad-people';
+    };
+  };
   collectionsSelect: {
     trips: TripsSelect<false> | TripsSelect<true>;
     batches: BatchesSelect<false> | BatchesSelect<true>;
@@ -785,7 +789,7 @@ export interface OlympiadPerson {
   aadhaarHash?: string | null;
   fee?: number | null;
   /**
-   * Changes when the fee is paid online, or when an Admin uses “Record a payment” above.
+   * Changes when the fee is paid online. Only an Admin can change it by hand, with the payment box at the top of this page.
    */
   paymentStatus?: ('free' | 'pending' | 'paid' | 'failed') | null;
   paidAt?: string | null;
@@ -802,6 +806,10 @@ export interface OlympiadPerson {
   feeCheck?: boolean | null;
   source?: ('direct' | 'school' | 'ambassador') | null;
   code?: string | null;
+  /**
+   * Groups C, D and E. The Ambassador account is made automatically once the fee is paid.
+   */
+  wantsAmbassador?: boolean | null;
   school?: (string | null) | OlympiadSchool;
   ambassador?: (string | null) | OlympiadAmbassador;
   rounds?: {
@@ -941,6 +949,10 @@ export interface OlympiadSchool {
     | 'Valsad'
     | 'Outside Gujarat';
   principal: string;
+  /**
+   * WhatsApp messages (approval, password link) are sent in this language.
+   */
+  language?: ('en' | 'gu') | null;
   coordinator: {
     name: string;
     whatsapp: string;
@@ -955,6 +967,14 @@ export interface OlympiadSchool {
   stats?: {
     students?: number | null;
     paid?: number | null;
+  };
+  /**
+   * Everyone this school added from its sheet or who registered with its class link, with their payment status.
+   */
+  students?: {
+    docs?: (string | OlympiadPerson)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
   };
   /**
    * The partner logs in with the email above (coordinator.email). Approving emails them a link to choose their own password; you can also type one here and save.
@@ -1000,6 +1020,10 @@ export interface OlympiadAmbassador {
    */
   email?: string | null;
   city?: string | null;
+  /**
+   * WhatsApp messages (approval, password link) are sent in this language.
+   */
+  language?: ('en' | 'gu') | null;
   role?: ('teacher' | 'ngo' | 'coach' | 'past-camper' | 'parent' | 'other') | null;
   /**
    * Kept up to date automatically.
@@ -1523,6 +1547,7 @@ export interface OlympiadPeopleSelect<T extends boolean = true> {
   feeCheck?: T;
   source?: T;
   code?: T;
+  wantsAmbassador?: T;
   school?: T;
   ambassador?: T;
   rounds?:
@@ -1613,6 +1638,7 @@ export interface OlympiadAmbassadorsSelect<T extends boolean = true> {
   whatsapp?: T;
   email?: T;
   city?: T;
+  language?: T;
   role?: T;
   stats?:
     | T
@@ -1663,6 +1689,7 @@ export interface OlympiadSchoolsSelect<T extends boolean = true> {
   type?: T;
   district?: T;
   principal?: T;
+  language?: T;
   coordinator?:
     | T
     | {
@@ -1676,6 +1703,7 @@ export interface OlympiadSchoolsSelect<T extends boolean = true> {
         students?: T;
         paid?: T;
       };
+  students?: T;
   login?:
     | T
     | {
@@ -2014,12 +2042,14 @@ export interface OlympiadSetting {
       }[]
     | null;
   /**
-   * Paid registrations an Ambassador needs for each reward.
+   * What an Ambassador needs for each reward. Confirmed registrations are paid ones, plus free Group 0 ones, made through the Ambassador's link.
    */
   milestones?:
     | {
+        metric: 'clicks' | 'paid';
         paid: number;
         reward: string;
+        rewardGu?: string | null;
         id?: string | null;
       }[]
     | null;
@@ -2686,8 +2716,10 @@ export interface OlympiadSettingsSelect<T extends boolean = true> {
   milestones?:
     | T
     | {
+        metric?: T;
         paid?: T;
         reward?: T;
+        rewardGu?: T;
         id?: T;
       };
   retainUntil?: T;

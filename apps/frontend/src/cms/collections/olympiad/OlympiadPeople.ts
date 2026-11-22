@@ -164,7 +164,7 @@ export const OlympiadPeople: CollectionConfig = {
           index: true,
           options: [
             { label: "Reminder", value: "reminder" },
-            { label: "Invited by school", value: "invited" },
+            { label: "Added by school, documents pending", value: "invited" },
             { label: "Registered", value: "registered" },
           ],
         },
@@ -441,6 +441,16 @@ export const OlympiadPeople: CollectionConfig = {
                 },
                 { name: "code", label: "School code / referral code", type: "text", index: true },
               ],
+            },
+            {
+              name: "wantsAmbassador",
+              label: "Asked to be an Ambassador",
+              type: "checkbox",
+              ...apiOwned,
+              admin: {
+                readOnly: true,
+                description: "Groups C, D and E. The Ambassador account is made automatically once the fee is paid.",
+              },
             },
             {
               type: "row",

@@ -621,3 +621,37 @@ input[type="radio"] {
     margin: 0;
   }
 }
+
+// Edit / Delete on each list row, pinned to the right edge so they stay in view when the table scrolls sideways.
+.cna-row-actions {
+  display: flex;
+  gap: 6px;
+  justify-content: flex-end;
+  white-space: nowrap;
+
+  .btn {
+    margin: 0;
+  }
+}
+
+.cna-row-actions__delete {
+  --color: var(--theme-error-500);
+
+  color: var(--theme-error-500);
+}
+
+.table {
+  th#heading-rowActions,
+  td.cell-rowActions {
+    position: sticky;
+    right: 0;
+    z-index: 1;
+    width: 1%;
+    background: var(--theme-bg);
+    box-shadow: -8px 0 8px -8px rgb(0 0 0 / 25%);
+  }
+
+  th#heading-rowActions {
+    text-align: right;
+  }
+}
