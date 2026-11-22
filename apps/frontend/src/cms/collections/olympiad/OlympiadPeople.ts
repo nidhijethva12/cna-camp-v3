@@ -86,6 +86,15 @@ const recordPayment: PayloadHandler = async (req) => {
     : Response.json({ message: result.message }, { status: 400, headers: privateHeaders });
 };
 
+/** The page where this person's fee can be paid online: staff open it at the office, or send it to the person. */
+const payLink: PayloadHandler = async (req) => {
+  if (!handlesRecords(req.user)) return notFound();
+  const result = await backendAsk<{ payUrl: string }>("/olympiad/payments/office/order", { id: String(req.routeParams?.id ?? "") });
+  return result.ok
+    ? Response.json({ url: result.data.payUrl }, { headers: privateHeaders })
+    : Response.json({ message: result.message }, { status: 400, headers: privateHeaders });
+};
+
 /** An Admin changes a fee recorded at the office back to "not paid". */
 const undoPayment: PayloadHandler = async (req) => {
   if (roleOf(req.user) !== "admin" || !req.user?.email) return notFound();
@@ -129,6 +138,7 @@ export const OlympiadPeople: CollectionConfig = {
     { path: "/export", method: "get", handler: exportPeople },
     { path: "/:id/record-payment", method: "post", handler: recordPayment },
     { path: "/:id/undo-payment", method: "post", handler: undoPayment },
+    { path: "/:id/pay-link", method: "post", handler: payLink },
   ],
   hooks: {
     // Deleting a person deletes their documents too.

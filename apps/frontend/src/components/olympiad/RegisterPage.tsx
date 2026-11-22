@@ -112,8 +112,8 @@ export async function RegisterPage({
           <div className="mt-5">
             {staff && (
               <p role="status" className="mb-4 rounded-card border border-dark bg-dark px-4 py-3 text-[15px] text-light">
-                <b>Office registration.</b> You are filling this in for someone as {staff.email}. No online payment opens;{" "}
-                {staff.canRecordPayments ? "you record the fee at the end." : "an Admin records the fee afterwards."}
+                <b>Office registration.</b> You are filling this in for someone as {staff.email}. At the end the fee is paid online, or at
+                the office{staff.canRecordPayments ? " and you mark it as paid." : " and an Admin marks it as paid."}
               </p>
             )}
             {invited && (
