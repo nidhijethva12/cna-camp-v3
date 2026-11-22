@@ -17,10 +17,13 @@ import {
   type PaymentDoc,
   type PersonDoc,
 } from '../schemas.js';
-import { readToken } from '../tokens.js';
+import { createToken, DAY, readToken } from '../tokens.js';
 import { AmbassadorEnrolService } from './ambassador-enrol.service.js';
 import { CountersService } from './counters.service.js';
 import { NotifyService } from './notify.service.js';
+
+/** How long a "pay online" link made at the office stays good. */
+const PAY_LINK_DAYS = 30;
 
 /** What the website needs to open Razorpay Checkout; null while Razorpay isn't set up yet. */
 export type CheckoutOrder = {
@@ -230,6 +233,39 @@ export class PaymentsService {
       paid: true,
       regId: saved && hasRegId(saved) ? saved.regId! : '',
       receiptToken: saved ? receiptToken(saved) : null,
+    };
+  }
+
+  /**
+   * Staff take the fee online for a registration filled in at the office: an order to open Razorpay
+   * Checkout with right there, and the link to the pay page, to hand to the person instead.
+   */
+  async officeOrder(input: { id?: unknown }) {
+    const id = text(input.id, 24);
+    const person = isValidObjectId(id)
+      ? await this.people
+          .findOne({ _id: id, type: 'registered' })
+          .lean<PersonDoc>()
+      : null;
+    if (!person) throw new FormError('This registration was not found.');
+    if (person.paymentStatus === 'paid' || person.paymentStatus === 'free')
+      throw new FormError('This registration is already confirmed.');
+    if ((person.fee ?? 0) <= 0)
+      throw new FormError('This registration has no fee to pay.');
+    return {
+      regId: hasRegId(person) ? person.regId! : '',
+      name: person.name,
+      group: person.group ?? '',
+      fee: person.fee ?? 0,
+      order:
+        (await this.openOrderFor(person)) ??
+        (await this.openOrder([person], `form-${id}`, 'participant')),
+      prefill: {
+        name: person.name,
+        email: person.email ?? '',
+        contact: person.mobile ?? person.whatsapp,
+      },
+      payUrl: `${config.siteUrl}/olympiad/pay/${createToken('pay', id, PAY_LINK_DAYS * DAY)}`,
     };
   }
 

@@ -103,6 +103,13 @@ export class OlympiadController {
     return this.payments.recordOfficePayment(body);
   }
 
+  /** Staff take the fee online for a registration filled in at the office. */
+  @Post('payments/office/order')
+  @HttpCode(200)
+  officeOrder(@Body() body: { id?: unknown }) {
+    return this.payments.officeOrder(body);
+  }
+
   /** An Admin changes a fee recorded at the office back to "not paid". */
   @Post('payments/office/undo')
   @HttpCode(200)
