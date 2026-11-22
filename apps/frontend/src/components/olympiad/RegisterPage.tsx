@@ -10,6 +10,7 @@ import { olympiadApiLive } from "@/lib/olympiad";
 import { callBackend } from "@/lib/olympiad/backend";
 import type { RegistrationInput } from "@/lib/olympiad/registration";
 import { formatIstDate, getOlympiadConfig, registrationState } from "@/lib/olympiad/settings";
+import { currentStaff } from "@/lib/olympiad/staff";
 import { getOlympiadContent } from "@/lib/olympiadContent";
 
 const gujarati = Noto_Sans_Gujarati({ subsets: ["gujarati"], variable: "--font-gujarati", display: "swap" });
@@ -66,11 +67,24 @@ async function invitedAnswers(token: string): Promise<{ answers: Partial<Registr
   };
 }
 
-export async function RegisterPage({ lang, preview, invite }: { lang: RegLang; preview: boolean; invite?: string }) {
+export async function RegisterPage({
+  lang,
+  preview,
+  invite,
+  office = false,
+}: {
+  lang: RegLang;
+  preview: boolean;
+  invite?: string;
+  /** Opened from the admin: staff fill in the form for someone at the office. */
+  office?: boolean;
+}) {
   if (!olympiadApiLive) notFound();
   const config = await getOlympiadConfig();
   // Locally, ?preview shows the form before registration opens.
-  const state = preview && process.env.NODE_ENV !== "production" ? "open" : registrationState(config);
+  const staff = office ? await currentStaff() : null;
+  // Staff can register someone at the office outside the public dates.
+  const state = staff || (preview && process.env.NODE_ENV !== "production") ? "open" : registrationState(config);
   const t = registrationText[lang].page;
   const invited = invite ? await invitedAnswers(invite) : null;
   const [{ notices }, contact] = await Promise.all([getOlympiadContent("en"), getSiteSettings()]);
@@ -86,8 +100,22 @@ export async function RegisterPage({ lang, preview, invite }: { lang: RegLang; p
         >
           <ArrowLeft /> {t.back}
         </Link>
-        {state === "open" ? (
+        {office && !staff ? (
+          <div className="mt-5 rounded-card border border-line bg-light p-6">
+            <h1 className="h-sub">Office registration</h1>
+            <p className="mt-3 text-[17px]">Log in to the admin first, then open this page again from Olympiad → Master list.</p>
+            <Link href="/admin" className="btn btn-primary mt-5">
+              Go to the admin
+            </Link>
+          </div>
+        ) : state === "open" ? (
           <div className="mt-5">
+            {staff && (
+              <p role="status" className="mb-4 rounded-card border border-dark bg-dark px-4 py-3 text-[15px] text-light">
+                <b>Office registration.</b> You are filling this in for someone as {staff.email}. No online payment opens;{" "}
+                {staff.canRecordPayments ? "you record the fee at the end." : "an Admin records the fee afterwards."}
+              </p>
+            )}
             {invited && (
               <p className="mb-4 rounded-card border border-primary/25 bg-primary-soft px-4 py-3 text-[15px]" lang={lang}>
                 {t.invited(invited.schoolName)}
@@ -101,6 +129,7 @@ export async function RegisterPage({ lang, preview, invite }: { lang: RegLang; p
               quizSlots={config.quizSlots}
               rules={rules}
               phone={contact.phone}
+              office={staff ? { canRecordPayments: staff.canRecordPayments } : undefined}
             />
           </div>
         ) : (

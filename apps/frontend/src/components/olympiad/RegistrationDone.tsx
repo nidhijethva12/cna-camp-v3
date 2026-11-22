@@ -256,9 +256,16 @@ export function ReceiptCard({
               <dl className="mt-1.5">
                 {[
                   [p.amount, rupees(r.fee)],
-                  [p.method, p.online],
-                  [p.paymentId, r.razorpayPaymentId],
-                  [p.orderId, r.razorpayOrderId],
+                  ...(r.paymentMethod
+                    ? [
+                        [p.method, p.office[r.paymentMethod] ?? p.office.other],
+                        [p.officeReceipt, r.razorpayOrderId],
+                      ]
+                    : [
+                        [p.method, p.online],
+                        [p.paymentId, r.razorpayPaymentId],
+                        [p.orderId, r.razorpayOrderId],
+                      ]),
                   [p.paidOn, istDateTime(r.paidAt)],
                   [p.paidTo, `${site.trust.name}, Rajkot`],
                 ].map(([k, v]) => (

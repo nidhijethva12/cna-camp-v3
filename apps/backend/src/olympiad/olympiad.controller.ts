@@ -88,6 +88,28 @@ export class OlympiadController {
     return this.payments.confirmFromCheckout(body);
   }
 
+  /** An Admin records a fee taken at the CNA office. The website checks the Admin login first. */
+  @Post('payments/office')
+  @HttpCode(200)
+  officePayment(
+    @Body()
+    body: {
+      id?: unknown;
+      method?: unknown;
+      reference?: unknown;
+      by?: unknown;
+    },
+  ) {
+    return this.payments.recordOfficePayment(body);
+  }
+
+  /** An Admin changes a fee recorded at the office back to "not paid". */
+  @Post('payments/office/undo')
+  @HttpCode(200)
+  undoOfficePayment(@Body() body: { id?: unknown; by?: unknown }) {
+    return this.payments.undoOfficePayment(body);
+  }
+
   @Post('payments/resume')
   @HttpCode(200)
   resumePayment(@Body() body: { token?: unknown }) {

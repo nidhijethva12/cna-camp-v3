@@ -17,6 +17,7 @@ import {
 } from "@/lib/olympiad/registration";
 import { aadhaarHash, deleteFiles, encryptText, storeFile, type DocumentKind } from "@/lib/olympiad/secure";
 import { getOlympiadConfig, registrationState } from "@/lib/olympiad/settings";
+import { currentStaff } from "@/lib/olympiad/staff";
 import { getCms } from "@/lib/payload";
 
 interface Saved {
@@ -31,6 +32,8 @@ interface Saved {
   paid: boolean;
   order: CheckoutOrder;
   prefill: { name: string; email: string; contact: string };
+  /** Only for a registration staff filled in at the office: the person to record the fee for. */
+  id?: string;
 }
 
 export type RegistrationResult =
@@ -94,9 +97,12 @@ export async function submitRegistration(fd: FormData): Promise<RegistrationResu
   const step = firstIncompleteStep(input, has, config.quizSlots);
   if (step) return { ok: false, message: t.checkFields, fieldErrors: stepErrors(step, input, has, lang, config.quizSlots) };
 
+  // Office mode needs a signed-in staff member; the form's hidden field alone opens nothing.
+  const staff = fd.get("office") === "1" ? await currentStaff() : null;
+  if (fd.get("office") === "1" && !staff) return { ok: false, message: "Your admin login has ended. Log in to the admin again." };
   // Cheap checks first, so nothing is stored for bots or while registration is shut.
-  if (antiSpam(fd).website) return { ok: false, message: t.tryAgain };
-  if (registrationState(config) !== "open") return { ok: false, message: t.closed };
+  if (!staff && antiSpam(fd).website) return { ok: false, message: t.tryAgain };
+  if (!staff && registrationState(config) !== "open") return { ok: false, message: t.closed };
 
   const payload = await getCms();
   const aadhaar = digits(input.aadhaar);
@@ -161,7 +167,7 @@ export async function submitRegistration(fd: FormData): Promise<RegistrationResu
       agree: input.agree,
       refCode: (await cookies()).get("olympiad_ref")?.value ?? "",
       invite: String(fd.get("invite") ?? "").slice(0, 512),
-      ...antiSpam(fd),
+      ...(staff ? { office: staff.email } : antiSpam(fd)),
     },
   });
 

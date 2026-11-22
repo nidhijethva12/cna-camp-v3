@@ -1,4 +1,5 @@
 import type { CollectionConfig, Field } from "payload";
+import { OFFICE_METHOD_LABELS, OFFICE_METHODS } from "../../../lib/olympiad/officePayments";
 import { canManageRecords, hiddenFromAuthors } from "../../access";
 
 /** Fields only the site writes; an admin save keeps what is stored. */
@@ -29,7 +30,14 @@ export const OlympiadPayments: CollectionConfig = {
       {
         type: "row",
         fields: [
-          { name: "razorpayOrderId", label: "Razorpay order ID", type: "text", required: true, unique: true },
+          {
+            name: "razorpayOrderId",
+            label: "Order ID",
+            type: "text",
+            required: true,
+            unique: true,
+            admin: { description: "From Razorpay, or OFFICE-… for a fee recorded at the office." },
+          },
           { name: "razorpayPaymentId", label: "Razorpay payment ID", type: "text", index: true },
           { name: "receipt", type: "text", required: true },
         ],
@@ -77,6 +85,7 @@ export const OlympiadPayments: CollectionConfig = {
             options: [
               { label: "Participant or parent", value: "participant" },
               { label: "School", value: "school" },
+              { label: "Recorded at the office", value: "office" },
             ],
           },
         ],
@@ -84,6 +93,20 @@ export const OlympiadPayments: CollectionConfig = {
       { name: "people", type: "relationship", relationTo: "olympiad-people", hasMany: true, required: true },
       { name: "school", type: "relationship", relationTo: "olympiad-schools" },
       { name: "paidAt", type: "date" },
+      {
+        type: "row",
+        fields: [
+          {
+            name: "method",
+            label: "Paid at the office by",
+            type: "select",
+            options: OFFICE_METHODS.map((value) => ({ value, label: OFFICE_METHOD_LABELS[value] })),
+            admin: { description: "Empty for online (Razorpay) payments." },
+          },
+          { name: "reference", type: "text" },
+          { name: "receivedBy", label: "Recorded by", type: "text" },
+        ],
+      },
       { name: "failureReason", type: "text" },
     ]),
     {

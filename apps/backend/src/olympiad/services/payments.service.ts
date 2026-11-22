@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import type { Model, Types } from 'mongoose';
+import { isValidObjectId, type Model, type Types } from 'mongoose';
 import { config } from '../../config.js';
 import { background, FormError, text } from '../../common/forms.js';
 import {
@@ -11,7 +11,12 @@ import {
   razorpayReady,
 } from '../razorpay.js';
 import { hasRegId, receiptToken } from '../registration-ids.js';
-import { MODELS, type PaymentDoc, type PersonDoc } from '../schemas.js';
+import {
+  MODELS,
+  OFFICE_METHODS,
+  type PaymentDoc,
+  type PersonDoc,
+} from '../schemas.js';
 import { readToken } from '../tokens.js';
 import { AmbassadorEnrolService } from './ambassador-enrol.service.js';
 import { CountersService } from './counters.service.js';
@@ -121,13 +126,21 @@ export class PaymentsService {
         },
       },
     );
-    // Each newly paid person gets their Registration ID now, from the one counter for all groups.
-    // Someone who already has one keeps it.
+    await this.confirm({
+      _id: { $in: owed.map((p) => p._id) },
+      razorpayPaymentId: paymentId,
+    });
+    return true;
+  }
+
+  /**
+   * What follows a payment for the people `filter` selects: each newly paid person gets their
+   * Registration ID from the one counter for all groups (someone who already has one keeps it), then
+   * their confirmation, and their Ambassador account if they asked for one.
+   */
+  private async confirm(filter: Record<string, unknown>) {
     for (const person of await this.people
-      .find({
-        _id: { $in: owed.map((p) => p._id) },
-        razorpayPaymentId: paymentId,
-      })
+      .find(filter)
       .select('regId group')
       .lean<PersonDoc[]>()) {
       if (hasRegId(person)) continue;
@@ -140,19 +153,132 @@ export class PaymentsService {
         },
       );
     }
-    const paid = await this.people
-      .find({
-        _id: { $in: owed.map((p) => p._id) },
-        razorpayPaymentId: paymentId,
-      })
-      .lean<PersonDoc[]>();
+    const paid = await this.people.find(filter).lean<PersonDoc[]>();
     background('registration confirmations', async () => {
       for (const person of paid) {
         await this.notify.registrationConfirmed(person);
         await this.enrol.enrol(person);
       }
     });
-    return true;
+    return paid;
+  }
+
+  /**
+   * An Admin records a fee taken at the CNA office (cash, UPI, bank transfer or cheque). The
+   * registration is confirmed exactly as after an online payment: Registration ID, confirmation and
+   * receipt. If an online payment for the same person arrives later, it is flagged for a refund.
+   */
+  async recordOfficePayment(input: {
+    id?: unknown;
+    method?: unknown;
+    reference?: unknown;
+    by?: unknown;
+  }) {
+    const id = text(input.id, 24);
+    const method = OFFICE_METHODS.find((m) => m === input.method);
+    const by = text(input.by, 120).toLowerCase();
+    if (!isValidObjectId(id) || !method || !by)
+      throw new FormError('Choose how the fee was paid.');
+    const person = await this.people
+      .findOne({ _id: id, type: 'registered' })
+      .lean<PersonDoc>();
+    if (!person) throw new FormError('This registration was not found.');
+    if (person.paymentStatus === 'paid' || person.paymentStatus === 'free')
+      throw new FormError('This registration is already confirmed.');
+    const fee = person.fee ?? 0;
+    if (fee <= 0) throw new FormError('This registration has no fee to pay.');
+
+    const paidAt = new Date();
+    const orderId = `OFFICE-${paidAt.getTime().toString(36).toUpperCase()}-${id.slice(-6).toUpperCase()}`;
+    const payment = await this.payments.create({
+      razorpayOrderId: orderId,
+      receipt: `office-${id}`,
+      amount: fee * 100,
+      status: 'paid',
+      mode: 'single',
+      paidBy: 'office',
+      people: [person._id],
+      method,
+      reference: text(input.reference, 120),
+      receivedBy: by,
+      paidAt,
+    });
+    // Claimed atomically, so an online payment landing in the same instant can't also mark it paid.
+    const claimed = await this.people.findOneAndUpdate(
+      {
+        _id: person._id,
+        type: 'registered',
+        paymentStatus: { $nin: ['paid', 'free'] },
+      },
+      {
+        $set: {
+          paymentStatus: 'paid',
+          paidAt,
+          payment: payment._id,
+          paymentMethod: method,
+          razorpayOrderId: orderId,
+        },
+        $unset: { razorpayPaymentId: 1 },
+      },
+    );
+    if (!claimed) {
+      await this.payments.deleteOne({ _id: payment._id });
+      throw new FormError('This registration is already confirmed.');
+    }
+    const [saved] = await this.confirm({ _id: person._id });
+    return {
+      paid: true,
+      regId: saved && hasRegId(saved) ? saved.regId! : '',
+      receiptToken: saved ? receiptToken(saved) : null,
+    };
+  }
+
+  /**
+   * An Admin changes a registration back to "not paid": only for a fee recorded at the office (by
+   * mistake, or a cheque that bounced). The Registration ID stays, as it is never given twice; the
+   * receipt stops working until a payment is recorded again. Money paid online is refunded in
+   * Razorpay instead, so it can't be changed here.
+   */
+  async undoOfficePayment(input: { id?: unknown; by?: unknown }) {
+    const id = text(input.id, 24);
+    const by = text(input.by, 120).toLowerCase();
+    if (!isValidObjectId(id) || !by)
+      throw new FormError('This registration was not found.');
+    const person = await this.people
+      .findOne({ _id: id, type: 'registered' })
+      .lean<PersonDoc>();
+    if (!person) throw new FormError('This registration was not found.');
+    if (person.paymentStatus !== 'paid')
+      throw new FormError('This registration is not marked as paid.');
+    if (!person.paymentMethod)
+      throw new FormError(
+        'This fee was paid online through Razorpay, so it cannot be changed here. Refund it in Razorpay if needed.',
+      );
+    const changed = await this.people.findOneAndUpdate(
+      {
+        _id: person._id,
+        paymentStatus: 'paid',
+        paymentMethod: person.paymentMethod,
+      },
+      {
+        $set: { paymentStatus: 'pending' },
+        $unset: { paidAt: 1, paymentMethod: 1, payment: 1, razorpayOrderId: 1 },
+      },
+    );
+    if (!changed)
+      throw new FormError('This registration was just changed. Please reload.');
+    if (person.payment)
+      await this.payments.updateOne(
+        { _id: person.payment, paidBy: 'office', status: 'paid' },
+        {
+          $set: {
+            status: 'failed',
+            failureReason: `Changed back to not paid by ${by}`,
+          },
+        },
+      );
+    this.log.warn(`office payment for ${id} changed back to not paid by ${by}`);
+    return { paid: false };
   }
 
   /** A failed attempt marks people still waiting on this order as failed; they can try again. */
@@ -353,6 +479,7 @@ export class PaymentsService {
       razorpayPaymentId: p.razorpayPaymentId ?? '',
       rulesVersion: p.rules?.version ?? '',
       ambassador: Boolean(p.wantsAmbassador),
+      paymentMethod: p.paymentMethod ?? '',
     };
   }
 
