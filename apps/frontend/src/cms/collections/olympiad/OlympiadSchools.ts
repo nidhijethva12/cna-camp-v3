@@ -43,6 +43,17 @@ export const OlympiadSchools: CollectionConfig = {
         { name: "type", type: "select", required: true, options: institutionTypeOptions },
         { name: "district", type: "select", required: true, options: districtOptions },
         { name: "principal", label: "Principal's name", type: "text", required: true },
+        {
+          name: "language",
+          label: "Message language",
+          type: "select",
+          defaultValue: "en",
+          options: [
+            { label: "English", value: "en" },
+            { label: "Gujarati", value: "gu" },
+          ],
+          admin: { description: "WhatsApp messages (approval, password link) are sent in this language." },
+        },
       ],
     },
     {

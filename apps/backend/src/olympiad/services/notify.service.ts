@@ -10,6 +10,7 @@ import {
   reminderEmail,
 } from '../emails.js';
 import { MODELS, type PersonDoc } from '../schemas.js';
+import { receiptToken } from '../registration-ids.js';
 import { createToken, DAY } from '../tokens.js';
 import { MessagingService, type SendResult } from './messaging.service.js';
 import { formatIstDate, SettingsService } from './settings.service.js';
@@ -36,6 +37,8 @@ export interface ApprovedPartner {
   schoolName?: string;
   /** One-time link to choose the dashboard password; absent when CNA already set one. */
   setPasswordUrl?: string;
+  /** "gu" sends the Gujarati copy of the WhatsApp template. */
+  language?: string;
 }
 
 /** The registration receipt, ready to download as a PDF. The link works for two years. */
@@ -124,20 +127,24 @@ export class NotifyService {
     }
   }
 
-  /** Registration number on WhatsApp and the receipt by email, once the fee is confirmed. */
+  /** Registration number and receipt, on WhatsApp and by email, once the fee is confirmed. */
   async registrationConfirmed(person: PersonDoc) {
     const fee = person.fee ?? 0;
     if (!person.whatsappStopped) {
       const template = 'olympiad_registration_confirmed';
+      const gujarati = person.formLanguage === 'gu';
       const result = await this.messaging.whatsapp({
         to: person.whatsapp,
         template,
+        language: gujarati ? 'gu' : 'en',
         params: [
           firstName(person.name),
           person.regId ?? '',
           person.group ?? '',
           String(fee),
         ],
+        // The "Download receipt" button: the template holds the address, this is the part after it.
+        buttonParam: `${receiptToken(person)}${gujarati ? '?lang=gu' : ''}`,
       });
       await this.record(person._id, template, 'whatsapp', result);
     }
@@ -163,19 +170,27 @@ export class NotifyService {
 
   /** Welcome message with the new code, sent when CNA approves a School or an Ambassador. */
   async partnerApproved(p: ApprovedPartner) {
-    if (p.kind === 'school') {
-      await this.messaging.whatsapp({
-        to: p.whatsapp,
-        template: 'olympiad_school_approved',
-        params: [firstName(p.name), p.schoolName ?? '', p.code],
-      });
-    } else {
-      await this.messaging.whatsapp({
-        to: p.whatsapp,
-        template: 'olympiad_ambassador_approved',
-        params: [firstName(p.name), p.code],
-      });
-    }
+    // WhatsApp points at the dashboard; the link to choose a password goes by email only.
+    const whatsapp = await this.messaging.whatsapp(
+      p.kind === 'school'
+        ? {
+            to: p.whatsapp,
+            template: 'olympiad_school_approved',
+            language: p.language,
+            params: [firstName(p.name), p.schoolName ?? ''],
+          }
+        : {
+            to: p.whatsapp,
+            template: 'olympiad_ambassador_approved',
+            language: p.language,
+            // The Ambassador's own link, in the text so the message can be forwarded as it is.
+            params: [firstName(p.name), partnerLinkUrl(p.code)],
+          },
+    );
+    if (whatsapp.status === 'failed')
+      this.log.error(
+        `approval WhatsApp failed for ${p.code}: ${whatsapp.error}`,
+      );
     if (p.email) {
       const mail = partnerApprovedEmail({
         kind: p.kind,

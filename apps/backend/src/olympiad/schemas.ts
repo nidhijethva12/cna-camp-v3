@@ -305,6 +305,8 @@ export interface AmbassadorDoc {
   email?: string;
   city?: string;
   role?: string;
+  /** The language their WhatsApp messages come in: "en" or "gu". */
+  language?: string;
   stats?: { clicks?: number; registered?: number; paid?: number };
   rewards?: { milestone: number; givenOn: Date; note?: string }[];
   login?: PartnerLogin;
@@ -322,6 +324,7 @@ export const AmbassadorSchema = new Schema<AmbassadorDoc>(
     email: String,
     city: String,
     role: String,
+    language: String,
     stats: { clicks: Number, registered: Number, paid: Number },
     rewards: [{ milestone: Number, givenOn: Date, note: String }],
     login,
@@ -342,6 +345,8 @@ export interface SchoolDoc {
   district: string;
   principal: string;
   coordinator: { name: string; whatsapp: string; email: string };
+  /** The language the coordinator's WhatsApp messages come in: "en" or "gu". */
+  language?: string;
   stats?: { students?: number; paid?: number };
   login?: PartnerLogin;
   notes?: string;
@@ -359,6 +364,7 @@ export const SchoolSchema = new Schema<SchoolDoc>(
     district: String,
     principal: String,
     coordinator: { name: String, whatsapp: String, email: String },
+    language: String,
     stats: { students: Number, paid: Number },
     login,
     notes: String,

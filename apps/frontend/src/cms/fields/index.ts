@@ -1,4 +1,23 @@
-import type { Field } from "payload";
+import type { CollectionConfig, Field } from "payload";
+
+const rowActions: Field = {
+  name: "rowActions",
+  label: "Actions",
+  type: "ui",
+  admin: {
+    components: { Cell: "@/components/admin/RowActions#RowActions", Field: "@/components/admin/RowActions#NoField" },
+  },
+};
+
+/** Adds the Edit / Delete column as the last column of a collection's list in the admin. */
+export const withRowActions = (collection: CollectionConfig): CollectionConfig => ({
+  ...collection,
+  admin: {
+    ...collection.admin,
+    ...(collection.admin?.defaultColumns ? { defaultColumns: [...collection.admin.defaultColumns, rowActions.name] } : {}),
+  },
+  fields: [...collection.fields, rowActions],
+});
 
 const toSlug = (value: string) =>
   value

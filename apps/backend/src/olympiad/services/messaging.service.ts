@@ -5,6 +5,9 @@ import { config } from '../../config.js';
 /** Graph API version for the WhatsApp Cloud API; Meta supports each version for about two years. */
 const GRAPH_VERSION = 'v23.0';
 
+/** Every template exists in English; other languages are optional copies with the same name. */
+const DEFAULT_LANGUAGE = 'en';
+
 export type SendStatus = 'sent' | 'failed' | 'skipped';
 export interface SendResult {
   status: SendStatus;
@@ -21,6 +24,7 @@ export interface TemplateMessage {
   params: string[];
   /** Variable of a dynamic URL button, e.g. a token. */
   buttonParam?: string;
+  /** The template's language in Meta: "en" or "gu". A Gujarati copy that is not approved yet falls back to English. */
   language?: string;
 }
 
@@ -45,19 +49,28 @@ export class MessagingService {
     return Boolean(config.whatsapp.token && config.whatsapp.phoneNumberId);
   }
 
-  async whatsapp({
-    to,
-    template,
-    params,
-    buttonParam,
-    language = 'en',
-  }: TemplateMessage): Promise<SendResult> {
+  async whatsapp(message: TemplateMessage): Promise<SendResult> {
     if (!this.whatsappReady) {
       this.log.log(
-        `WhatsApp not configured, skipped ${template} to ${to.slice(0, 6)}…`,
+        `WhatsApp not configured, skipped ${message.template} to ${message.to.slice(0, 6)}…`,
       );
       return { status: 'skipped' };
     }
+    const language = message.language ?? DEFAULT_LANGUAGE;
+    const first = await this.sendTemplate(message, language);
+    if (first.status !== 'failed' || language === DEFAULT_LANGUAGE)
+      return first;
+    // The same template exists in English even when its copy in another language is missing or paused.
+    this.log.warn(
+      `${message.template} (${language}) failed: ${first.error}; sending the English one`,
+    );
+    return this.sendTemplate(message, DEFAULT_LANGUAGE);
+  }
+
+  private async sendTemplate(
+    { to, template, params, buttonParam }: TemplateMessage,
+    language: string,
+  ): Promise<SendResult> {
     const components: Record<string, unknown>[] = [];
     if (params.length)
       components.push({

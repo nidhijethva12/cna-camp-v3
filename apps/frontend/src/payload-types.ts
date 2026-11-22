@@ -949,6 +949,10 @@ export interface OlympiadSchool {
     | 'Valsad'
     | 'Outside Gujarat';
   principal: string;
+  /**
+   * WhatsApp messages (approval, password link) are sent in this language.
+   */
+  language?: ('en' | 'gu') | null;
   coordinator: {
     name: string;
     whatsapp: string;
@@ -1016,6 +1020,10 @@ export interface OlympiadAmbassador {
    */
   email?: string | null;
   city?: string | null;
+  /**
+   * WhatsApp messages (approval, password link) are sent in this language.
+   */
+  language?: ('en' | 'gu') | null;
   role?: ('teacher' | 'ngo' | 'coach' | 'past-camper' | 'parent' | 'other') | null;
   /**
    * Kept up to date automatically.
@@ -1630,6 +1638,7 @@ export interface OlympiadAmbassadorsSelect<T extends boolean = true> {
   whatsapp?: T;
   email?: T;
   city?: T;
+  language?: T;
   role?: T;
   stats?:
     | T
@@ -1680,6 +1689,7 @@ export interface OlympiadSchoolsSelect<T extends boolean = true> {
   type?: T;
   district?: T;
   principal?: T;
+  language?: T;
   coordinator?:
     | T
     | {

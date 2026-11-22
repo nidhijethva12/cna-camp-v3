@@ -272,6 +272,7 @@ export class PartnersService {
       city: me.city ?? null,
       approvedAt: me.approvedAt ?? null,
       code: me.code!,
+      language: me.language ?? null,
       shareUrl: partnerLinkUrl(me.code!),
       stats: { clicks, registered, paid },
       milestones: config.milestones,
@@ -306,6 +307,7 @@ export class PartnersService {
       type: me.type,
       district: me.district,
       coordinator: me.coordinator.name,
+      language: me.language ?? null,
       stats: {
         students: students.length,
         paid,
@@ -398,6 +400,7 @@ export class PartnersService {
         partner && !partner.login?.passwordHash
           ? passwordLinkFor(kind, partner)
           : undefined,
+      language: partner?.language,
     });
   }
 
@@ -509,6 +512,15 @@ export class PartnersService {
   async schoolPay(token: string | undefined) {
     const me = await this.session('school', token);
     if (!me) return null;
+    const waiting = await this.people.countDocuments({
+      school: me._id,
+      type: 'invited',
+    });
+    // One payment for the whole sheet: it opens only when no student is still missing a document.
+    if (waiting)
+      throw new FormError(
+        `Payment opens when every document is uploaded. ${waiting} ${waiting === 1 ? 'student still needs' : 'students still need'} documents.`,
+      );
     const owed = await this.owedBySchool(me._id);
     if (!owed.length)
       throw new FormError('There are no pending payments right now.');
