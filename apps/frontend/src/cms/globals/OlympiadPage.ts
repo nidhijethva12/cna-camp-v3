@@ -121,7 +121,7 @@ export const OlympiadPage: GlobalConfig = {
               type: "array",
               admin: { description: "In date order." },
               fields: [
-                row(text("when", { description: "e.g. 15 Nov to 14 Dec 2026" }), text("title")),
+                row(text("when", { description: "e.g. 15 Nov to 31 Dec 2026" }), text("title")),
                 text("note", { optional: true }),
                 { name: "key", label: "Highlight this date", type: "checkbox", defaultValue: false },
               ],

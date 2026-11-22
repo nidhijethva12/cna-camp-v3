@@ -21,7 +21,7 @@ export const rulesEn: RulesSection[] = [
     blocks: [
       {
         list: [
-          "Registration: 15 Nov to 14 Dec 2026 (till 11:59 PM)",
+          "Registration: 15 Nov to 31 Dec 2026 (till 11:59 PM)",
           "Last buffer date: 27 Dec 2026",
           "Last date to pay the fee: 31 Dec 2026",
           "Rounds 1, 2 and 3 (online): January to February 2027 (tentative)",
@@ -204,7 +204,7 @@ export const rulesGu: RulesSection[] = [
     blocks: [
       {
         list: [
-          "રજિસ્ટ્રેશન: 15 નવેમ્બર થી 14 ડિસેમ્બર 2026 (રાત્રે 11:59 સુધી)",
+          "રજિસ્ટ્રેશન: 15 નવેમ્બર થી 31 ડિસેમ્બર 2026 (રાત્રે 11:59 સુધી)",
           "છેલ્લી બફર તારીખ: 27 ડિસેમ્બર 2026",
           "ફી ભરવાની છેલ્લી તારીખ: 31 ડિસેમ્બર 2026",
           "રાઉન્ડ 1, 2 અને 3 (ઓનલાઇન): જાન્યુઆરી થી ફેબ્રુઆરી 2027 (સંભવિત)",

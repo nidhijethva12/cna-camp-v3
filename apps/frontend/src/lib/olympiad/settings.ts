@@ -20,7 +20,7 @@ export interface OlympiadConfig {
 
 const FALLBACK = {
   opensAt: "2026-11-14T18:30:00.000Z",
-  closesAt: "2026-12-14T18:29:00.000Z",
+  closesAt: "2026-12-31T18:29:00.000Z",
   feeLastDate: "2026-12-31T18:29:00.000Z",
   consentText: "I agree to get Olympiad updates from CNA on WhatsApp and email. I can stop them any time.",
   consentVersion: "2026-10",

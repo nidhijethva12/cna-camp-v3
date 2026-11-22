@@ -96,7 +96,7 @@ const guMonths: Record<string, string> = {
   Dec: "ડિસેમ્બર",
 };
 
-/** "14 Dec 2026" with the month in Gujarati. */
+/** "31 Dec 2026" with the month in Gujarati. */
 const guDate = (date: string) =>
   date.replace(/\b(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\b/, (m) => guMonths[m.slice(0, 3)]);
 
