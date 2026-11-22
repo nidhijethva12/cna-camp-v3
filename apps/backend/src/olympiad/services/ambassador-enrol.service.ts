@@ -41,6 +41,7 @@ export class AmbassadorEnrolService {
         setPasswordUrl: ambassador.login?.passwordHash
           ? undefined
           : passwordLinkFor('ambassador', ambassador),
+        language: ambassador.language,
       });
     } catch (err) {
       this.log.error(`making ${String(person._id)} an Ambassador failed`, err);
@@ -91,6 +92,8 @@ export class AmbassadorEnrolService {
         ...(person.email ? { email: person.email } : {}),
         ...(person.district ? { city: person.district } : {}),
         role: roleOf(person),
+        // Their messages come in the language they registered in.
+        ...(person.formLanguage ? { language: person.formLanguage } : {}),
         stats: { clicks: 0, registered: 0, paid: 0 },
         meta: { consentAt: person.registeredAt ?? new Date() },
       })

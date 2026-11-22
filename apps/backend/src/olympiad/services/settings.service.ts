@@ -26,6 +26,8 @@ export interface Milestone {
   metric: 'clicks' | 'paid';
   paid: number;
   reward: string;
+  /** The reward's name in Gujarati, for a dashboard shown in Gujarati. */
+  rewardGu?: string;
 }
 
 export interface Contact {
@@ -46,13 +48,24 @@ const FALLBACK = {
   consentVersion: '2026-10',
   // The admin's defaults for Ambassador milestones, until CNA saves the settings.
   milestones: [
-    { metric: 'clicks', paid: 50, reward: 'Olympiad Ambassador certificate' },
+    {
+      metric: 'clicks',
+      paid: 50,
+      reward: 'Olympiad Ambassador certificate',
+      rewardGu: 'ઓલમ્પિયાડ એમ્બેસેડર સર્ટિફિકેટ',
+    },
     {
       metric: 'paid',
       paid: 100,
       reward: '1 free registration coupon for Group C, D or E',
+      rewardGu: 'ગ્રુપ C, D કે E માટે 1 ફ્રી રજિસ્ટ્રેશન કૂપન',
     },
-    { metric: 'paid', paid: 200, reward: 'Free Manali trip' },
+    {
+      metric: 'paid',
+      paid: 200,
+      reward: 'Free Manali trip',
+      rewardGu: 'મનાલીની ફ્રી ટ્રિપ',
+    },
   ] as Milestone[],
 };
 
@@ -119,10 +132,11 @@ export class SettingsService {
         (doc.milestones as Partial<Milestone>[] | undefined) ??
         FALLBACK.milestones
       )
-        .map(({ metric, paid, reward }) => ({
+        .map(({ metric, paid, reward, rewardGu }) => ({
           metric: metric === 'clicks' ? ('clicks' as const) : ('paid' as const),
           paid: Number(paid) || 0,
           reward: String(reward ?? ''),
+          ...(rewardGu ? { rewardGu: String(rewardGu) } : {}),
         }))
         .filter((m) => m.paid > 0 && m.reward)
         .sort((a, b) => a.paid - b.paid),

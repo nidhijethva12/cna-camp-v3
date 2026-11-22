@@ -57,6 +57,8 @@ export interface PartnerRequestInput extends FormInput {
 }
 
 export interface SchoolSignupInput extends FormInput {
+  /** The language of the sign-up page ("en" or "gu"); later messages use it. */
+  lang?: unknown;
   name?: unknown;
   udise?: unknown;
   type?: unknown;
@@ -69,6 +71,7 @@ export interface SchoolSignupInput extends FormInput {
 }
 
 export interface AmbassadorSignupInput extends FormInput {
+  lang?: unknown;
   name?: unknown;
   whatsapp?: unknown;
   city?: unknown;
@@ -386,6 +389,7 @@ export class FormsService {
     const school = (
       await this.schools.create({
         ...details,
+        language: input.lang === 'gu' ? 'gu' : 'en',
         status: 'pending',
         meta: { consentAt: new Date(), ipHash: visitor },
         stats: { students: 0, paid: 0 },
@@ -492,6 +496,7 @@ export class FormsService {
       await this.ambassadors.create({
         ...details,
         whatsapp: whatsapp!,
+        language: input.lang === 'gu' ? 'gu' : 'en',
         status: 'pending',
         meta: { consentAt: new Date(), ipHash: visitor },
         stats: { clicks: 0, registered: 0, paid: 0 },

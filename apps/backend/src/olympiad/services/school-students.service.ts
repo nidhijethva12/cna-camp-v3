@@ -205,7 +205,7 @@ export class SchoolStudentsService {
         `For this age the class must be one of: ${classesFor(group).join(', ')}`,
       ],
       [Boolean(mobile), 'Mobile must be 10 digits'],
-      [!v.email || EMAIL.test(v.email), 'Email not valid'],
+      [EMAIL.test(v.email), 'Email missing or not valid'],
       [v.address.length >= 3 && isPlainText(v.address), 'Address missing'],
       [
         isDistrict(v.district),
@@ -260,7 +260,7 @@ export class SchoolStudentsService {
         orphan,
         mobile: mobile!,
         whatsapp: whatsapp!,
-        ...(v.email ? { email: v.email } : {}),
+        email: v.email,
         dob: v.dob,
         group,
         ...(asksStd6to8 ? { govtStd6to8: v.govtStd6to8 === 'yes' } : {}),
