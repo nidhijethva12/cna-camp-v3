@@ -127,17 +127,31 @@ export const OlympiadSettings: GlobalConfig = {
       name: "milestones",
       label: "Ambassador milestones",
       type: "array",
-      admin: { description: "Paid registrations an Ambassador needs for each reward." },
+      admin: {
+        description:
+          "What an Ambassador needs for each reward. Confirmed registrations are paid ones, plus free Group 0 ones, made through the Ambassador's link.",
+      },
       defaultValue: [
-        { paid: 25, reward: "Olympiad Ambassador certificate" },
-        { paid: 50, reward: "Name on the website Ambassadors list" },
-        { paid: 100, reward: "A free seat or escort seat on a camp (to be confirmed)" },
+        { metric: "clicks", paid: 50, reward: "Olympiad Ambassador certificate" },
+        { metric: "paid", paid: 100, reward: "1 free registration coupon for Group C, D or E" },
+        { metric: "paid", paid: 200, reward: "Free Manali trip" },
       ],
       fields: [
         {
           type: "row",
           fields: [
-            { name: "paid", label: "Paid registrations", type: "number", required: true, min: 1 },
+            {
+              name: "metric",
+              label: "Counts",
+              type: "select",
+              required: true,
+              defaultValue: "paid",
+              options: [
+                { label: "Link opens", value: "clicks" },
+                { label: "Confirmed registrations", value: "paid" },
+              ],
+            },
+            { name: "paid", label: "How many", type: "number", required: true, min: 1 },
             { name: "reward", type: "text", required: true },
           ],
         },

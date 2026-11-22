@@ -25,4 +25,6 @@ export interface ReceiptData {
   razorpayOrderId: string;
   razorpayPaymentId: string;
   rulesVersion: string;
+  /** Asked to become an Olympiad Ambassador while registering. */
+  ambassador?: boolean;
 }

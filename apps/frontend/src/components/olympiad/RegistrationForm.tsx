@@ -702,6 +702,17 @@ export function RegistrationForm({
                 />
               </Field>
             )}
+            {s.asksAmbassador && (
+              <Choice
+                label={t.step3.ambassador}
+                hint={t.step3.ambassadorHint}
+                required
+                value={input.ambassador}
+                error={err("ambassador")}
+                onChange={(v) => set("ambassador", v)}
+                options={(["yes", "no"] as const).map((v) => ({ value: v, label: t.step3.ambassadorOptions[v] }))}
+              />
+            )}
             <hr className="border-line" />
             <fieldset className="grid gap-2.5">
               <legend className="text-[15px] font-bold">{t.step3.achievements}</legend>
@@ -1252,6 +1263,7 @@ function reviewSections(input: RegistrationInput, files: Partial<Record<FileKey,
           `${input.teacherStatus ? t.step3.teacherStatus[input.teacherStatus] : ""}${input.subject ? ` · ${input.subject}` : ""}`,
         ],
         s.adult && [r.work, t.step3.workOptions[input.work] ?? input.work],
+        s.asksAmbassador && input.ambassador && [r.ambassador, t.step3.ambassadorOptions[input.ambassador]],
         [r.achievements, achievements.length ? achievements.join(", ") : r.none],
       ],
     },

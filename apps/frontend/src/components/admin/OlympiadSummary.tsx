@@ -2,7 +2,11 @@
 
 import { useDocumentInfo, useFormFields } from "@payloadcms/ui";
 
-const TYPE_LABELS: Record<string, string> = { reminder: "Reminder only", invited: "Invited by school", registered: "Registered" };
+const TYPE_LABELS: Record<string, string> = {
+  reminder: "Reminder only",
+  invited: "Added by school, documents pending",
+  registered: "Registered",
+};
 const PAYMENT_LABELS: Record<string, string> = { free: "Free (₹0)", paid: "Paid", pending: "Payment pending", failed: "Payment failed" };
 const PARTICIPANT_LABELS: Record<string, string> = { student: "Student", teacher: "Teacher", adult: "Other (18+)" };
 const SOURCE_LABELS: Record<string, string> = { direct: "Direct", school: "School", ambassador: "Ambassador" };

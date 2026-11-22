@@ -60,6 +60,8 @@ export interface RegistrationInput {
   teacherStatus: "current" | "retired" | "";
   subject: string;
   work: string;
+  /** Groups C, D and E: "yes" asks for an Olympiad Ambassador account, made once the fee is paid. */
+  ambassador: "yes" | "no" | "";
   achievements: string[];
   achievementOther: string;
   aadhaar: string;
@@ -110,6 +112,7 @@ export const emptyRegistration: RegistrationInput = {
   teacherStatus: "",
   subject: "",
   work: "",
+  ambassador: "",
   achievements: [],
   achievementOther: "",
   aadhaar: "",
@@ -145,6 +148,8 @@ export function shape(input: RegistrationInput) {
     /** A school ID card or bonafide certificate backs the free or lower fee. */
     proof: needsSchoolProof(group, govt),
     slot: student && picksQuizSlot(group, input.std),
+    /** Only adults can be Ambassadors: college students (C), other adults (D) and teachers (E). */
+    asksAmbassador: group !== "" && !isSchoolGroup(group),
   };
 }
 
@@ -227,6 +232,7 @@ export function stepErrors(step: number, input: RegistrationInput, files: Regist
     if (s.teacher && !input.teacherStatus) e.teacherStatus = t.choose;
     if (s.teacher && input.subject.trim()) text("subject", t.subject, 60);
     if (s.adult) text("work", t.select);
+    if (s.asksAmbassador && !input.ambassador) e.ambassador = t.choose;
     if (input.achievements.includes(ACHIEVEMENT_OTHER)) text("achievementOther", t.achievementOther, 120);
   }
 
@@ -277,6 +283,7 @@ export const FIELD_STEP: Partial<Record<RegistrationField, number>> = {
   contactMobile: 3,
   teacherStatus: 3,
   work: 3,
+  ambassador: 3,
   achievementOther: 3,
   photo: 4,
   aadhaar: 4,

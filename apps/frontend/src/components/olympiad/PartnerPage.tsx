@@ -7,6 +7,7 @@ import type { OlympiadLang } from "@/components/olympiad/LanguageSwitch";
 import { PartnerSignupForm } from "@/components/olympiad/PartnerSignupForm";
 import { FileText, GraduationCap, Megaphone, ShieldCheck, Trophy, UserCircleCheck, UsersThree } from "@/components/ui/icons";
 import { dashboardPath, partnerPageText, partnerPath, type PartnerKind } from "@/content/partnerPages";
+import { registrationPath } from "@/content/registration";
 import { olympiadApiLive } from "@/lib/olympiad";
 
 const gujarati = Noto_Sans_Gujarati({ subsets: ["gujarati"], variable: "--font-gujarati", display: "swap" });
@@ -85,7 +86,17 @@ export function PartnerPage({ kind, lang }: { kind: PartnerKind; lang: OlympiadL
               </Link>
             </p>
           </div>
-          <PartnerSignupForm kind={kind} lang={lang} />
+          {kind === "school" ? (
+            <PartnerSignupForm kind={kind} lang={lang} />
+          ) : (
+            <div className="grid gap-3 rounded-card border border-t-4 border-line border-t-primary bg-light p-6 shadow-card sm:p-7">
+              <h2 className="font-display text-[22px] font-extrabold">{t.ambassador.join.title}</h2>
+              <p className="text-[15.5px] text-muted">{t.ambassador.join.text}</p>
+              <Link href={registrationPath[lang]} className="btn btn-primary mt-1 w-full">
+                {t.ambassador.join.cta}
+              </Link>
+            </div>
+          )}
         </div>
       </section>
     </div>

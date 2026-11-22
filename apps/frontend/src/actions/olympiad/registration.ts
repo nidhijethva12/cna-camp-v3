@@ -153,6 +153,7 @@ export async function submitRegistration(fd: FormData): Promise<RegistrationResu
       teacherStatus: input.teacherStatus,
       subject: input.subject,
       work: input.work,
+      ambassador: s.asksAmbassador && input.ambassador === "yes",
       achievements,
       aadhaarLast4: aadhaar.slice(-4),
       ...secret,

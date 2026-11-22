@@ -82,6 +82,20 @@ export const OlympiadSchools: CollectionConfig = {
         },
       ],
     },
+    {
+      name: "students",
+      label: "Students of this school",
+      type: "join",
+      collection: "olympiad-people",
+      on: "school",
+      defaultSort: "-createdAt",
+      defaultLimit: 25,
+      admin: {
+        allowCreate: false,
+        defaultColumns: ["regId", "name", "stage", "group", "fee", "paymentStatus", "type"],
+        description: "Everyone this school added from its sheet or who registered with its class link, with their payment status.",
+      },
+    },
     loginFields("coordinator.email"),
     { name: "notes", type: "textarea", admin: { description: "Visible to the CNA team only." } },
     {

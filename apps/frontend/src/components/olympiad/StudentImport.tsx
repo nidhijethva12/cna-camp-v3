@@ -6,7 +6,7 @@ import { FileText } from "@/components/ui/icons";
 
 const initial: ImportState = { status: "idle" };
 
-/** "Upload Excel" / "Download template": adds students in bulk; each parent then finishes the form from a link. */
+/** "Download template" / "Upload Excel": the school enters every student's registration details in one sheet. */
 export function StudentImport() {
   const [state, action, pending] = useActionState(importStudents, initial);
 
@@ -14,10 +14,14 @@ export function StudentImport() {
     <div className="border-b border-line px-6 py-5">
       <p className="font-display font-bold">Add students from Excel</p>
       <p className="mt-1 max-w-[70ch] text-[14.5px] text-muted">
-        Fill the template with your students and upload it. Each parent gets an email link to add the photo, Aadhaar and consent; for a
-        student without a parent email, copy their link below and send it on WhatsApp.
+        The template has one column for each answer in the registration form. Fill one row per student and upload it. The group and fee are
+        worked out from the date of birth and your school&apos;s type. Then add each student&apos;s documents in the table below.
       </p>
       <form action={action} className="mt-3.5 flex flex-wrap items-center gap-3">
+        <label className="flex basis-full cursor-pointer items-start gap-2.5 text-[14.5px] leading-snug">
+          <input name="declared" type="checkbox" required className="mt-0.5 h-5 w-5 shrink-0 accent-primary" />
+          <span>We hold the consent of each student&apos;s parent or guardian to register them and share these details with CNA.</span>
+        </label>
         <a href="/school-dashboard/template" className="btn btn-outline min-h-0 px-4 py-2.5 text-[14px]" download>
           <FileText /> Download template
         </a>
@@ -40,7 +44,7 @@ export function StudentImport() {
             <b className="text-success">
               {state.added} {state.added === 1 ? "student" : "students"} added.
             </b>{" "}
-            {state.emailed ? `${state.emailed} parent ${state.emailed === 1 ? "email is" : "emails are"} on the way.` : ""}
+            {state.added ? "Add their documents in the table below." : ""}
           </p>
           {state.skipped && state.skipped.length > 0 && (
             <>

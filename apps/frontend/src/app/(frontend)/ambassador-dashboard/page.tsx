@@ -38,8 +38,6 @@ export default async function AmbassadorDashboardPage() {
   const { shareUrl, milestones } = ambassador;
   const { clicks, registered, paid } = ambassador.stats;
   const qr = await qrPng(shareUrl);
-  const next = milestones.find((m) => m.paid > paid);
-  const top = milestones.at(-1)?.paid ?? 1;
   const subtitle = [ambassador.role, ambassador.city, ambassador.approvedAt && `Ambassador since ${formatIstDate(ambassador.approvedAt)}`]
     .filter(Boolean)
     .join(" · ");
@@ -95,14 +93,13 @@ export default async function AmbassadorDashboardPage() {
             </a>
           </div>
 
-          <dl className="grid grid-cols-2 border-b border-line md:grid-cols-4">
+          <dl className="grid grid-cols-3 border-b border-line">
             {[
               { label: "Link opened", value: clicks, tone: "" },
               { label: "Registered", value: registered, tone: "" },
-              { label: "Paid", value: paid, tone: "text-success" },
-              { label: "To next milestone", value: next ? next.paid - paid : 0, tone: "text-primary" },
+              { label: "Confirmed", value: paid, tone: "text-success" },
             ].map((k) => (
-              <div key={k.label} className="border-r border-b border-line px-6 py-4.5 md:border-b-0">
+              <div key={k.label} className="border-r border-line px-4 py-4.5 last:border-r-0 sm:px-6">
                 <dt className="text-[13.5px] text-muted">{k.label}</dt>
                 <dd className={`font-display text-[28px] font-extrabold tabular-nums ${k.tone}`}>{k.value}</dd>
               </div>
@@ -110,54 +107,48 @@ export default async function AmbassadorDashboardPage() {
           </dl>
 
           {milestones.length > 0 && (
-            <>
-              <div className="border-b border-line px-6 py-5.5">
-                <p>
-                  {next ? (
-                    <>
-                      <b className="font-display">
-                        {paid} of {next.paid} paid registrations
-                      </b>{" "}
-                      to reach the next milestone
-                    </>
-                  ) : (
-                    <b className="font-display">Every milestone reached. Thank you!</b>
-                  )}
-                </p>
-                <div
-                  className="mt-2.5 h-3 overflow-hidden rounded-full bg-soft"
-                  role="progressbar"
-                  aria-valuemin={0}
-                  aria-valuemax={top}
-                  aria-valuenow={paid}
-                >
-                  <span className="block h-full rounded-full bg-primary" style={{ width: `${Math.min(100, (paid / top) * 100)}%` }} />
-                </div>
-                <div className="mt-2 flex justify-between text-[13px] text-muted">
-                  {[0, ...milestones.map((m) => m.paid)].map((n) => (
-                    <span key={n}>{n}</span>
-                  ))}
-                </div>
-              </div>
-              <ul className="grid gap-3 px-6 py-5.5 md:grid-cols-3">
-                {milestones.map((m) => {
-                  const reached = paid >= m.paid;
+            <div className="px-6 py-5.5">
+              <p className="font-display text-[18px] font-extrabold">Your rewards</p>
+              <ol className="mt-3.5 grid gap-3 md:grid-cols-3">
+                {milestones.map((m, i) => {
+                  const have = m.metric === "clicks" ? clicks : paid;
+                  const reached = have >= m.paid;
+                  const unit = m.metric === "clicks" ? "link opens" : "confirmed registrations";
                   return (
-                    <li key={m.paid} className={`rounded-card border p-4 ${reached ? "border-success bg-success/8" : "border-line"}`}>
-                      <b className="block font-display">
-                        {m.paid}
-                        {reached && " · Reached"}
-                      </b>
-                      <span className="text-[14px] text-muted">{m.reward}</span>
+                    <li
+                      key={`${m.metric}-${m.paid}`}
+                      className={`flex flex-col gap-2 rounded-card border p-4 ${reached ? "border-success bg-success/8" : "border-line"}`}
+                    >
+                      <span className="text-[13px] font-bold text-muted">Step {i + 1}</span>
+                      <b className="font-display text-[19px] leading-tight">{m.reward}</b>
+                      <span className="text-[14px] text-muted">
+                        {m.paid}+ {unit}
+                      </span>
+                      <div
+                        className="mt-auto h-2.5 overflow-hidden rounded-full bg-soft"
+                        role="progressbar"
+                        aria-label={`${m.reward}: ${Math.min(have, m.paid)} of ${m.paid} ${unit}`}
+                        aria-valuemin={0}
+                        aria-valuemax={m.paid}
+                        aria-valuenow={Math.min(have, m.paid)}
+                      >
+                        <span
+                          className={`block h-full rounded-full ${reached ? "bg-success" : "bg-primary"}`}
+                          style={{ width: `${Math.min(100, (have / m.paid) * 100)}%` }}
+                        />
+                      </div>
+                      <span className={`text-[13.5px] font-bold ${reached ? "text-success" : "text-primary"}`}>
+                        {reached ? "Unlocked. The CNA team will contact you." : `${have} of ${m.paid} · ${m.paid - have} to go`}
+                      </span>
                     </li>
                   );
                 })}
-              </ul>
-            </>
+              </ol>
+            </div>
           )}
-          <p className="px-6 pb-4 text-[13.5px] text-muted">
-            Only paid registrations count. You see counts only, not other people&apos;s personal details. Milestone rewards are decided by
-            CNA.
+          <p className="border-t border-line px-6 py-4 text-[13.5px] text-muted">
+            A registration is confirmed once its fee is paid; Group 0 is free and counts when the form is complete. You see counts only, not
+            other people&apos;s personal details. Rewards are given by the CNA team, who contact you when you unlock one.
           </p>
         </div>
       </div>
