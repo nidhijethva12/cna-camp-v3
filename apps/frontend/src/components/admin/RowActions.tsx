@@ -1,10 +1,11 @@
 "use client";
 
-import { ConfirmationModal, toast, useAuth, useConfig, useModal, useRouteCache } from "@payloadcms/ui";
+import { ConfirmationModal, EditIcon, toast, useAuth, useConfig, useModal, useRouteCache, useSelection } from "@payloadcms/ui";
+import { TrashIcon } from "@payloadcms/ui/icons/Trash";
 import Link from "next/link";
 import type { DefaultCellComponentProps } from "payload";
 
-/** Edit and Delete for one row of an admin list. Delete shows only to roles allowed to delete, and asks first. */
+/** Edit (pencil) and Delete (trash) for a ticked row of an admin list. Delete shows only to roles allowed to delete, and asks first. */
 export function RowActions({ collectionSlug, rowData }: DefaultCellComponentProps) {
   const {
     config: {
@@ -14,6 +15,7 @@ export function RowActions({ collectionSlug, rowData }: DefaultCellComponentProp
   const { permissions } = useAuth();
   const { openModal } = useModal();
   const { clearRouteCache } = useRouteCache();
+  const { selected } = useSelection();
 
   const id = String(rowData.id);
   const modalSlug = `delete-${collectionSlug}-${id}`;
@@ -36,19 +38,24 @@ export function RowActions({ collectionSlug, rowData }: DefaultCellComponentProp
     }
   };
 
+  // The icons show on ticked rows only, so the list stays calm until someone picks a row to act on.
+  if (!selected.get(rowData.id as number | string)) return null;
+
   return (
     <div className="cna-row-actions">
-      <Link href={`${admin}/collections/${collectionSlug}/${id}`} className="btn btn--style-secondary btn--size-small">
-        Edit
+      <Link href={`${admin}/collections/${collectionSlug}/${id}`} className="cna-row-actions__button" aria-label="Edit" title="Edit">
+        <EditIcon />
       </Link>
       {canDelete && (
         <>
           <button
             type="button"
-            className="btn btn--style-secondary btn--size-small cna-row-actions__delete"
+            className="cna-row-actions__button cna-row-actions__delete"
+            aria-label="Delete"
+            title="Delete"
             onClick={() => openModal(modalSlug)}
           >
-            Delete
+            <TrashIcon />
           </button>
           <ConfirmationModal
             modalSlug={modalSlug}

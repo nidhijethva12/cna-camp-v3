@@ -5,7 +5,9 @@ export function OfficeRegisterLink() {
       <a href="/olympiad/register?office" target="_blank" rel="noopener" className="btn btn--style-primary btn--size-small">
         Register someone at the office
       </a>
-      <span>Opens the registration form for you to fill in. No online payment opens; an Admin records the fee.</span>
+      <span>
+        Opens the registration form for you to fill in. At the end the fee is paid online, or at the office and an Admin marks it as paid.
+      </span>
     </div>
   );
 }

@@ -53,12 +53,36 @@ export function RecordPayment() {
     }
   };
 
+  /** Opens the page where this fee is paid online (Razorpay), for staff to use here or send to the person. */
+  const payOnline = async () => {
+    setBusy(true);
+    try {
+      const res = await fetch(`/api/olympiad-people/${id}/pay-link`, { method: "POST", credentials: "include" });
+      const data = (await res.json().catch(() => ({}))) as { url?: string; message?: string };
+      if (res.ok && data.url) window.open(data.url, "_blank", "noopener");
+      else toast.error(data.message ?? "The payment page could not be opened. Please try again.");
+    } catch {
+      toast.error("Could not reach the server. Please try again.");
+    } finally {
+      setBusy(false);
+    }
+  };
+  const online = (
+    <button type="button" className="btn btn--style-secondary btn--size-medium" onClick={payOnline} disabled={busy}>
+      Pay online instead
+    </button>
+  );
+
   if (!paid) {
     if (!isAdmin) {
       return (
-        <p className="cna-pay cna-pay--note">
-          The fee of {amount} is not paid yet. If it was paid at the office, ask an Admin to record it here.
-        </p>
+        <div className="cna-pay">
+          <p className="cna-pay__title">Payment status: not paid</p>
+          <p className="cna-pay__text">
+            The fee of {amount} can be paid online from here. If it was paid at the office, ask an Admin to mark it as paid.
+          </p>
+          <div className="cna-pay__row">{online}</div>
+        </div>
       );
     }
     const record = () => {
@@ -70,8 +94,8 @@ export function RecordPayment() {
       <div className="cna-pay">
         <p className="cna-pay__title">Payment status: not paid</p>
         <p className="cna-pay__text">
-          Record the fee of {amount} here only when you have received the money at the office. It gives the Registration ID and sends the
-          confirmation.
+          Take the fee of {amount} online, or mark it as paid when you have received the money at the office. Either way the person gets the
+          Registration ID and the confirmation.
         </p>
         <div className="cna-pay__row">
           <label>
@@ -97,6 +121,7 @@ export function RecordPayment() {
           <button type="button" className="btn btn--style-primary btn--size-medium" onClick={record} disabled={busy}>
             {busy ? "Saving…" : `Mark as paid (${amount})`}
           </button>
+          {online}
         </div>
       </div>
     );

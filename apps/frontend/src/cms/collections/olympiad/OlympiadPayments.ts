@@ -22,6 +22,10 @@ export const OlympiadPayments: CollectionConfig = {
     useAsTitle: "razorpayOrderId",
     defaultColumns: ["razorpayOrderId", "people", "amount", "status", "mode", "paidBy", "createdAt"],
     listSearchableFields: ["razorpayOrderId", "razorpayPaymentId", "receipt"],
+    // The list is the record of money received. Orders nobody paid stay in the database (a person's
+    // open payment window needs them) but are not shown.
+    baseFilter: () => ({ status: { equals: "paid" } }),
+    description: "Payments received, online and at the office. Orders that were opened but never paid are not listed.",
   },
   access: {
     create: () => false,

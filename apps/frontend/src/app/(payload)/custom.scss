@@ -629,15 +629,43 @@ input[type="radio"] {
   justify-content: flex-end;
   white-space: nowrap;
 
-  .btn {
-    margin: 0;
+}
+
+.cna-row-actions__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--theme-elevation-150);
+  border-radius: var(--style-radius-s);
+  background: var(--theme-elevation-0);
+  color: var(--theme-text);
+  cursor: pointer;
+
+  &:hover,
+  &:focus-visible {
+    border-color: var(--theme-text);
+  }
+
+  .icon {
+    width: 20px;
+    height: 20px;
   }
 }
 
 .cna-row-actions__delete {
-  --color: var(--theme-error-500);
-
   color: var(--theme-error-500);
+
+  &:hover,
+  &:focus-visible {
+    border-color: var(--theme-error-500);
+  }
+
+  .icon .stroke {
+    stroke: currentColor;
+  }
 }
 
 .table {
