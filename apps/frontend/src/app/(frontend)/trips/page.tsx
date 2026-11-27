@@ -1,3 +1,4 @@
+import { ExpeditionBanner } from "@/components/expedition/ExpeditionBanner";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { PageHead } from "@/components/layout/PageHead";
@@ -33,6 +34,8 @@ export default async function TripsPage() {
         title="Find your trip"
         text={`${trips.length} ways to get outdoors, from a one-day hill walk near Rajkot to 18 days on the Everest trail. Pick a region, a month or a level, and the list does the rest.`}
       />
+      <ExpeditionBanner className="mt-8" />
+
       <section className="wrap mt-8">
         <Suspense>
           <TripFilters

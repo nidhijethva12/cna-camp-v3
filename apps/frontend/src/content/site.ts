@@ -53,6 +53,7 @@ export const mainNav: NavItem[] = [
       ...regionOrder.map((r) => ({ label: regions[r].label, href: tripsByRegionHref(r) })),
       { label: "Girls-only & solo", href: "/travellers" },
       { label: "Group trips", href: "/group-trips" },
+      { label: "Sindhu Darshan Yatra", href: "/sarasvati-sindhu-darshan-yatra" },
     ],
   },
   { label: "Upcoming Batches", href: "/batches" },
@@ -76,6 +77,7 @@ export const footerNav = {
   company: [
     { label: "About us", href: "/about" },
     { label: "Olympiad", href: "/olympiad", hot: true },
+    { label: "Sindhu Darshan Yatra", href: "/sarasvati-sindhu-darshan-yatra" },
     { label: "Contact us", href: "/contact" },
   ],
   resources: [

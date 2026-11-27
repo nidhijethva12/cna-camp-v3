@@ -1,3 +1,4 @@
+import { ExpeditionBanner } from "@/components/expedition/ExpeditionBanner";
 import type { Metadata } from "next";
 import { Audiences } from "@/components/home/Audiences";
 import { Destinations } from "@/components/home/Destinations";
@@ -79,6 +80,7 @@ export default async function HomePage() {
     <>
       <Hero content={home.hero} />
       <TripSearch />
+      <ExpeditionBanner className="mt-12" />
       <StorySection />
       <UpcomingBatches batches={batches} />
       <PopularTrips trips={popular} />
