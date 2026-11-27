@@ -34,7 +34,8 @@ export function OlympiadPopup({ open }: { open: boolean }) {
 
   useEffect(() => {
     // Not on the Olympiad pages it advertises, nor on the partner dashboards.
-    if (["/olympiad", "/school-dashboard", "/ambassador-dashboard"].some((p) => pathname.startsWith(p))) return;
+    if (["/olympiad", "/school-dashboard", "/ambassador-dashboard", "/sarasvati-sindhu-darshan-yatra"].some((p) => pathname.startsWith(p)))
+      return;
     if (shownThisLoad) return;
 
     const timer = setTimeout(() => {

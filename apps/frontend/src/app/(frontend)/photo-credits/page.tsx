@@ -19,6 +19,7 @@ const otherSlots: Record<string, string> = {
   "campus-hingolgadh": "Hingolgadh camp",
   "olympiad-popup": "Olympiad pop-up",
   "olympiad-hero": "Olympiad page",
+  "sarasvati-sindhu-darshan-yatra": "Sarasvati - Sindhu Darshan Yatra page",
 };
 
 export default async function PhotoCreditsPage() {

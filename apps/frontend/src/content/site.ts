@@ -6,9 +6,9 @@ export const FOUNDED_YEAR = 1997;
 export const site = {
   name: "CNA Camp",
   legalName: "Climber Nature Adventure Club",
-  shortTagline: "Treks & camps since 1997, Rajkot",
+  shortTagline: "Treks & camps for 28+ years, Rajkot",
   description:
-    "Treks, camps and outdoor adventures across Gujarat, the Himalaya and North-East India since 1997. Backed by Saurashtra Education & Charitable Trust.",
+    "Treks, camps and outdoor adventures across Gujarat, the Himalaya and North-East India for 28+ years. Backed by Saurashtra Education & Charitable Trust.",
   trust: {
     name: "Saurashtra Education & Charitable Trust",
     registration: "E-5718/2000",

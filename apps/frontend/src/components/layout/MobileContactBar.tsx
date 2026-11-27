@@ -20,6 +20,7 @@ export function MobileContactBar({ whatsappHref, olympiadOpen }: { whatsappHref:
 
   return (
     <nav
+      data-contact-shortcut
       className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-2 border-t border-line bg-light pb-[env(safe-area-inset-bottom)] lg:hidden"
       aria-label="Quick contact"
     >
