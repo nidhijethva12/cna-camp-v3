@@ -3,7 +3,21 @@ import type { Batch, PhotoKey, Trip } from "../../types/content";
 /** Trip as written in the approved design: photos are design keys, files under /public/img. */
 export type SeedTrip = Omit<
   Trip,
-  "img" | "gallery" | "videoIds" | "updatedAt" | "included" | "notIncluded" | "faqs" | "isSample" | "seo"
+  | "img"
+  | "gallery"
+  | "videoIds"
+  | "updatedAt"
+  | "included"
+  | "notIncluded"
+  | "faqs"
+  | "isSample"
+  | "seo"
+  | "priceNote"
+  | "optional"
+  | "notice"
+  | "guideUrl"
+  | "heading"
+  | "tagline"
 > & {
   img: PhotoKey;
   gallery: PhotoKey[];

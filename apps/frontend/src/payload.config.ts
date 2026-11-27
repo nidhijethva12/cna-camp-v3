@@ -10,6 +10,7 @@ import { Batches } from "./cms/collections/Batches";
 import { Documents } from "./cms/collections/Documents";
 import { Donors } from "./cms/collections/Donors";
 import { Enquiries } from "./cms/collections/Enquiries";
+import { ExpeditionRegistrations } from "./cms/collections/expedition/ExpeditionRegistrations";
 import { Faqs } from "./cms/collections/Faqs";
 import { Media } from "./cms/collections/Media";
 import { Notices } from "./cms/collections/Notices";
@@ -23,6 +24,7 @@ import { Trips } from "./cms/collections/Trips";
 import { Users } from "./cms/collections/Users";
 import { Videos } from "./cms/collections/Videos";
 import { withRowActions } from "./cms/fields";
+import { ExpeditionSettings } from "./cms/globals/ExpeditionSettings";
 import { HomePage } from "./cms/globals/HomePage";
 import { OlympiadPage } from "./cms/globals/OlympiadPage";
 import { OlympiadSettings } from "./cms/globals/OlympiadSettings";
@@ -100,12 +102,13 @@ export default buildConfig({
     Videos,
     Enquiries,
     OlympiadPeople,
+    ExpeditionRegistrations,
     OlympiadPayments,
     OlympiadAmbassadors,
     OlympiadSchools,
     Users,
   ].map(withRowActions),
-  globals: [HomePage, SiteSettings, OlympiadSettings, OlympiadPage],
+  globals: [HomePage, SiteSettings, OlympiadSettings, OlympiadPage, ExpeditionSettings],
   localization: {
     locales: [
       { code: "en", label: "English" },

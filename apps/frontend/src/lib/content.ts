@@ -59,6 +59,8 @@ function toTrip(doc: TripDoc): Trip {
   return {
     slug: doc.slug,
     name: doc.name,
+    heading: doc.heading || null,
+    tagline: doc.tagline || null,
     region: doc.region,
     state: doc.location,
     type: tripTypes[doc.type],
@@ -66,8 +68,9 @@ function toTrip(doc: TripDoc): Trip {
     nights: doc.nights,
     altitude: doc.altitudeM ? `${doc.altitudeM.toLocaleString("en-IN")} m` : null,
     difficulty: capitalise<Difficulty>(doc.difficulty),
-    // Prices stay saved in the admin but are hidden for now: every trip shows "On request".
-    price: SHOW_TRIP_PRICES ? (doc.priceFrom ?? null) : null,
+    // Prices stay saved in the admin but are hidden for now: a trip shows its price only when its own switch is on.
+    price: SHOW_TRIP_PRICES || doc.showPrice ? (doc.priceFrom ?? null) : null,
+    priceNote: doc.priceNote || null,
     img: toImage(doc.heroImage),
     gallery: images(doc.gallery),
     updatedAt: doc.updatedAt,
@@ -85,7 +88,16 @@ function toTrip(doc: TripDoc): Trip {
     reach: doc.howToReach || null,
     included: texts(doc.included),
     notIncluded: texts(doc.notIncluded),
-    faqs: doc.faqs?.length ? doc.faqs.map(({ question, answer }) => ({ question, answer })) : null,
+    optional: texts(doc.optionalExtras) ?? [],
+    notice: doc.notice?.text ? { title: doc.notice.title || "Please note", text: doc.notice.text } : null,
+    guideUrl: (typeof doc.guide === "object" && doc.guide?.url) || null,
+    faqs: doc.faqs?.length
+      ? doc.faqs.map(({ question, answer, linkLabel, linkHref }) => ({
+          question,
+          answer,
+          ...(linkLabel && linkHref ? { link: { label: linkLabel, href: linkHref } } : {}),
+        }))
+      : null,
     isSample: Boolean(doc.isSample),
     seo: toSeo(doc.seo),
   };

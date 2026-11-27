@@ -140,8 +140,14 @@ const bookingFaq: Faq = {
   link: { label: "Read the cancellation policy", href: "/cancellation" },
 };
 
-/** The trip's own FAQs, always ending with how booking and cancellation work. */
-export const tripFaqs = (t: Trip): Faq[] => [...(t.faqs ?? defaultFaqs(t)), bookingFaq];
+/**
+ * The trip's own FAQs, ending with how booking and cancellation work. A trip whose own FAQs already
+ * link to the cancellation policy has its own booking answer, so the standard one is left out.
+ */
+export const tripFaqs = (t: Trip): Faq[] => {
+  const own = t.faqs ?? defaultFaqs(t);
+  return own.some((f) => f.link?.href === bookingFaq.link?.href) ? own : [...own, bookingFaq];
+};
 
 export const tripDescription = (t: Trip) =>
   t.seo.description ?? `${t.summary} ${durationShort(t)} ${t.type.toLowerCase()} in ${t.state} with CNA, Rajkot.`;

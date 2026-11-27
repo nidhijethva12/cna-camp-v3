@@ -57,10 +57,14 @@ const englishMessages: CheckoutMessages = {
   payFailed: "The payment didn't go through. Please try again.",
 };
 
-/** Opens Razorpay Checkout for an order the Olympiad API created (the amount is fixed by the order). */
+/** Opens Razorpay Checkout for an order the API created (the amount is fixed by the order). */
 export async function openCheckout(
   order: NonNullable<CheckoutOrder>,
-  details: { description: string; prefill: { name: string; email: string; contact: string } },
+  details: {
+    description: string;
+    prefill: { name: string; email: string; contact: string };
+    /** The title of the payment window. */ name?: string;
+  },
   { onPaid, onStopped }: CheckoutCallbacks,
   messages: CheckoutMessages = englishMessages,
 ) {
@@ -75,7 +79,7 @@ export async function openCheckout(
     order_id: order.orderId,
     amount: order.amount,
     currency: "INR",
-    name: "Adventure Olympiad · CNA",
+    name: details.name ?? "Adventure Olympiad · CNA",
     description: details.description,
     image: `${window.location.origin}/img/logo.png`,
     prefill: { ...details.prefill, contact: details.prefill.contact.replace(/\s/g, "") },

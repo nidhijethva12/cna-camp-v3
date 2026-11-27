@@ -26,7 +26,22 @@ export const Trips: CollectionConfig = {
         {
           label: "Basics",
           fields: [
-            { name: "name", type: "text", required: true },
+            { name: "name", type: "text", required: true, admin: { description: "Short name for cards, lists and the enquiry form." } },
+            {
+              name: "heading",
+              label: "Heading on the trip page",
+              type: "text",
+              admin: {
+                description:
+                  "A longer title for the trip's own page, e.g. “Statue of Unity Trip: Ekta Nagar & Poicha”. Empty uses the name.",
+              },
+            },
+            {
+              name: "tagline",
+              type: "textarea",
+              maxLength: 240,
+              admin: { description: "The line under the heading on the trip's own page. Empty uses the card summary." },
+            },
             {
               name: "summary",
               type: "textarea",
@@ -70,6 +85,23 @@ export const Trips: CollectionConfig = {
               ],
             },
             {
+              type: "row",
+              fields: [
+                {
+                  name: "showPrice",
+                  label: "Show this price on the site",
+                  type: "checkbox",
+                  defaultValue: false,
+                  admin: { description: "Off shows “On request”, as on the other trips." },
+                },
+                {
+                  name: "priceNote",
+                  type: "text",
+                  admin: { description: "Small line under the price, e.g. “Per person. Age 8 years and above.”" },
+                },
+              ],
+            },
+            {
               name: "months",
               type: "select",
               hasMany: true,
@@ -108,12 +140,30 @@ export const Trips: CollectionConfig = {
             },
             { name: "howToReach", type: "textarea", admin: { description: "Empty says the group travels together from the start city." } },
             {
+              name: "notice",
+              label: "“Please note” box",
+              type: "group",
+              admin: { description: "Shown just above the trip FAQs. Leave the text empty for no box." },
+              fields: [
+                { name: "title", type: "text", defaultValue: "Please note" },
+                { name: "text", type: "textarea" },
+              ],
+            },
+            {
+              name: "guide",
+              label: "Trip guide (PDF)",
+              type: "upload",
+              relationTo: "documents",
+              admin: { description: "Adds “Download the trip guide (PDF)” under the price box." },
+            },
+            {
               type: "collapsible",
               label: "Lists (optional, empty uses the standard text)",
               admin: { initCollapsed: true },
               fields: [
                 textList("included", "What's included"),
                 textList("notIncluded", "Not included"),
+                textList("optionalExtras", "Optional, at your own cost"),
                 textList("packingList", "What to carry"),
                 {
                   name: "faqs",
@@ -122,6 +172,17 @@ export const Trips: CollectionConfig = {
                   fields: [
                     { name: "question", type: "text", required: true },
                     { name: "answer", type: "textarea", required: true },
+                    {
+                      type: "row",
+                      fields: [
+                        {
+                          name: "linkLabel",
+                          type: "text",
+                          admin: { description: "Optional link after the answer, e.g. “Read the cancellation policy”." },
+                        },
+                        { name: "linkHref", type: "text", admin: { description: "Where it goes, e.g. /cancellation" } },
+                      ],
+                    },
                   ],
                 },
               ],

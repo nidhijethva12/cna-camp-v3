@@ -26,5 +26,7 @@ export function dateRange(start: string, end: string) {
   const day = (d: string) => String(Number(d));
   const mon = (m: string) => m.charAt(0) + m.slice(1).toLowerCase();
   [a.month, b.month] = [mon(a.month), mon(b.month)];
+  // A day trip starts and ends on the same date.
+  if (start === end) return `${day(a.day)} ${a.month}`;
   return a.month === b.month ? `${day(a.day)} to ${day(b.day)} ${b.month}` : `${day(a.day)} ${a.month} to ${day(b.day)} ${b.month}`;
 }

@@ -7,7 +7,7 @@ import { OlympiadPopup } from "@/components/olympiad/OlympiadPopup";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { FOUNDED_YEAR, site } from "@/content/site";
+import { site } from "@/content/site";
 import { getSiteSettings, type SiteSettings } from "@/lib/content";
 import { getOlympiadPhase } from "@/lib/olympiad/settings";
 import { metaPixelId } from "@/lib/metaPixel";
@@ -52,7 +52,6 @@ const organizationLd = (contact: SiteSettings) => ({
   logo: absoluteUrl("/img/logo.png"),
   image: absoluteUrl("/img/valley-wide.jpg"),
   description: site.description,
-  foundingDate: String(FOUNDED_YEAR),
   telephone: contact.phoneHref.replace("tel:", ""),
   email: contact.email,
   address: {

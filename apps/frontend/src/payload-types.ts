@@ -79,6 +79,7 @@ export interface Config {
     videos: Video;
     enquiries: Enquiry;
     'olympiad-people': OlympiadPerson;
+    'expedition-registrations': ExpeditionRegistration;
     'olympiad-payments': OlympiadPayment;
     'olympiad-ambassadors': OlympiadAmbassador;
     'olympiad-schools': OlympiadSchool;
@@ -106,6 +107,7 @@ export interface Config {
     videos: VideosSelect<false> | VideosSelect<true>;
     enquiries: EnquiriesSelect<false> | EnquiriesSelect<true>;
     'olympiad-people': OlympiadPeopleSelect<false> | OlympiadPeopleSelect<true>;
+    'expedition-registrations': ExpeditionRegistrationsSelect<false> | ExpeditionRegistrationsSelect<true>;
     'olympiad-payments': OlympiadPaymentsSelect<false> | OlympiadPaymentsSelect<true>;
     'olympiad-ambassadors': OlympiadAmbassadorsSelect<false> | OlympiadAmbassadorsSelect<true>;
     'olympiad-schools': OlympiadSchoolsSelect<false> | OlympiadSchoolsSelect<true>;
@@ -124,12 +126,14 @@ export interface Config {
     'site-settings': SiteSetting;
     'olympiad-settings': OlympiadSetting;
     'olympiad-page': OlympiadPage;
+    'expedition-settings': ExpeditionSetting;
   };
   globalsSelect: {
     'home-page': HomePageSelect<false> | HomePageSelect<true>;
     'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
     'olympiad-settings': OlympiadSettingsSelect<false> | OlympiadSettingsSelect<true>;
     'olympiad-page': OlympiadPageSelect<false> | OlympiadPageSelect<true>;
+    'expedition-settings': ExpeditionSettingsSelect<false> | ExpeditionSettingsSelect<true>;
   };
   locale: 'en' | 'gu';
   widgets: {
@@ -165,7 +169,18 @@ export interface UserAuthOperations {
  */
 export interface Trip {
   id: string;
+  /**
+   * Short name for cards, lists and the enquiry form.
+   */
   name: string;
+  /**
+   * A longer title for the trip's own page, e.g. “Statue of Unity Trip: Ekta Nagar & Poicha”. Empty uses the name.
+   */
+  heading?: string | null;
+  /**
+   * The line under the heading on the trip's own page. Empty uses the card summary.
+   */
+  tagline?: string | null;
   /**
    * One or two lines for trip cards.
    */
@@ -194,6 +209,14 @@ export interface Trip {
    * Departure city, e.g. Ahmedabad
    */
   startsFrom: string;
+  /**
+   * Off shows “On request”, as on the other trips.
+   */
+  showPrice?: boolean | null;
+  /**
+   * Small line under the price, e.g. “Per person. Age 8 years and above.”
+   */
+  priceNote?: string | null;
   /**
    * Months this trip runs.
    */
@@ -230,6 +253,17 @@ export interface Trip {
    * Empty says the group travels together from the start city.
    */
   howToReach?: string | null;
+  /**
+   * Shown just above the trip FAQs. Leave the text empty for no box.
+   */
+  notice?: {
+    title?: string | null;
+    text?: string | null;
+  };
+  /**
+   * Adds “Download the trip guide (PDF)” under the price box.
+   */
+  guide?: (string | null) | Document;
   included?:
     | {
         text: string;
@@ -237,6 +271,12 @@ export interface Trip {
       }[]
     | null;
   notIncluded?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  optionalExtras?:
     | {
         text: string;
         id?: string | null;
@@ -252,6 +292,14 @@ export interface Trip {
     | {
         question: string;
         answer: string;
+        /**
+         * Optional link after the answer, e.g. “Read the cancellation policy”.
+         */
+        linkLabel?: string | null;
+        /**
+         * Where it goes, e.g. /cancellation
+         */
+        linkHref?: string | null;
         id?: string | null;
       }[]
     | null;
@@ -297,6 +345,28 @@ export interface Trip {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "documents".
+ */
+export interface Document {
+  id: string;
+  /**
+   * What the PDF is, e.g. “Olympiad 2.0 official notice”.
+   */
+  title: string;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media".
  */
 export interface Media {
@@ -313,7 +383,6 @@ export interface Media {
    * Tick only for CNA's own photos. Unticked photos must be replaced or credited before launch.
    */
   ownedByCna?: boolean | null;
-  _objectKey?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -362,7 +431,6 @@ export interface Video {
    */
   ambient?: boolean | null;
   showInGallery?: boolean | null;
-  _objectKey?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -616,30 +684,6 @@ export interface Notice {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "documents".
- */
-export interface Document {
-  id: string;
-  /**
-   * What the PDF is, e.g. “Olympiad 2.0 official notice”.
-   */
-  title: string;
-  prefix?: string | null;
-  _objectKey?: string | null;
-  updatedAt: string;
-  createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "enquiries".
  */
 export interface Enquiry {
@@ -863,6 +907,8 @@ export interface OlympiadPerson {
   createdAt: string;
 }
 /**
+ * Payments received, online and at the office. Orders that were opened but never paid are not listed.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "olympiad-payments".
  */
@@ -1065,6 +1111,49 @@ export interface OlympiadAmbassador {
   createdAt: string;
 }
 /**
+ * Everyone who filled the form. “Paid” people get the Zoom link on WhatsApp.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "expedition-registrations".
+ */
+export interface ExpeditionRegistration {
+  id: string;
+  regId?: string | null;
+  status?: ('pending' | 'paid' | 'failed') | null;
+  fee?: number | null;
+  name?: string | null;
+  whatsapp?: string | null;
+  district?: string | null;
+  age?: number | null;
+  gender?: ('female' | 'male' | 'undisclosed') | null;
+  paidAt?: string | null;
+  razorpayPaymentId?: string | null;
+  razorpayOrderId?: string | null;
+  message?: {
+    status?: ('waiting' | 'skipped' | 'sent' | 'delivered' | 'read' | 'failed') | null;
+    at?: string | null;
+    error?: string | null;
+    providerId?: string | null;
+  };
+  reminder?: {
+    status?: ('waiting' | 'skipped' | 'sent' | 'delivered' | 'read' | 'failed') | null;
+    at?: string | null;
+    error?: string | null;
+    providerId?: string | null;
+  };
+  failureReason?: string | null;
+  /**
+   * This person paid twice. Refund the second payment in Razorpay.
+   */
+  needsRefund?: boolean | null;
+  orders?: string[] | null;
+  resends?: number | null;
+  agreedAt?: string | null;
+  ipHash?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
@@ -1137,6 +1226,10 @@ export interface PayloadLockedDocument {
         value: string | OlympiadPerson;
       } | null)
     | ({
+        relationTo: 'expedition-registrations';
+        value: string | ExpeditionRegistration;
+      } | null)
+    | ({
         relationTo: 'olympiad-payments';
         value: string | OlympiadPayment;
       } | null)
@@ -1200,6 +1293,8 @@ export interface PayloadMigration {
  */
 export interface TripsSelect<T extends boolean = true> {
   name?: T;
+  heading?: T;
+  tagline?: T;
   summary?: T;
   region?: T;
   location?: T;
@@ -1210,6 +1305,8 @@ export interface TripsSelect<T extends boolean = true> {
   altitudeM?: T;
   priceFrom?: T;
   startsFrom?: T;
+  showPrice?: T;
+  priceNote?: T;
   months?: T;
   activities?:
     | T
@@ -1228,6 +1325,13 @@ export interface TripsSelect<T extends boolean = true> {
       };
   itineraryConfirmed?: T;
   howToReach?: T;
+  notice?:
+    | T
+    | {
+        title?: T;
+        text?: T;
+      };
+  guide?: T;
   included?:
     | T
     | {
@@ -1235,6 +1339,12 @@ export interface TripsSelect<T extends boolean = true> {
         id?: T;
       };
   notIncluded?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  optionalExtras?:
     | T
     | {
         text?: T;
@@ -1251,6 +1361,8 @@ export interface TripsSelect<T extends boolean = true> {
     | {
         question?: T;
         answer?: T;
+        linkLabel?: T;
+        linkHref?: T;
         id?: T;
       };
   heroImage?: T;
@@ -1387,7 +1499,6 @@ export interface MediaSelect<T extends boolean = true> {
   alt?: T;
   credit?: T;
   ownedByCna?: T;
-  _objectKey?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -1420,8 +1531,6 @@ export interface MediaSelect<T extends boolean = true> {
  */
 export interface DocumentsSelect<T extends boolean = true> {
   title?: T;
-  prefix?: T;
-  _objectKey?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -1445,7 +1554,6 @@ export interface VideosSelect<T extends boolean = true> {
   order?: T;
   ambient?: T;
   showInGallery?: T;
-  _objectKey?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -1600,6 +1708,47 @@ export interface OlympiadPeopleSelect<T extends boolean = true> {
         consentIpHash?: T;
         parentConsentIpHash?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "expedition-registrations_select".
+ */
+export interface ExpeditionRegistrationsSelect<T extends boolean = true> {
+  regId?: T;
+  status?: T;
+  fee?: T;
+  name?: T;
+  whatsapp?: T;
+  district?: T;
+  age?: T;
+  gender?: T;
+  paidAt?: T;
+  razorpayPaymentId?: T;
+  razorpayOrderId?: T;
+  message?:
+    | T
+    | {
+        status?: T;
+        at?: T;
+        error?: T;
+        providerId?: T;
+      };
+  reminder?:
+    | T
+    | {
+        status?: T;
+        at?: T;
+        error?: T;
+        providerId?: T;
+      };
+  failureReason?: T;
+  needsRefund?: T;
+  orders?: T;
+  resends?: T;
+  agreedAt?: T;
+  ipHash?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -2137,7 +2286,7 @@ export interface OlympiadPage {
   dates?:
     | {
         /**
-         * e.g. 15 Nov to 14 Dec 2026
+         * e.g. 15 Nov to 31 Dec 2026
          */
         when: string;
         title: string;
@@ -2515,6 +2664,24 @@ export interface OlympiadPage {
       footnote?: string | null;
     };
   };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "expedition-settings".
+ */
+export interface ExpeditionSetting {
+  id: string;
+  /**
+   * Sent on WhatsApp to everyone who has paid, and shown to them after payment. It is never shown on the public page. After adding or changing it, use “Send the Zoom link” in the Registrations list.
+   */
+  zoomLink?: string | null;
+  registrationMode: 'auto' | 'open' | 'closed';
+  opensAt: string;
+  closesAt: string;
+  fee: number;
+  minAge: number;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -3052,6 +3219,21 @@ export interface OlympiadPageSelect<T extends boolean = true> {
               footnote?: T;
             };
       };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "expedition-settings_select".
+ */
+export interface ExpeditionSettingsSelect<T extends boolean = true> {
+  zoomLink?: T;
+  registrationMode?: T;
+  opensAt?: T;
+  closesAt?: T;
+  fee?: T;
+  minAge?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

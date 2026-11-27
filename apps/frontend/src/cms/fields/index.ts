@@ -52,7 +52,7 @@ export const seoField: Field = {
   admin: { description: "Search engine and social sharing. Empty fields fall back to the page content." },
   fields: [
     { name: "title", type: "text", maxLength: 70 },
-    { name: "description", type: "textarea", maxLength: 160 },
+    { name: "description", type: "textarea", maxLength: 170 },
     { name: "image", type: "upload", relationTo: "media" },
   ],
 };

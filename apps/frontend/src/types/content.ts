@@ -31,6 +31,9 @@ export type PhotoSource = PhotoKey | ImageRef;
 export interface Trip {
   slug: string;
   name: string;
+  /** Longer title and opening line for the trip's own page; `null` uses the name and the summary. */
+  heading: string | null;
+  tagline: string | null;
   region: RegionSlug;
   /** State or district shown on cards, e.g. "Himachal Pradesh". */
   state: string;
@@ -42,6 +45,8 @@ export interface Trip {
   difficulty: Difficulty;
   /** Starting price in INR; `null` = on request. */
   price: number | null;
+  /** Small line under a shown price, e.g. who it is for. */
+  priceNote: string | null;
   img: ImageRef | null;
   gallery: ImageRef[];
   /** ISO date of the last published change. */
@@ -65,6 +70,12 @@ export interface Trip {
   /** Editor overrides; `null` falls back to the generated defaults. */
   included: string[] | null;
   notIncluded: string[] | null;
+  /** Things people may add and pay for themselves. */
+  optional: string[];
+  /** The "Please note" box above the FAQs. */
+  notice: { title: string; text: string } | null;
+  /** The trip guide PDF. */
+  guideUrl: string | null;
   faqs: Faq[] | null;
   isSample: boolean;
   seo: Seo;

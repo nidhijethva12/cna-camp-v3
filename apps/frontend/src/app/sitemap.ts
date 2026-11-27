@@ -18,6 +18,7 @@ const publicPages = [
   "/cancellation",
   "/privacy",
   "/photo-credits",
+  "/sarasvati-sindhu-darshan-yatra",
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

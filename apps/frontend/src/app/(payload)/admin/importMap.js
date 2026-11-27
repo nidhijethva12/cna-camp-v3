@@ -29,6 +29,8 @@ import { OlympiadDocuments as OlympiadDocuments_8a439d492f629a1201bb81d750c986eb
 import { OlympiadOverview as OlympiadOverview_7ccf1a30ef1ca3d5aac1685c7555bbbf } from '@/components/admin/OlympiadOverview'
 import { OfficeRegisterLink as OfficeRegisterLink_260bf55653f53bb6e5d25e3875fe7ae7 } from '@/components/admin/OfficeRegisterLink'
 import { ExportPeople as ExportPeople_73628aeca91857daf923138e9536830c } from '@/components/admin/ExportPeople'
+import { ExpeditionSendAgain as ExpeditionSendAgain_d14215245065d5e78848d469eefdc8db } from '@/components/admin/ExpeditionSendAgain'
+import { ExpeditionTools as ExpeditionTools_7564fa3c3ac3b392ddbe3d09be4f7d18 } from '@/components/admin/ExpeditionTools'
 import { RupeeCell as RupeeCell_778c307b147a20ca788d0c772e255c42 } from '@/components/admin/RupeeCell'
 import { default as default_d500ae2ad98a0a33d640ae0ac1a3417c } from '@/components/admin/AdminIcon'
 import { default as default_b80a86fce1072afc84cd6a430a965697 } from '@/components/admin/AdminLogo'
@@ -68,6 +70,8 @@ export const importMap = {
   "@/components/admin/OlympiadOverview#OlympiadOverview": OlympiadOverview_7ccf1a30ef1ca3d5aac1685c7555bbbf,
   "@/components/admin/OfficeRegisterLink#OfficeRegisterLink": OfficeRegisterLink_260bf55653f53bb6e5d25e3875fe7ae7,
   "@/components/admin/ExportPeople#ExportPeople": ExportPeople_73628aeca91857daf923138e9536830c,
+  "@/components/admin/ExpeditionSendAgain#ExpeditionSendAgain": ExpeditionSendAgain_d14215245065d5e78848d469eefdc8db,
+  "@/components/admin/ExpeditionTools#ExpeditionTools": ExpeditionTools_7564fa3c3ac3b392ddbe3d09be4f7d18,
   "@/components/admin/RupeeCell#RupeeCell": RupeeCell_778c307b147a20ca788d0c772e255c42,
   "@/components/admin/AdminIcon#default": default_d500ae2ad98a0a33d640ae0ac1a3417c,
   "@/components/admin/AdminLogo#default": default_b80a86fce1072afc84cd6a430a965697,

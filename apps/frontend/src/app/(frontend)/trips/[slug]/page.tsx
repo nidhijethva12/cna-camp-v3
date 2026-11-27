@@ -12,7 +12,7 @@ import { TripCard } from "@/components/trips/TripCard";
 import { FaqList } from "@/components/ui/FaqList";
 import { SectionNav } from "@/components/ui/SectionNav";
 import { FeatureIcon } from "@/components/ui/FeatureIcon";
-import { ArrowRight, CheckCircle, Clock, Gauge, MapPin, Mountains, XCircle } from "@/components/ui/icons";
+import { ArrowRight, CheckCircle, Clock, FileText, Gauge, MapPin, Mountains, XCircle } from "@/components/ui/icons";
 import { regions, site, tripsByRegionHref } from "@/content/site";
 import { getSimilarTrips, getSiteSettings, getTrip, getTripBatches, getTrips, getTripVideos } from "@/lib/content";
 import { dateRange } from "@/lib/format";
@@ -60,6 +60,9 @@ export async function generateMetadata({ params }: PageProps<"/trips/[slug]">): 
   };
 }
 
+/** Photos in storage already have a full address; only the site's own files need the domain added. */
+const absolutePhoto = (src: string) => (/^https?:\/\//.test(src) ? src : absoluteUrl(src));
+
 export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
   const trip = await getTrip((await params).slug);
   if (!trip) notFound();
@@ -83,6 +86,7 @@ export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
     getTripVideos(trip),
   ]);
   const days = tripItinerary(trip);
+  const heroAlt = (typeof trip.img === "object" && trip.img?.alt) || trip.name;
 
   const jumpLinks: [string, string][] = [
     ["overview", "Overview"],
@@ -99,10 +103,10 @@ export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
   const tripLd = {
     "@context": "https://schema.org",
     "@type": "TouristTrip",
-    name: trip.name,
+    name: trip.heading ?? trip.name,
     description: trip.summary,
     url: absoluteUrl(`/trips/${trip.slug}`),
-    image: trip.img ? absoluteUrl(photoSrc(trip.img)) : undefined,
+    image: trip.img ? absolutePhoto(photoSrc(trip.img)) : undefined,
     touristType: ["Students", "Families", "Groups", "Solo travellers"],
     provider: { "@id": absoluteUrl("/#organization") },
     itinerary: {
@@ -120,7 +124,7 @@ export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
         {sharpHero ? (
           <>
             <div className="kenburns absolute inset-0 -z-10 overflow-hidden opacity-90">
-              <Photo img={trip.img} wide preload sizes="100vw" alt={trip.name} label={`${region} photo coming soon`} />
+              <Photo img={trip.img} wide preload sizes="100vw" alt={heroAlt} label={`${region} photo coming soon`} />
             </div>
             <div className="absolute inset-0 -z-10 bg-linear-to-b from-dark/20 to-dark/88" />
           </>
@@ -154,8 +158,8 @@ export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
               {region}
             </Link>
           </nav>
-          <h1 className="h-page mt-4 max-w-4xl">{trip.name}</h1>
-          <p className="mt-4 max-w-2xl text-[18px] text-light/85">{trip.summary}</p>
+          <h1 className="h-page mt-4 max-w-4xl">{trip.heading ?? trip.name}</h1>
+          <p className="mt-4 max-w-2xl text-[18px] text-light/85">{trip.tagline ?? trip.summary}</p>
           <ul className={`mt-7 flex flex-wrap items-center gap-2.5 ${sharpHero ? "" : "justify-center"}`} aria-label="Trip facts">
             <li className="rounded-full bg-secondary px-4 py-2 text-[13px] font-bold text-dark">{trip.type}</li>
             {heroFacts.map(({ Icon, label, value }) => (
@@ -366,6 +370,16 @@ export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
                 ))}
               </ul>
             </div>
+            {trip.optional.length > 0 && (
+              <div className="rounded-card border border-dashed border-line p-6 md:col-span-2">
+                <h3 className="h-card">Optional, at your own cost</h3>
+                <ul className="mt-4 list-disc space-y-2 pl-5 text-muted">
+                  {trip.optional.map((x) => (
+                    <li key={x}>{x}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </section>
 
           <section id="carry" className="mt-14 scroll-mt-32">
@@ -384,6 +398,13 @@ export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
             <h2 className="h-sub">How to reach</h2>
             <p className="mt-4 text-[17px] leading-relaxed text-muted">{tripReach(trip)}</p>
           </section>
+
+          {trip.notice && (
+            <aside className="mt-14 rounded-card border-[1.5px] border-primary bg-primary-soft p-6">
+              <h2 className="h-card">{trip.notice.title}</h2>
+              <p className="mt-2 text-[16px] leading-relaxed">{trip.notice.text}</p>
+            </aside>
+          )}
 
           <section id="faq" className="mt-14 scroll-mt-32">
             <h2 className="h-sub">Trip FAQs</h2>
@@ -406,7 +427,7 @@ export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
           <div className="rounded-card border border-dark p-6">
             <p className="text-[13.5px] font-medium text-muted">{trip.price ? "Starts from" : "Price"}</p>
             <p className="display mt-1 text-[36px]">{tripPrice(trip)}</p>
-            <p className="text-[14px] text-muted">{trip.price ? "per person" : "Depends on group size and dates"}</p>
+            <p className="text-[14px] text-muted">{trip.price ? (trip.priceNote ?? "per person") : "Depends on group size and dates"}</p>
             <div className="trail-line my-5" />
             <p className="eyebrow">Next batches</p>
             {batches.length ? (
@@ -429,6 +450,16 @@ export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
             <a href={contact.whatsappHref} target="_blank" rel="noopener" className="btn btn-outline mt-3 w-full">
               WhatsApp us
             </a>
+            {trip.guideUrl && (
+              <a
+                href={trip.guideUrl}
+                target="_blank"
+                rel="noopener"
+                className="mt-4 flex items-center justify-center gap-2 text-[14.5px] font-bold text-primary underline"
+              >
+                <FileText /> Download the trip guide (PDF)
+              </a>
+            )}
           </div>
         </aside>
       </div>
