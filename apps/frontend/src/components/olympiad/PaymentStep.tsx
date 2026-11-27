@@ -5,6 +5,7 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import type { CheckoutOrder } from "@/actions/olympiad/register";
 import { ArrowRight, Check } from "@/components/ui/icons";
 import { registrationText, type RegistrationText } from "@/content/registration";
+import { trackPixel } from "@/lib/metaPixel";
 import { openCheckout } from "./razorpayCheckout";
 import { waitForPayment } from "./waitForPayment";
 
@@ -34,12 +35,15 @@ export function PaymentStep({
   autoOpen = true,
   t = registrationText.en.payment,
   done,
+  track = false,
 }: {
   summary: PaymentSummary;
   autoOpen?: boolean;
   t?: RegistrationText["payment"];
   /** The screen once paid, given the receipt link; without it a short confirmation shows. */
   done?: (receiptToken: string) => ReactNode;
+  /** Reports the payment step and the paid fee to the Meta Pixel: only for the public registration form. */
+  track?: boolean;
 }) {
   const [phase, setPhase] = useState<Phase>({ step: "ready" });
   const opened = useRef(false);
@@ -59,6 +63,7 @@ export function PaymentStep({
           else if (!result.paid) setPhase({ step: "waiting" });
           else {
             const me = result.people.find((x) => x.receiptToken) ?? result.people[0];
+            if (track) trackPixel("CompleteRegistration", { value: summary.fee, currency: "INR" });
             setPhase({ step: "paid", receiptToken: me?.receiptToken ?? null, regId: me?.regId ?? "" });
           }
         },
@@ -69,6 +74,7 @@ export function PaymentStep({
   };
 
   useEffect(() => {
+    if (track && order) trackPixel("InitiateCheckout", { value: summary.fee, currency: "INR" });
     if (autoOpen && order && !opened.current) {
       opened.current = true;
       pay();

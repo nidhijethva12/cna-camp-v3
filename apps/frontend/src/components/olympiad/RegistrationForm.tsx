@@ -254,7 +254,7 @@ export function RegistrationForm({
           done={done}
         />
       );
-    if (!result.paid) return <PaymentStep summary={result} t={t.payment} done={done} />;
+    if (!result.paid) return <PaymentStep summary={result} t={t.payment} done={done} track />;
     return result.receiptToken ? done(result.receiptToken) : null;
   }
 

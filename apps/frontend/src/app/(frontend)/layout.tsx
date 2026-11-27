@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { DM_Sans, Plus_Jakarta_Sans } from "next/font/google";
 import Script from "next/script";
+import { MetaPixel } from "@/components/analytics/MetaPixel";
 import { ContactShortcuts } from "@/components/layout/ContactShortcuts";
 import { OlympiadPopup } from "@/components/olympiad/OlympiadPopup";
 import { SiteFooter } from "@/components/layout/SiteFooter";
@@ -9,6 +10,7 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { FOUNDED_YEAR, site } from "@/content/site";
 import { getSiteSettings, type SiteSettings } from "@/lib/content";
 import { getOlympiadPhase } from "@/lib/olympiad/settings";
+import { metaPixelId } from "@/lib/metaPixel";
 import { absoluteUrl, isIndexable, siteUrl } from "@/lib/seo";
 import { themeColors } from "@/lib/theme";
 import "./globals.css";
@@ -81,6 +83,21 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
             gtag('config', 'G-6XTWLH62LN');
           `}
         </Script>
+        {metaPixelId && (
+          <>
+            <MetaPixel />
+            <noscript>
+              {/* eslint-disable-next-line @next/next/no-img-element -- Meta's tracking ping for browsers without JavaScript */}
+              <img
+                height="1"
+                width="1"
+                style={{ display: "none" }}
+                alt=""
+                src={`https://www.facebook.com/tr?id=${metaPixelId}&ev=PageView&noscript=1`}
+              />
+            </noscript>
+          </>
+        )}
         <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:bg-light focus:p-3">
           Skip to content
         </a>
