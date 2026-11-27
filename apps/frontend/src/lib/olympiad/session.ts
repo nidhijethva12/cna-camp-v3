@@ -1,5 +1,6 @@
 import "server-only";
 import { cookies } from "next/headers";
+import type { SheetStudent } from "@/components/olympiad/StudentSheet";
 import { callBackend } from "./backend";
 
 export type PartnerKind = "school" | "ambassador";
@@ -44,7 +45,10 @@ export interface AmbassadorDashboard {
   code: string;
   shareUrl: string;
   stats: { clicks: number; registered: number; paid: number };
-  milestones: { paid: number; reward: string }[];
+  /** Each reward and what it needs: `metric` says whether `paid` counts link opens or confirmed registrations. */
+  milestones: { metric: "clicks" | "paid"; paid: number; reward: string; rewardGu?: string }[];
+  /** The language they signed up in; the dashboard opens in it until they pick another. */
+  language?: string;
 }
 
 export interface SchoolDashboard {
@@ -53,12 +57,15 @@ export interface SchoolDashboard {
   type: string;
   district: string;
   coordinator: string;
-  stats: { students: number; paid: number; pending: number; consentPending: number; waitingForParent: number };
+  /** The language the school signed up in; the dashboard opens in it until they pick another. */
+  language?: string;
+  /** `students` counts complete registrations; `documentsPending` counts sheet rows still missing a document. */
+  stats: { students: number; paid: number; pending: number; documentsPending: number };
   /** Students the school can pay for now, and their total fee in rupees. */
   pay: { count: number; amount: number };
-  /** Students from the Excel sheet whose parents have not finished the form yet. */
-  invited: { id: string; name: string; stage: string; group: string; emailed: boolean; link: string }[];
   classLink: string;
+  /** Every student from the school's sheet, complete or not. */
+  sheet: SheetStudent[];
   students: {
     id: string;
     regId: string;

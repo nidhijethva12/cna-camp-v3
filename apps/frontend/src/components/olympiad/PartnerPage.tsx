@@ -7,12 +7,16 @@ import type { OlympiadLang } from "@/components/olympiad/LanguageSwitch";
 import { PartnerSignupForm } from "@/components/olympiad/PartnerSignupForm";
 import { FileText, GraduationCap, Megaphone, ShieldCheck, Trophy, UserCircleCheck, UsersThree } from "@/components/ui/icons";
 import { dashboardPath, partnerPageText, partnerPath, type PartnerKind } from "@/content/partnerPages";
+import { registrationPath } from "@/content/registration";
 import { olympiadApiLive } from "@/lib/olympiad";
 
 const gujarati = Noto_Sans_Gujarati({ subsets: ["gujarati"], variable: "--font-gujarati", display: "swap" });
 
 const olympiadPath: Record<OlympiadLang, string> = { en: "/olympiad", gu: "/olympiad/gu" };
-const heroImage: Record<PartnerKind, string> = { school: "/img/olympiad/group-deodar.webp", ambassador: "/img/olympiad/rock-climb.webp" };
+const heroImage: Record<PartnerKind, string> = {
+  school: "/img/stock/home-banner-2-wide.webp",
+  ambassador: "/img/stock/home-banner-5-wide.webp",
+};
 const stepIcons: Record<PartnerKind, (typeof GraduationCap)[]> = {
   school: [GraduationCap, UsersThree, FileText, ShieldCheck],
   ambassador: [UserCircleCheck, Megaphone, UsersThree, Trophy],
@@ -37,7 +41,8 @@ export function PartnerPage({ kind, lang }: { kind: PartnerKind; lang: OlympiadL
   return (
     <div lang={lang} className={`${gujarati.variable} ${lang === "gu" ? "lang-gu" : ""}`}>
       <section className="relative isolate overflow-hidden bg-dark text-light">
-        <Image src={heroImage[kind]} alt="" fill preload sizes="100vw" className="-z-10 object-cover opacity-30" />
+        <Image src={heroImage[kind]} alt="" fill preload sizes="100vw" className="-z-20 object-cover object-[50%_85%]" />
+        <div className="absolute inset-0 -z-10 bg-linear-to-r from-dark/85 to-dark/35" />
         <div className="wrap py-[clamp(48px,7vw,84px)]">
           <p className="text-[14px] text-light/80">
             <Link href={olympiadPath[lang]} className="underline underline-offset-3 hover:text-light">
@@ -81,7 +86,17 @@ export function PartnerPage({ kind, lang }: { kind: PartnerKind; lang: OlympiadL
               </Link>
             </p>
           </div>
-          <PartnerSignupForm kind={kind} lang={lang} />
+          {kind === "school" ? (
+            <PartnerSignupForm kind={kind} lang={lang} />
+          ) : (
+            <div className="grid gap-3 rounded-card border border-t-4 border-line border-t-primary bg-light p-6 shadow-card sm:p-7">
+              <h2 className="font-display text-[22px] font-extrabold">{t.ambassador.join.title}</h2>
+              <p className="text-[15.5px] text-muted">{t.ambassador.join.text}</p>
+              <Link href={registrationPath[lang]} className="btn btn-primary mt-1 w-full">
+                {t.ambassador.join.cta}
+              </Link>
+            </div>
+          )}
         </div>
       </section>
     </div>

@@ -33,9 +33,6 @@ import { registrationPath } from "@/content/registration";
 import { enquireHref, site } from "@/content/site";
 import { whatsappLink, type SiteSettings } from "@/lib/content";
 
-/** The "For schools and teachers" section is hidden for now; set to true to show it again. */
-const SHOW_PARTNERS = false;
-
 const glanceIcons = { questions: ListChecks, timer: Timer, star: Star, language: Translate, book: BookOpen } as const;
 const partnerIcons = { school: GraduationCap, ambassador: UserCircleCheck } as const;
 
@@ -139,9 +136,7 @@ export function OlympiadView({ o, lang, contact, phase, closesOn, consentText }:
   const registerHref = registrationPath[lang];
   const helpHref = whatsappLink(contact.whatsappNumber, ui.help.whatsappMessage);
   const jumpLinks = [
-    ...(
-      ["notices", "how", "groups", ...(SHOW_PARTNERS ? (["partners"] as const) : []), "scholarships", "prizes", "rules", "faq"] as const
-    ).map((id) => [id, ui.nav[id]] as const),
+    ...(["notices", "how", "groups", "partners", "scholarships", "prizes", "rules", "faq"] as const).map((id) => [id, ui.nav[id]] as const),
     ...(phase === "open" ? [["register", t.navRegister] as const] : []),
   ];
   const cta = { phase, t, contactUs: ui.contactUs, registerHref };
@@ -408,67 +403,65 @@ export function OlympiadView({ o, lang, contact, phase, closesOn, consentText }:
         </div>
       </section>
 
-      {SHOW_PARTNERS && (
-        <section id="partners" aria-labelledby="h-partners" className={`relative overflow-hidden bg-secondary/12 ${sectionY}`}>
-          <svg
-            aria-hidden="true"
-            viewBox="0 0 200 200"
-            className="pointer-events-none absolute top-7.5 -right-15 h-85 w-85 opacity-50 max-lg:hidden"
-          >
-            <g fill="none" strokeWidth="2" className="stroke-secondary">
-              <circle cx="100" cy="100" r="90" />
-              <circle cx="100" cy="100" r="64" strokeDasharray="4 6" />
-              <path d="M100 6v188M6 100h188" />
-            </g>
-            <path d="M100 20l12 80-12 80-12-80z" opacity=".8" className="fill-secondary" />
-            <path d="M100 20l12 80H88z" className="fill-primary" />
-          </svg>
-          <div className="wrap relative">
-            <SectionHead id="h-partners" {...ui.sections.partners} />
-            <div className="mt-8 grid gap-5 lg:grid-cols-2">
-              {o.partners.map((p, i) => {
-                const Icon = partnerIcons[p.icon];
-                return (
-                  <article
-                    key={p.kind}
-                    className={`flex flex-col gap-3.5 rounded-card border border-t-4 border-secondary/30 bg-light p-7 shadow-card ${i === 0 ? "border-t-primary" : "border-t-dark"}`}
-                  >
-                    <span className="flex h-13 w-13 items-center justify-center rounded-full bg-primary-soft text-[26px] text-primary">
-                      <Icon />
-                    </span>
-                    <h3 className="font-display text-[21px] font-extrabold">{p.title}</h3>
-                    <p className="text-[15.5px] text-muted">{p.who}</p>
-                    <ul className="grid gap-2">
-                      {p.points.map((point) => (
-                        <Tick key={point}>{point}</Tick>
-                      ))}
-                    </ul>
-                    <div className="mt-auto flex flex-wrap items-center gap-x-5 gap-y-3">
-                      {phase === "contact" ? (
-                        <ContactCta className={`btn ${i === 0 ? "btn-primary" : "btn-dark"}`}>
-                          {ui.contactUs} <ArrowRight />
-                        </ContactCta>
-                      ) : (
-                        <Link href={partnerPath[lang][p.kind]} className={`btn ${i === 0 ? "btn-primary" : "btn-dark"}`}>
-                          {p.cta} <ArrowRight />
-                        </Link>
-                      )}
-                      {phase !== "contact" && (
-                        <Link
-                          href={p.kind === "school" ? "/school-dashboard" : "/ambassador-dashboard"}
-                          className="font-display text-[15px] font-bold text-primary underline underline-offset-3"
-                        >
-                          {p.kind === "school" ? t.dashboards.school : t.dashboards.ambassador}
-                        </Link>
-                      )}
-                    </div>
-                  </article>
-                );
-              })}
-            </div>
+      <section id="partners" aria-labelledby="h-partners" className={`relative overflow-hidden bg-secondary/12 ${sectionY}`}>
+        <svg
+          aria-hidden="true"
+          viewBox="0 0 200 200"
+          className="pointer-events-none absolute top-7.5 -right-15 h-85 w-85 opacity-50 max-lg:hidden"
+        >
+          <g fill="none" strokeWidth="2" className="stroke-secondary">
+            <circle cx="100" cy="100" r="90" />
+            <circle cx="100" cy="100" r="64" strokeDasharray="4 6" />
+            <path d="M100 6v188M6 100h188" />
+          </g>
+          <path d="M100 20l12 80-12 80-12-80z" opacity=".8" className="fill-secondary" />
+          <path d="M100 20l12 80H88z" className="fill-primary" />
+        </svg>
+        <div className="wrap relative">
+          <SectionHead id="h-partners" {...ui.sections.partners} />
+          <div className="mt-8 grid gap-5 lg:grid-cols-2">
+            {o.partners.map((p, i) => {
+              const Icon = partnerIcons[p.icon];
+              return (
+                <article
+                  key={p.kind}
+                  className={`flex flex-col gap-3.5 rounded-card border border-t-4 border-secondary/30 bg-light p-7 shadow-card ${i === 0 ? "border-t-primary" : "border-t-dark"}`}
+                >
+                  <span className="flex h-13 w-13 items-center justify-center rounded-full bg-primary-soft text-[26px] text-primary">
+                    <Icon />
+                  </span>
+                  <h3 className="font-display text-[21px] font-extrabold">{p.title}</h3>
+                  <p className="text-[15.5px] text-muted">{p.who}</p>
+                  <ul className="grid gap-2">
+                    {p.points.map((point) => (
+                      <Tick key={point}>{point}</Tick>
+                    ))}
+                  </ul>
+                  <div className="mt-auto flex flex-wrap items-center gap-x-5 gap-y-3">
+                    {phase === "contact" ? (
+                      <ContactCta className={`btn ${i === 0 ? "btn-primary" : "btn-dark"}`}>
+                        {ui.contactUs} <ArrowRight />
+                      </ContactCta>
+                    ) : (
+                      <Link href={partnerPath[lang][p.kind]} className={`btn ${i === 0 ? "btn-primary" : "btn-dark"}`}>
+                        {p.cta} <ArrowRight />
+                      </Link>
+                    )}
+                    {phase !== "contact" && (
+                      <Link
+                        href={p.kind === "school" ? "/school-dashboard" : "/ambassador-dashboard"}
+                        className="font-display text-[15px] font-bold text-primary underline underline-offset-3"
+                      >
+                        {p.kind === "school" ? t.dashboards.school : t.dashboards.ambassador}
+                      </Link>
+                    )}
+                  </div>
+                </article>
+              );
+            })}
           </div>
-        </section>
-      )}
+        </div>
+      </section>
 
       <section
         id="scholarships"

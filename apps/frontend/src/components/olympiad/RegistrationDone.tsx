@@ -133,6 +133,7 @@ export function ReceiptCard({
         [p.mobile, r.mobile ? `+91 ${r.mobile.replace(/^\+91/, "")}` : ""],
         [p.whatsapp, `+91 ${r.whatsapp.replace(/^\+91/, "")}`],
         [p.email, r.email],
+        r.ambassador === true && [p.ambassador, p.yes],
       ],
     },
     {

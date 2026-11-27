@@ -718,6 +718,18 @@ export function RegistrationForm({
                 />
               </Field>
             )}
+            {s.asksAmbassador && (
+              <Choice
+                label={t.step3.ambassador}
+                hint={t.step3.ambassadorHint}
+                hintStrong
+                required
+                value={input.ambassador}
+                error={err("ambassador")}
+                onChange={(v) => set("ambassador", v)}
+                options={(["yes", "no"] as const).map((v) => ({ value: v, label: t.step3.ambassadorOptions[v] }))}
+              />
+            )}
             <hr className="border-line" />
             <fieldset className="grid gap-2.5">
               <legend className="text-[15px] font-bold">{t.step3.achievements}</legend>
@@ -988,6 +1000,7 @@ function Choice<V extends string>({
   onChange,
   error,
   hint,
+  hintStrong,
   required,
   columns = 2,
 }: {
@@ -997,6 +1010,8 @@ function Choice<V extends string>({
   onChange: (v: V) => void;
   error?: string;
   hint?: string;
+  /** Shows the hint in dark ink, for a note people must read before choosing. */
+  hintStrong?: boolean;
   required?: boolean;
   columns?: 2 | 3;
 }) {
@@ -1020,7 +1035,7 @@ function Choice<V extends string>({
           </button>
         ))}
       </div>
-      {hint && <span className="text-[13px] text-muted">{hint}</span>}
+      {hint && <span className={hintStrong ? "text-[14px] leading-relaxed text-dark" : "text-[13px] text-muted"}>{hint}</span>}
       {error && <span className="text-[13px] font-medium text-danger">{error}</span>}
     </div>
   );
@@ -1268,6 +1283,7 @@ function reviewSections(input: RegistrationInput, files: Partial<Record<FileKey,
           `${input.teacherStatus ? t.step3.teacherStatus[input.teacherStatus] : ""}${input.subject ? ` · ${input.subject}` : ""}`,
         ],
         s.adult && [r.work, t.step3.workOptions[input.work] ?? input.work],
+        s.asksAmbassador && input.ambassador && [r.ambassador, t.step3.ambassadorOptions[input.ambassador]],
         [r.achievements, achievements.length ? achievements.join(", ") : r.none],
       ],
     },

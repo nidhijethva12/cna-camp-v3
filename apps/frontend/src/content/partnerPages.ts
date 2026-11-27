@@ -70,11 +70,22 @@ const en = {
     lead: "Share your own code with students, parents and friends. See how many join through you, and get recognised by CNA.",
     stepsTitle: "Share, count, get recognised",
     steps: [
-      ["Sign up", "Teachers, NGO workers, coaches, past campers and parents can join. It is free."],
-      ["Get your code", "After approval you get a code, a link and a QR code to share on WhatsApp or print."],
-      ["Track your count", "Every paid registration with your code shows on your dashboard."],
-      ["Get recognised", "Certificate, a place on our Ambassadors list and more at each milestone."],
+      [
+        "Register for the Olympiad",
+        "College students, adults and teachers (Groups C, D and E) can be Ambassadors. In the form, choose Yes for Ambassador.",
+      ],
+      [
+        "Get your code",
+        "Once your fee is paid, your code and dashboard login come by email. Share your link and QR code on WhatsApp or print them.",
+      ],
+      ["Track your count", "Every confirmed registration through your link shows on your dashboard."],
+      ["Earn rewards", "A certificate, a free registration coupon and a free Manali trip as your numbers grow."],
     ],
+    join: {
+      title: "How to become an Ambassador",
+      text: "Register for Adventure Olympiad 2.0 in Group C, D or E and choose Yes when the form asks about being an Ambassador. No separate sign-up is needed.",
+      cta: "Register now",
+    },
     formTitle: "Ambassador sign-up",
     formLead: "Takes about 2 minutes.",
     fields: { name: "Full name", whatsapp: "WhatsApp number", city: "City", role: "You are a", email: "Email" },
@@ -169,11 +180,22 @@ const gu: PartnerPageText = {
     lead: "તમારો code students, parents ને મિત્રો સાથે share કરો. તમારા થકી કેટલા જોડાયા એ જુઓ ને CNA તરફથી ઓળખ મેળવો.",
     stepsTitle: "Share કરો, ગણતરી જુઓ, ઓળખ મેળવો",
     steps: [
-      ["Sign-up", "Teachers, NGO workers, coaches, જૂના campers ને parents જોડાઈ શકે. Free છે."],
-      ["તમારો code", "Approval પછી તમને code, link ને QR code મળશે, WhatsApp પર share કરવા કે print કરવા."],
-      ["ગણતરી જુઓ", "તમારા code સાથેનું દરેક paid registration dashboard પર દેખાશે."],
-      ["ઓળખ મેળવો", "દરેક milestone પર certificate, Ambassadors list માં નામ ને વધુ."],
+      [
+        "Olympiad માં register કરો",
+        "College students, નાગરિકો ને teachers (Group C, D ને E) Ambassador બની શકે. Form માં Ambassador માટે હા select કરો.",
+      ],
+      [
+        "તમારો code",
+        "Fee ભર્યા પછી તમારો code ને dashboard login email પર આવશે. તમારી link ને QR code WhatsApp પર share કરો કે print કરો.",
+      ],
+      ["ગણતરી જુઓ", "તમારી link થી થયેલું દરેક confirmed registration dashboard પર દેખાશે."],
+      ["Rewards મેળવો", "આંકડા વધે એમ certificate, free registration coupon ને free Manali trip."],
     ],
+    join: {
+      title: "Ambassador કેવી રીતે બનવું",
+      text: "એડવેન્ચર ઓલમ્પિયાડ 2.0 માં Group C, D કે E માં register કરો ને form માં Ambassador વિશે પૂછે ત્યારે હા select કરો. અલગ sign-up ની જરૂર નથી.",
+      cta: "હમણાં રજિસ્ટર કરો",
+    },
     formTitle: "Ambassador sign-up",
     formLead: "આશરે 2 મિનિટ લાગશે.",
     fields: { name: "પૂરું નામ", whatsapp: "WhatsApp number", city: "શહેર / ગામ", role: "તમે કોણ છો", email: "Email" },
