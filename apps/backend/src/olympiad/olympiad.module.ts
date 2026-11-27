@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { ExpeditionModule } from '../expedition/expedition.module.js';
 import { OlympiadController } from './olympiad.controller.js';
 import {
   AmbassadorSchema,
@@ -28,6 +29,8 @@ import { WebhooksController } from './webhooks.controller.js';
 
 @Module({
   imports: [
+    // The Razorpay and WhatsApp webhooks are shared with the expedition registration.
+    ExpeditionModule,
     MongooseModule.forFeature([
       {
         name: MODELS.person,

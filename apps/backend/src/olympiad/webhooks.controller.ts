@@ -15,6 +15,7 @@ import type { RawBodyRequest } from '@nestjs/common';
 import type { Request } from 'express';
 import { config } from '../config.js';
 import { safeEqual } from '../common/security.js';
+import { ExpeditionService } from '../expedition/expedition.service.js';
 import { webhookSignatureValid } from './razorpay.js';
 import { LinksService } from './services/links.service.js';
 import { PaymentsService } from './services/payments.service.js';
@@ -45,6 +46,7 @@ export class WebhooksController {
   constructor(
     private readonly payments: PaymentsService,
     private readonly links: LinksService,
+    private readonly expedition: ExpeditionService,
   ) {}
 
   /** The server-side proof of payment; it also covers people who close the tab before returning. */
@@ -65,16 +67,23 @@ export class WebhooksController {
       payment?.order_id &&
       payment.id
     ) {
-      await this.payments.markPaid(
-        payment.order_id,
-        payment.id,
-        payment.amount,
-      );
+      // One Razorpay account serves both: an order belongs to the Olympiad or to the expedition.
+      if (
+        !(await this.expedition.markPaid(
+          payment.order_id,
+          payment.id,
+          payment.amount,
+        ))
+      )
+        await this.payments.markPaid(
+          payment.order_id,
+          payment.id,
+          payment.amount,
+        );
     } else if (event.event === 'payment.failed' && payment?.order_id) {
-      await this.payments.markFailed(
-        payment.order_id,
-        payment.error_description ?? 'Payment failed',
-      );
+      const reason = payment.error_description ?? 'Payment failed';
+      await this.expedition.markFailed(payment.order_id, reason);
+      await this.payments.markFailed(payment.order_id, reason);
     }
     return { ok: true };
   }
@@ -108,9 +117,17 @@ export class WebhooksController {
       this.log.warn('WhatsApp webhook with an invalid signature');
       throw new BadRequestException();
     }
-    await this.links.whatsappEvent(
-      body as Parameters<LinksService['whatsappEvent']>[0],
-    );
+    const event = body as Parameters<LinksService['whatsappEvent']>[0];
+    await this.links.whatsappEvent(event);
+    for (const change of event.entry?.flatMap((e) => e.changes ?? []) ?? [])
+      for (const s of change.value?.statuses ?? [])
+        if (
+          s.status === 'sent' ||
+          s.status === 'delivered' ||
+          s.status === 'read' ||
+          s.status === 'failed'
+        )
+          await this.expedition.whatsappStatus(s.id, s.status);
     return { ok: true };
   }
 }

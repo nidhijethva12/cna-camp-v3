@@ -13,7 +13,8 @@ export type TokenPurpose =
   | 'session'
   | 'password'
   | 'invite'
-  | 'receipt';
+  | 'receipt'
+  | 'expedition-receipt';
 
 interface TokenBody {
   /** What the token is for; a token for one purpose is never accepted for another. */
