@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useActionState, useState, type ReactNode } from "react";
+import { useActionState, useEffect, useState, type ReactNode } from "react";
 import { submitEnquiry, type EnquiryField, type EnquiryState } from "@/actions/enquiry";
 import { ArrowRight, CheckCircle } from "@/components/ui/icons";
 import { Select } from "@/components/ui/Select";
 import { travellerTypes } from "@/content/site";
+import { trackPixel } from "@/lib/metaPixel";
 
 export interface EnquiryFormProps {
   trips: { slug: string; name: string }[];
@@ -29,6 +30,10 @@ export function EnquiryFormClient({ trips, phone, defaultTrip = "", short = fals
   const [consent, setConsent] = useState(false);
   const pathname = usePathname();
   const blocked = !consent && !pending;
+
+  useEffect(() => {
+    if (state.status === "success") trackPixel("Lead");
+  }, [state]);
 
   const err = (f: EnquiryField) => state.fieldErrors?.[f];
   const v = state.values ?? {};

@@ -16,7 +16,8 @@ const blobStorage = "https://*.public.blob.vercel-storage.com";
 // direct-to-Blob uploads need more.
 const siteCsp = [
   ...baseCsp,
-  `img-src 'self' data: blob: ${blobStorage}`,
+  // facebook.com receives the Meta Pixel's page-view pings, which are sent as images.
+  `img-src 'self' data: blob: ${blobStorage} https://www.facebook.com`,
   `media-src 'self' ${blobStorage}`,
   "font-src 'self'",
   // Google Maps on the contact page; vercel.live is the toolbar on preview deployments; Cloudflare

@@ -6,6 +6,7 @@ import { Lightbox } from "@/components/media/Lightbox";
 import { Photo } from "@/components/media/Photo";
 import { VideoGrid } from "@/components/media/VideoGrid";
 import { BreadcrumbLd } from "@/components/seo/Breadcrumbs";
+import { PixelEventOnView } from "@/components/analytics/MetaPixel";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { TripCard } from "@/components/trips/TripCard";
 import { FaqList } from "@/components/ui/FaqList";
@@ -437,6 +438,7 @@ export default async function TripPage({ params }: PageProps<"/trips/[slug]">) {
       </section>
 
       <JsonLd data={tripLd} />
+      <PixelEventOnView event="ViewContent" params={{ content_name: trip.name, content_category: "Trip" }} />
       <BreadcrumbLd
         items={[
           { name: "Home", path: "/" },

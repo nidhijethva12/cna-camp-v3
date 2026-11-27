@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { PixelEventOnView } from "@/components/analytics/MetaPixel";
 import { UpdatesNudge } from "@/components/layout/UpdatesNudge";
 import { AutoScroll } from "@/components/olympiad/AutoScroll";
 import { GroupPicker } from "@/components/olympiad/GroupPicker";
@@ -148,6 +149,7 @@ export function OlympiadView({ o, lang, contact, phase, closesOn, consentText }:
 
   const page = (
     <>
+      <PixelEventOnView event="ViewContent" params={{ content_name: "Adventure Olympiad", content_category: "Olympiad" }} />
       <div className="bg-primary text-[13px] text-light sm:text-[14.5px]" role="status">
         <div className="wrap flex items-center justify-center gap-x-2.5 gap-y-1 py-2.25 text-center whitespace-nowrap sm:flex-wrap sm:gap-x-3.5 sm:whitespace-normal">
           {phase === "open" || phase === "closed" ? (
